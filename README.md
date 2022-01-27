@@ -12,6 +12,8 @@ HAT models are comprised of a heterogenous agent block within each country and a
 
 - HAT combines the two with the HA block and the trade block interacting.
 
+- HAT models provide a foundation to systematically think about the distributional affects of trade reforms, their dynamics, and complementary policies to mitigate the downsides of globalization.  
+
 ---
 
 ### How?
