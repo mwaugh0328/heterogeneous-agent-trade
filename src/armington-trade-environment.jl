@@ -75,7 +75,6 @@ function trade_flows(p, Pindex, AD, trade_params)
     τ_revenue = Array{eltype(τ)}(undef, Ncntry, Ncntry)
 
 
-
     for buyr = 1:Ncntry # buyer
 
         for suplr = 1:Ncntry #suppleir
