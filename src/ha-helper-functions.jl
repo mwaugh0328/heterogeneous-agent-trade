@@ -1,10 +1,9 @@
 struct NIPA{T}
     C::Array{T}
-    I::Array{T}
+    AD::Array{T}
     income::Array{T}
     N::Array{T}
     Aprime::Array{T}
-    IHS_car::Array{T}
     LFP::Array{T}
 end
 
@@ -36,70 +35,75 @@ end
 
 ##############################################################################
 
-function get_consumption(Pces, W, τ_rev, R, model_params, asset_policy, car_policy, work_policy, state_index)
+function get_consumption(Pces, W, τ_rev, R, asset_policy, model_params, state_index)
  
-    @unpack Na, Nshocks, Doptions, Woptions, mc, dgrid, agrid,
-    pnew, pused, statesize = model_params
+    @unpack Na, Nshocks, agrid, statesize, mc = model_params
 
     c = Array{eltype(R)}(undef, statesize)
     fill!(c, 0.0)
-    
-    invest = similar(c)
-    fill!(invest,0.0)
 
-    new_car = similar(c)
-    fill!(new_car,0.0)
+    for (foo, xxx) in enumerate(state_index)
 
-    @inbounds for (foo, xxx) in enumerate(state_index)
-
-        for car = 1:Doptions
-
-            ihold = investment(car, dgrid[xxx[3]], dgrid[end], pnew, pused)
-
-            if car == 1
-
-                new_car_hold = 1.0
-
-            elseif car == 2
-                new_car_hold = 0.0
-
-            end
-
-            for wrk = 1:Woptions
-            # work through different work options
-
-                wz = labor_income(exp.(mc.state_values[xxx[2]]), W, wrk)
+        wz = labor_income(exp.(mc.state_values[xxx[2]]), W)
             # will return labor income depending upon how much working.
-
-                share_type = work_policy[xxx[1],xxx[2], xxx[3], car, wrk] * car_policy[xxx[1],xxx[2], xxx[3], car] 
-                # share of worker type. work*car
-                
-                invest[foo] += share_type * ihold
-
-                new_car[foo] += share_type * new_car_hold
-                       
-                chold = sum( asset_policy[xxx[1], : ,xxx[2], xxx[3], car, wrk] .* consumption(Pces, τ_rev, R*agrid[xxx[1]], agrid, 
-                            wz, ihold )) # given different aprim, all the consumption 
-
-                c[foo] += share_type * chold
-
-            end
-        end
+         
+        c[foo] += sum( asset_policy[xxx[1], : ,xxx[2]] .* consumption(Pces, τ_rev, R*agrid[xxx[1]], agrid, wz)) 
+        # given different aprim, all the consumption 
 
     end
 
-    return c, invest, new_car
+    return c
 
 end
 
 ##############################################################################
 
-function get_laborsupply(model_params, W, distribution, car_policy, work_policy, state_index)
+function get_distribution(state_index, stationary_distribution)
+    # returns distribution of assets across grid
 
-    @unpack Na, Ncars, Nshocks, Woptions, Doptions, agrid,
-    statesize = model_params
+    asset_state = [xxx[1] for xxx in state_index]
+        # asset should be second index
+
+    asset_distribution = [sum(stationary_distribution[asset_state .== xxx]) for xxx in unique(asset_state)]
+
+    return asset_distribution
+
+end
+
+##############################################################################
+
+function get_laborincome(W, state_index, model_params)
+    # grabs the current shock in level terms
+    # asset is first index,
+    # shock is second index,
+    # car is thrid index 
+    @unpack statesize, mc = model_params
+    
+    wz = Array{eltype(mc.state_values)}(undef, statesize)
+    fill!(wz,0.0)
+
+    ef_units = similar(wz)
+
+    for (foo, xxx) in enumerate(state_index)
+
+        ef_units[foo] = exp.(mc.state_values[xxx[2]])
+
+        wz[foo] = labor_income(ef_units[foo], W)
+            # will return labor income depending upon how much working.
+
+    end
+
+    return wz, ef_units
+
+end
+
+##############################################################################
+
+function get_laborsupply(W, work_policy, state_index, distribution, model_params)
+
+    @unpack Na,  Nshocks, agrid, statesize = model_params
        
-    wz, ef_units = get_laborincome(W, model_params, car_policy, work_policy, state_index)
+    wz, ef_units = get_laborincome(W, state_index, model_params)
 
     labor_supply = Array{eltype(work_policy)}(undef, statesize)
 
@@ -107,11 +111,7 @@ function get_laborsupply(model_params, W, distribution, car_policy, work_policy,
 
     for (foo, xxx) in enumerate(state_index)
 
-        for car = 1:Doptions
-
-            labor_supply[foo] += car_policy[xxx[1],xxx[2], xxx[3], car] * work_policy[xxx[1],xxx[2], xxx[3], car, 1]
-
-        end
+        labor_supply[foo] += work_policy[xxx[1], xxx[2]]
 
     end
 
@@ -124,76 +124,21 @@ function get_laborsupply(model_params, W, distribution, car_policy, work_policy,
 
 end
 
-##############################################################################
-
-function get_distribution(state_index, stationary_distribution)
-    # returns either the joint (default) distribution, asset if key word is passed,
-
-    # assets is first index,
-    # shock is second index,
-    # car is thrid index 
-
-    asset_state = [xxx[1] for xxx in state_index]
-        # asset should be second index
-
-    distribution = [sum(stationary_distribution[asset_state .== xxx]) for xxx in unique(asset_state)]
-
-    return distribution
-
-end
 
 ##############################################################################
 
-function get_laborincome(W, model_params, car_policy, work_policy, state_index)
-    # grabs the current shock in level terms
-    # asset is first index,
-    # shock is second index,
-    # car is thrid index 
-    @unpack statesize, Woptions, Doptions, mc = model_params
-    
-    wz = Array{eltype(mc.state_values)}(undef, statesize)
-    fill!(wz,0.0)
-
-    ef_units = similar(wz)
-
-    for (foo, xxx) in enumerate(state_index)
-
-        ef_units[foo] = exp.(mc.state_values[xxx[2]])
-
-        for car = 1:Doptions
-
-            for wrk = 1:Woptions
-            # work through different work options
-
-                wz[foo] += car_policy[xxx[1],xxx[2], xxx[3], car] * 
-                work_policy[xxx[1],xxx[2], xxx[3], car, wrk] * labor_income(exp.(mc.state_values[xxx[2]]), W, wrk)
-            # will return labor income depending upon how much working.
-
-            end
-
-        end
-
-    end
-
-    return wz, ef_units
-
-end
-
-
-##############################################################################
-
-function get_astate(model_params, state_index)
+function get_astate(state_index, model_params)
     # grabs the current asset level
     # shock is first index,
     # assets is second index,
     # car is thrid index 
     @unpack statesize, agrid = model_params
     
-    asset_state = Array{eltype(agrid)}(undef, statesize, 1)
+    asset_state = Array{eltype(agrid)}(undef, statesize)
 
     for (foo, xxx) in enumerate(state_index)
         
-        asset_state[foo, 1] = agrid[xxx[1]]
+        asset_state[foo] = agrid[xxx[1]]
 
     end
 
@@ -201,97 +146,80 @@ function get_astate(model_params, state_index)
 
 end
 
+
 ##############################################################################
 
-function get_expenditure(Pces, W, τ_rev, R, model_params, asset_policy, 
-    car_policy, work_policy, state_index, distribution)
+function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; display = false)
 
-    c, invest, new_car = get_consumption(Pces, W, τ_rev, R, model_params, asset_policy, car_policy, work_policy, state_index)
+    # organization...
+
+    @unpack state_index, L = distribution
+
+    @unpack asset_policy = hh
+
+    # it's setup to accomedate labor supply, but for it's not here...
+    work_policy = Array{eltype(W)}(undef, model_params.Na, model_params.Nshocks)
+
+    fill!(work_policy, 1.0)
+
+    #####
+    # Get stuff from labor side
+
+    wz, ef_units = get_laborincome(W, state_index, model_params)
+
+    labor_supply, N, LFP = get_laborsupply(W, work_policy, state_index, L, model_params)
+
+    #####
+    # Get stuff from hh side
+
+    a = get_astate(state_index, model_params)
+    # assets today
+
+    aprime = get_aprime(asset_policy, state_index, model_params)
+    # assets tomorrow Noption * statesize as assets are contingent on car choice
+
+    Aprime = sum(aprime .* L, dims = 1)[1]
+
+    c = get_consumption(Pces, W, τ_rev, R, asset_policy, model_params, state_index)
 
     # aggregate asset demand 
 
-    C = sum( c .* distribution, dims = 1)[1]
-    #aggregate nondurable consumption
-    # then multiply the prob of being in that state and sum to aggregate 
-
-    I = sum( invest .* distribution, dims = 1)[1]
-
-    a = get_astate(model_params, state_index)
-    # assets today
-
-    aprime = get_aprime(model_params, asset_policy, car_policy, work_policy, state_index)
-    # assets tomorrow Noption * statesize as assets are contingent on car choice
-
-    Aprime = sum(aprime .* distribution, dims = 1)[1]
-
-    A = sum(a .* distribution, dims = 1)[1]
+    A = sum(a .* L, dims = 1)[1]
     # aggregate asset positoin entering the period
 
     NetA = -(R * A) + Aprime
 
-    return C + I + NetA
-    # don't quite undsertand this...path only works/makes sense if this way
-    # neet to factor in how these resources are evolving. 
-
-end
-
-
-##############################################################################
-
-function aggregate(Pces, W, τ_rev, R, TFP, model_params, asset_policy, 
-    car_policy, work_policy, state_index, distribution; display = false)
-
-    wz, ef_units = get_laborincome(W, model_params, car_policy, work_policy, state_index)
-    #labor income shocks
-
-    a = get_astate(model_params, state_index)
-    # assets today
-
-    aprime = get_aprime(model_params, asset_policy, car_policy, work_policy, state_index)
-    # assets tomorrow Noption * statesize as assets are contingent on car choice
-
-    Aprime = sum(aprime .* distribution, dims = 1)[1]
-
-    c, invest, new_car = get_consumption(Pces, W, τ_rev, R, model_params, asset_policy, car_policy, work_policy, state_index)
-
-    # aggregate asset demand 
-
-    A = sum(a .* distribution, dims = 1)[1]
-    # aggregate asset positoin entering the period
-
-    NetA = -(R * A) + Aprime
-
-    C = sum( c .* distribution, dims = 1)[1]
+    C = sum( c .* L, dims = 1)[1]
     #aggregate nondurable consumption
     # then multiply the prob of being in that state and sum to aggregate 
 
-    
-    IHS_car = sum( new_car .* distribution, dims = 1)[1]
-    #aggregate nondurable consumption
-    # then multiply the prob of being in that state and sum to aggregate 
+    AD = C + NetA
+    # this is aggregate demand. So how many coconuts do you need which 
+    # includes consumption and then stuff to save /lend out
 
-    I = sum( invest .* distribution, dims = 1)[1]
-    #aggregate durable expenditure
-    # same for durable
+    ####
+    # then compute GDP like measure
 
-    expenditure = Pces *( C + I + NetA - τ_rev)
-    # seems neccessary to get everything in same units 
-    # when price levels are different
-
-    labor_supply, N, LFP = get_laborsupply(model_params, W, distribution, car_policy, work_policy, state_index)
+    expenditure = Pces *( C + NetA - τ_rev)
+    # to get expenditure to line up with production and income,
+    # need to put everything in same units, mulitipying by P index does this
+    # net off tariff revenue too
 
     price_production = W / TFP # comes of profit max condition that p = w / A
 
-    production = price_production*sum( TFP .* ef_units .* labor_supply .* distribution, dims = 1)[1] 
-    # tariff revenue shows up here like production of G, same with income...
-    # needs to be here to line up with expenditure.
+    production = price_production * sum( TFP .* ef_units .* labor_supply .* L, dims = 1)[1] 
 
-    income = sum( wz.* distribution, dims = 1)[1] 
+    income = sum( wz.* L, dims = 1)[1] 
     # aggregate labor income 
     # take shock and multiply by prob of being in that state, sum to aggregate
 
     output_stats = NIPA(
-        [C], [I], [income], [N], [Aprime], [IHS_car], [LFP]
+        [C],
+        [AD],
+        [income],
+        [N],
+        [Aprime],
+        [LFP]
         )
 
     if display == true
@@ -303,9 +231,6 @@ function aggregate(Pces, W, τ_rev, R, TFP, model_params, asset_policy,
         println("")
         println("Aggregate Non-Durable Consumption")
         println(round(C, digits = digits))
-        println("")
-        println("Aggregate Durable Expenditure")
-        println(round(I, digits = digits))
         println("")
         println("Aggregate Net Asset Position")
         println(round(NetA, digits = digits))

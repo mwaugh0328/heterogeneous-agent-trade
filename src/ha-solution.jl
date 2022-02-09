@@ -24,11 +24,9 @@ hh = solve_household_problem(Pces, W, τ_rev, R, model_params; tol = tol_vfi, so
 
 dist = make_stationary_distribution(hh.asset_policy, model_params, tol = tol_dis, solution_method = stdist_sol_method)
 
-aprime = get_aprime(hh.asset_policy, dist.state_index, model_params)
+output = aggregate(Pces, W, τ_rev, R, hh, dist, 1.0, model_params)
 
-net_asset_demand = sum(aprime .* L, dims = 1)[1]
-
-return net_asset_demand
+return output.Aprime
 
 end
 
