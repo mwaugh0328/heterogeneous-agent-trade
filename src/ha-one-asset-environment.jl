@@ -21,48 +21,66 @@ model_params = @with_kw (
     σ = 0.10,
     mc = tauchen(Nshocks, ρ, σ),
     σa = 0.01,
+    σw = 0.10,
+    ϑ = 1.5,
+    Woptions = 2,
 )
 
 ##########################################################################
-function bellman_operator_policy(v, u, mc, β, σa) 
+function bellman_operator_policy(v, u, mc, β, σa, σw) 
     # the value function /bellman operator that takes a v then
     # returns a Tv and policy functions.
     # The asset policy is smoothed and are probabilities over a' tomorrow. 
 
     Na = size(u)[1]
     Nshocks = size(u)[3]
+    Woptions = size(u)[4]
 
-    asset_policy = Array{eltype(u)}(undef, Na, Na,  Nshocks)
+    asset_policy = Array{eltype(u)}(undef, Na, Na,  Nshocks, Woptions)
+    work_policy = Array{eltype(u)}(undef, Na, Nshocks, Woptions)
 
-    Tv = Array{eltype(u)}(undef, Na, Nshocks)
+    Tvwork = Array{eltype(u)}(undef, Na, Nshocks, Woptions)
+    Tv = Array{eltype(u)}(undef, Na, Nshocks, 1)
 
-    for shockstate = 1:Nshocks
+    @inbounds @views for shockstate = 1:Nshocks
 
         βEV = compute_EV(β*v, mc[shockstate, :])
 
-        foo = u[:, :, shockstate] .+ βEV
+        for wrkchoice = 1:Woptions
 
-        maximum!(view(Tv, : , shockstate), foo )
+            foo = u[:, :, shockstate, wrkchoice] .+ βEV
 
-        foo .-= ( Tv[ :, shockstate]) 
-        # this operation is creating NaN's in foo
-        # then propogates.  max is -Inf and then 
-        # the subtraction of -Inf so (-Inf - (-Inf) = NaN)
-                    
+            maximum!(view(Tvwork, : , shockstate, wrkchoice), foo )
+
+            foo .-= ( Tvwork[ :, shockstate, wrkchoice]) 
+            foo[isnan.(foo)] .= 0.0
+            # this operation is creating NaN's in foo
+            # then propogates.  max is -Inf and then 
+            # the subtraction of -Inf so (-Inf - (-Inf) = NaN)
+
+            asset_policy[ :, :, shockstate, wrkchoice] = exp.( foo ./ σa ) ./ sum( exp.( foo ./ σa ) , dims = 2) 
+
+        end
+
+        Tvworkmax = maximum(Tvwork[:, shockstate, :], dims = 2)
+
+        foo = Tvwork[:, shockstate, :] .- Tvworkmax
         foo[isnan.(foo)] .= 0.0
-                    
-        @views asset_policy[ :, :, shockstate] = exp.( foo ./ σa ) ./ sum( exp.( foo ./ σa ) , dims = 2) 
-                   
+
+        work_policy[:, shockstate, :] = exp.( foo ./ σw ) ./ sum( exp.( foo ./ σw ) , dims = 2) 
+    
+        Tv[:, shockstate] = σw.*log.( sum( exp.( foo ./ σw ) , dims = 2) )  .+ Tvworkmax
+               
     end
- 
-    return Tv, asset_policy
+
+    return household(Tv, asset_policy, work_policy )
     
 end
 
 ##########################################################################
 ##########################################################################
 
-function bellman_operator(v, u, mc, β)
+function bellman_operator(v, u, mc, β, σw)
     # basic value function /bellman operator that takes a v then
     # returns a TV. 
     # v and Tv are setup each individual entry has v(a,z) as in 
@@ -70,24 +88,35 @@ function bellman_operator(v, u, mc, β)
            
     Na = size(u)[1]
     Nshocks = size(u)[3]
+    Woptions = size(u)[4]
 
     # stores the value function Tv_{j}(a,z)
+    
     Tv = Array{eltype(u)}(undef, Na, Nshocks)
+    Tvwork = Array{eltype(u)}(undef, Na, Nshocks, Woptions)
 
-    # eltype(u) ensures that Tvmove is same type as u
-
-    for shockstate = 1:Nshocks
+    @inbounds @views for shockstate = 1:Nshocks
         # work through each shock state
 
-        βEV = compute_EV(β*v, mc[shockstate, :])
-             # Compute expected value 
-                
-        maximum!(view(Tv, : , shockstate), u[:, :, shockstate] .+ βEV )
+        # Compute expected value 
+        βEV = compute_EV(β*Tv, mc[shockstate, :])
+
+        for wrkchoice = 1:Woptions
+
+            # find best value for each choice
+            maximum!(view(Tvwork, : , shockstate, wrkchoice), u[:, :, shockstate, wrkchoice] .+ βEV )
+
+        end
+
+        Tvworkmax = maximum(Tvwork[:, shockstate, :], dims = 2)
+
+        foo = Tvwork[:, shockstate, :] .- Tvworkmax
+        foo[isnan.(foo)] .= 0.0
+    
+        Tv[:, shockstate] = σw.*log.( sum( exp.(  foo ./ σw ) , dims = 2) )  .+ Tvworkmax
 
     end
-    # this returns a array of Na, Nschocks, Ncars, 1 
-    # so need drop the last 1 dimension...
-    
+
     return Tv
     
 end
@@ -97,7 +126,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function bellman_operator_upwind(v, u, mc, β) 
+function bellman_operator_upwind(v, u, mc, β, σw) 
     # the value function /bellman operator that takes a v then
     # returns a TV.
     # 
@@ -106,22 +135,36 @@ function bellman_operator_upwind(v, u, mc, β)
     #
     # v and Tv are setup each individual entry has v(a,z) as in 
     # model.pdf notes.
-
+    Na = size(u)[1]
     Nshocks = size(u)[3]
+    Woptions = size(u)[4]
     
     Tv = copy(v)
+    Tvwork = Array{eltype(u)}(undef, Na, Nshocks, Woptions)
+    foo = Array{eltype(u)}(undef, Na, Woptions)
 
-    for shockstate = 1:Nshocks
+    @inbounds @views for shockstate = 1:Nshocks
         # work through each shock state
 
-        @views βEV = compute_EV(β*Tv, mc[shockstate, :])
-        # Compute expected value, key difference here is
-        # Tv is used to compute EV, not gueessed v.  
-                
-        maximum!(view(Tv, : , shockstate), u[:, :, shockstate] .+ βEV )
+        # Compute expected value 
+         βEV = compute_EV(β.*Tv, mc[shockstate, :])
+
+        for wrkchoice = 1:Woptions
+
+            # find best value for each choice
+            maximum!(view(Tvwork, : , shockstate, wrkchoice), u[:, :, shockstate, wrkchoice] .+ βEV )
+
+        end
+
+        Tvworkmax = maximum(Tvwork[:, shockstate, :], dims = 2)
+
+        foo = Tvwork[:, shockstate, :] .- Tvworkmax
+        foo[isnan.(foo)] .= 0.0
+    
+        Tv[:, shockstate] = σw.*log.( sum( exp.(  foo ./ σw ) , dims = 2) )  .+ Tvworkmax
 
     end
-    
+
     return Tv
       
 end
@@ -157,7 +200,7 @@ function make_utility!(utility_grid, Pces, W, τ_rev, R, model_params)
     # R is gross real interest rate ∈ (β, 1/β)
     # W is wage per effeciency unit
     
-    @unpack Na, Nshocks, mc, agrid, γ = model_params
+    @unpack Na, Nshocks, Woptions, mc, agrid, γ, ϑ = model_params
     
     a =  reshape(agrid, Na, 1)
     #assets today
@@ -167,16 +210,20 @@ function make_utility!(utility_grid, Pces, W, τ_rev, R, model_params)
 
     shock_level = exp.(mc.state_values)
 
-    for shockstate = 1:Nshocks
+    @inbounds @views for shockstate = 1:Nshocks
     #shock state
 
-        wz = labor_income( shock_level[shockstate] , W )
+        for workchoice = 1:Woptions
+        
+            wz = labor_income( shock_level[shockstate] , W, workchoice)
 
-        c = consumption(Pces, τ_rev, R*a, a_prime, wz)
+            c = consumption(Pces, τ_rev, R*a, a_prime, wz)
                 # takes assets states, shock state -> consumption from
                 # budget constraint
         
-        utility_grid[:, :, shockstate] = utility.(c, γ)
+            utility_grid[:, :, shockstate, workchoice] = utility.(c, γ, ϑ, workchoice)
+
+        end
         
     end
     
@@ -185,12 +232,22 @@ end
 
 ##########################################################################
 ##########################################################################
-function labor_income(shock, W)
+function labor_income(shock, W, workchoice)
     # computes labor income. it's simple now, but need so it can be 
     # more complicated later
     # W is wage per effeciency unit
 
-    return shock * W
+    if workchoice == 1
+        #you are working
+
+        return shock * W
+
+    elseif workchoice == 2
+        # not working get nothing
+
+        return 0.0
+
+    end
 
 end
             
@@ -208,25 +265,32 @@ end
     
 ##########################################################################
 ##########################################################################
-function log_utility(c)
-
-    (c < 1e-10 ? -Inf : @fastmath log(c) )
-
-end
-
-##########################################################################
-##########################################################################
-
 function utility(c, γ)
     # maps consumption into utility with the CRRA specification
     # log it γ is close to one
-    
+
     if γ == 1.0
         
         (c < 1e-10 ? -Inf : @fastmath log(c) )
 
     else
         (c < 1e-10 ? -Inf : @fastmath c^( 1.0 - γ) / (1.0 - γ))
+
+    end
+
+end
+
+# Using mulitiple dispatch here...
+
+function utility(c, γ, ϑ, workchoice)
+
+    if workchoice == 1
+
+        utility(c, γ) # don't enjoy it
+
+    elseif workchoice == 2
+
+        utility(c, γ) + ϑ # enjoy leisure
 
     end
 
@@ -255,13 +319,13 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_Q!(Q, state_index, asset_policy, model_params)
+function make_Q!(Q, state_index, asset_policy, work_policy, model_params)
 
-    @unpack Na, Nshocks, mc= model_params
+    @unpack Na, Nshocks, Woptions, mc= model_params
     
     fill!(Q, 0.0) # this is all setup assumeing Q is zero everywehre
 
-    @inbounds for shk = 1:Nshocks
+    @inbounds @views for shk = 1:Nshocks
     
         shk_counter = Int((shk - 1)*Na)
 
@@ -279,7 +343,11 @@ function make_Q!(Q, state_index, asset_policy, model_params)
 
                     tommorow = astprime + shk_counter_prime 
 
-                    Q[today, tommorow] += mc.p[shk, shkprime] * asset_policy[ast, astprime, shk]
+                    for wrk = 1:Woptions
+
+                        Q[today, tommorow] += mc.p[shk, shkprime] * asset_policy[ast, astprime, shk, wrk] * work_policy[ast, shk, wrk]
+
+                    end
 
                 end
 

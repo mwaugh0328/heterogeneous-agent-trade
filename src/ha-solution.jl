@@ -1,6 +1,7 @@
 struct household{T}
     Tv::Array{T} # value function
     asset_policy::Array{T} # asset_policy
+    work_policy::Array{T} # work_policy
 end
 
 struct distribution{T}
@@ -22,7 +23,7 @@ function clear_asset_market(Pces, W, τ_rev, R, model_params; tol_vfi = 1e-6, to
 
 hh = solve_household_problem(Pces, W, τ_rev, R, model_params; tol = tol_vfi, solution_method = vfi_solution_method)
 
-dist = make_stationary_distribution(hh.asset_policy, model_params, tol = tol_dis, solution_method = stdist_sol_method)
+dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
 
 output = aggregate(Pces, W, τ_rev, R, hh, dist, 1.0, model_params)
 
@@ -40,7 +41,7 @@ function compute_eq(Pces, W, τ_rev, R, model_params; tol_vfi = 1e-6, tol_dis = 
 # (2) Constructs stationary distribution
 hh = solve_household_problem(Pces, W, τ_rev, R, model_params; tol = tol_vfi, solution_method = vfi_solution_method)
 
-dist = make_stationary_distribution(hh.asset_policy, model_params, tol = tol_dis, solution_method = stdist_sol_method)
+dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
 
 return hh, dist
 
@@ -64,26 +65,24 @@ function solve_household_problem(Pces, W, τ_rev, R, model_params; tol = 10^-6, 
     end
     
     @unpack Na, Nshocks,
-     mc, β, σa = model_params
+     mc, β, σa, σw = model_params
 
-     Tv, asset_policy = bellman_operator_policy(Tv, u, mc.p, β, σa);
-
-    return household(Tv, asset_policy )
+    return bellman_operator_policy(Tv, u, mc.p, β, σa, σw);
 
 end
 
 ##########################################################################
 ##########################################################################
 
-function make_stationary_distribution(asset_policy, model_params; tol = 1e-10, solution_method = "nl-fixedpoint") 
+function make_stationary_distribution(household, model_params; tol = 1e-10, solution_method = "nl-fixedpoint") 
 
 @unpack Na, Nshocks, statesize = model_params
 
 state_index = Array{Tuple{eltype(Na), eltype(Na)}}(undef, statesize, 1)
 
-Q = Array{eltype(asset_policy)}(undef, statesize, statesize)
+Q = Array{eltype(household.asset_policy)}(undef, statesize, statesize)
 
-make_Q!(Q, state_index, asset_policy, model_params)
+make_Q!(Q, state_index, household.asset_policy, household.work_policy, model_params)
 
 if solution_method == "nl-fixedpoint"
 
@@ -165,9 +164,9 @@ function value_function_itteration(Pces, W, τ_rev, R, model_params; tol = 10^-6
     # fastest is using nlsove fixed point to find situation where
     # v = bellman_operator(v)
     
-    @unpack Na, Nshocks, β, mc = model_params
+    @unpack Na, Nshocks, Woptions, β, mc, σw = model_params
 
-    u = Array{eltype(R)}(undef, Na, Na, Nshocks)
+    u = Array{eltype(R)}(undef, Na, Na, Nshocks, Woptions)
 
     make_utility!(u, Pces, W, τ_rev, R, model_params)
 
@@ -178,7 +177,7 @@ function value_function_itteration(Pces, W, τ_rev, R, model_params; tol = 10^-6
 
     for iter in 1:Niter
         
-        Tv = bellman_operator_upwind(v, u, mc.p, β) 
+        Tv = bellman_operator_upwind(v, u, mc.p, β, σw) 
         #there is some advantage of having it
         # explicity, not always recreating the Tv 
         # array in the function
@@ -206,16 +205,15 @@ end
 
 function value_function_fixedpoint(Pces, W, τ_rev, R, model_params; tol = 10^-6)
 
-    @unpack Na, Nshocks, β, mc = model_params
+    @unpack Na, Nshocks, Woptions, β, mc, σw = model_params
 
-    u = Array{eltype(R)}(undef, Na, Na, Nshocks)
-
+    u = Array{eltype(R)}(undef, Na, Na, Nshocks, Woptions)
     make_utility!(u, Pces, W, τ_rev, R, model_params)
 
 # define the inline function on the bellman operator. 
 # so the input is v (other stuff is fixed)
     
-    T(v) = bellman_operator_upwind(v, u, mc.p, β)
+    T(v) = bellman_operator_upwind(v, u, mc.p, β, σw)
 
     Vo = -ones(Na, Nshocks) / (1-β); #initial value
 
