@@ -89,7 +89,7 @@ function get_laborincome(W, hh, state_index, model_params)
     @unpack statesize, Woptions, mc = model_params
     @unpack work_policy = hh
     
-    wz = Array{eltype(mc.state_values)}(undef, statesize)
+    wz = Array{eltype(work_policy)}(undef, statesize)
     fill!(wz,0.0)
 
     ef_units = similar(wz)

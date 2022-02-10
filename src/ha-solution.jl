@@ -31,6 +31,24 @@ return output.Aprime
 
 end
 
+function clear_asset_market(Pces, W, 
+    τ_rev, R::ForwardDiff.Dual, model_params; tol_vfi = 1e-6, tol_dis = 1e-10)
+# for some reason NLsolve fixedpoint does not work well with ForwardDiff.Dual numbers.
+# the work around is to use multiple dispatch. So if R a dual number...then revert to 
+# basic itterative methods to solve hh problem and stationary distribution.
+
+@assert model_params.ϕ > 0.0
+
+hh = solve_household_problem(Pces, W, τ_rev, R, model_params; tol = tol_vfi, solution_method = "vfi-itteration")
+
+dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = "itteration")
+
+output = aggregate(Pces, W, τ_rev, R, hh, dist, 1.0, model_params)
+
+return output.Aprime
+
+end
+
 ##########################################################################
 ##########################################################################
 
@@ -117,8 +135,9 @@ function itterate_stationary_distribution(Q; tol = 1e-10, Niter = 5000)
     # must satisfy the fixed point relationsip L = Q'*L  
     
     L = zeros(size(Q)[1], 1)
+    L = convert(Array{eltype(Q)}, L)
     
-    L[1] = 1.0
+    L .= 1.0 / size(Q)[1]
     
     Lnew = similar(L)
     
@@ -157,8 +176,7 @@ end
 
 function value_function_itteration(Pces, W, τ_rev, R, model_params; tol = 10^-6, Niter = 500)
     # this is the boiler plate vfi routine (1) make grid (2) itterate on 
-    # bellman operator untill convergence. Policy 
-    # functions are then outputed as cartesian index
+    # bellman operator untill convergence. 
     #
     # as Fast/ ~faster than Matlab (but nothing is multithreaded here)
     # fastest is using nlsove fixed point to find situation where
@@ -216,6 +234,7 @@ function value_function_fixedpoint(Pces, W, τ_rev, R, model_params; tol = 10^-6
     T(v) = bellman_operator_upwind(v, u, mc.p, β, σw)
 
     Vo = -ones(Na, Nshocks) / (1-β); #initial value
+    Vo = convert(Array{eltype(u)}, Vo)
 
     solution = fixedpoint(T, Vo, ftol = tol, method = :anderson);
     

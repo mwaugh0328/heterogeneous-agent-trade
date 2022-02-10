@@ -3,6 +3,26 @@
 ##########################################################################
 ##########################################################################
 
+function ha_trade_equilibrium(x, model_params, trade_params)
+    #again using mulitple dispatch here...size of x determines
+    
+    @unpack Ncntry = trade_params
+
+    if length(x) == 3*Ncntry #Financial Autarky case
+
+        outvec = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], x[2*Ncntry + 1 : end], model_params, trade_params)
+
+    elseif length(x) == 2*Ncntry + 1 #Financial Integration case
+
+        outvec = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], x[2*Ncntry + 1], model_params, trade_params)
+
+    end
+
+    return outvec
+
+end
+
+
 function ha_trade_equilibrium(W::Array{T}, τ_revenue::Array{T}, R::Array{T}, model_params, trade_params) where T
     # Combines the demand side with the trade side.
     #

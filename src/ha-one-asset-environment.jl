@@ -5,6 +5,7 @@ using QuantEcon
 using BasisMatrices
 using NLsolve
 using Octavian
+using ForwardDiff
 
 ##########################################################################
 
@@ -99,7 +100,7 @@ function bellman_operator(v, u, mc, β, σw)
         # work through each shock state
 
         # Compute expected value 
-        βEV = compute_EV(β*Tv, mc[shockstate, :])
+        βEV = compute_EV(β*v, mc[shockstate, :])
 
         for wrkchoice = 1:Woptions
 
@@ -140,6 +141,8 @@ function bellman_operator_upwind(v, u, mc, β, σw)
     Woptions = size(u)[4]
     
     Tv = copy(v)
+    Tv = convert(Array{eltype(u)}, Tv)
+
     Tvwork = Array{eltype(u)}(undef, Na, Nshocks, Woptions)
     foo = Array{eltype(u)}(undef, Na, Woptions)
 
@@ -147,7 +150,7 @@ function bellman_operator_upwind(v, u, mc, β, σw)
         # work through each shock state
 
         # Compute expected value 
-         βEV = compute_EV(β.*Tv, mc[shockstate, :])
+         βEV = compute_EV(β*Tv, mc[shockstate, :])
 
         for wrkchoice = 1:Woptions
 
@@ -172,7 +175,7 @@ end
 
 ##########################################################################
 ##########################################################################
-function compute_EV(v, mc_probs)
+function compute_EV(v::Array{Float64}, mc_probs::Array{Float64})
     # construct expected value
     # given the transition probabiltes from the markov chain...
     
@@ -181,16 +184,26 @@ function compute_EV(v, mc_probs)
     # we want to integrate this so transpose, so for a given
     # asset state integrate accross different shock outcomes
     
-    #return  (mc_probs' * v' )
-
     return matmul(mc_probs', v' )
-    
+
+    #matmul is from Octavian packaage, pure julia matrix multiplicaiton
+    # can be meaningfully faster than BLAS
+    # problem is it does not play well with ForwardDiff when mc_probs
+    # is a subarray. So solution is to use mulitple dispactch. IF anything,
+    # then use BLAS. If Array then specilize and do matmul
+
+end
+
+##########################################################################
+##########################################################################
+function compute_EV(v, mc_probs) 
+    # multiple dispatch version if v is a dual number
+
+    return  (mc_probs' * v' )
+        
     # updated: for some reason matmul in this place does not work with autodiff
     # not sure why, it works with autodiff in the construction of stationary distribution 
-    
-    # uses Octavian a pure julia implementation of matrix multiplication
-    # standard * calls BLAS C(?) wrapped implementation
-    # seems faster than *
+
 end
 
 ##########################################################################
@@ -217,7 +230,7 @@ function make_utility!(utility_grid, Pces, W, τ_rev, R, model_params)
         
             wz = labor_income( shock_level[shockstate] , W, workchoice)
 
-            c = consumption(Pces, τ_rev, R*a, a_prime, wz)
+            c = consumption(Pces, τ_rev, R.*a, a_prime, wz)
                 # takes assets states, shock state -> consumption from
                 # budget constraint
         
@@ -271,10 +284,10 @@ function utility(c, γ)
 
     if γ == 1.0
         
-        (c < 1e-10 ? -Inf : @fastmath log(c) )
+        (c < 1e-10 ? -Inf : log(c) )
 
     else
-        (c < 1e-10 ? -Inf : @fastmath c^( 1.0 - γ) / (1.0 - γ))
+        (c < 1e-10 ? -Inf : c^( 1.0 - γ) / (1.0 - γ))
 
     end
 
