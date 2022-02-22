@@ -1,21 +1,22 @@
 
 include("ha-trade.jl")
 using MINPACK
+import DataFrames
 
 
-haparams = model_params(ρ = 0.20, σ = 0.3919, Nshocks = 10, Na = 100,
-             ϕ = 3.0, amax = 8, σa = 0.005, γ = 3.0, ϑ = 0.0, σw = 0.001)
+haparams = model_params(ρ = 0.90, σ = 0.10, Nshocks = 5, Na = 50,
+             ϕ = 1.0, amax = 3.0, σa = 0.005, γ = 1.0, ϑ = 0.85, σw = 0.20)
              
 Ncntry = trade_params().Ncntry
 
-new_τ = [0.00 0.00; 0.00 0.00]
+new_τ = [0.00 0.05; 0.05 0.00]
 
-T = 10
+T = 50
 
-τ_path = Array{Array{Float64}}(undef, 3)
+τ_path = Array{Array{Float64}}(undef, 5)
 fill!(τ_path, trade_params().τ)
 
-n_path = Array{Array{Float64}}(undef, 7)
+n_path = Array{Array{Float64}}(undef, 45)
 fill!(n_path, new_τ  )
 
 τ_path = [τ_path; n_path]
@@ -60,9 +61,11 @@ println(" ")
 println(solint)
 println(" ")
 
+output_int = ha_trade_equilibrium(solint.x, haparams , inital_tradeparams, display = true)[2]
+
 Wint, τ_rev_int, Rint = unpack_solution(solint.x, Ncntry)
 
-dist_int = collect_intial_conditions(Wint, τ_rev_int, Rint, haparams , inital_tradeparams )
+dist_int = collect_intial_conditions(Wint, τ_rev_int, Rint, haparams, inital_tradeparams )
 
 
 # ###############################################################################################
@@ -132,6 +135,10 @@ println(" ")
 println(sol_path)
 println(" ")
 
+path_stats = transition_path(sol_path.x, Rint, trade_path, 
+            dist_int, hh_end, haparams, display = true)[2]
+
+df = make_dataset(path_stats, output_int, T)
 
 
 

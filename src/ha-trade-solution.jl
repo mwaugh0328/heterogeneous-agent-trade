@@ -3,22 +3,32 @@
 ##########################################################################
 ##########################################################################
 
-function ha_trade_equilibrium(x, model_params, trade_params)
+function ha_trade_equilibrium(x, model_params, trade_params; display = false)
     #again using mulitple dispatch here...size of x determines
     
     @unpack Ncntry = trade_params
 
     if length(x) == 3*Ncntry #Financial Autarky case
 
-        outvec = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], x[2*Ncntry + 1 : end], model_params, trade_params)
+        outvec, output_stats = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], 
+                    x[2*Ncntry + 1 : end], model_params, trade_params)
 
     elseif length(x) == 2*Ncntry + 1 #Financial Integration case
 
-        outvec = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], x[2*Ncntry + 1], model_params, trade_params)
+        outvec, output_stats = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], 
+                    x[2*Ncntry + 1], model_params, trade_params)
 
     end
 
-    return outvec
+    if display == false
+
+        return outvec
+
+    else
+
+        return outvec, output_stats
+
+    end
 
 end
 
@@ -45,7 +55,7 @@ function ha_trade_equilibrium(W::Array{T}, τ_revenue::Array{T}, R::Array{T}, mo
     # Given the wage, we need to know the price index to solve the 
     # hh problem. So do this first.
 
-    for xxx = 1:Ncntry  # do this for each country.
+    Threads.@threads for xxx = 1:Ncntry  # do this for each country.
                         # this is the place to use distributed or pmap
                         # hh problems can be solved independtly
 
@@ -72,7 +82,7 @@ function ha_trade_equilibrium(W::Array{T}, τ_revenue::Array{T}, R::Array{T}, mo
 
     trade_net_demand = trade_equilibrium(W, AD, Nf, τ_revenue, trade_params)
 
-    return vcat(trade_net_demand , asset_net_demand )
+    return vcat(trade_net_demand , asset_net_demand ), output_stats
 
 end
 
@@ -100,7 +110,7 @@ function ha_trade_equilibrium(W::Array{T}, τ_revenue::Array{T}, R::T, model_par
     # Given the wage, we need to know the price index to solve the 
     # hh problem. So do this first.
 
-    for xxx = 1:Ncntry  # do this for each country.
+    Threads.@threads for xxx = 1:Ncntry  # do this for each country.
                         # this is the place to use distributed or pmap
                         # hh problems can be solved independtly
 
@@ -128,7 +138,7 @@ function ha_trade_equilibrium(W::Array{T}, τ_revenue::Array{T}, R::T, model_par
 
     trade_net_demand = trade_equilibrium(W, AD, Nf, τ_revenue, trade_params)
 
-    return vcat(trade_net_demand ; asset_net_demand )
+    return vcat(trade_net_demand ; asset_net_demand ), output_stats
 
 end
 

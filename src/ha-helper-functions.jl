@@ -262,78 +262,61 @@ end
 ##############################################################################
 ##############################################################################
 
-function make_dataset(output, output_int)
+function make_dataset(output, output_int, Tperiods)
 
     backfilllength = 10
-
-    bigI = []
     bigT = []
     bigC = []
     bigN = []
-    bigIHS_car = []
     bigLFP = []
     country_index = []
 
     backfill= Array{Float64}(undef, backfilllength )
 
     for cnt = 1:trade_params().Ncntry
-        
-        ###############################################
-        # Investment 
-        fill!(backfill, output_int[cnt].I[1])
 
-        I = [output[cnt][xxx].I[1] for xxx in 1:T]
-
-        prepend!(I, backfill)
-    
-        time = -9:1:(length(I)-10)
-    
-        append!(bigI, I)
-        append!(bigT,time)
-        append!(country_index, Int.(cnt.*ones(length(time))))
-    
         ###############################################
         # Counsumption
         fill!(backfill, output_int[cnt].C[1])
 
-        C = [output[cnt][xxx].C[1] for xxx in 1:T]
+        C = [output[cnt][xxx].C[1] for xxx in 1:Tperiods]
 
         prepend!(C, backfill)
         append!(bigC, C)
+
+        ###############################################
+        # Time and country index
+
+        time = -9:1:(length(C)-10)
+    
+
+        append!(bigT,time)
+        append!(country_index, Int.(cnt.*ones(length(time))))
     
         ###############################################
         # Labor Supply
         fill!(backfill, output_int[cnt].N[1])
 
-        N = [output[cnt][xxx].N[1] for xxx in 1:T]
+        N = [output[cnt][xxx].N[1] for xxx in 1:Tperiods]
 
         prepend!(N, backfill)
         append!(bigN, N)
 
-        ###############################################
-        # CARS
-        fill!(backfill, output_int[cnt].IHS_car[1])
 
-        IHS_car = [output[cnt][xxx].IHS_car[1] for xxx in 1:T]
-
-        prepend!(IHS_car, backfill)
-        append!(bigIHS_car, IHS_car)
         ###############################################
         # LFP
         fill!(backfill, output_int[cnt].LFP[1])
 
-        LFP = [output[cnt][xxx].LFP[1] for xxx in 1:T]
+        LFP = [output[cnt][xxx].LFP[1] for xxx in 1:Tperiods]
 
         prepend!(LFP, backfill)
         append!(bigLFP, LFP)
     end
 
-    df = DataFrame(country_index = country_index, 
+    df = DataFrames.DataFrame(country_index = country_index, 
                consumption = bigC,
                labor_supply = bigN,
-                durable_c = bigI,
                 time = bigT,
-                cars = bigIHS_car,
                 LFP = bigLFP
                );
 
