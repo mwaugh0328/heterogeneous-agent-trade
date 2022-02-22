@@ -10,23 +10,47 @@ function ha_trade_equilibrium(x, model_params, trade_params; display = false)
 
     if length(x) == 3*Ncntry #Financial Autarky case
 
-        outvec, output_stats = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], 
+        goods_demand , asset_demand, output_stats = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], 
                     x[2*Ncntry + 1 : end], model_params, trade_params)
 
     elseif length(x) == 2*Ncntry + 1 #Financial Integration case
 
-        outvec, output_stats = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], 
+        goods_demand , asset_demand, output_stats = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], 
                     x[2*Ncntry + 1], model_params, trade_params)
 
     end
 
     if display == false
 
-        return outvec
+        return vcat(goods_demand , asset_demand)
 
     else
 
-        return outvec, output_stats
+        return vcat(goods_demand , asset_demand ), output_stats
+
+    end
+
+end
+
+##########################################################################
+##########################################################################
+
+function ha_trade_equilibrium(x, R, model_params, trade_params; display = false)
+    #again using mulitple dispatch here for fixed R
+    
+    @unpack Ncntry = trade_params
+
+    goods_demand, asset_demand, output_stats = ha_trade_equilibrium(x[1:Ncntry], x[Ncntry+1 : 2*Ncntry], 
+                    R, model_params, trade_params)
+
+
+    if display == false
+
+        return goods_demand
+
+    else
+
+        return goods_demand, output_stats
 
     end
 
@@ -82,7 +106,7 @@ function ha_trade_equilibrium(W::Array{T}, τ_revenue::Array{T}, R::Array{T}, mo
 
     trade_net_demand = trade_equilibrium(W, AD, Nf, τ_revenue, trade_params)
 
-    return vcat(trade_net_demand , asset_net_demand ), output_stats
+    return trade_net_demand , asset_net_demand, output_stats
 
 end
 
@@ -138,7 +162,7 @@ function ha_trade_equilibrium(W::Array{T}, τ_revenue::Array{T}, R::T, model_par
 
     trade_net_demand = trade_equilibrium(W, AD, Nf, τ_revenue, trade_params)
 
-    return vcat(trade_net_demand ; asset_net_demand ), output_stats
+    return trade_net_demand , asset_net_demand , output_stats
 
 end
 
@@ -299,6 +323,16 @@ function unpack_solution(solution, Ncntry)
     
     R = solution[2*Ncntry + 1 : end]
 
+    return W, τ_rev, R
+    
+end
+
+function unpack_solution(solution, R, Ncntry)
+
+    W = solution[1:Ncntry]
+
+    τ_rev =  solution[Ncntry+1 : 2*Ncntry]
+    
     return W, τ_rev, R
     
 end
