@@ -4,12 +4,11 @@ using MINPACK
 import DataFrames
 
 
-haparams = model_params(ρ = 0.90, σ = 0.10, Nshocks = 5, Na = 50,
-             ϕ = 1.0, amax = 3.0, σa = 0.005, γ = 1.0, ϑ = 0.05, σw = 0.20)
+haparams = model_params()
              
 Ncntry = trade_params().Ncntry
 
-new_τ = [0.00 0.05; 0.05 0.00]
+new_τ = [0.00 0.10; 0.10 0.00]
 
 T = 25
 
@@ -29,7 +28,7 @@ fill!(n_path, new_τ  )
 inital_tradeparams = trade_params()
 
 R = Array{eltype(Float64)}(undef, Ncntry)
-fill!(R, 1.029)
+fill!(R, 1.002)
 
 f(x) = ha_trade_equilibrium(x, R, haparams, inital_tradeparams )
 

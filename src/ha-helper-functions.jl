@@ -262,9 +262,22 @@ end
 ##############################################################################
 ##############################################################################
 
-function make_dataset(output, output_int, Tperiods)
+function make_dataset(output, output_int, solution, initialR, Tperiods)
+    
+    Ncntry = size(output)[1]
 
+    R = solution[2*Ncntry*Tperiods + 1 : end]
+
+    println(solution[2*Ncntry*Tperiods + 1 : end])
+    
+    R = vcat(initialR, R)
+
+    println(size(R))
+
+    R = reshape(R, Ncntry, Tperiods)
+    
     backfilllength = 10
+    bigR = []
     bigT = []
     bigC = []
     bigN = []
@@ -273,7 +286,14 @@ function make_dataset(output, output_int, Tperiods)
 
     backfill= Array{Float64}(undef, backfilllength )
 
-    for cnt = 1:trade_params().Ncntry
+    for cnt = 1:Ncntry
+
+        fill!(backfill, initialR[cnt])
+
+        fooR = [R[cnt ,xxx] for xxx in 1:Tperiods]
+
+        prepend!(fooR, backfill)
+        append!(bigR, fooR)
 
         ###############################################
         # Counsumption
@@ -313,12 +333,13 @@ function make_dataset(output, output_int, Tperiods)
         append!(bigLFP, LFP)
     end
 
-    df = DataFrames.DataFrame(country_index = country_index, 
-               consumption = bigC,
-               labor_supply = bigN,
-                time = bigT,
-                LFP = bigLFP
-               );
+    df = DataFrames.DataFrame(country_index = country_index,
+            time = bigT, 
+            consumption = bigC,
+            labor_supply = bigN,
+            intrest_rate = bigR,
+            LFP = bigLFP
+            );
 
     return df
 
