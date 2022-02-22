@@ -9,28 +9,27 @@ end
 
 ##############################################################################
 
-function get_aprime(hh, state_index, model_params)
-    # grabs the choice of assets given states and car choice
+function get_aprime(asset_policy, work_policy, state_index, model_params)
+    # grabs the choice of assets given states
     # shock is first index,
     # assets is second index,
-    # car is thrid index 
-    # but in the asset_policy it is setup with row = asset, shock is column, then thrid
-    # dimension is car state, fourth dimension is if you buy or not. 
 
-    @unpack Na, Nshocks, Woptions, agrid, statesize = model_params
-    @unpack asset_policy, work_policy = hh
-       
+    @unpack Woptions, agrid, statesize = model_params
+    
+    agrid = convert(Array{Float64}, agrid)
+    
     asset_prime = Array{eltype(asset_policy)}(undef, statesize)
     fill!(asset_prime, 0.0) #need to fill given += operator below
 
-    for (foo, xxx) in enumerate(state_index)
+    @views @inbounds for (foo, xxx) in enumerate(state_index)
 
         for wrk = 1:Woptions
 
-            asset_prime[foo] += sum(agrid .* asset_policy[xxx[1], : ,xxx[2], wrk] .* work_policy[xxx[1], xxx[2], wrk] )
+            asset_prime[foo] += sum(agrid .* asset_policy[xxx[1], : ,xxx[2], wrk] * work_policy[xxx[1], xxx[2], wrk] )
                     # aprime choice given work and car choice
                     # which is all assets * prob its chosen sumed over 
         end
+
     end
 
     return asset_prime
@@ -39,22 +38,24 @@ end
 
 ##############################################################################
 
-function get_consumption(Pces, W, τ_rev, R, hh, model_params, state_index)
+function get_consumption(Pces, W, τ_rev, R, asset_policy, work_policy, state_index, model_params)
  
     @unpack Na, Nshocks, Woptions, agrid, statesize, mc = model_params
-    @unpack asset_policy, work_policy = hh
 
     c = Array{eltype(R)}(undef, statesize)
     fill!(c, 0.0)
 
-    for (foo, xxx) in enumerate(state_index)
+    exp_statevals = exp.(mc.state_values)
+
+    @views @inbounds for (foo, xxx) in enumerate(state_index)
 
         for wrk = 1:Woptions
 
-            wz = labor_income(exp.(mc.state_values[xxx[2]]), W, wrk)
+            wz = labor_income(exp_statevals[xxx[2]], W, wrk)
             # will return labor income depending upon how much working.
          
-            c[foo] += sum( asset_policy[xxx[1], : ,xxx[2], wrk] .* work_policy[xxx[1], xxx[2], wrk] .* consumption(Pces, τ_rev, R*agrid[xxx[1]], agrid, wz)) 
+            c[foo] += sum( asset_policy[xxx[1], : ,xxx[2], wrk] * work_policy[xxx[1], xxx[2], wrk]
+                        .* consumption(Pces, τ_rev, R*agrid[xxx[1]], agrid, wz)) 
         # given different aprim, all the consumption 
 
         end
@@ -81,15 +82,14 @@ end
 
 ##############################################################################
 
-function get_laborincome(W, hh, state_index, model_params)
+function get_laborincome(W, work_policy, state_index, model_params)
     # grabs the current shock in level terms
     # asset is first index,
     # shock is second index,
     # car is thrid index 
     @unpack statesize, Woptions, mc = model_params
-    @unpack work_policy = hh
     
-    wz = Array{eltype(work_policy)}(undef, statesize)
+    wz = Array{eltype(W)}(undef, statesize)
     fill!(wz,0.0)
 
     ef_units = similar(wz)
@@ -114,14 +114,13 @@ end
 
 ##############################################################################
 
-function get_laborsupply(W, hh, state_index, distribution, model_params)
+function get_labor(W, work_policy, state_index, distribution, model_params)
 
-    @unpack Na,  Nshocks, Woptions, agrid, statesize = model_params
-    @unpack work_policy = hh
-       
-    wz, ef_units = get_laborincome(W, hh, state_index, model_params)
+    @unpack statesize = model_params
 
-    labor_supply = Array{eltype(work_policy)}(undef, statesize)
+    wz, ef_units = get_laborincome(W, work_policy, state_index, model_params)
+
+    labor_supply = Array{eltype(W)}(undef, statesize)
 
     fill!(labor_supply, 0.0) #need to fill given += operator below
 
@@ -135,7 +134,7 @@ function get_laborsupply(W, hh, state_index, distribution, model_params)
 
     N = sum( ef_units .* labor_supply .* distribution, dims = 1)[1]
 
-    return labor_supply, N, LFP
+    return labor_supply, N, LFP, wz, ef_units
     # matrix that is of size Na*Nshocks*Ncars
 
 end
@@ -169,14 +168,10 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
 
     # organization...
 
-    @unpack state_index, L = distribution
+    @unpack state_index, λ = distribution
 
     #####
-    # Get stuff from labor side
-
-    wz, ef_units = get_laborincome(W, hh, state_index, model_params)
-
-    labor_supply, N, LFP = get_laborsupply(W, hh, state_index, L, model_params)
+    labor_supply, N, LFP, wz, ef_units = get_labor(W, hh.work_policy, state_index, λ, model_params)
 
     #####
     # Get stuff from hh side
@@ -184,21 +179,21 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
     a = get_astate(state_index, model_params)
     # assets today
 
-    aprime = get_aprime(hh, state_index, model_params)
-    # assets tomorrow Noption * statesize as assets are contingent on car choice
+    aprime = get_aprime(hh.asset_policy, hh.work_policy, state_index, model_params)
+    # # assets tomorrow Noption * statesize as assets are contingent on car choice
 
-    Aprime = sum(aprime .* L, dims = 1)[1]
+    c = get_consumption(Pces, W, τ_rev, R, hh.asset_policy, hh.work_policy, state_index, model_params)
 
-    c = get_consumption(Pces, W, τ_rev, R, hh, model_params, state_index)
+    Aprime = sum(aprime .* λ, dims = 1)[1]
 
     # aggregate asset demand 
 
-    A = sum(a .* L, dims = 1)[1]
+    A = sum(a .* λ, dims = 1)[1]
     # aggregate asset positoin entering the period
 
     NetA = -(R * A) + Aprime
 
-    C = sum( c .* L, dims = 1)[1]
+    C = sum( c .* λ, dims = 1)[1]
     #aggregate nondurable consumption
     # then multiply the prob of being in that state and sum to aggregate 
 
@@ -216,9 +211,9 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
 
     price_production = W / TFP # comes of profit max condition that p = w / A
 
-    production = price_production * sum( TFP .* ef_units .* labor_supply .* L, dims = 1)[1] 
+    production = price_production * sum( TFP .* ef_units .* labor_supply .* λ, dims = 1)[1] 
 
-    income = sum( wz.* L, dims = 1)[1] 
+    income = sum( wz.* λ, dims = 1)[1] 
     # aggregate labor income 
     # take shock and multiply by prob of being in that state, sum to aggregate
 

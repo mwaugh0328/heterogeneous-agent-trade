@@ -1,7 +1,7 @@
 ##########################################################################
 ##########################################################################
 
-function trade_equilibrium(w, AD, N, τ_revenue, trade_params; output = "solver")
+function trade_equilibrium(w, AD, N, τrev, trade_params; output = "solver")
     # constructs zero function, takes wages, demand, tariff revenue
     # returns diffrence between procution and demand and guessed tariff transfer
     # and relized tariff transfer
@@ -14,7 +14,9 @@ function trade_equilibrium(w, AD, N, τ_revenue, trade_params; output = "solver"
 
     trade = trade_flows(p, Pindex, AD, trade_params)
 
-    value_production = similar(trade.world_demand)
+    value_production = Array{eltype(w)}(undef, Ncntry)
+    net_demand = similar(value_production)
+    τ_zero = similar(value_production)
 
     for xxx = 1:Ncntry
 
@@ -22,21 +24,15 @@ function trade_equilibrium(w, AD, N, τ_revenue, trade_params; output = "solver"
 
     end
 
-    if output == "solver"
+    @unpack world_demand, τ_revenue = trade
 
-        net_demand = value_production .- trade.world_demand
+     net_demand .= value_production .- world_demand
         # left hand side is production of each commodity
         # right hand side is demand of each commodity by all countries
 
-        τ_zero = τ_revenue .- sum(trade.τ_revenue, dims = 2)[:]
+    τ_zero .= τrev .- sum(τ_revenue, dims = 2)[:]
 
-        return [net_demand ; τ_zero]
-
-    elseif output == "all"
-
-        return trade
-
-    end
+    return vcat(net_demand , τ_zero)
 
 end
 

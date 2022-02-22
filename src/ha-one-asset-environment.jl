@@ -39,9 +39,10 @@ function bellman_operator_policy(v, u, mc, β, σa, σw)
 
     asset_policy = Array{eltype(u)}(undef, Na, Na,  Nshocks, Woptions)
     work_policy = Array{eltype(u)}(undef, Na, Nshocks, Woptions)
+    foo = Array{eltype(u)}(undef, Na, Na)
 
     Tvwork = Array{eltype(u)}(undef, Na, Nshocks, Woptions)
-    Tv = Array{eltype(u)}(undef, Na, Nshocks, 1)
+    Tv = Array{eltype(u)}(undef, Na, Nshocks)
 
     @inbounds @views for shockstate = 1:Nshocks
 
@@ -49,7 +50,7 @@ function bellman_operator_policy(v, u, mc, β, σa, σw)
 
         for wrkchoice = 1:Woptions
 
-            foo = u[:, :, shockstate, wrkchoice] .+ βEV
+            foo .= u[:, :, shockstate, wrkchoice] .+ βEV
 
             maximum!(view(Tvwork, : , shockstate, wrkchoice), foo )
 
@@ -63,14 +64,7 @@ function bellman_operator_policy(v, u, mc, β, σa, σw)
 
         end
 
-        Tvworkmax = maximum(Tvwork[:, shockstate, :], dims = 2)
-
-        foo = Tvwork[:, shockstate, :] .- Tvworkmax
-        foo[isnan.(foo)] .= 0.0
-
-        work_policy[:, shockstate, :] = exp.( foo ./ σw ) ./ sum( exp.( foo ./ σw ) , dims = 2) 
-    
-        Tv[:, shockstate] = σw.*log.( sum( exp.( foo ./ σw ) , dims = 2) )  .+ Tvworkmax
+        make_Tv!(view(Tv, :, shockstate), view(Tvwork,:,shockstate,:), view(work_policy,:,shockstate,:), σw)
                
     end
 
@@ -100,7 +94,7 @@ function bellman_operator(v, u, mc, β, σw)
         # work through each shock state
 
         # Compute expected value 
-        βEV = compute_EV(β*v, mc[shockstate, :])
+        βEV = compute_EV(β*v, view(mc,shockstate, :))
 
         for wrkchoice = 1:Woptions
 
@@ -109,18 +103,14 @@ function bellman_operator(v, u, mc, β, σw)
 
         end
 
-        Tvworkmax = maximum(Tvwork[:, shockstate, :], dims = 2)
-
-        foo = Tvwork[:, shockstate, :] .- Tvworkmax
-        foo[isnan.(foo)] .= 0.0
-    
-        Tv[:, shockstate] = σw.*log.( sum( exp.(  foo ./ σw ) , dims = 2) )  .+ Tvworkmax
+        make_Tv!(view(Tv,:,shockstate), view(Tvwork, :, shockstate,:), σw)
 
     end
 
     return Tv
     
 end
+
 
 
 
@@ -141,10 +131,8 @@ function bellman_operator_upwind(v, u, mc, β, σw)
     Woptions = size(u)[4]
     
     Tv = copy(v)
-    Tv = convert(Array{eltype(u)}, Tv)
 
     Tvwork = Array{eltype(u)}(undef, Na, Nshocks, Woptions)
-    foo = Array{eltype(u)}(undef, Na, Woptions)
 
     @inbounds @views for shockstate = 1:Nshocks
         # work through each shock state
@@ -159,17 +147,48 @@ function bellman_operator_upwind(v, u, mc, β, σw)
 
         end
 
-        Tvworkmax = maximum(Tvwork[:, shockstate, :], dims = 2)
-
-        foo = Tvwork[:, shockstate, :] .- Tvworkmax
-        foo[isnan.(foo)] .= 0.0
-    
-        Tv[:, shockstate] = σw.*log.( sum( exp.(  foo ./ σw ) , dims = 2) )  .+ Tvworkmax
+        make_Tv!(view(Tv,:,shockstate), view(Tvwork, :, shockstate,:), σw)
 
     end
 
     return Tv
       
+end
+
+##########################################################################
+##########################################################################
+
+function make_Tv!(Tv, Tvwork, σw)
+    #makes the Tv function with the scaling by max across options
+    # this is abit faster than old version as it eliminates need to
+    # create new variables...
+
+    Tvworkmax = maximum(Tvwork, dims = 2)
+
+    Tvwork .-= Tvworkmax # broadcast, inplace subtract off max value
+
+    Tvwork[isnan.(Tvwork)] .= 0.0
+
+    Tv .= σw.*log.( sum( exp.(  Tvwork ./ σw ) , dims = 2) )  .+ Tvworkmax
+
+end
+
+function make_Tv!(Tv, Tvwork, work_policy, σw)
+    #multiple dispact version to fill in policy function
+    #makes the Tv function with the scaling by max across options
+    # this is abit faster than old version as it eliminates need to
+    # create new variables...
+
+    Tvworkmax = maximum(Tvwork, dims = 2)
+
+    Tvwork .-= Tvworkmax # broadcast, inplace subtract off max value
+
+    Tvwork[isnan.(Tvwork)] .= 0.0
+
+    work_policy .= exp.( Tvwork ./ σw ) ./ sum( exp.( Tvwork ./ σw ) , dims = 2) 
+
+    Tv .= σw.*log.( sum( exp.(  Tvwork ./ σw ) , dims = 2) )  .+ Tvworkmax
+
 end
 
 
@@ -234,7 +253,7 @@ function make_utility!(utility_grid, Pces, W, τ_rev, R, model_params)
                 # takes assets states, shock state -> consumption from
                 # budget constraint
         
-            utility_grid[:, :, shockstate, workchoice] = utility.(c, γ, ϑ, workchoice)
+            utility_grid[:, :, shockstate, workchoice] .= utility.(c, γ, ϑ, workchoice)
 
         end
         
@@ -312,14 +331,14 @@ end
 ##########################################################################
 ##########################################################################
 
-function law_of_motion(L , Q_tran)
-    # Takes the transition matrix Q and given a distribution L, advances it
-    # where Lnew = Q'*L
-    # usefull to construct stationary where L = Q'*L
+function law_of_motion(λ , Q_tran)
+    # Takes the transition matrix Q and given a distribution λ, advances it
+    # where Lnew = Q'*λ
+    # usefull to construct stationary where λ = Q'*λ
     
-    #return Q_tran * L
+    #return Q_tran * λ
     
-    return matmul(Q_tran, L) 
+    return matmul(Q_tran, λ) 
     # this is using Octavian a fast, pure julia package for matrix multiplicaiton
     # if LinearAlgebra.BLAS.set_num_threads(Threads.nthreads()) need to be carefull
     # as it is chosing # threads independently. When free, matmul beats by half, with 24 

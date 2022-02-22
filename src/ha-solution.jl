@@ -6,8 +6,8 @@ end
 
 struct distribution{T}
     Q::Array{T} # transition matrix
-    L::Array{T} # L
-    state_index::Array{Tuple{Int64, Int64}} # index of states, lines up with L
+    λ::Array{T} # λ
+    state_index::Array{Tuple{Int64, Int64}} # index of states, lines up with λ
 end
 
 ##########################################################################
@@ -51,6 +51,19 @@ end
 
 ##########################################################################
 ##########################################################################
+
+function compute_eq(Pces, W::ForwardDiff.Dual, τ_rev::ForwardDiff.Dual, 
+    R::ForwardDiff.Dual, model_params; tol_vfi = 1e-6, tol_dis = 1e-10)
+# Does everything...
+# (1) Sovles hh problem
+# (2) Constructs stationary distribution
+hh = solve_household_problem(Pces, W, τ_rev, R, model_params; tol = tol_vfi, solution_method = "vfi-itteration")
+
+dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = "itteration")
+
+return hh, dist
+
+end
 
 function compute_eq(Pces, W, τ_rev, R, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     vfi_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
@@ -104,7 +117,7 @@ make_Q!(Q, state_index, household.asset_policy, household.work_policy, model_par
 
 if solution_method == "nl-fixedpoint"
 
-    g(L) = law_of_motion(L, transpose(Q))
+    g(λ) = law_of_motion(λ, transpose(Q))
 
     initialvalue = zeros(size(Q)[1], 1)
 
@@ -112,15 +125,15 @@ if solution_method == "nl-fixedpoint"
 
     solution = fixedpoint(g, initialvalue, ftol = tol, method = :anderson)
 
-    stationary_distribution = solution.zero
+    λ = solution.zero
 
 elseif solution_method == "itteration"
 
-    stationary_distribution = itterate_stationary_distribution(Q; tol = 1e-10)
+    λ = itterate_stationary_distribution(Q; tol = 1e-10)
 
 end
 
-return distribution(Q, stationary_distribution, state_index)
+return distribution(Q, λ, state_index)
 
 end
 
@@ -132,26 +145,26 @@ function itterate_stationary_distribution(Q; tol = 1e-10, Niter = 5000)
     # NLsolve fixedpoint routine below.
     
     # Takes the transition matrix above then we know a stationary distribution
-    # must satisfy the fixed point relationsip L = Q'*L  
+    # must satisfy the fixed point relationsip λ = Q'*λ  
     
-    L = zeros(size(Q)[1], 1)
-    L = convert(Array{eltype(Q)}, L)
+    λ = zeros(size(Q)[1], 1)
+    λ = convert(Array{eltype(Q)}, λ)
     
-    L .= 1.0 / size(Q)[1]
+    λ .= 1.0 / size(Q)[1]
     
-    Lnew = similar(L)
+    Lnew = similar(λ)
     
     for iter in 1:Niter
         
-        #Lnew = transpose(Q) * L
+        #Lnew = transpose(Q) * λ
         
-        Lnew = law_of_motion(L, transpose(Q))
+        Lnew = law_of_motion(λ, transpose(Q))
         #this ordering is also better in julia
-        # than my matlab implementation of Q*L (1, na*nshock)
+        # than my matlab implementation of Q*λ (1, na*nshock)
                 
-        err = maximum(abs, L - Lnew)
+        err = maximum(abs, λ - Lnew)
         
-        copy!(L, Lnew)
+        copy!(λ, Lnew)
         # this surprisingly makes a big difference
         # but in the vfi it causes a slowdown?
         
@@ -166,7 +179,7 @@ function itterate_stationary_distribution(Q; tol = 1e-10, Niter = 5000)
         
     end
 
-    return L
+    return λ
 
 end
 
@@ -249,4 +262,6 @@ end
 
 ##########################################################################
 ##########################################################################
+
+
 

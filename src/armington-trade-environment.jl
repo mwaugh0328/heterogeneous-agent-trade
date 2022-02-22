@@ -2,14 +2,22 @@ using BenchmarkTools, SpecialFunctions
 using Statistics
 using Parameters
 
-trade_params = @with_kw (
-    θ = 4.0,
-    τ = [0.0  0.0; 0.0 0.0], # tariff rate
-    d = [1.0  1.5; 1.5 1.0], # trade cost
-    A = [1.0, 1.0], #TFP
-    Ncntry = length(A),
+# trade_params = @with_kw (
+#     θ = 4.0,
+#     τ = [0.0  0.0; 0.0 0.0], # tariff rate
+#     d = [1.0  1.5; 1.5 1.0], # trade cost
+#     A = [1.0, 1.0], #TFP
+#     Ncntry = length(A),
     
-)
+# )
+
+@with_kw struct trade_params
+    θ::Float64 = 4.0
+    τ::Array{Float64} = [0.0  0.0; 0.0 0.0]
+    d::Array{Float64} = [1.0  1.5; 1.5 1.0]
+    A::Array{Float64} = [1.0, 1.0]
+    Ncntry::Int64 = length(A)
+end
 
 # simple parameter settings to test stuff out on....
 
@@ -25,7 +33,8 @@ function goods_prices(w, trade_params)
     @unpack τ, d, A, Ncntry, θ = trade_params
     @assert length(w) == Ncntry
     
-    p = Array{eltype(τ)}(undef, Ncntry, Ncntry)
+    p = Array{eltype(w)}(undef, Ncntry, Ncntry)
+    Pindex = Array{eltype(w)}(undef, Ncntry)
 
     for buyr = 1:Ncntry # buyer
 
@@ -66,13 +75,9 @@ function trade_flows(p, Pindex, AD, trade_params)
 
     @unpack Ncntry, τ, θ = trade_params
 
-    @assert length(Pindex) == Ncntry
-    @assert size(p)[1] == Ncntry
-    @assert length(AD) == Ncntry
-
-    trade_value = Array{eltype(τ)}(undef, Ncntry, Ncntry)
-    trade_share = Array{eltype(τ)}(undef, Ncntry, Ncntry)
-    τ_revenue = Array{eltype(τ)}(undef, Ncntry, Ncntry)
+    trade_value = Array{eltype(p)}(undef, Ncntry, Ncntry)
+    trade_share = Array{eltype(p)}(undef, Ncntry, Ncntry)
+    τ_revenue = Array{eltype(p)}(undef, Ncntry, Ncntry)
 
 
     for buyr = 1:Ncntry # buyer
@@ -127,3 +132,26 @@ function ces(p, θ)
 end
 ##########################################################################
 ##########################################################################
+
+function make_trade_params(d, τ, A, Ncntry)
+
+    dmat = Array{eltype(d)}(undef,Ncntry,Ncntry)
+    fill!(dmat, d)
+
+    for xxx in 1:Ncntry
+        dmat[xxx,xxx] = 1.0
+    end
+
+    τmat = Array{eltype(d)}(undef,Ncntry,Ncntry)
+    fill!(τmat, τ)
+
+    for xxx in 1:Ncntry
+        τmat[xxx,xxx] = 0.0
+    end
+
+    Amat = Array{eltype(d)}(undef,Ncntry)
+    fill!(Amat, A)
+
+    return dmat, τmat, Amat
+    
+end
