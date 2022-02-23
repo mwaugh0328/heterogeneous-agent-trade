@@ -239,6 +239,7 @@ function value_function_fixedpoint(Pces, W, τ_rev, R, model_params; tol = 10^-6
     @unpack Na, Nshocks, Woptions, β, mc, σw = model_params
 
     u = Array{eltype(R)}(undef, Na, Na, Nshocks, Woptions)
+    
     make_utility!(u, Pces, W, τ_rev, R, model_params)
 
 # define the inline function on the bellman operator. 

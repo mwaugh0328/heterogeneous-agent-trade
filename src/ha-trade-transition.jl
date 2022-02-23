@@ -249,7 +249,8 @@ end
 #####################################################################################################
 #####################################################################################################
 
-function collect_end_conditions(W::Array{T}, τ_rev::Array{T}, R::Array{T}, model_params, trade_params) where T
+function collect_end_conditions(W::Array{T}, τ_rev::Array{T}, 
+                            R::Array{T}, model_params, trade_params) where T
     # grabs end conditions
 
     @unpack Ncntry = trade_params
