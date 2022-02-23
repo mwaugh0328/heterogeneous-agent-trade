@@ -14,7 +14,7 @@ using Parameters
 @with_kw struct trade_params
     θ::Float64 = 4.0
     τ::Array{Float64} = [0.0  0.0; 0.0 0.0]
-    d::Array{Float64} = [1.0  1.5; 1.5 1.0]
+    d::Array{Float64} = [1.0  1.95; 1.95 1.0]
     A::Array{Float64} = [1.0, 1.0]
     Ncntry::Int64 = length(A)
 end

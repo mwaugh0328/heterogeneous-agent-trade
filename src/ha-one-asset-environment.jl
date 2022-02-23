@@ -9,23 +9,27 @@ using ForwardDiff
 
 ##########################################################################
 
-model_params = @with_kw (
-    β= 0.96,
-    γ = 1.0,
-    ϕ = 1.0,
-    amax = 5.0,
-    Na= 100,
-    agrid = range(-ϕ, amax, length = Na),
-    Nshocks = 5,
-    statesize = Int(Na*Nshocks),
-    ρ = 0.90,
-    σ = 0.10,
-    mc = tauchen(Nshocks, ρ, σ),
-    σa = 0.01,
-    σw = 0.5,
-    ϑ = 1.5,
-    Woptions = 2,
-)
+@with_kw struct model_params
+    β::Float64 = 0.96
+    γ::Float64 = 1.0
+    ϕ::Float64 = 1.0
+    amax::Float64 = 5.0
+    Na::Int64 = 100
+    agrid::Array{Float64} = convert(Array, range(-ϕ, amax, length = Na))
+    Nshocks::Int64 = 5
+    statesize::Int64 = Int(Na*Nshocks)
+    ρ::Float64 = 0.90
+    σ::Float64 = 0.10
+    mc::MarkovChain{Float64, Matrix{Float64}, 
+    StepRangeLen{Float64, Base.TwicePrecision{Float64},
+     Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
+    σa::Float64 = 0.01
+    σw::Float64 = 0.25
+    ϑ::Float64 = 1.5
+    Woptions::Int64 = 2
+end
+
+
 
 ##########################################################################
 function bellman_operator_policy(v, u, mc, β, σa, σw) 

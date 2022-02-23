@@ -11,12 +11,12 @@ Ncntry = trade_params().Ncntry
 
 new_τ = [0.00 0.10; 0.10 0.00]
 
-T = 35
+T = 25
 
 τ_path = Array{Array{Float64}}(undef, 5)
 fill!(τ_path, trade_params().τ)
 
-n_path = Array{Array{Float64}}(undef, 30)
+n_path = Array{Array{Float64}}(undef, 20)
 fill!(n_path, new_τ  )
 
 τ_path = [τ_path; n_path]
@@ -67,11 +67,6 @@ Wint, τ_rev_int, Rint = unpack_solution(solint.x, Ncntry)
 
 dist_int = collect_intial_conditions(Wint, τ_rev_int, Rint, haparams, inital_tradeparams )
 
-# adist = get_distribution(dist_int[1].state_index, dist_int[1].λ);
-
-# plot(haparams.agrid, adist, alpha = 0.5, lw = 4,
-#     color = "dark blue", ylabel = "Probability Mass", xlabel = "Asset Holdings", label = false, show = true)
-
 
 # ###############################################################################################
 # ###############################################################################################
@@ -99,14 +94,6 @@ println(sol_end)
 println(" ")
        
 Wend, τ_rev_end, Rend = unpack_solution(sol_end.x, Ncntry)
-
-# dist_end = collect_intial_conditions(Wend, τ_rev_end, Rend, haparams, tparams_end )
-
-# adist = get_distribution(dist_end[1].state_index, dist_end[1].λ);
-
-# plot(haparams.agrid, adist, alpha = 0.5, lw = 4,
-#     color = "dark blue", ylabel = "Probability Mass", xlabel = "Asset Holdings", label = false)
-       
 
 # ###############################################################################################
 # ###############################################################################################

@@ -40,8 +40,9 @@ function transition_path(x, Rint, τ_path, dist, hh, model_params; display = fal
 
     Wvec = x[ 1: Ncntry*Tperiods]
     τ_rev_vec = x[Ncntry*Tperiods + 1: 2*Ncntry*Tperiods]
+    
+    
     Rvec = x[2*Ncntry*Tperiods + 1 : end]
-
     Rvec = vcat(Rint, Rvec)
 
     if display == false
@@ -66,7 +67,7 @@ end
 function transition_path(Wvec, τ_rev_vec, Rvec, τ_path, dist, hh, model_params)
     # main version to be used in solving for eq.
 
-    @assert length(Wvec) == length(τ_rev_vec) == length(Rvec) 
+    @assert length(Wvec) == length(τ_rev_vec)
 
     Ncntry = τ_path[1].Ncntry
         
@@ -79,12 +80,26 @@ function transition_path(Wvec, τ_rev_vec, Rvec, τ_path, dist, hh, model_params
 
     W = reshape(Wvec, Ncntry, Tperiods)
     τ_rev = reshape(τ_rev_vec, Ncntry, Tperiods)
-    R = reshape(Rvec, Ncntry, Tperiods)
 
     Pces = similar(W)
     AD = similar(W)
     N = similar(W)
     AP = similar(W)
+
+    # this stuff below is for finacial integration
+    if length(Rvec) == Ncntry*Tperiods
+
+        R = reshape(Rvec, Ncntry, Tperiods)
+
+    else
+
+        @assert length(Rvec) == Tperiods
+
+        R = reshape(repeat(Rvec, inner = Ncntry, outer = 1), Ncntry, Tperiods)
+
+        @assert size(R) == size(W)
+
+    end
 
     output_stats = Array{Array{NIPA{eltype(W)}}}(undef, Ncntry)
 
@@ -123,7 +138,20 @@ function transition_path(Wvec, τ_rev_vec, Rvec, τ_path, dist, hh, model_params
     end
 
     net_demand = net_demand[:]
-    AP = AP[:]
+
+    # Again this is the situation with the
+    # finacial autarky or global integration
+    if length(Rvec) == Ncntry*Tperiods
+
+        AP = AP[:]
+    
+    else
+        # sum across the country dimension
+        AP = sum(AP, dims = 1)
+
+        AP = AP[:]
+
+    end
 
     # this is the finacial autarky situation. 
     return net_demand, AP , output_stats
@@ -221,7 +249,7 @@ end
 #####################################################################################################
 #####################################################################################################
 
-function collect_end_conditions(W, τ_rev, R, model_params, trade_params)
+function collect_end_conditions(W::Array{T}, τ_rev::Array{T}, R::Array{T}, model_params, trade_params) where T
     # grabs end conditions
 
     @unpack Ncntry = trade_params
@@ -232,9 +260,30 @@ function collect_end_conditions(W, τ_rev, R, model_params, trade_params)
 
     hh = Array{household{eltype(W)}}(undef, Ncntry)
 
-    for ncnty = 1:Ncntry  # do this for each country.
+    Threads.@threads for ncnty = 1:Ncntry  # do this for each country.
                             # this is the place to use distributed. hh problems can be solved independtly
         hh[ncnty] = solve_household_problem(Pces[ncnty], W[ncnty], τ_rev[ncnty], R[ncnty],  model_params)
+        
+    end
+
+    return hh
+
+end
+
+function collect_end_conditions(W::Array{T}, τ_rev::Array{T}, R::T, model_params, trade_params) where T
+    # grabs end conditions
+
+    @unpack Ncntry = trade_params
+
+    Pces = goods_prices(W, trade_params)[2]
+    # Given the wage, we need to know the price index to solve the 
+    # hh problem. So do this first.
+
+    hh = Array{household{eltype(W)}}(undef, Ncntry)
+
+    Threads.@threads for ncnty = 1:Ncntry  # do this for each country.
+                            # this is the place to use distributed. hh problems can be solved independtly
+        hh[ncnty] = solve_household_problem(Pces[ncnty], W[ncnty], τ_rev[ncnty], R,  model_params)
         
     end
 
@@ -246,7 +295,8 @@ end
 ##########################################################################
 
 
-function collect_intial_conditions(W, τ_revenue, R, model_params, trade_params)
+function collect_intial_conditions(W::Array{T}, τ_revenue::Array{T}, 
+                                R::Array{T}, model_params, trade_params) where T
     # grabs initial conditions for 
     # to compute 
 
@@ -259,7 +309,7 @@ function collect_intial_conditions(W, τ_revenue, R, model_params, trade_params)
 
     dist = Array{distribution{eltype(W)}}(undef, Ncntry)
 
-    for ncnty = 1:Ncntry  # do this for each country.
+    Threads.@threads for ncnty = 1:Ncntry  # do this for each country.
 
         dist[ncnty] = compute_eq(Pces[ncnty], W[ncnty], τ_revenue[ncnty], R[ncnty],  model_params)[2];
 
@@ -269,5 +319,28 @@ function collect_intial_conditions(W, τ_revenue, R, model_params, trade_params)
 
 end
 
+function collect_intial_conditions(W::Array{T}, τ_revenue::Array{T},
+                         R::T, model_params, trade_params) where T
+    # grabs initial conditions for 
+    # to compute 
+
+    @unpack Na, statesize = model_params
+    @unpack Ncntry = trade_params
+
+    Pces = goods_prices(W, trade_params)[2]
+    # Given the wage, we need to know the price index to solve the 
+    # hh problem. So do this first.
+
+    dist = Array{distribution{eltype(W)}}(undef, Ncntry)
+
+    Threads.@threads for ncnty = 1:Ncntry  # do this for each country.
+
+        dist[ncnty] = compute_eq(Pces[ncnty], W[ncnty], τ_revenue[ncnty], R,  model_params)[2];
+
+    end
+
+    return dist
+
+end
 
 

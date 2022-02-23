@@ -5,6 +5,7 @@ struct NIPA{T}
     N::Array{T}
     Aprime::Array{T}
     LFP::Array{T}
+    NetA::Array{T}
 end
 
 ##############################################################################
@@ -223,7 +224,8 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
         [income],
         [N],
         [Aprime],
-        [LFP]
+        [LFP],
+        [NetA]
         )
 
     if display == true
@@ -263,18 +265,25 @@ end
 ##############################################################################
 
 function make_dataset(output, output_int, solution, initialR, Tperiods)
+    #multiple dispatch version for endogenous Rend
     
     Ncntry = size(output)[1]
 
-    R = solution[2*Ncntry*Tperiods + 1 : end]
-
-    println(solution[2*Ncntry*Tperiods + 1 : end])
+    Rvec = vcat(Rint, solution[2*Ncntry*Tperiods + 1 : end])
     
-    R = vcat(initialR, R)
+    if length(Rvec) == Ncntry*Tperiods
 
-    println(size(R))
+        R = reshape(Rvec, Ncntry, Tperiods)
 
-    R = reshape(R, Ncntry, Tperiods)
+    else
+
+        @assert length(Rvec) == Tperiods
+
+        R = reshape(repeat(Rvec, inner = Ncntry, outer = 1), Ncntry, Tperiods)
+
+        initialR = repeat(initialR, inner = Ncntry, outer = 1)
+
+    end
     
     backfilllength = 10
     bigR = []
@@ -282,6 +291,7 @@ function make_dataset(output, output_int, solution, initialR, Tperiods)
     bigC = []
     bigN = []
     bigLFP = []
+    bigNetA = []
     country_index = []
 
     backfill= Array{Float64}(undef, backfilllength )
@@ -294,6 +304,15 @@ function make_dataset(output, output_int, solution, initialR, Tperiods)
 
         prepend!(fooR, backfill)
         append!(bigR, fooR)
+
+        ###############################################
+        # Net Asset Position
+        fill!(backfill, output_int[cnt].NetA[1])
+
+        NetA = [output[cnt][xxx].NetA[1] for xxx in 1:Tperiods]
+
+        prepend!(NetA, backfill)
+        append!(bigNetA, NetA)
 
         ###############################################
         # Counsumption
@@ -338,7 +357,93 @@ function make_dataset(output, output_int, solution, initialR, Tperiods)
             consumption = bigC,
             labor_supply = bigN,
             intrest_rate = bigR,
-            LFP = bigLFP
+            LFP = bigLFP,
+            NetAsset = bigNetA
+            );
+
+    return df
+
+end
+
+function make_dataset(output, output_int, R, Tperiods)
+    #multiple dispatch version for fixed R
+    
+    Ncntry = size(output)[1]
+    
+    backfilllength = 10
+    bigR = []
+    bigT = []
+    bigC = []
+    bigN = []
+    bigLFP = []
+    bigNetA = []
+    country_index = []
+
+    backfill= Array{Float64}(undef, backfilllength )
+
+    for cnt = 1:Ncntry
+
+        fill!(backfill, R)
+
+        fooR = [R for xxx in 1:Tperiods]
+
+        prepend!(fooR, backfill)
+        append!(bigR, fooR)
+
+        ###############################################
+        # Net Asset Position
+        fill!(backfill, output_int[cnt].NetA[1])
+
+        NetA = [output[cnt][xxx].NetA[1] for xxx in 1:Tperiods]
+
+        prepend!(NetA, backfill)
+        append!(bigNetA, NetA)
+
+        ###############################################
+        # Counsumption
+        fill!(backfill, output_int[cnt].C[1])
+
+        C = [output[cnt][xxx].C[1] for xxx in 1:Tperiods]
+
+        prepend!(C, backfill)
+        append!(bigC, C)
+
+        ###############################################
+        # Time and country index
+
+        time = -9:1:(length(C)-10)
+    
+
+        append!(bigT,time)
+        append!(country_index, Int.(cnt.*ones(length(time))))
+    
+        ###############################################
+        # Labor Supply
+        fill!(backfill, output_int[cnt].N[1])
+
+        N = [output[cnt][xxx].N[1] for xxx in 1:Tperiods]
+
+        prepend!(N, backfill)
+        append!(bigN, N)
+
+
+        ###############################################
+        # LFP
+        fill!(backfill, output_int[cnt].LFP[1])
+
+        LFP = [output[cnt][xxx].LFP[1] for xxx in 1:Tperiods]
+
+        prepend!(LFP, backfill)
+        append!(bigLFP, LFP)
+    end
+
+    df = DataFrames.DataFrame(country_index = country_index,
+            time = bigT, 
+            consumption = bigC,
+            labor_supply = bigN,
+            intrest_rate = bigR,
+            LFP = bigLFP,
+            NetAsset = bigNetA
             );
 
     return df

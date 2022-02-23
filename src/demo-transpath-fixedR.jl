@@ -27,8 +27,7 @@ fill!(n_path, new_τ  )
 
 inital_tradeparams = trade_params()
 
-R = Array{eltype(Float64)}(undef, Ncntry)
-fill!(R, 1.002)
+R = 1.002
 
 f(x) = ha_trade_equilibrium(x, R, haparams, inital_tradeparams )
 
@@ -136,7 +135,7 @@ println(" ")
 path_stats = transition_path_FixedR(sol_path.x, R[1], R[1], 
             trade_path, dist_int, hh_end, haparams, display = true)[3]
 
-df = make_dataset(path_stats, output_int, T)
+df = make_dataset(path_stats, output_int, R[1], T)
 
 
 
