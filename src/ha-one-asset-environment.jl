@@ -15,7 +15,7 @@ using ForwardDiff
     ϕ::Float64 = 1.0
     amax::Float64 = 5.0
     Na::Int64 = 100
-    agrid::Array{Float64} = convert(Array, range(-ϕ, amax, length = Na))
+    agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
     Nshocks::Int64 = 5
     statesize::Int64 = Int(Na*Nshocks)
     ρ::Float64 = 0.90
@@ -278,7 +278,7 @@ function labor_income(shock, W, workchoice)
 
         return shock * W
 
-    elseif workchoice == 2
+    else
         # not working get nothing
 
         return 0.0
@@ -324,7 +324,7 @@ function utility(c, γ, ϑ, workchoice)
 
         utility(c, γ) # don't enjoy it
 
-    elseif workchoice == 2
+    else
 
         utility(c, γ) + ϑ # enjoy leisure
 

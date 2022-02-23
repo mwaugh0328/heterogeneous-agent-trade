@@ -1,11 +1,11 @@
-struct NIPA{T}
-    C::Array{T}
-    AD::Array{T}
-    income::Array{T}
-    N::Array{T}
-    Aprime::Array{T}
-    LFP::Array{T}
-    NetA::Array{T}
+struct NIPA
+    C::Float64
+    AD::Float64
+    income::Float64
+    N::Float64
+    Aprime::Float64
+    LFP::Float64
+    NetA::Float64
 end
 
 ##############################################################################
@@ -17,8 +17,6 @@ function get_aprime(asset_policy, work_policy, state_index, model_params)
 
     @unpack Woptions, agrid, statesize = model_params
     
-    agrid = convert(Array{Float64}, agrid)
-    
     asset_prime = Array{eltype(asset_policy)}(undef, statesize)
     fill!(asset_prime, 0.0) #need to fill given += operator below
 
@@ -26,7 +24,7 @@ function get_aprime(asset_policy, work_policy, state_index, model_params)
 
         for wrk = 1:Woptions
 
-            asset_prime[foo] += sum(agrid .* asset_policy[xxx[1], : ,xxx[2], wrk] * work_policy[xxx[1], xxx[2], wrk] )
+            asset_prime[foo] += sum(agrid .* (asset_policy[xxx[1], : ,xxx[2], wrk] * work_policy[xxx[1], xxx[2], wrk] ))
                     # aprime choice given work and car choice
                     # which is all assets * prob its chosen sumed over 
         end
@@ -46,7 +44,8 @@ function get_consumption(Pces, W, τ_rev, R, asset_policy, work_policy, state_in
     c = Array{eltype(R)}(undef, statesize)
     fill!(c, 0.0)
 
-    exp_statevals = exp.(mc.state_values)
+    exp_statevals = Array{eltype(R)}(undef, Nshocks)
+    exp_statevals .= exp.(mc.state_values)
 
     @views @inbounds for (foo, xxx) in enumerate(state_index)
 
@@ -56,7 +55,7 @@ function get_consumption(Pces, W, τ_rev, R, asset_policy, work_policy, state_in
             # will return labor income depending upon how much working.
          
             c[foo] += sum( asset_policy[xxx[1], : ,xxx[2], wrk] * work_policy[xxx[1], xxx[2], wrk]
-                        .* consumption(Pces, τ_rev, R*agrid[xxx[1]], agrid, wz)) 
+                        .* consumption(Pces, τ_rev, R.*agrid[xxx[1]], agrid, wz)) 
         # given different aprim, all the consumption 
 
         end
@@ -170,9 +169,10 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
     # organization...
 
     @unpack state_index, λ = distribution
+    @unpack work_policy, asset_policy = hh
 
     #####
-    labor_supply, N, LFP, wz, ef_units = get_labor(W, hh.work_policy, state_index, λ, model_params)
+    labor_supply, N, LFP, wz, ef_units = get_labor(W, work_policy, state_index, λ, model_params)
 
     #####
     # Get stuff from hh side
@@ -180,10 +180,10 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
     a = get_astate(state_index, model_params)
     # assets today
 
-    aprime = get_aprime(hh.asset_policy, hh.work_policy, state_index, model_params)
+    aprime = get_aprime(hh.asset_policy, work_policy, state_index, model_params)
     # # assets tomorrow Noption * statesize as assets are contingent on car choice
 
-    c = get_consumption(Pces, W, τ_rev, R, hh.asset_policy, hh.work_policy, state_index, model_params)
+    c = get_consumption(Pces, W, τ_rev, R, asset_policy, work_policy, state_index, model_params)
 
     Aprime = sum(aprime .* λ, dims = 1)[1]
 
@@ -218,16 +218,6 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
     # aggregate labor income 
     # take shock and multiply by prob of being in that state, sum to aggregate
 
-    output_stats = NIPA(
-        [C],
-        [AD],
-        [income],
-        [N],
-        [Aprime],
-        [LFP],
-        [NetA]
-        )
-
     if display == true
         digits = 6
 
@@ -257,7 +247,15 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
 
 
 
-    return output_stats
+    return NIPA(
+        C,
+        AD,
+    income,
+        N,
+        Aprime,
+        LFP,
+        NetA
+        )
 
 end
 
