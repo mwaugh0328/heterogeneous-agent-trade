@@ -123,7 +123,7 @@ function ha_trade_equilibrium(W::Array{T}, τ_revenue::Array{T}, R::T, model_par
 
     @unpack Ncntry, A = trade_params
 
-    output_stats = Array{NIPA{eltype(W)}}(undef, Ncntry)
+    output_stats = Array{NIPA}(undef, Ncntry)
     hh = Array{household{eltype(W)}}(undef, Ncntry)
     dist = Array{distribution{eltype(W)}}(undef, Ncntry)
 

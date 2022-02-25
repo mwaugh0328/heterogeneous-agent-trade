@@ -6,17 +6,23 @@ import DataFrames
 
 
 haparams = model_params()
+
+d, τ, A = make_trade_params(1.95, 0.0, 1.0, 10)
+
+inital_tradeparams = trade_params(A = A, τ = τ, d = d)
              
-Ncntry = trade_params().Ncntry
+Ncntry = inital_tradeparams.Ncntry
 
-new_τ = [0.00 0.10; 0.00 0.00]
+new_τ = deepcopy(inital_tradeparams.τ)
+new_τ[1,2] = 0.10
+new_τ[2,1] = 0.10
 
-T = 35
+T = 25
 
 τ_path = Array{Array{Float64}}(undef, 5)
-fill!(τ_path, trade_params().τ)
+fill!(τ_path, inital_tradeparams.τ)
 
-n_path = Array{Array{Float64}}(undef, 30)
+n_path = Array{Array{Float64}}(undef, 20)
 fill!(n_path, new_τ  )
 
 τ_path = [τ_path; n_path]
@@ -25,8 +31,6 @@ fill!(n_path, new_τ  )
 
 ###############################################################################################
 # STEP 1 Solve for initial equillibrium
-
-inital_tradeparams = trade_params()
 
 f(x) = ha_trade_equilibrium(x, haparams , inital_tradeparams )
 
@@ -42,7 +46,7 @@ fill!(W, 1.0)
 τ_revenue = Array{eltype(Float64)}(undef, Ncntry)
 fill!(τ_revenue, 0.0)
 
-R = 1.029
+R = 1.002
 
 
 initial_x = [W; τ_revenue; R]
@@ -71,7 +75,7 @@ dist_int = collect_intial_conditions(Wint, τ_rev_int, Rint[1], haparams, inital
 # ###############################################################################################
 # # STEP 2 Solve for final ss equillibrium
 
-tparams_end = trade_params(τ = τ_path[end])
+tparams_end = trade_params(A = A, d = d, τ = τ_path[end])
 
 f(x) = ha_trade_equilibrium(x, haparams , tparams_end )
 
@@ -108,7 +112,7 @@ trade_path = Array{trade_params}(undef,T)
 
 for xxx = 1:T
 
-      trade_path[xxx] = trade_params(τ = τ_path[xxx])
+      trade_path[xxx] = trade_params(A = A, d = d, τ = τ_path[xxx])
 
 end
 

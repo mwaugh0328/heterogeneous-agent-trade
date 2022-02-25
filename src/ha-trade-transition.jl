@@ -101,7 +101,7 @@ function transition_path(Wvec, τ_rev_vec, Rvec, τ_path, dist, hh, model_params
 
     end
 
-    output_stats = Array{Array{NIPA{eltype(W)}}}(undef, Ncntry)
+    output_stats = Array{Array{NIPA}}(undef, Ncntry)
 
     net_demand = Array{eltype(Wvec)}(undef, 2*Ncntry, Tperiods)
     # The output vectov, net demand is 2*Ncountry bc we are 
@@ -171,7 +171,7 @@ function foward_backward(Pces, W, τ_rev, R, dist, Tvend, TFP, model_params)
     hh = Array{household{eltype(W)}}(undef, Tperiods)
     # A structure of households (policies and Vs) for each time period
 
-    output_stats = Array{NIPA{eltype(W)}}(undef, Tperiods)
+    output_stats = Array{NIPA}(undef, Tperiods)
     # structure of statistics, for each time period.
 
     AD = Array{eltype(W)}(undef, Tperiods)

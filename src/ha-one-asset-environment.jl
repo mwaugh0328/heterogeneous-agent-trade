@@ -23,7 +23,7 @@ using ForwardDiff
     mc::MarkovChain{Float64, Matrix{Float64}, 
     StepRangeLen{Float64, Base.TwicePrecision{Float64},
      Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
-    σa::Float64 = 0.01
+    σa::Float64 = 0.015
     σw::Float64 = 0.25
     ϑ::Float64 = 1.5
     Woptions::Int64 = 2

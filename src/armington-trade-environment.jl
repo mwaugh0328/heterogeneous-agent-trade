@@ -155,3 +155,4 @@ function make_trade_params(d, τ, A, Ncntry)
     return dmat, τmat, Amat
     
 end
+
