@@ -1,0 +1,426 @@
+\documentclass[12pt,pdftex]{article}
+\usepackage[pdftex]{graphicx,color}
+\usepackage{setspace,palatino,multirow}
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{lscape}
+%\usepackage{subfigure}
+\usepackage{threeparttable}
+\usepackage{natbib}
+\bibliographystyle{ecta}
+\usepackage{cite}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+\usepackage{xcolor}
+\usepackage{rotating}
+
+\definecolor{nblue}{RGB}{0,0,128}
+
+\usepackage[pdftex,colorlinks=true, bookmarks=false,
+pdfstartview={XYZ null null 0.65},
+pdftitle={The Consumption Response to Trade Shocks: Evidence from the US-China Trade War},
+pdfauthor={ Michael E. Waugh},
+pdfkeywords={economics, trade, dynamics, quant econ, consumption, data science, cars,
+waugh, incomplete markets, inequality, Ricardo, julia, migration, China, trade war, tariffs, python, matplotlib,
+auto, difference in difference },
+colorlinks=true,linkcolor=darkgray,citecolor=darkgray,urlcolor=darkgray,
+breaklinks]{hyperref}
+
+\newcounter{saveeqni}%
+\newcounter{saveeqn01i}%
+\newcommand{\alpheqni}{\setcounter{saveeqni}{\value{section}}%
+%\setcounter{saveeqn01i}{\value{subsectioni}}%
+\renewcommand{\theequation}
+    {\alph{saveeqni}\mbox{.\arabic{equation}}}}%
+\newcommand{\reseteqni}{\setcounter{equation}{\value{saveeqni}}%
+\renewcommand{\theequation}{\arabic{equation}}}%
+
+\newtheorem{as}{Assumption}
+\newtheorem{reg}{Regularity Condition}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{corr}{Corollary}
+\newtheorem{df}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prp}{Proposition}
+\newtheorem{rmk}{Remark}
+\newenvironment{prf}{{\bf Proof}}{\hfill { }}
+
+\DeclareMathOperator*{\plim}{plim}
+\DeclareMathOperator*{\umax}{max}
+
+\special{papersize=8.5in,11in}
+\onehalfspacing
+\setlength{\parindent}{0.1em}
+\setlength{\parskip}{.09in}
+\textwidth15.75cm
+\evensidemargin 1.5in
+\oddsidemargin 1.5in
+\topmargin 8.5cm
+\textheight 10in
+\hyphenation{over-lapping}
+
+\titleformat{\section}{\color{black}\large\bf}{\color{black}{\thesection.}}{.25cm}{}
+\titleformat{\subsection}{\color{black}\normalsize\bf}{\thesubsection.}{.5em}{}
+\titleformat{\subsubsection}{\color{black}\normalsize\bf}{\thesubsubsection.}{.5em}{}
+
+\titlespacing{\section}{0pt}{*1.5}{*.5}
+\titlespacing{\subsection}{0pt}{*1.5}{*.5}
+\titlespacing{\subsubsection}{0pt}{*1.5}{*.5}
+
+\def\thesection{\arabic{section}}
+\def\thesubsection{\arabic{section}.\arabic{subsection}}
+\def\thesubsubsection{\arabic{section}.\arabic{subsection}.\Alph{subsubsection}}
+
+\def\citeapos#1{\citeauthor{#1}'s (\citeyear{#1})}
+
+\renewcommand{\arraystretch}{1.1}
+\usepackage[margin=2cm]{geometry}
+
+\begin{document}
+
+\begin{onehalfspacing}
+
+{\large \textbf{HA-T: Heterogeneous Agent Trade}}
+
+\vspace{1cm}
+
+%{\textbf{PRELIMINARY AND INCOMPLETE}}
+%
+%\vspace{1cm}
+
+\href{http://www.waugheconomics.com/}{Michael E. Waugh} \\ Federal Reserve Bank of Minneapolis and NBER
+
+\vspace{0.5cm}
+
+March 2022
+
+\vspace{1.5cm}
+
+
+\normalsize
+
+ABSTRACT ------------------------------------------------------------------------------------------------------------
+
+This paper develops a simple, but rich model of heterogenous agents and international trade. Household heterogeneity is modeled as in the standard incomplete markets tradition with ex-ante identical, but ex-post differences in households arising due to incomplete insurance against idiosyncratic shocks. International trade follows the Armington tradition but is determined from the ``bottom up'' with household heterogeneity shaping the aggregate pattern of trade. Heterogeneity in a household's exposure to trade and substitution patters (on both the consumption and labor market) side arises endogenously and leads to unequal benefits from globalization. I use model to study the distributional costs and benefits of trade, trade imbalances, aggregate dynamics due to globalization and the execution of trade policy.
+
+------------------------------------------------------------------------------------------------------------------------------
+%%\vspace{0.25cm}
+%
+%%JEL Classification:
+%%
+%%
+%%Keywords:
+
+\vspace{6.95cm}
+
+\footnotesize Email: michael.e.waugh@gmail.com. The views expressed herein are those of the author and not necessarily those of the Federal
+Reserve Bank of Minneapolis or the Federal Reserve System.
+
+\hspace{-0.05cm}
+
+
+
+\thispagestyle{empty}
+\newpage
+\normalsize
+
+\section{The Model}
+
+The model is setup in a simple and transparent way. Trade is in the Armigton tradition with each country producing a nationally differentiated variety. Households follow the standard incomplete markets tradition. The key departure is that I lean into household heterogeneity and have households make a discrete choice over the varieties they consume. Aggregate trade flows between countries are, thus, given by the explicit aggregation of households and the choices they make.
+
+\subsection{Trade and Production}\label{sec:trade}
+
+There are $M$ locations which I will call a country. Each country produces a differentiated product as in the Armington tradition and these differentiated products. In country $i$, competitive firms have the following production technology to produce variety $i$:
+\begin{align}
+q_i = A_i N_i,
+\label{eq:production}
+\end{align}
+where $N_i$ are the efficiency units of labor supplied by households in country $i$.
+
+Trade faces several obstacles. There are iceberg trade costs $d_{ji}$ for a good to go from supplier $i$ to buyer $j$. Cross-border trade faces policy obstacles, i.e. tariffs $\tau_{ji}$. The notation here is such that $\tau_{ji}$ which is the ad-valorem tariff rate that country $j$ imposes on the commodity that county $i$ produces.
+
+Profit maximization of the competitive goods producers in location $i$ results in the wage per efficiency unit reflecting the value of the marginal product of labor
+\begin{align}
+w_{i} = p_{i} A_{i}.
+\label{eq:marginal-product}
+\end{align}
+Given iceberg trade costs and tariffs, the unit cost for country $j$ to purchase a good from location $i$ is
+\begin{align}
+p_{ji} = \frac{d_{ji}(1 +\tau_{ji})w_{i}}{A_{i}}.
+\label{eq:marginal-product-ship}
+\end{align}
+
+\subsection{Households}
+
+There is a mass of $L_i$ households in each location $i$. Households are immobile across countries. They are infinite lived and have time-sparable preferences over non-durable consumption varieties and leisure:
+\begin{align}
+\small
+E_{0} \sum_{t = 0}^{\infty} \beta^{t} u( \{ c(j)_t \}_{M}, \ell_{t}),
+\end{align}
+where the notation $\{ c(j)_t \}_{M}$ means that the household has preferences over all $j$ varieties supplied by $M$ countries in the world. My focus is on the situation where households each period receive Type 1 extreme value shocks $\epsilon(j)$ with dispersion parameter $\sigma_{\epsilon}$ and then households make a discrete choice about which variety $j$ to each period and a continuous choice about how much.
+
+More specifically, the utility associated with the choice of variety $j$ and leisure is
+\begin{align}
+u( c(j) , \ell) =  \frac{ c(j) ^{1-\gamma}}{1- \gamma} + \epsilon(j) + \nu \frac{ \ell ^{1-\varphi}}{1- \varphi} . \label{eq:utility}
+\end{align}
+where consumption mapped into utils with a standard CRRA function, $\epsilon(j)$ is the taste shock, and then the value of leisure is separable with two parameters $\nu$ and $\varphi$. I normalize a household's time endowment to one and thus labor supply must lie within the bounds of working the entire time $\ell = 0$ or fully enjoying leisure $\ell = 1$. Define hours worked as $h_t = (1 - \ell_t)$.
+
+A household's efficiency units are stochastic and they evolve according to a discrete state Markov chain. Mathematically, $z$ is a households efficiently units and $\mathcal{P}(z,z')$ describes the probability of a household with state $z$ efficiency units transiting to state $z'$.
+
+Households can save and borrow in a non-state contingent asset $a$. The units of the asset are chosen to be the numeraire and pays out with gross interest rate $R$. I discuss this more in depth below, but the determination of $R_{i}$ is either exogenously given or the rate that clears the bond market (local or global). An country specific, exogenous debt limit $\phi_{i}$ constrains borrowing so:
+\begin{align}
+a_{t+1} \geq - \phi_{i}.
+\label{eq:borrowing-constraint}
+\end{align}
+All these pieces come together in the household's budget constraint, conditional on choosing variety $j$ to consume, and focusing on a stationary setting where prices and transfers are constant:
+\begin{align}
+a_{t+1} + p_{ij}c(j)_{t}  \leq    R_{i} a_{t} + w_{i} z_{t} h_{t} + T_{i,\tau}.\label{eq:trade-budget-constraint}
+\end{align}
+The value of asset purchases and consumption expenditures must be less than or equal to asset payments, labor earnings, and transfers arising from trade policy (the $T_{i,\tau}$).
+
+\subsection{Recursive Formulation of the Household Problem}
+
+The state variables of a individual household are it's asset holdings and efficiency units. The aggregate states (and outcomes in other countries) only matter through prices and transfers and thus I summarize the aggregate state in country $i$ as $S_i = (\{ w_i \}_{M}, T_i, R_{i})$ which is the collection of the wage per efficiency units, transfers, and the interest rate. The wage vector $\{ w_i \}_{M}$ is sufficient here since they determine prices in (\ref{eq:marginal-product-ship}) and, thus, consumers can make the appropriate choice of commodities. 
+
+The value function of a household in country $i$ is
+\begin{align}
+v_{i}(a, z; S_i) = &  \max_{ij} \big  \{ \  v_{ij}(a, z; S_i)  \ \big \}
+\label{eq:valuefun}
+\end{align}
+which is the maximum across the discrete choices of different national varieties and the value function conditional on
+\begin{align}
+v_{ij}(a, z;  S_i  ) = &  \max_{\ a' , \ \ell }\bigg  \{ u(c(j), \ \ell)  + \beta \, \mathbb{E} [v_{i}(a', z'; S_i' )]  \bigg\}
+\label{eq:value_fun_option} \\
+\nonumber \\
+\mbox{subject to}  \ & (\ref{eq:trade-budget-constraint}) \  \mathrm{and} \ (\ref{eq:borrowing-constraint}) \nonumber
+\end{align}
+where households choose asset holdings and labor supply and the level of consumption is residually determined through the budget constraint. The continuation value function is the expectation over (\ref{eq:valuefun}) where the expectation is taken with respect to $z'$ and taste shocks in the future. What this last point means is that households understand that their may be situations where, e.g., they really desire the high priced imported good and, hence, save accordingly.
+
+As is well known, the Type 1 extreme value gives rise to the following choice probabilities for each differentiated good. So
+\begin{align}
+\pi_{ij}(a, z; S_i) = \exp \left( \frac{ v_{ij}(a, z;  S_i ) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z;  S_i ) }{\sigma_{\epsilon}} \right) \label{eq:choice-prob}
+\end{align}
+which is the probability that a household with assets $a$ and efficiency units $z$ chooses country variety $j$. And then the expectation of (\ref{eq:valuefun}) with respect to the taste shocks takes the familiar log-sum form
+\begin{align}
+\mathbb{E}_{\epsilon} v_i(a, z; S_i) = \sigma_{\epsilon} \log \left\{ \sum_{j'} \exp \left( \frac{  v_{ij}(a, z;  S_i )}{\sigma_{\epsilon}} \right) \right\} \label{eq:log_sum}
+\end{align}
+Associated with the problem (\ref{eq:value_fun}) are a labor supply function $h_{ij}(a, z; S_i)$ which prescribes labor supply for a household give the state and variety choice, an asset policy function $g_{ij}(a, z; S_i)$ which prescribes asset holdings given a state and variety choice, and then define $c_{ij}(a, z; S_i)$ as the consumption function which prescribes consumption given states and variety choice.
+
+\subsection{Aggregation}
+
+Define the probability distribution of households across individual states $\lambda_{i}(a, z; S_i )$ which is the probability measure of households with asset levels $a$ individual shock $z$ in country $i$. This distribution evolves according to
+\begin{align}
+\lambda_i(a', z', S_i') = \sum_{z}\sum_{j} \sum_{a: a' = g_{ij}(a, z; S_i)} \pi_{ij}(a, z; S_i) \mathcal{P}(z, z') \lambda_i(a, z; S_i).
+\label{eq:law_motion}
+\end{align}
+
+\textbf{Aggregate Labor Supply.}  Aggregate efficiency units are
+\begin{align}
+N_i = L_{i}\sum_{z}\sum_{j} \sum_{a}\ z h_{ij}(a, z; S_i) \pi_{ij}(a, z; S_i) \lambda_i(a, z; S_i) \label{eq:ag-labor-supply}
+\end{align}
+where the inner most term reflects efficiency units multiplied by the probability that a household works given those states and multiplied by the measure of households with that state. This is all multiplied by $L_i$ which is the mass of households in country $i$.
+
+\textbf{Asset Holdings.} The aggregate quantity of asset holdings simply sums across the distribution conditional on choosing
+\begin{align}
+\mathrm{A}_i' = L_{i} \sum_{z}\sum_{j}\sum_{a}  g_{ij}(a, z; S_i) \pi_{ij}(a, z; S_i) \lambda_i(a, z; S_i).
+\label{eq:aggregate_asset}
+\end{align}
+
+\textbf{National Income and Consumption} Starting from the production side of our economy, the value of aggregate production must equal aggregate payments to labor so
+\begin{align}
+p_{i} Y_{i} = p_{i} A_{i} N_{i} = L_i \sum_{z}\sum_{j}\sum_{a}  w_{i} \  z \ h_{ij}(a, z; S_i)\ \pi_{ij}(a, z; S_i) \  \lambda_i(a, z; S_i)
+\label{eq:value_production}
+\end{align}
+where the last term sums over wage payments for each household type. Then by summing over individual consumers' budget constraint and substituting in (\ref{eq:value_production}), we arrive at the aggregated budget constraint:
+\begin{align}
+p_{i} Y_{i}  = \widetilde{P_{i} C_i}  + \bigg[-R_i\mathrm{A_i} +  \mathrm{A_i'} \bigg] - T_{i,\tau},
+\label{eq:aggregate_budget_constraint}
+\end{align}
+where national income equals the value of aggregate consumption $\widetilde{P_{i} C_i}$, the country's the net asset position, all net of transfers. Here the value of aggregate consumption is
+\begin{align}
+\widetilde{P_{i} C_i} = L_{i} \sum_{z}\sum_{j}\sum_{a}  p_{ij} c_{ij}(a, z; S_i) \pi_{ij}(a, z; S_i) \lambda_i(a, z; S_i)
+\end{align}
+where one can see a bug and a feature of this model. Here there is an ``index number problem`` in the sense that there is not an ideal price index for which one can decompose aggregate values in to a price and quantity component. This is in contrast to, e.g., a model where households consume a CES bundle of goods. 
+
+\textbf{Trade Flows} It's first worth walking though imports for a given set of states. So for households with states $a$ and $z$ we have
+\begin{align}
+M_{ij}(a, z; S_i) = p_{ij} c_{ij}(a, z; S_i) \ \pi_{ij}(a, z; S_i).
+\end{align}
+Then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households in those states so
+\begin{align}
+M_{ij} = L_i \sum_{z}\sum_{a} X_{ij}(a, z; S_i) \lambda_i(a, z; S_i).
+\label{eq:imports}
+\end{align}
+The same can be done for a countries exports. Again, focusing on exports to a location given a set of states we have
+\begin{align}
+X_{ji}(a, z; S_j) = p_{ji} c_{ji}(a, z; S_j) \pi_{ji}(a, z; S_j)
+\end{align}
+Then aggregate exports from country $i$ to country $j$
+\begin{align}
+X_{ji} = L_j \sum_{z}\sum_{a} X_{ji}(a, z; S_j) \lambda_j(a, z; S_j)
+\label{eq:exports}
+\end{align}
+
+\subsection{Market Clearing and Equilibrium}
+
+Given the definitions above, I discuss the market clearing conditions than an equilibrium must respect.
+
+\textbf{The Goods Market.} From here we can equate the value of production of commodity $i$ in country $i$ with global demand for country $i$'s commodity:
+\begin{align}
+p_{i} Y_{i} &= \sum_{j}^{M}  X_{ji} \label{eq:goods-supply},
+\end{align}
+where the left hand side is production and the right hand side is world demand for the commodity from (\ref{eq:exports}).
+
+\textbf{The Bond Market.} The second market clearing condition is in the bond market. Two cases are considered ``financial globalization'' in which there is a global bond market with one real interest rate $R$. In this case the market clearing condition is
+\begin{align}
+\sum_{i}^{M} \mathrm{A_i'} = 0
+\label{eq:bond-market-global}
+\end{align}
+which says that net asset demand must equal zero across all countries. The second case considerer is ``financial autarky'' in which there is a local bond market that facilitaties withing country risk-sharing, but not globaly. In this case, there is an interest rate is $R_i$ for each country and the associated market clearing condition is
+\begin{align}
+\mathrm{A_i'} = 0 \ \ \forall i
+\label{eq:bond-market-country}
+\end{align}
+Below is a formal definition of a Stationary Equilibrium when the aggregate state $S_i$ is constant and not changing.
+
+\textbf{A Stationary Equilibrium.} A Stationary Equilibrium are asset policy functions, labor supply, and commodity choice probabilities $\{\  g_{ij}(a, z), h_{ij}(a, z), \pi_{ij}(a, z) \ \}_{i}$, probability distributions $\lambda_i(a, z)$, and positive real numbers $\left \{w, p, R\right \}_{i}$ such that
+\begin{itemize}
+\vspace{-.4cm}
+\item[i]  Prices ($w, p$) satisfy (\ref{eq:marginal-product}, \ref{eq:marginal-product-ship});
+\item[ii] The policy functions and choice probabilities solve the household's optimization problem in (\ref{eq:value_fun});
+\item[iv] The probability distribution $\lambda_i(a, z)$ induced by the policy functions, choice probabilities, and primitives satisfies (\ref{eq:law_motion}) and is a stationary distribution;
+\item[v] Goods market clears:
+\begin{align}
+p_{i} Y_{i} - \sum_{j}^{M}  X_{ji} = 0, \ \ \forall i
+\end{align}
+\item[v] Bond market clears with either Financial Globalization with $R_i = R$ and
+\begin{align}
+\sum_{i}^{M} \mathrm{A_i'} = 0.
+\label{eq:fg-condition}
+\end{align}
+Or Financial Autarky where
+\begin{align}
+\mathrm{A_i'} = 0, \ \ \forall i
+\label{eq:fa-condition}
+\end{align}
+\end{itemize}
+
+\subsection{Special Cases / Running Examples}
+
+There are two special cases that I will refer back to repeatedly in the text. One is what I will call the CES case in which I mean that the household has access to a constant elasticity aggregator over the different varieties. The second case is the ``hand-to-mouth'' case in which households have no access to borrowing or lending.
+
+\textbf{CES case.} This case is relatively familiar and standard. Here there is an aggregator over national varieties of the CES class, so
+\begin{align}
+c = \bigg \{ \sum_{j}^{M}  c_{j}^{\frac{\theta - 1}{\theta}} \bigg \}^{\frac{\theta}{\theta - 1}},
+\label{eq:ces-armington}
+\end{align}
+where $\theta$ controls the elasticity of substitution across products. Then each household has the following demand curve for a region's variety:
+\begin{align}
+c_{ij}(a,z; S_i) & = \left(\frac{p_{ij}}{P_i}\right)^{-\theta}c_{i}(a,z; S_i).
+\label{eq:ces-demand-curve}
+\end{align}
+which is given the total amount of consumption $c_{i}(a,z; S_i)$ a household chooses given their states and $P_i$ is the CES price index:
+\begin{align}
+P_{i} &= \bigg \{ \sum_{j}^{M} p_{ij}^{1 - \theta} \ \bigg \}^{\frac{1}{1-\theta}}.
+\label{eq:ces-price-index}
+\end{align}
+what is unique about this setting is that household expenditure shares on different goods are independent of their state. So the expenditure share of a household in location $i$ with state $a$ and $z$ is
+\begin{align}
+\frac{p_{ij}c_{ij}(a,z; S_i)}{P_i c_{i}(a,z; S_i)} & = \left(\frac{p_{ij}}{P_i}\right)^{1-\theta},
+\label{eq:ces-expenditure-share}
+\end{align}
+which depends only on prices that all households face. What is happening here is that the CES aggregator is homothetic in total consumption. So while households are choosing different levels of total consumption to solve their income-fluctuations problem, how that demand is divided up is always the same. From here, one can aggregate and arrive at a ``gravity-like'' import demand system with
+households with states $a$ and $z$ importing
+\begin{align}
+M_{ij}(a, z; S_i) = p_{ij} \left(\frac{p_{ij}}{P_i}\right)^{-\theta} c_{i}(a,z; S_i).
+\end{align}
+Then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households in those states which gives
+\begin{align}
+M_{ij} =  \left(\frac{p_{ij}}{P_i}\right)^{1-\theta} \times P_{i} C_{i}
+\end{align}
+where the last term follows by noting that the sum of $c_{i}(a,z; S_i)$ across the distribution is aggregate consumption and then this is put in value terms by multiplying and dividing by the CES price index. 
+
+\textbf{Hand-to-Mouth, Log, No Labor Supply Households.} This case focuses on the situation described|so there does not exist a risk free asset to smooth consumption, nor can households adjust their labor supply. The value function of a household contemplating the purchase of national variety $j$ is:
+\begin{align}
+v_{ij}(a, z;  S_i  ) = &   u\left( \frac{w_{i}z}{p_{ij}} \right) + \epsilon(j)  + \beta \, \mathbb{E} [v_{i}(z'; S_i' )] 
+\end{align}
+and then the choice probability becomes
+\begin{align}
+\pi_{ij}(z; S_i) = & \exp \left( \frac{ v_{ij}(z;  S_i ) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(z;  S_i ) }{\sigma_{\epsilon}} \right) \\
+\nonumber\\
+\pi_{ij}(z; S_i) = & \exp \left( \frac{ u\left( \frac{w_{i}z}{p_{ij}} \right) ) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ u\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right) 
+\end{align}
+where the last line follows from the properties of the $\exp$ function and that the continuation value function is exactly the same independent of the good chosen. Two more steps. With the CRRA utility speciation, a houeholds efficiency units drops out and thus the choice probability does not depend upon $z$. Then with $\log$ this expression collapses to
+\begin{align}
+\pi_{ij}(S_i) = \frac{p_{ij}^{-\sigma_{\epsilon}}}{\sum_{j'} p_{ij'}^{-\sigma_{\epsilon}}}
+\end{align}
+where here we recover the well known ``ces-logit-isomorphisim'' between the logit demand system and the CES aggregator in \ref{eq:ces-armington} above by setting $\sigma_\epsilon = 1 - \theta$. 
+
+Like in the CES case, a similar aggregate gravity type relationship can be recovered. Individual imports are
+\begin{align}
+M_{ij}(z; S_i) = p_{ij} \frac{w_{i}z}{p_{ij}} \pi_{ij}(S_i).
+\end{align}
+then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households in those states which gives
+\begin{align}
+M_{ij} =  \frac{p_{ij}^{-\sigma_{\epsilon}}}{\sum_{j'} p_{ij'}^{-\sigma_{\epsilon}}} \times \widetilde{P_{i} C_{i}}
+\end{align}
+where the last term follows from imposing the aggregated budget constraint with aggregate labor income equalling aggregate expenditure. 
+
+%\section{When Household Heterogeneity Does Not Matter?}
+%
+%Before studying computational results. It's worth thinking about when and when not the household heterogeneity may not matter. In the first couple of remarks below, I abstract from issues related to tariffs
+%
+%\subsection{Issue \# 1: Trade Imbalance}
+%
+%To see how this works, let's connecting trade and financial flows. The trade side of the model in (\ref{sec:trade}) determines how aggregate demand in each country is sourced across different countries:
+%\begin{align}
+%P_{i}C_i  = p_{i}\bigg \{ \left(\frac{p_{i}}{P_i}\right)^{-\theta}C_i  \bigg \} +  \underbrace{\sum_{j \neq i}^{M}  p^{cif}_{ij}\bigg \{ \left(\frac{p_{ij}}{P_i}\right)^{-\theta}C_i
+%\bigg \}}_{IM_{i}} + \underbrace{\sum_{j \neq i}^{M}  \tau_{ij} p^{cif}_{ij} \bigg \{ \left( \frac{p_{ij}}{P_{j}} \right)^{-\theta}C_i \bigg \}}_{T_{i,\tau}}.
+%\label{eq:goods-supply-imports}
+%\end{align}
+%where $p^{cif}_{ij} = \frac{d_{ji} w_{i}}{A_{i}}$, so these prices including shipping costs, but exclude tariffs. Imports here are defined as ``customs value'' per NIPA guidelines, i.e., the price paid for foreign goods excluding tariffs. Substituting in (\ref{eq:goods-supply-imports}) into the (\ref{eq:goods-supply-exports}) and then into the aggregated budget constraint (\ref{eq:aggregate_budget_constraint}) implies the following relation:
+%\begin{align}
+%\underbrace{\sum_{j \neq i}^{M}  p_{ji}\bigg \{ \left(\frac{p_{ji}}{P_j}\right)^{-\theta}\big [ C_j \big ]\bigg \}}_{EX_{i}} \ - \ \underbrace{\sum_{j \neq i}^{M}  p_{ij}\bigg \{ \left(\frac{p_{ij}}{P_i}\right)^{-\theta}[ C_i  \big ] \bigg \}}_{IM_{i}}  = \bigg[-R\mathrm{A_i} +  \mathrm{A_i'} \bigg]
+%\label{eq:imbalance}
+%\end{align}
+%that is the trade imbalance must equal the net asset position of a country.
+%
+%From this condition, one can show how this reduces to standard relationships exploited in the trade literature. First, consider the case of Financial Autarky, so that condition (\ref{eq:fa-condition}) holds. Net asset holdings in each country are zero (though recall, gross asset positions for individual households within a country may be non-zero). This implies
+%\begin{align}
+%\underbrace{\sum_{j \neq i}^{M}  p_{ji}\bigg \{ \left(\frac{p_{ji}}{P_j}\right)^{-\theta}\big [ C_j \big ]\bigg \}}_{EX_{i}} \ = \ \underbrace{\sum_{j \neq i}^{M}  p_{ij}\bigg \{ \left(\frac{p_{ij}}{P_i}\right)^{-\theta}[ C_i  \big ] \bigg \}}_{IM_{i}},
+%\label{eq:imbalance_v2}
+%\end{align}
+%or balanced trade. There is one more step, however, what shows up in (\ref{eq:imbalance}) is demand $C_i$, not supply or income. But from the aggregated budget constraint, and abstracting from tariffs, condition (\ref{eq:fa-condition}), implies that the value of output (and labor income) must equal the value of consumption
+%\begin{align}
+%p_{i} Y_{i}  = P_{i}  C_i ,
+%\end{align}
+%and after substituting in the relationship between wages and prices we have
+%\begin{align}
+%\underbrace{\sum_{j \neq i}^{M}  p_{ji}\bigg \{ \left(\frac{p_{ji}}{P_j}\right)^{-\theta} \left( \frac{ w_j N_j }{P_j} \right) \bigg \}}_{EX_{i}} \ = \ \underbrace{\sum_{j \neq i}^{M}  p_{ij}\bigg \{ \left(\frac{p_{ij}}{P_i}\right)^{-\theta}\left( \frac{w_i N_i}{P_i}  \right) \bigg \}}_{IM_{i}},
+%\label{eq:imbalance_v3}
+%\end{align}
+%which is the same exact system of equations explored in canonical trade models. Alvarez Lucas is probably best example. What else?
+%
+%There is one more issue which is addressed next. In this system of equations is $N_i$ shows up ant it's labor supply.
+%
+%\subsection{Issue \# 2: Labor Supply and Market Incompleteness}
+%
+%Obviously set N exogenous recovers everything.
+%
+%Work out efficient allocation. N is different? What about $\frac{dw}{d\tau}$?
+%
+%\subsection{Issue \# 3: Tariffs and Insurance}
+%
+%When lump-sum rebated, the implied distribution of potential labor earnings contracts? easy to show? This is like some of the tax progressivity stuff.
+
+
+
+
+\newpage
+
+
+\end{onehalfspacing}
+
+\end{document} 
