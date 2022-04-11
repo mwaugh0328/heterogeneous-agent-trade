@@ -234,6 +234,72 @@ end
 ##########################################################################
 ##########################################################################
 
+function policy_function_itteration(W, R, model_params; tol = 10^-6, Niter = 500)
+    # this is the boiler plate vfi routine (1) make grid (2) itterate on 
+    # bellman operator untill convergence. 
+    #
+    # as Fast/ ~faster than Matlab (but nothing is multithreaded here)
+    # fastest is using nlsove fixed point to find situation where
+    # v = bellman_operator(v)
+    
+    @unpack Na, Nshocks = model_params
+
+    gc = ones(Na, Nshocks)
+
+    Kgc = similar(gc)
+
+    for iter in 1:Niter
+        
+        Kgc = coleman_operator(gc, R, W, model_params)
+        #there is some advantage of having it
+        # explicity, not always recreating the Tv 
+        # array in the function
+    
+        err = maximum(abs, Kgc - gc)
+
+        err < tol && break
+                
+        gc = copy(Kgc)
+
+        if iter == Niter
+
+          println("value function may not have converged")
+          println("check the situation")
+        end
+
+    end
+
+    return Kgc
+    
+end
+
+##########################################################################
+##########################################################################
+
+function policy_function_fixedpoint(W, R, model_params; tol = 10^-6)
+
+    @unpack Na, Nshocks = model_params
+
+    gco = ones(Na, Nshocks)
+    
+# define the inline function on the bellman operator. 
+# so the input is v (other stuff is fixed)
+    
+    K(gc) = coleman_operator(gc, R, W, model_params)
+
+    solution = fixedpoint(K, gco, ftol = tol, method = :anderson);
+    
+    if solution.f_converged == false
+        println("did not converge")
+    end
+
+    return solution
+
+end
+
+##########################################################################
+##########################################################################
+
 function value_function_fixedpoint(Pces, W, τ_rev, R, model_params; tol = 10^-6)
 
     @unpack Na, Nshocks, Woptions, β, mc, σw = model_params
