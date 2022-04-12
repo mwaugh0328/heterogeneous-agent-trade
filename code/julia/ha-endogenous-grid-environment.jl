@@ -19,6 +19,7 @@ using LinearAlgebra
     ϕ::Float64 = 0.0
     amax::Float64 = 14.0
     Ncntry::Int64 = 2
+    σϵ::Float64 = 0.25
     Na::Int64 = 50
     agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
     Nshocks::Int64 = 2
@@ -33,26 +34,39 @@ end
 ##########################################################################
 ##########################################################################
 
-
-
-function coleman_operator_test(c, πprob, R, W, p, model_params)
+function coleman_operator_DC(c, πprob, R, W, p, model_params)
     # policyfun = 
 
-    @unpack agrid, mc, β, γ, Nshocks, Ncntry = model_params
+    @unpack agrid, mc, β, γ, σϵ, Nshocks, Ncntry, statesize = model_params
+
+    Q = Array{eltype(R)}(undef, statesize, statesize)
 
     shocks = exp.(mc.state_values)
 
+    u = similar(c)
+    aprime = similar(c)
+    v = similar(c)
+    aindex = Array{Int64}(undef, size(c))
+
     Kg = similar(c)
+    Kπprob = similar(πprob)
 
     muc_ϵ = Array{Float64}(undef, Na, Nshocks)
+
+    ###################
     
-    #first step is to integrate out future taste shock
+    #Step (1) is to integrate out future taste shock
 
     ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
     # this is the ∑ π_j(a,z) * muc_j(a,z) / p_j
 
+    #Step (2) is to integrate out z'
+
     Emuc = β*R*( matmul( muc_ϵ , mc.p'))
     # this integrates over z
+
+    #Step (3) Work through each county option where 
+
 
     for cntry = 1:Ncntry
 
@@ -66,18 +80,42 @@ function coleman_operator_test(c, πprob, R, W, p, model_params)
         for nshk = 1:Nshocks
     
             foo = LinearInterpolation(ã[:,nshk], agrid, extrapolation_bc = (Flat(), Flat()) )
+
+            aprime[:, nshk, cntry] = foo.(agrid)
     
-            Kg[:, nshk, cntry] = ( -foo.(agrid) .+ R*agrid .+ W*shocks[nshk] ) / p[cntry]
+            Kg[:, nshk, cntry] = ( -aprime[:, nshk, cntry] .+ R*agrid .+ W*shocks[nshk] ) / p[cntry]
             # again off budget constraint pc = -a + Ra + wz
+
+            u[:, nshk, cntry] = utility.(Kg[:, nshk, cntry], γ)
+
+            for ast = 1:Na
+
+                aindex[ast, nshk, cntry] = find_asset_position(aprime[ast, nshk, cntry], agrid)
+
+            end
     
         end
 
     end
 
-    return Kg
+    make_Q!(Q, aprime, aindex, πprob, model_params)
+
+    for cntry = 1:Ncntry
+
+        vfoo = (lu(I - β*Q)) \ vec(u[:, :, cntry])
+
+        v[:, :, cntry] .= reshape(vfoo , Na, Nshocks)
+
+        make_πprob!(v, Kπprob, σϵ)
+
+    end
+
+    return Kg, Kπprob, Q
 
 end
 
+##########################################################################
+##########################################################################
 
 function ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
 
@@ -99,107 +137,11 @@ end
 ##########################################################################
 ##########################################################################
 
-function coleman_operator(c, R, W, model_params)
-    # mulitple-disptach here, when c is passed it returns Kgc
+function make_πprob!(vj, πprob, σϵ)
 
-    @unpack agrid, mc, β, γ, Nshocks = model_params
+    vj .-= maximum(vj, dims = 3) # broadcast, inplace subtract off max value
 
-    shocks = exp.(mc.state_values)
-
-    Kg = similar(c)
-
-    gc = muc_inverse.( β*R*( matmul( muc.(c, γ) , mc.p')), γ) 
-
-    ã = (gc .+ agrid .- W*shocks') / R
-
-    for nshk = 1:Nshocks
-
-        foo = LinearInterpolation(ã[:,nshk], agrid, extrapolation_bc = (Flat(), Linear()) )
-
-        Kg[:, nshk] = -foo.(agrid) .+ R*agrid .+ W*shocks[nshk]
-
-    end
-
-    return Kg
-
-end
-
-##########################################################################
-##########################################################################
-
-function coleman_operator(c, Q, state_index, R, W, model_params)
-    # multiple dispatch here, returns Kg, gq, and v
-
-    @unpack agrid, mc, β, γ, Na, Nshocks, statesize = model_params
-
-    shocks = exp.(mc.state_values)
-
-    v = similar(c)
-    aprime = similar(c)
-    u = similar(c)
-    aindex = Array{Int64}(undef, size(c))
-
-    Kg = similar(c)
-
-    # Step 1: Infer consumption today, given policy function, tommorow
-
-    gc = muc_inverse.( β*R*( muc.(c, γ) * mc.p'), γ) 
-    # muc = β*R*E(muc') 
-    # and then to get consumption we have
-    # c(ã,z) = muc_inverse ( β*R*E(muc(a',z')) ) 
-    # so this tells us consumption today, given that we had state
-    # a' tommorow (which is on the grid)
-
-    # Step 2: Infer the state associated with that consumption today.
-
-    ã = (gc .+ agrid .- W*shocks') / R
-
-    # the budget constraint is
-    # c + a' = R*a + w*z
-    # so what we have inferd is c(ã,z) and an associated a',
-    # but we don't know what ã is, so back it out from the budget constraint.
-    # and now we have a map from states ã,z -> consumption and a'
-
-    # Step 3: Push it back on to the grid...
-
-    for nshk = 1:Nshocks
-
-        foo = LinearInterpolation(ã[:,nshk], agrid, extrapolation_bc = (Flat(), Flat()) )
-        # must have extrapolation here, otherwise an error is thrown when extrapolation 
-        # is needed, Flat forces it to be at the bound. Mechanichally, what this does is that
-        # if outside the bounds (defined by the grid), it extrapolates to the bound. 
-        # So if ã is below the borrowing constraint -> the extrapolated value is ϕ
-
-        # this creates a function "foo" which is created by interpoliating on 
-        # a map from ã into a' where a' is on the grid.
-        # then figure out what c(a,z) is by evaluating this map at a where a
-        # is on the grid
-
-        aprime[:, nshk] = foo.(agrid)
-
-        Kg[:, nshk] = -aprime[:, nshk] .+ R*agrid .+ W*shocks[nshk]
-        # this is the last step.
-        # c = -a' + R*a + w*z
-
-        u[:, nshk] = utility.(Kg[:, nshk], γ)
-
-        for ast = 1:Na
-
-            aindex[ast,nshk] = find_asset_position(aprime[ast, nshk], agrid)
-
-        end
-
-    end
-
-    make_Q!(Q, state_index, aprime, aindex, model_params)
-
-    v = (lu(I - β*Q)) \ u[:]
-    # question is what is fastest way? # Open BLAS issues when big
-    # a discourse happend to suggest lu above
-    
-    v = reshape(v, Na, Nshocks)
-
-    return Kg, aprime, Q, state_index, v
+    πprob .= exp.( vj ./ σϵ ) ./ sum( exp.( vj ./ σϵ ) , dims = 3) 
 
 end
 
@@ -215,48 +157,50 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_Q!(Q, state_index, asset_policy, asset_policy_index, model_params)
+function make_Q!(Q, asset_policy, asset_policy_index, πprob, model_params)
     # this is not optimized to exploit column major order.
 
-    @unpack Na, Nshocks, mc, agrid = model_params
+    @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
     
     fill!(Q, 0.0) # this is all setup assumeing Q is zero everywehre
 
-    @inbounds @views for shk = 1:Nshocks
+    for cntry = 1:Ncntry
+
+        for shk = 1:Nshocks
     
-        shk_counter = Int((shk - 1)*Na)
+            shk_counter = Int((shk - 1)*Na)
 
-        for ast = 1:Na
+            for ast = 1:Na
 
-            today = ast + shk_counter 
+                today = ast + shk_counter 
 
-            state_index[today] = (ast, shk)
-
-            aprime_h = asset_policy_index[ast, shk]
-            aprime_l = max(asset_policy_index[ast, shk] - 1, 1)
+                aprime_h = asset_policy_index[ast, shk, cntry]
+                aprime_l = max(asset_policy_index[ast, shk, cntry] - 1, 1)
             
-            p = 1.0 - (asset_policy[ast,shk] - agrid[aprime_l]) / (agrid[aprime_h] - agrid[aprime_l])
+                p = 1.0 - (asset_policy[ast, shk, cntry] - agrid[aprime_l]) / (agrid[aprime_h] - agrid[aprime_l])
 
-            if isnan(p)
-                p = 1.0
-            end
+                if isnan(p)
+                    p = 1.0
+                end
 
-            for shkprime = 1:Nshocks
+                for shkprime = 1:Nshocks
     
-                shk_counter_prime = Int((shkprime - 1)*Na)
+                    shk_counter_prime = Int((shkprime - 1)*Na)
 
-                for astprime = 1:Na
+                    for astprime = 1:Na
 
-                    tommorow = astprime + shk_counter_prime 
+                        tommorow = astprime + shk_counter_prime 
 
-                    if astprime == aprime_l
+                        if astprime == aprime_l
 
-                        Q[today, tommorow] = ( p )*mc.p[shk, shkprime]
+                            Q[today, tommorow] += ( p )*mc.p[shk, shkprime]*πprob[astprime,shkprime,cntry]
 
-                    elseif astprime == aprime_h
+                        elseif astprime == aprime_h
 
-                        Q[today, tommorow] = ( 1.0 - p )*mc.p[shk, shkprime]
+                            Q[today, tommorow] += ( 1.0 - p )*mc.p[shk, shkprime]*πprob[astprime,shkprime,cntry]
 
+                        end
+                        
                     end
 
                 end
@@ -437,4 +381,110 @@ function bellman_operator_upwind(v, u, mc, β)
 
     return Tv
       
+end
+
+##########################################################################
+
+function coleman_operator(c, R, W, model_params)
+    # mulitple-disptach here, when c is passed it returns Kgc
+
+    @unpack agrid, mc, β, γ, Nshocks = model_params
+
+    shocks = exp.(mc.state_values)
+
+    Kg = similar(c)
+
+    gc = muc_inverse.( β*R*( matmul( muc.(c, γ) , mc.p')), γ) 
+
+    ã = (gc .+ agrid .- W*shocks') / R
+
+    for nshk = 1:Nshocks
+
+        foo = LinearInterpolation(ã[:,nshk], agrid, extrapolation_bc = (Flat(), Linear()) )
+
+        Kg[:, nshk] = -foo.(agrid) .+ R*agrid .+ W*shocks[nshk]
+
+    end
+
+    return Kg
+
+end
+
+##########################################################################
+##########################################################################
+
+function coleman_operator(c, Q, state_index, R, W, model_params)
+    # multiple dispatch here, returns Kg, gq, and v
+
+    @unpack agrid, mc, β, γ, Na, Nshocks, statesize = model_params
+
+    shocks = exp.(mc.state_values)
+
+    v = similar(c)
+    aprime = similar(c)
+    u = similar(c)
+    aindex = Array{Int64}(undef, size(c))
+
+    Kg = similar(c)
+
+    # Step 1: Infer consumption today, given policy function, tommorow
+
+    gc = muc_inverse.( β*R*( muc.(c, γ) * mc.p'), γ) 
+    # muc = β*R*E(muc') 
+    # and then to get consumption we have
+    # c(ã,z) = muc_inverse ( β*R*E(muc(a',z')) ) 
+    # so this tells us consumption today, given that we had state
+    # a' tommorow (which is on the grid)
+
+    # Step 2: Infer the state associated with that consumption today.
+
+    ã = (gc .+ agrid .- W*shocks') / R
+
+    # the budget constraint is
+    # c + a' = R*a + w*z
+    # so what we have inferd is c(ã,z) and an associated a',
+    # but we don't know what ã is, so back it out from the budget constraint.
+    # and now we have a map from states ã,z -> consumption and a'
+
+    # Step 3: Push it back on to the grid...
+
+    for nshk = 1:Nshocks
+
+        foo = LinearInterpolation(ã[:,nshk], agrid, extrapolation_bc = (Flat(), Flat()) )
+        # must have extrapolation here, otherwise an error is thrown when extrapolation 
+        # is needed, Flat forces it to be at the bound. Mechanichally, what this does is that
+        # if outside the bounds (defined by the grid), it extrapolates to the bound. 
+        # So if ã is below the borrowing constraint -> the extrapolated value is ϕ
+
+        # this creates a function "foo" which is created by interpoliating on 
+        # a map from ã into a' where a' is on the grid.
+        # then figure out what c(a,z) is by evaluating this map at a where a
+        # is on the grid
+
+        aprime[:, nshk] = foo.(agrid)
+
+        Kg[:, nshk] = -aprime[:, nshk] .+ R*agrid .+ W*shocks[nshk]
+        # this is the last step.
+        # c = -a' + R*a + w*z
+
+        u[:, nshk] = utility.(Kg[:, nshk], γ)
+
+        for ast = 1:Na
+
+            aindex[ast,nshk] = find_asset_position(aprime[ast, nshk], agrid)
+
+        end
+
+    end
+
+    make_Q!(Q, state_index, aprime, aindex, model_params)
+
+    v = (lu(I - β*Q)) \ vec(u)
+    # question is what is fastest way? # Open BLAS issues when big
+    # a discourse happend to suggest lu above
+    
+    v = reshape(v, Na, Nshocks)
+
+    return Kg, aprime, Q, state_index, v
+
 end
