@@ -35,7 +35,11 @@ end
 ##########################################################################
 
 function coleman_operator_DC(c, πprob, R, W, p, model_params)
-    # policyfun = 
+    # todo, better setup input of policy which is 
+    # a consumption function and then choice probability
+
+    ######################################################################
+    # Organization 
 
     @unpack agrid, mc, β, γ, σϵ, Nshocks, Ncntry, statesize = model_params
 
@@ -53,8 +57,9 @@ function coleman_operator_DC(c, πprob, R, W, p, model_params)
 
     muc_ϵ = Array{Float64}(undef, Na, Nshocks)
 
-    ###################
-    
+    ######################################################################
+    # Now implement EGM method...
+
     #Step (1) is to integrate out future taste shock
 
     ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
@@ -65,18 +70,16 @@ function coleman_operator_DC(c, πprob, R, W, p, model_params)
     Emuc = β*R*( matmul( muc_ϵ , mc.p'))
     # this integrates over z
 
-    #Step (3) Work through each county option where 
-
-
+    #Step (3) Work through each county option
     for cntry = 1:Ncntry
 
         gc = muc_inverse.( p[cntry] * Emuc, γ)
         # invert from rhs of euler equation
-        # key is how price shows up here.
         
         ã = (p[cntry] * gc .+ agrid .- W*shocks') / R
         # off budget constraint a = (p_jc_j + a' - w*z ) / R
 
+        # then linear interpolation to get back on grid.
         for nshk = 1:Nshocks
     
             foo = LinearInterpolation(ã[:,nshk], agrid, extrapolation_bc = (Flat(), Flat()) )
@@ -99,16 +102,23 @@ function coleman_operator_DC(c, πprob, R, W, p, model_params)
     end
 
     make_Q!(Q, aprime, aindex, πprob, model_params)
+    # here is the deal, need to think more, but Q does not depend current purchase.
+    # just future....so given (a,z) -> (a',z') which is policy function | variety 
+    # purchased x probability variety is purchased
 
+    invQ = (lu(I - β*Q))
+
+    # then recover the value function for each choice.
     for cntry = 1:Ncntry
 
-        vfoo = (lu(I - β*Q)) \ vec(u[:, :, cntry])
+        vfoo = invQ \ vec(u[:, :, cntry])
 
         v[:, :, cntry] .= reshape(vfoo , Na, Nshocks)
-
-        make_πprob!(v, Kπprob, σϵ)
-
+        
     end
+
+    make_πprob!(v, Kπprob, σϵ)
+    # this then constructs the choice probabilities
 
     return Kg, Kπprob, Q
 
