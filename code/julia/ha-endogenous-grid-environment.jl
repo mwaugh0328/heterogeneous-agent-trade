@@ -23,7 +23,7 @@ using LinearAlgebra
     Na::Int64 = 50
     agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
     Nshocks::Int64 = 2
-    statesize::Int64 = Int(Na*Nshocks)
+    statesize::Int64 = Int(Na*Nshocks*Ncntry)
     ρ::Float64 = 0.60
     σ::Float64 = 0.30
     mc::MarkovChain{Float64, Matrix{Float64}, 
@@ -43,8 +43,6 @@ function coleman_operator_DC(c, πprob, R, W, p, model_params)
 
     @unpack agrid, mc, β, γ, σϵ, Nshocks, Ncntry, statesize = model_params
 
-    Q = Array{eltype(R)}(undef, statesize, statesize)
-
     shocks = exp.(mc.state_values)
 
     u = similar(c)
@@ -55,7 +53,7 @@ function coleman_operator_DC(c, πprob, R, W, p, model_params)
     Kg = similar(c)
     Kπprob = similar(πprob)
 
-    muc_ϵ = Array{Float64}(undef, Na, Nshocks)
+    muc_ϵ = Array{eltype(R)}(undef, Na, Nshocks)
 
     ######################################################################
     # Now implement EGM method...
@@ -101,26 +99,24 @@ function coleman_operator_DC(c, πprob, R, W, p, model_params)
 
     end
 
+    Q = Array{eltype(R)}(undef, statesize, statesize)
+
     make_Q!(Q, aprime, aindex, πprob, model_params)
-    # here is the deal, need to think more, but Q does not depend current purchase.
-    # just future....so given (a,z) -> (a',z') which is policy function | variety 
-    # purchased x probability variety is purchased
+    # Think of the state as (a,z,j) so Q makes the transition matrix from
+    # (a,z,j) -> (a',z',j') given asset choices, z transitions, and the 
+    # probabilitiy one ends up consuming j'
 
-    invQ = (lu(I - β*Q))
+    v = (lu(I - β*Q)) \ vec(u)
+    # then given Q and note how u is defined over (a,z,j) we just apply the 
+    # same procedure giving v(a,z,j) in each position
 
-    # then recover the value function for each choice.
-    for cntry = 1:Ncntry
-
-        vfoo = invQ \ vec(u[:, :, cntry])
-
-        v[:, :, cntry] .= reshape(vfoo , Na, Nshocks)
-        
-    end
+    v = reshape(v , Na, Nshocks, Ncntry)
+    # reshape v
 
     make_πprob!(v, Kπprob, σϵ)
-    # this then constructs the choice probabilities
+    # this computes updated choice probablities given v
 
-    return Kg, Kπprob, Q
+    return Kg, Q, Kπprob
 
 end
 
@@ -150,6 +146,7 @@ end
 function make_πprob!(vj, πprob, σϵ)
 
     vj .-= maximum(vj, dims = 3) # broadcast, inplace subtract off max value
+    # dims = 3 here because countries are stored in 3rd dimension
 
     πprob .= exp.( vj ./ σϵ ) ./ sum( exp.( vj ./ σϵ ) , dims = 3) 
 
@@ -168,49 +165,59 @@ end
 ##########################################################################
 
 function make_Q!(Q, asset_policy, asset_policy_index, πprob, model_params)
-    # this is not optimized to exploit column major order.
 
     @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
     
     fill!(Q, 0.0) # this is all setup assumeing Q is zero everywehre
 
-    for cntry = 1:Ncntry
+        for cntry = 1:Ncntry
 
-        for shk = 1:Nshocks
+            cntry_counter = Int((cntry - 1)*Nshocks*Na)
+
+            for shk = 1:Nshocks
     
-            shk_counter = Int((shk - 1)*Na)
+                shk_counter = Int((shk - 1)*Na)
 
-            for ast = 1:Na
+                for ast = 1:Na
 
-                today = ast + shk_counter 
+                    today = ast + shk_counter + cntry_counter
 
-                aprime_h = asset_policy_index[ast, shk, cntry]
-                aprime_l = max(asset_policy_index[ast, shk, cntry] - 1, 1)
-            
-                p = 1.0 - (asset_policy[ast, shk, cntry] - agrid[aprime_l]) / (agrid[aprime_h] - agrid[aprime_l])
+                    aprime_h = asset_policy_index[ast,shk,cntry]
 
-                if isnan(p)
-                    p = 1.0
-                end
+                    aprime_l = max(aprime_h - 1, 1)
+                
+                    p = 1.0 - (asset_policy[ast,shk,cntry] - agrid[aprime_l]) / (agrid[aprime_h] - agrid[aprime_l])
+                
+                    if isnan(p)
+                        p = 1.0
+                    end
 
-                for shkprime = 1:Nshocks
+                    for cntryprime = 1:Ncntry
+
+                        cntry_counter_prime = Int((cntryprime - 1)*Nshocks*Na)
+
+                        for shkprime = 1:Nshocks
     
-                    shk_counter_prime = Int((shkprime - 1)*Na)
+                            shk_counter_prime = Int((shkprime - 1)*Na)
 
-                    for astprime = 1:Na
+                            for astprime = 1:Na
 
-                        tommorow = astprime + shk_counter_prime 
+                                tommorow = astprime + shk_counter_prime + cntry_counter_prime
 
-                        if astprime == aprime_l
+                                if astprime == aprime_l
 
-                            Q[today, tommorow] += ( p )*mc.p[shk, shkprime]*πprob[astprime,shkprime,cntry]
+                                    Q[today, tommorow] = ( p )*mc.p[shk, shkprime]*πprob[astprime,shkprime,cntryprime]
+                                # given today (a,z,j) = asset choice * prob end up with z' * prob choose varity j'
+                                # or (a',z',j')
 
-                        elseif astprime == aprime_h
+                                elseif astprime == aprime_h
 
-                            Q[today, tommorow] += ( 1.0 - p )*mc.p[shk, shkprime]*πprob[astprime,shkprime,cntry]
+                                    Q[today, tommorow] = ( 1.0 - p )*mc.p[shk, shkprime]*πprob[astprime,shkprime,cntryprime]
 
-                        end
-                        
+                                end
+
+                        end 
+
                     end
 
                 end

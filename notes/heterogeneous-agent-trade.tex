@@ -514,32 +514,41 @@ where this has a very natural form: you set the marginal utility of consumption 
 
 \subsection{EGM Algorithm}
 
-Here is a proposed approach. This focuses on just the consumer side in one country $i$. 
+Here is a proposed approach. This focuses on just the consumer side in one country $i$.
 \begin{itemize}
 \item[\textbf{0.}] Set up an asset grid as usual. Then guess (i) a consumption function $g_{c,ij}(a,z)$ for each $a$, $z$, and product choice $j$ and (ii) choice probabilities $\pi_{ij}(a, z)$.
 
-\item[\textbf{1.}] Given the consumption function and choice probabilities compute the RHS of (\ref{eq:euler_equation}) first. 
+\item[\textbf{1.}] Given the consumption function and choice probabilities compute the RHS of (\ref{eq:euler_equation}) first.
 
 
 \item[\textbf{2.}] Then invert to find the new updated consumption choice so
 \begin{align}
 c_{ij}(\tilde a, z) = u^{' -1}\left\{ p_{ij} \max \left\{ \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij}(a', z') \frac{u'(c_{ij}(a', z'))}{p_{ij}} \right] \ , \  u \left( \frac{R_i a + w_i - \phi_{i}}{p_{ij}} \right) \right \} \right \}
 \end{align}
-where $u^{' -1}$ is the inverse function of the marginal utility of consumption. 
+where $u^{' -1}$ is the inverse function of the marginal utility of consumption.
 
 Side note: One of the interesting things about this equation is that the direct $j$ component on the RHS that only affects the consumption choice is through the price. Can this be exploited? We also know the choice probabilities need to sum to one, so is there a way to map the consumption choice into the choice probabilities?
 
 \item[\textbf{3.}] The key issue in this method is that we have found  $c_{ij}(\tilde a, z)$ where the consumption function is associated with some asset level that is not necessarily on the grid. The solution is to (i) use the budget constraint and infer $\tilde a$ given that $a'$ was chosen above, $z$, and $c_{ij}(\tilde a, z)$. Now we have a map from $\tilde a$ to $a'$ for which one can use interpolation to infer the $a'$ chosen given $a$ where $a$ is on the grid.
-    
-\item Do steps \textbf{2.} and \textbf{3.} for each $j$ variety choice. This then makes the function $g_{a,ij}(a,z)$ mapping each state and $j$ choice (today) into $a', z'$ states.
 
-\item[\textbf{3.}] Compute the transition probability matrix ($Q$ in my notation) that characterizes transitions from $a,z$ into $a',z'$. \textbf{Note $Q$ does not depend on $j$.} So this can be done in one whole step.
+\item Do steps \textbf{2.} and \textbf{3.} for each $j$ variety choice. This then makes the function $g_{a,ij}(a,z)$ mapping each state and $j$ choice (today) into $a', z'$ states and then from the budget constraint we have an associated consumption function $g_{c,ij}(a,z)$
+
+\item[\textbf{3.}] Compute utility for each $a,z,j$ state given consumption function \textbf{and} including the logit shock integrated out. So 
+\begin{align}
+u(g_{c,ij}(a,z)) + \mathrm{E}_{\epsilon}(\epsilon_j | \{\pi(a, z)\}_M )
+\end{align}
+where the last term is the expected preference shock, conditional on the choice probabilities. This is needed to properly invert the value function so that it reflects the value associated with the shock. Need to look in LMW as there is a closed for this expectation. 
+
+\item[\textbf{4.}] Compute the transition probability matrix ($Q$ in my notation) that characterizes transitions from $a,z$ into $a',z'$.
+
+Need to think about this. Two issues, (i) starting point is conditional on the choice so is there a $Q_j$ for one step and then from there it becomes just the general transition matrix Q.
 
 
 
-\item[\textbf{4.}] Given $Q_{ij}$, one can compute the value functions $v_{ij}$ and then new choice probabilities from \ref{eq:choice-prob}.
 
-\item[\textbf{5.}] Compare old and new policy functions, old and new choice probabilities, and then update accordingly.
+\item[\textbf{5.}] Invert to find value functions and compute choice probabilities
+
+\item[\textbf{6.}] Compare old and new policy functions, old and new choice probabilities, and then update accordingly.
 
 \end{itemize}
 
