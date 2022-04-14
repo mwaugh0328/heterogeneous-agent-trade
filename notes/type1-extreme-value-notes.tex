@@ -1,0 +1,255 @@
+\documentclass[pdftex,11pt]{article}
+\usepackage[pdftex]{graphicx,color}
+\usepackage{setspace}
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+\usepackage{subfigure}
+\usepackage{fancyhdr}
+\usepackage[longnamesfirst]{natbib}
+\usepackage{cite}
+\usepackage[paperwidth=8.5in,
+left=0.5in,right=0.5in,paperheight=11.0in,textheight=9.5in,centering]{geometry}
+
+\bibliographystyle{ecta}
+\definecolor{nblue}{RGB}{0,0,128}
+
+\usepackage[colorlinks=true, linkcolor=nblue,
+citecolor=black, urlcolor=nblue, bookmarks=false,
+pdfstartview={XYZ null null 0.70},
+pdftitle={Redistributing the Gains From Trade Through Progressive Taxation},
+pdfauthor={Spencer G. Lyon, Michael E. Waugh},
+pdfkeywords={economics, trade, dynamics, quant econ, lyon, waugh, incomplete markets, taxes, redistribution, progressivity, inequality, Ricardo, julia, migration, taxation, social insurance}
+]{hyperref}
+
+\usepackage{setspace}
+
+\onehalfspace
+
+\renewcommand{\baselinestretch}{1.1}
+\renewcommand{\arraystretch}{.7}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{.1in}
+\renewcommand\familydefault{\sfdefault}
+
+\titleformat{\section}{\large\bf}{\thesection.}{.5em}{}
+\titleformat{\subsection}{\normalsize\bf}{\thesubsection.}{.5em}{}
+\titleformat{\subsubsection}{\normalsize\bf}{\thesubsubsection.}{.5em}{}
+
+\def\thesection{\arabic{section}}
+\def\thesubsection{\Alph{subsection}}
+\def\thesubsubsection{\Roman{subsubsection}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{assumption}{Assumption}
+
+\pagestyle{fancy}
+\rhead{}
+\lhead{}
+\cfoot{\thepage}
+\lfoot{}
+\lfoot{Revised: \today}
+\renewcommand{\headrulewidth}{0pt}
+
+
+\begin{document}
+
+\subsection{Type 1 Extreme Value Shocks, Choice Probabilities, and Expected utility}
+
+This section justifies and derives the expression for utility in (\ref{eq:utility-shocks}), choice probabilities, expected utility, etc. The idea is that we can recast the planner as choosing cutoff values for the preference shock as the planner directly choosing the migration rates. I do everything below in a simplified form with an agent picking between locations $j$ and $j'$. And to simplify the notation, I'm not carrying around all the states.
+
+First, the ordinal way to think of the planner's problem is that the planner is choosing $J-1$ cut-off values $\nu_j^{j}(s)$ for each state ($s$ and current location $j$). The $J-1$ is because for $J$ locations, one is redundant. In my presentation below, it is only a two location situation, so there is only one cutoff value.
+
+The cutoff value then works in the following way where: $\nu^{j} + \nu^{j}(s) > \nu^{j'}$, then you move to $j$ otherwise go to $j'$. Another, perhaps clearer way to write this is $\nu^{j}(s) \geq \nu^{j'} - \nu^{j}$. So, for example, if your preference for location $j$ is very large, this inequality is satisfied and you go to $j$. Otherwise, if this inequality is not satisfied (you have a very large $\nu^{j'}$ shock, then go to $j'$.
+
+Now we can go back an forth between the cut-off values described above and migration rates. Given some joint density over the preference shocks $\phi$, the probability that people go to location $j$ is:
+\begin{align}
+\mu_{j,j}(s)  = \mathtt{Prob}\{ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \} = \int_{\infty}^{\infty} \bigg [ \int^{\nu^{j} + \nu_j^{j}(s)} \phi(\nu^{j},\nu^{j'})d\nu^{j'} \bigg ] d\nu^{j}
+\label{eq:type1_stay}
+\end{align}
+where the internal part of the bracket stays: ``fix a $\nu^j$, then how many guys have $\nu^{j'}$ below $\nu^j + \nu_j^{j}(s)$'' or in words ``for the given $\nu^j$, how many want to go to $j$.`` Then there is the outer part says ``add up all those guys for each $\nu^{j}$.'' I do this many times, always get confused, so say it again. With the Type 1 extreme value distribution, we can evaluate the integral in (\ref{eq:type1_stay}) and then compute the migration rates as a function of the cut-off values and expected utility as a function of the migration rates as in (\ref{eq:utility-shocks}).
+
+Below we do this in several steps.
+\begin{enumerate}
+\item Train's book is here \url{https://eml.berkeley.edu/books/choice2.html} which is a very good resource for working with the Type 1 extreme value distribution. Most of the discussion below simply fills in the holes from aspects of the book with a more explicit derivation.
+
+\item The Type 1 extreme value pdf is:
+\begin{align}
+\phi(\nu) &= \sigma^{-1}\exp(-\sigma^{-1}\nu)\exp(-\exp(-\sigma^{-1}\nu))\\
+\Phi(\nu) &= \exp(-\exp(-\sigma^{-1}\nu))
+\end{align}
+and then let's insert this into (\ref{eq:type1_stay}) and realizing that the inner term of (\ref{eq:type1_stay}) is the cdf $\Phi$ evaluated at the cut-off point of $\nu^{j} + \nu_j^{j}(s)$.
+\begin{align}
+\mathtt{Prob}\{ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \} &= \int_{-\infty}^{\infty} \Phi(\nu^{j} + \nu_j^{j}(s)) \phi(\nu) d\nu^{s}\\
+\mathtt{Prob}\{ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \} &= \int_{-\infty}^{\infty} \exp(-\exp(-\sigma^{-1}(\nu^{j} + \nu_j^{j}(s)))) \sigma^{-1}\exp(-\sigma^{-1}\nu^{j})\exp(-\exp(-\sigma^{-1}\nu^{j}))d\nu^{j}
+\end{align}
+Now if you collect terms on the $\exp$s you get something like
+\begin{align}
+\mathtt{Prob}\{ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \} &= \int_{-\infty}^{\infty} \sigma^{-1}\exp \big [-\sigma^{-1}\nu^{j} - \exp(-\sigma^{-1}\nu^{j})(1 +
+\exp(-\sigma^{-1}\nu_j^{j}(s))) \big] d\nu^{j}
+\end{align}
+This is tedious, but almost done. First, using antiderivative calculator will take care of this.\footnote{The way to see the form is to note it takes $\alpha \exp(-\alpha x + \exp(-\alpha x)\beta)$ for which the antiderivative is $\frac{\exp(-\beta \exp(-\alpha x))}{\beta}.$} A more subtle approach is to note that this is essentially the same as the pdf|which we know integrates up to one|except for the constant term $(1 +
+\exp(-\sigma^{-1}\nu^{j}(s)))$. Either which way, when you compute this you have that:
+\begin{align}
+\mu_{j,j}(s) = \mathtt{Prob}\{ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \} = \frac{1}{1 +
+\exp(-\sigma^{-1}\nu_j^{j}(s))}
+\label{eq:type1_stayprob}
+\end{align}
+which is the standard Type 1 extreme value share formula. First note that if the cut-off $\nu_j^{j}(s)$ becomes arbitrarily large, then this value converges to one, so everyone stays in location $j$. Second, notice if dispersion parameter $\sigma$ becomes arbitrarily large, the share converges to a pure lottery, half go one way half go another way. Finally the probability of going to location $j'$ is
+\begin{align}
+\mu_{j',j}(s) = \frac{\exp(-\sigma^{-1}\nu_j^{j}(s))}{1+\exp(-\sigma^{-1}\nu_j^{j}(s))}
+\end{align}
+
+\item Next we need to compute expected utility associated with the migration pattern above. Note this is not a simple calculation because one needs to take into account that only the highst relative (or max) values migrate to a destination. So to compute expected utility, we first need to construct the following density:
+\begin{align}
+\mathtt{Prob}\{ \nu^{j} \ | \ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \}
+\end{align}
+which is the probability of $\nu^{j}$, conditional on $\nu^{j} + \nu_j^{j}(s)$ being greater than the random variable $\nu^{j'}$. Now we can construct this density in the following way, using Bayes rule we have that
+\begin{align}
+\mathtt{Prob}\{ \nu^{j} \ | \ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \} \  = \  \frac{\mathtt{Prob}\{ \nu^{j} \ , \ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \}}{\mathtt{Prob}\{ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \}}
+\end{align}
+and one important thing to notice is that we have already computed the value in the denominator as it's the same as the stay in location $j$ probability in (\ref{eq:type1_stayprob}). Then the object in the top is closely related to the way we computed the earlier density. This is:
+\begin{align}
+\mathtt{Prob}\{ \nu^{j} \ | \ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \}  & = \int_{-\infty}^{\nu} \bigg [ \int^{\nu^{j} + \nu_j^{j}(s)} \phi(\nu^{j},\nu^{j'})d\nu^{j'} \bigg ] d\nu^{j} \\
+& = \int_{-\infty}^{\nu}\sigma^{-1}\exp \big [-\sigma^{-1}\nu^{j} - \exp(-\sigma^{-1}\nu^{j})(1 +
+\exp(-\sigma^{-1}\nu_j^{j}(s))) \big]d\nu^{j}
+\end{align}
+where (to repeat my self) the first line says, fix a $\nu^{j}$ and add up all the guys that go to $j$ for that given value. Then add up all the $\nu^{j}$ \textbf{up to the point of} $\nu$. This is the joint density of $\nu$s that are movers and values up that point. Now notice this is the same form of the integral as before, so this density is expressed as:
+\begin{align}
+\mathtt{Prob}\{ \nu^{j} < \nu \ , &\ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \}  = \frac{\exp[-(1+\exp(-\sigma^{-1}\nu_j^{j}(s)))\exp(-\sigma^{-1}\nu)]}{1+\exp(-\sigma^{-1}\nu_j^{j}(s))}.
+\end{align}
+Then combining this probability with probability of being a stayer gives the following.
+\begin{align}
+\mathtt{Prob}\{ \nu^{j} < \nu \ | \ \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'} \} & = \exp[-(1+\exp(-\sigma^{-1}\nu_j^{j}(s)))\exp(-\sigma^{-1}\nu)] \\
+& = \exp[-(\mu_{j,j}(s))^{-1}\exp(-\sigma^{-1}\nu)]
+\end{align}
+where the last line substitutes in the ``ACR'' like insight that the centering parameter relates to the share of migrants. Now the expected value of $\nu^{j}$ conditional on staying in $j$ is
+\begin{align}
+\mathtt{E}(\nu^{j} | \nu^{j} + \nu_j^{j}(s) \geq \nu^{j'}) = \int_{-\infty}^{\infty}\nu^{j} \ d\exp[-(\mu_{j,j}(s))^{-1}\exp(-\sigma^{-1}\nu^{j})].
+\end{align}
+Now to compute this integral we need to do several more things. First, compute the pdf. Second, compute the integral via a change in variables and then make connection with Euler's constant. First the CDF takes the general form
+\begin{align}
+\exp[-\beta \exp(-\alpha x)] \\
+\end{align}
+and then the associated PDF takes the form
+\begin{align}
+\beta \alpha \exp[-\beta\exp(-\alpha x) - \alpha x]
+\end{align}
+and the integral that we want to compute is
+\begin{align}
+\beta \alpha \int \exp[-\beta\exp(-\alpha x) - \alpha x]x dx
+\label{eq:int_gum1}
+\end{align}
+Now we want to connect this integral with Euler's constant which is
+\begin{align}
+-\int \exp(-y)\ln y dy = \gamma
+\end{align}
+\item \url{https://www.randomservices.org/random/special/ExtremeValue.html} helps. As does this one with integrals of functions of exponentiation \\ \url{https://en.wikipedia.org/wiki/List_of_integrals_of_exponential_functions}
+
+\item So first notice that we can express the integral in (\ref{eq:int_gum1}) as
+\begin{align}
+\beta \alpha \int \exp[-\beta\exp(-\alpha x)]\exp[-\alpha x]x dx
+\label{eq:int_gum2}
+\end{align}
+by just using rules of exponents. Next here is the proposed change of variables where
+\begin{align}
+y = \beta \exp(-\alpha x)\\
+\frac{y}{\beta} = \exp(-\alpha x) \\
+x = \frac{-1}{\alpha}\ln \left(\frac{y}{\beta}\right)\\
+\frac{dx}{dy} = \frac{-1}{\alpha}\frac{1}{y}
+\label{eq:change_var}
+\end{align}
+And notice that the domain of integration for this is now $[\infty, 0]$ (yes, the infinity is at the bottom), but we have to flip giving rise to a minus sign. Now inserting this change of variable into (\ref{eq:int_gum2}) we have
+\begin{align}
+-\beta \alpha \int_{0}^{\infty} \exp(-y)\left(\frac{y}{\beta}\right)\left(\frac{-1}{\alpha}\ln \left(\frac{y}{\beta}\right)\right)\left(\frac{-1}{\alpha}\frac{1}{y}\right)dy
+\end{align}
+and then notice how the terms cancel leaving
+\begin{align}
+-\int \exp(-y)\ln \left(\frac{y}{\beta}\right)\left(\frac{1}{\alpha}\right)dy.
+\end{align}
+Almost there. The final step is to expand out the stuff in the $\ln$ function giving.
+\begin{align}
+-\frac{1}{\alpha} \int \exp(-y)\ln y \ dy  +  \frac{\ln \beta}{\alpha} \int \exp(-y) \ dy
+\end{align}
+Then given the domain of integration and the form of these integrals, the first integral is Euler's constant, the second integral just sums up to one giving us:
+\begin{align}
+\frac{\gamma}{\alpha} + \frac{\ln \beta}{\alpha}
+\end{align}
+Now let's get some intuition behind this formula. Recall that $\alpha = \sigma^{-1}$ and that $\beta = \frac{1}{\mu_{j,j}(s)}$. So first notice if no one chooses $j'$, everyone is choosing $j$, then $\beta$ equals one and then the formula implies that the expected value of the preference draw those going to $j$ is $\sigma \gamma$ which is the standard formula for the mean of a \href{https://en.wikipedia.org/wiki/Gumbel_distribution}{Type 1 extreme value}. Good. Then notice as $\mu_{j,j}(s)$ decreases, less people are staying in $j$ and $\beta$ becomes larger. Why is it increasing? Remember this is the mean of the preference shock in $j$, so as out migration rate increases (less $\mu_{j,j}(s)$, higher $\mu_{j',j}(s)$, than those remaining in $j$ are more selected and hence the expected value of the preference shock is larger. Even better.
+
+\item To summarize the main result, the expected values \textbf{in a location $j$} conditional on a migration rate are
+\begin{align}
+\mathtt{E}(\nu^{j} | \nu^{j} + \nu_{j}^{j}(s) \geq \nu^{j'}) &= \sigma \gamma + \sigma \ln \left( \frac{1}{\mu_{j,k}(s)} \right)
+\end{align}
+And the \textbf{expected value across all locations}, conditional on the migration rates (which is a function of the cutoff value $\nu^{j}(s)$) is
+\begin{align}
+E[\ \nu \ | \ \mu_{j'j}(s)] = \sigma \gamma + -\sigma \sum_{j'} \mu_{j'}(s) \log \left( \mu_{j'j}(s) \right)
+\end{align}
+which takes the familiar log sum formulation that arises in the Type 1 extreme value models. And most importantly, this is cast all in terms of the migration rates, not cutoff values.
+\end{enumerate}
+
+
+%\newpage
+%\textbf{TO BE UPDATED}
+%
+%\textbf{Brute Force Computational Approach}
+%
+%This would be relatively simple. It would look something like this:
+%\begin{itemize}
+%\item Fix a grid over $i,s$.
+%\item For each $i,s$ state, guess a migration rate
+%\item Construct the stationary distribution, efficiency units, and output.
+%\item Use the first order conditions for consumption to determine how output should be allocated across agents. Then construct value functions for each $i,s$.
+%\item Compute social welfare, update migration rates to maximize social welfare.
+%\end{itemize}
+%
+%
+%\newpage
+%%\bibliography{../bib/micro_price_bibtex}
+%\bibliography{../bib/migration_refs}
+%
+%
+%
+%\newpage
+%
+%\subsection{Discussion on the role of Assets and Rents}
+%
+%There are two details to take note of in (\ref{eq:income_side_gdp}) regarding assets and rents. To talk through this substantively, rearranging the expenditure side of gdp
+%
+%\textbf{Net Asset Supply is Not Zero.} With the assumption of a fixed interest rate $R$, the asset market is not clearing (we know this). This assumption also implies that from an aggregate, economy wide perspective there are resources available to households for consumption above and beyond those available through production. In the planning problem, this something we need to take care of when making a fair, apple to apple comparison of social welfare.
+%
+%Just to be clear, consider what occurs in the models of \citet{huggett1993risk} or \citet{aiyagari1994uninsured}.  In \citet{huggett1993risk} the equilibrium interest rate is determined so that net asset supply (supply of assets net of demand for assets) is zero, $\mathcal{A} = 0$. In \citet{aiyagari1994uninsured}, the net asset supply is positive, but it is equal to the supply of capital and the equilibrium interest rate relates to the marginal product of capital. And all of this would equally payments to capital and connect with production, i.e. the stuff on the LHS of (\ref{eq:income_side_gdp}). There would not be the $-r\mathcal{A}$ in \citet{aiyagari1994uninsured} either.
+%
+%One final point about this is to think about what possibilities these economies have to transfer resources across time. In the \citet{huggett1993risk} economy, in aggregate, there is no possibilities to transfer resources today into the future. It's an endowment economy and any intertemporal trades taking place are always zero in net supply. I save, you borrow, but on net these trades cancel and the economy is not saving or borrowing. \citet{aiyagari1994uninsured} does have a technology to store resources across time, it's capital.
+%
+%I bring this point up, because one open question in the planners problem is does the planner have a technology to transfer resources across time? With that said, while the level of social welfare might depend upon this, it's not obvious that it would affect the ``derivative'' i.e. how social welfare changes in response to a change in migration costs.
+%
+%\textbf{Land Rents.}
+%
+%The other term floating around is the term associated with land rents $L_r(N_r) > 0$. The way this is set up right now is that these go to ``absentee landlords'' and from a national income and accounting sense, these resources are sent ``abroad'' and don't show up in measured consumption or migration costs.
+%
+%This is a term that the planner will have to take into account. That is as the planner changes migration behavior, it will affect the amount of resources going towards the absentee landlords and available for consumption.
+%
+%\subsection{Discussion on the Pareto Optimality and Casting it interms of migration}
+%
+%One more comment. \textbf{If} we were looking to compare welfare between the decentralized outcome (\ref{eq:D-social_welfare}) and centralized outcome (\ref{eq:C-social_welfare}), we need to be a bit more precise about what better or worse means. One approach is to say that we will rank outcomes seeing if social welfare is higher in than one or the other. The complication is that per se, it's not necessarily Pareto Optimal in the sense that all are no worse off, one is better. With that said, one interpretation of the particular social welfare function we are using is that it evaluates welfare ``behind the veil'' in the sense that ex-ante all agents are identical and expected utility/welfare is defined as in (\ref{eq:D-social_welfare}) or (\ref{eq:C-social_welfare}). And if one is higher or lower, ex-ante it is a Pareto improvement (again, since ex-ante all guys are the same). The \citet{davila2012constrained} paper has an extended discussion about this issue.
+%
+%Finally \textbf{If} is bolded because I don't think we necessarily need to do this. I discuss this below around the envelope theorem.
+%
+%Now I will define the households utility function as:
+%\begin{align}
+%u(i,s,\nu) =  \bigg \{ u(c(i,s)) +  \  \ \mbox{if} \ \nu^{\tiny\mbox{stay}} + \nu(i,s) > \nu^{\tiny\mbox{stay}} , \ \mbox{else} \ \  u(c(i,s)) + \nu^{\tiny\mbox{move}} \ \bigg \}
+%\nonumber
+%\end{align}
+%Here $\nu^{*}(i,s)$ is the cut-off preference value (chosen by the planner) which defines a threshold for which on one side the agent moves and the other side the agent stays. One thing that I'm imposing here is that consumption is not conditioned on the moving shock. My conjecture and comes out below, is that the planner would never want to do since marginal utility which is what the planner wants equated and the preference shock is additive.
+%
+%Below, I want to set the problem up so that the planners control variable is not a cutoff, but a migration rate. So the key object we want to describe is the mass of those who stay (or move) for a given set of preference shocks. So:
+%\begin{align}
+%G(\nu^{*}(i,s))  = \mathtt{Prob}\{ \nu^{\tiny\mbox{stay}} + \nu(i,s) \geq \nu^{\tiny\mbox{move}} \},
+%\end{align}
+%which is the \textbf{mass of guys who stay} given the Planner specified cut-off value and households random idiosyncratic shocks. Then define:
+%\begin{align}
+%\mu^{*}(i,s) = 1-G(\nu(i,s))
+%\end{align}
+%which provides a mapping from the optimal cut-off value to the optimal migration rate (given a distributional assumption on the preference shocks). The notation here is that $i$ represents the source, not the destination. So if we have $\mu^{*}(u,s)$, then these are the guys migrating \textbf{away from} the urban area.
+
+\end{document}  
