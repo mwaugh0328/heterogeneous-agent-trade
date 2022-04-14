@@ -529,26 +529,29 @@ where $u^{' -1}$ is the inverse function of the marginal utility of consumption.
 
 Side note: One of the interesting things about this equation is that the direct $j$ component on the RHS that only affects the consumption choice is through the price. Can this be exploited? We also know the choice probabilities need to sum to one, so is there a way to map the consumption choice into the choice probabilities?
 
-\item[\textbf{3.}] The key issue in this method is that we have found  $c_{ij}(\tilde a, z)$ where the consumption function is associated with some asset level that is not necessarily on the grid. The solution is to (i) use the budget constraint and infer $\tilde a$ given that $a'$ was chosen above, $z$, and $c_{ij}(\tilde a, z)$. Now we have a map from $\tilde a$ to $a'$ for which one can use interpolation to infer the $a'$ chosen given $a$ where $a$ is on the grid.
+\item[\textbf{3.}] The key issue in this method is that we have found  $c_{ij}(\tilde a, z)$ where the consumption function is associated with some asset level that is not necessarily on the grid. The solution is to (i) use the budget constraint and infer $\tilde a$ given that $a'$ was chosen above (that's where we started), $z$, and $c_{ij}(\tilde a, z)$. Now we have a map from $\tilde a$ to $a'$ for which one can use interpolation to infer the $a'$ chosen given $a$ where $a$ is on the grid.
 
 \item Do steps \textbf{2.} and \textbf{3.} for each $j$ variety choice. This then makes the function $g_{a,ij}(a,z)$ mapping each state and $j$ choice (today) into $a', z'$ states and then from the budget constraint we have an associated consumption function $g_{c,ij}(a,z)$
 
-\item[\textbf{3.}] Compute utility for each $a,z,j$ state given consumption function \textbf{and} including the logit shock integrated out. So 
+\item[\textbf{3.}] Compute utility for each $a,z,j$ state given consumption function \textbf{and} including the logit shock integrated out:
 \begin{align}
-u(g_{c,ij}(a,z)) + \mathrm{E}_{\epsilon}(\epsilon_j | \{\pi(a, z)\}_M )
+u(g_{c,ij}(a,z)) + \mathrm{E}_{\epsilon}(\epsilon_{ij} | \{\pi(a, z)\}_M ), \label{eq:utility_azj}
 \end{align}
-where the last term is the expected preference shock, conditional on the choice probabilities. This is needed to properly invert the value function so that it reflects the value associated with the shock. Need to look in LMW as there is a closed for this expectation. 
+where the last term is the expected preference shock, conditional on the choice probabilities. This is needed to properly invert the value function so that it reflects the value associated with the shock. \textbf{Need to look in LMW as there is a closed for this expectation.}
 
-\item[\textbf{4.}] Compute the transition probability matrix ($Q$ in my notation) that characterizes transitions from $a,z$ into $a',z'$.
+\item[\textbf{4.}] Compute the transition probability matrix ($Q$ in my notation). Now I'm going to set this matrix up so that the consumption of variety $j$ is a state. So an entry in $Q$ will be the probability that a household with these ``states'' $(a,z,j)$ transits to $(a',z',j')$. States here is not quite right, but it's like imagine you are consuming variety $j$, that's your state, what happens.
+    
+    This transition probability is (i) the linearly interpolated asset choice probability $p$ (\textbf{need to explain more} times (ii) the probability that $z$ transits to $z'$ times (iii) the probability that a household with assets $a',z'$ consumes variety $j'$.
 
-Need to think about this. Two issues, (i) starting point is conditional on the choice so is there a $Q_j$ for one step and then from there it becomes just the general transition matrix Q.
+\item[\textbf{5.}] Given the structure of $Q$, then just line (\ref{eq:utility_azj}) with $Q$ and invert to find value functions that are associated with each $(a,z,j)$ state. This takes the form where 
+\begin{align}
+\vec{v} = (\mathbb{I} - \beta Q) \ / \  \vec{u} \label{eq:v_inversion}
+\end{align}
+where, again, each entry in $\vec{u}$ is an $(a,z,j)$ state and it conforms with the analogues entries in $Q$ of the $(a,z,j)$ states and then the resulting output $\vec{v}$ are the value functions corresponding with $(a,z,j)$ state.
 
+\item[\textbf{6.}] Given $v_{ij}(a,z)$ computed from (\ref{eq:v_inversion}), now compute choice probabilities using (\ref{eq:choice-prob}) for each $(a,z)$ combination.
 
-
-
-\item[\textbf{5.}] Invert to find value functions and compute choice probabilities
-
-\item[\textbf{6.}] Compare old and new policy functions, old and new choice probabilities, and then update accordingly.
+\item[\textbf{7.}] Compare old and new policy functions, old and new choice probabilities, and then update accordingly.
 
 \end{itemize}
 

@@ -116,7 +116,7 @@ function coleman_operator_DC(c, πprob, R, W, p, model_params)
     make_πprob!(v, Kπprob, σϵ)
     # this computes updated choice probablities given v
 
-    return Kg, Q, Kπprob
+    return Kg, Q, Kπprob, v
 
 end
 
@@ -296,12 +296,12 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_utility!(utility_grid, W, R, model_params) 
+function make_utility!(utility_grid, W, R, p, model_params) 
     # take prices and model parameters and returns utility function
     # R is gross real interest rate ∈ (β, 1/β)
     # W is wage per effeciency unit
     
-    @unpack Na, Nshocks, mc, agrid, γ = model_params
+    @unpack Na, Nshocks, Ncntry, mc, agrid, γ = model_params
     
     a = copy(agrid)
     #assets today
@@ -311,16 +311,20 @@ function make_utility!(utility_grid, W, R, model_params)
 
     shock_level = exp.(mc.state_values)
 
-    @inbounds @views for shockstate = 1:Nshocks
+    for shockstate = 1:Nshocks
     #shock state
 
         wz = labor_income( shock_level[shockstate] , W)
 
-        c = consumption(R.*a, a_prime, wz)
+        for cntry = 1:Ncntry
+
+            c = consumption(R.*a, a_prime, wz, p[cntry])
                 # takes assets states, shock state -> consumption from
                 # budget constraint
         
-        utility_grid[:, :, shockstate] .= utility.(c, γ)
+            utility_grid[:, :, shockstate, cntry] .= utility.(c, γ)
+
+        end
         
     end
     
@@ -329,12 +333,12 @@ end
 ##########################################################################
 ##########################################################################
 
-function consumption(Ra, ap, wz)
+function consumption(Ra, ap, wz, p)
     # constructs consumption via the hh budget constraint
     # .- boadcasting is used to turn vectors (a,ap) into a grid
     # over c (na by na)
 
-    return @. Ra - ap + wz  
+    return @. (Ra - ap + wz ) / p
     
 end
 
@@ -372,136 +376,41 @@ end
 ##########################################################################
 ##########################################################################
 
-function bellman_operator_upwind(v, u, mc, β) 
+function bellman_operator_upwind(v, u, mc, β, σϵ) 
     # the value function /bellman operator that takes a v then
-    # returns a TV.
-    # 
-    # upwind approach... so the EV is evaluated with TV, not V...
-    # usually yeilds faster convergence
-    #
-    # v and Tv are setup each individual entry has v(a,z) as in 
-    # model.pdf notes.
+    # returns a TV.           
     Na = size(u)[1]
     Nshocks = size(u)[3]
-
+    Ncntry = size(u)[4]
+    
     Tv = copy(v)
+    # this is here to ensure the output is same type as u...important for
+    # autodiff
+
+    Tvj = Array{eltype(u)}(undef, Na, Nshocks, Ncntry)
 
     for shockstate = 1:Nshocks
-        # work through each shock state
+        # work through each durable/car state
 
-        # Compute expected value 
-         βEV = compute_EV(β*Tv, mc[shockstate, :])
+        βEV = compute_EV(β.*Tv, mc[shockstate, :])
+        
+        for cntry = 1:Ncntry 
+            # work through each shock state
 
-        maximum!(view(Tv, : , shockstate), u[:, :, shockstate] .+ βEV )
+            maximum!(view(Tvj, : , shockstate, cntry), u[:, :, shockstate, cntry] .+ βEV )
+
+        end
+
+        Tvj_max = maximum(Tvj[ :, shockstate, : ], dims = 2)
+
+        foo = Tvj[ :, shockstate, : ] .- Tvj_max
+
+        foo[isnan.(foo)] .= -Inf
+
+        Tv[ :, shockstate] = σϵ.*log.( sum( exp.( ( foo )./ σϵ ) , dims = 2) ) + Tvj_max
 
     end
 
     return Tv
       
-end
-
-##########################################################################
-
-function coleman_operator(c, R, W, model_params)
-    # mulitple-disptach here, when c is passed it returns Kgc
-
-    @unpack agrid, mc, β, γ, Nshocks = model_params
-
-    shocks = exp.(mc.state_values)
-
-    Kg = similar(c)
-
-    gc = muc_inverse.( β*R*( matmul( muc.(c, γ) , mc.p')), γ) 
-
-    ã = (gc .+ agrid .- W*shocks') / R
-
-    for nshk = 1:Nshocks
-
-        foo = LinearInterpolation(ã[:,nshk], agrid, extrapolation_bc = (Flat(), Linear()) )
-
-        Kg[:, nshk] = -foo.(agrid) .+ R*agrid .+ W*shocks[nshk]
-
-    end
-
-    return Kg
-
-end
-
-##########################################################################
-##########################################################################
-
-function coleman_operator(c, Q, state_index, R, W, model_params)
-    # multiple dispatch here, returns Kg, gq, and v
-
-    @unpack agrid, mc, β, γ, Na, Nshocks, statesize = model_params
-
-    shocks = exp.(mc.state_values)
-
-    v = similar(c)
-    aprime = similar(c)
-    u = similar(c)
-    aindex = Array{Int64}(undef, size(c))
-
-    Kg = similar(c)
-
-    # Step 1: Infer consumption today, given policy function, tommorow
-
-    gc = muc_inverse.( β*R*( muc.(c, γ) * mc.p'), γ) 
-    # muc = β*R*E(muc') 
-    # and then to get consumption we have
-    # c(ã,z) = muc_inverse ( β*R*E(muc(a',z')) ) 
-    # so this tells us consumption today, given that we had state
-    # a' tommorow (which is on the grid)
-
-    # Step 2: Infer the state associated with that consumption today.
-
-    ã = (gc .+ agrid .- W*shocks') / R
-
-    # the budget constraint is
-    # c + a' = R*a + w*z
-    # so what we have inferd is c(ã,z) and an associated a',
-    # but we don't know what ã is, so back it out from the budget constraint.
-    # and now we have a map from states ã,z -> consumption and a'
-
-    # Step 3: Push it back on to the grid...
-
-    for nshk = 1:Nshocks
-
-        foo = LinearInterpolation(ã[:,nshk], agrid, extrapolation_bc = (Flat(), Flat()) )
-        # must have extrapolation here, otherwise an error is thrown when extrapolation 
-        # is needed, Flat forces it to be at the bound. Mechanichally, what this does is that
-        # if outside the bounds (defined by the grid), it extrapolates to the bound. 
-        # So if ã is below the borrowing constraint -> the extrapolated value is ϕ
-
-        # this creates a function "foo" which is created by interpoliating on 
-        # a map from ã into a' where a' is on the grid.
-        # then figure out what c(a,z) is by evaluating this map at a where a
-        # is on the grid
-
-        aprime[:, nshk] = foo.(agrid)
-
-        Kg[:, nshk] = -aprime[:, nshk] .+ R*agrid .+ W*shocks[nshk]
-        # this is the last step.
-        # c = -a' + R*a + w*z
-
-        u[:, nshk] = utility.(Kg[:, nshk], γ)
-
-        for ast = 1:Na
-
-            aindex[ast,nshk] = find_asset_position(aprime[ast, nshk], agrid)
-
-        end
-
-    end
-
-    make_Q!(Q, state_index, aprime, aindex, model_params)
-
-    v = (lu(I - β*Q)) \ vec(u)
-    # question is what is fastest way? # Open BLAS issues when big
-    # a discourse happend to suggest lu above
-    
-    v = reshape(v, Na, Nshocks)
-
-    return Kg, aprime, Q, state_index, v
-
 end
