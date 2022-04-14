@@ -34,18 +34,19 @@ end
 ##########################################################################
 ##########################################################################
 
-function coleman_operator_DC(c, πprob, R, W, p, model_params)
+function coleman_operator(c, πprob, Q, R, W, p, model_params)
     # todo, better setup input of policy which is 
     # a consumption function and then choice probability
 
     ######################################################################
     # Organization 
 
-    @unpack agrid, mc, β, γ, σϵ, Nshocks, Ncntry, statesize = model_params
+    @unpack agrid, mc, β, γ, σϵ, Na, Nshocks, Ncntry, statesize = model_params
 
     shocks = exp.(mc.state_values)
 
     u = similar(c)
+    π_selection = similar(c)
     aprime = similar(c)
     v = similar(c)
     aindex = Array{Int64}(undef, size(c))
@@ -69,7 +70,7 @@ function coleman_operator_DC(c, πprob, R, W, p, model_params)
     # this integrates over z
 
     #Step (3) Work through each county option
-    for cntry = 1:Ncntry
+    @inbounds @views for cntry = 1:Ncntry
 
         gc = muc_inverse.( p[cntry] * Emuc, γ)
         # invert from rhs of euler equation
@@ -78,20 +79,23 @@ function coleman_operator_DC(c, πprob, R, W, p, model_params)
         # off budget constraint a = (p_jc_j + a' - w*z ) / R
 
         # then linear interpolation to get back on grid.
-        for nshk = 1:Nshocks
+        for shk = 1:Nshocks
     
-            foo = LinearInterpolation(ã[:,nshk], agrid, extrapolation_bc = (Flat(), Flat()) )
+            foo = LinearInterpolation(ã[:,shk], agrid, extrapolation_bc = (Flat(), Flat()) )
 
-            aprime[:, nshk, cntry] = foo.(agrid)
+            aprime[:, shk, cntry] = foo.(agrid)
     
-            Kg[:, nshk, cntry] = ( -aprime[:, nshk, cntry] .+ R*agrid .+ W*shocks[nshk] ) / p[cntry]
+            Kg[:, shk, cntry] = ( -aprime[:, shk, cntry] .+ R*agrid .+ W*shocks[shk] ) / p[cntry]
             # again off budget constraint pc = -a + Ra + wz
 
-            u[:, nshk, cntry] = utility.(Kg[:, nshk, cntry], γ)
+            π_selection[:, shk, cntry] = -σϵ*log.(πprob[:, shk, cntry])
+
+            u[:, shk, cntry] = utility.(Kg[:, shk, cntry], γ) + π_selection[:, shk, cntry]
+            # the last bit factors in expected value of preference shock
 
             for ast = 1:Na
 
-                aindex[ast, nshk, cntry] = find_asset_position(aprime[ast, nshk, cntry], agrid)
+                aindex[ast, shk, cntry] = find_asset_position(aprime[ast, shk, cntry], agrid)
 
             end
     
@@ -99,26 +103,31 @@ function coleman_operator_DC(c, πprob, R, W, p, model_params)
 
     end
 
-    Q = Array{eltype(R)}(undef, statesize, statesize)
-
     make_Q!(Q, aprime, aindex, πprob, model_params)
     # Think of the state as (a,z,j) so Q makes the transition matrix from
-    # (a,z,j) -> (a',z',j') given asset choices, z transitions, and the 
-    # probabilitiy one ends up consuming j'
+    # (a,z,j) -> (a',z',j') 
 
-    v = (lu(I - β*Q)) \ vec(u)
+    vj = (lu(I - β*Q)) \ vec(u)
     # then given Q and note how u is defined over (a,z,j) we just apply the 
     # same procedure giving v(a,z,j) in each position
+    #vj = itterate_v(vec(u),  β, Q)
 
-    v = reshape(v , Na, Nshocks, Ncntry)
+    vj = reshape(vj , Na, Nshocks, Ncntry)
     # reshape v
 
-    make_πprob!(v, Kπprob, σϵ)
+    Kπprob = make_πprob(vj .- π_selection, σϵ)
     # this computes updated choice probablities given v
+    # Important! need to net off selection correction
 
-    return Kg, Q, Kπprob, v
+    v = reshape( sum( vj.*Kπprob, dims = 3), Na, Nshocks)
+    # then this computes the expected v prior to prefernce shock
+    # realization. not log sum thing because E(epsilon | cho) is built 
+    # in already
+
+    return Kg, Kπprob, v, Q
 
 end
+
 
 ##########################################################################
 ##########################################################################
@@ -127,7 +136,7 @@ function ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
 
     Na, Nshocks = size(c)[1:2]
 
-    for ast = 1:Na
+    @inbounds @views for ast = 1:Na
 
         for shk = 1:Nshocks
             
@@ -143,12 +152,16 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_πprob!(vj, πprob, σϵ)
+function make_πprob(vj, σϵ)
 
-    vj .-= maximum(vj, dims = 3) # broadcast, inplace subtract off max value
+    vj_max = maximum(vj, dims = 3) # broadcast, inplace subtract off max value
     # dims = 3 here because countries are stored in 3rd dimension
 
-    πprob .= exp.( vj ./ σϵ ) ./ sum( exp.( vj ./ σϵ ) , dims = 3) 
+    foo = vj .- vj_max
+
+    πprob = exp.( foo ./ σϵ ) ./ sum( exp.( foo ./ σϵ ) , dims = 3) 
+
+    return πprob
 
 end
 
@@ -170,7 +183,7 @@ function make_Q!(Q, asset_policy, asset_policy_index, πprob, model_params)
     
     fill!(Q, 0.0) # this is all setup assumeing Q is zero everywehre
 
-        for cntry = 1:Ncntry
+    @inbounds @views for cntry = 1:Ncntry
 
             cntry_counter = Int((cntry - 1)*Nshocks*Na)
 
@@ -207,8 +220,8 @@ function make_Q!(Q, asset_policy, asset_policy_index, πprob, model_params)
                                 if astprime == aprime_l
 
                                     Q[today, tommorow] = ( p )*mc.p[shk, shkprime]*πprob[astprime,shkprime,cntryprime]
-                                # given today (a,z,j) = asset choice * prob end up with z' * prob choose varity j'
-                                # or (a',z',j')
+                                    # given today (a,z,j) = asset choice * prob end up with z' * prob choose varity j'
+                                    # or (a',z',j')
 
                                 elseif astprime == aprime_h
 
@@ -216,7 +229,9 @@ function make_Q!(Q, asset_policy, asset_policy_index, πprob, model_params)
 
                                 end
 
-                        end 
+                            end 
+
+                        end
 
                     end
 
@@ -225,8 +240,6 @@ function make_Q!(Q, asset_policy, asset_policy_index, πprob, model_params)
             end
 
         end
-
-    end
 
 end
 

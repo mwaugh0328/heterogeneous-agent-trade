@@ -185,8 +185,7 @@ end
 ##########################################################################
 ##########################################################################
 
-
-function value_function_itteration(Pces, W, τ_rev, R, model_params; tol = 10^-6, Niter = 500)
+function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 500)
     # this is the boiler plate vfi routine (1) make grid (2) itterate on 
     # bellman operator untill convergence. 
     #
@@ -194,72 +193,28 @@ function value_function_itteration(Pces, W, τ_rev, R, model_params; tol = 10^-6
     # fastest is using nlsove fixed point to find situation where
     # v = bellman_operator(v)
     
-    @unpack Na, Nshocks, Woptions, β, mc, σw = model_params
+    @unpack Na, Nshocks, Ncntry, statesize = model_params
 
-    u = Array{eltype(R)}(undef, Na, Na, Nshocks, Woptions)
+    Q = Array{eltype(R)}(undef, statesize, statesize)
 
-    make_utility!(u, Pces, W, τ_rev, R, model_params)
-
-    v = -ones(Na, Nshocks) / (1-β); #initial value
-    
-    v = convert(Array{eltype(u)}, v)
-    Tv = similar(v)
-
-    for iter in 1:Niter
-        
-        Tv = bellman_operator_upwind(v, u, mc.p, β, σw) 
-        #there is some advantage of having it
-        # explicity, not always recreating the Tv 
-        # array in the function
-    
-        err = maximum(abs, Tv - v)
-
-        err < tol && break
-                
-        v = copy(Tv)
-
-        if iter == Niter
-
-          println("value function may not have converged")
-          println("check the situation")
-        end
-
-    end
-
-    return Tv, u
-    
-end
-
-##########################################################################
-##########################################################################
-
-function policy_function_itteration(W, R, model_params; tol = 10^-6, Niter = 500)
-    # this is the boiler plate vfi routine (1) make grid (2) itterate on 
-    # bellman operator untill convergence. 
-    #
-    # as Fast/ ~faster than Matlab (but nothing is multithreaded here)
-    # fastest is using nlsove fixed point to find situation where
-    # v = bellman_operator(v)
-    
-    @unpack Na, Nshocks = model_params
-
-    gc = ones(Na, Nshocks)
+    gc = ones(Na, Nshocks, Ncntry)
+    πprob = (1/Ncntry)*ones(Na, Nshocks, Ncntry)
 
     Kgc = similar(gc)
+    Kπprob= similar(πprob)
 
     for iter in 1:Niter
         
-        Kgc = coleman_operator(gc, R, W, model_params)
-        #there is some advantage of having it
-        # explicity, not always recreating the Tv 
-        # array in the function
+        Kgc, Kπprob = coleman_operator(gc, πprob, Q, R, W, p, model_params)[1:2]
     
-        err = maximum(abs, Kgc - gc)
+        err = maximum(abs, vcat(Kgc - gc, Kπprob - πprob) )
 
         err < tol && break
                 
         gc = copy(Kgc)
 
+        πprob = copy(Kπprob)
+
         if iter == Niter
 
           println("value function may not have converged")
@@ -268,49 +223,55 @@ function policy_function_itteration(W, R, model_params; tol = 10^-6, Niter = 500
 
     end
 
-    return Kgc
+    Kgc, Kπprob, v, Q = coleman_operator(Kgc, Kπprob, Q, R, W, p, model_params)
+
+    return Kgc, Kπprob, v, Q
     
 end
 
 ##########################################################################
 ##########################################################################
 
-function policy_function_fixedpoint(W, R, model_params; tol = 10^-6)
+function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
-    @unpack Na, Nshocks = model_params
+    @unpack Na, Nshocks, Ncntry, statesize = model_params
 
-    gco = ones(Na, Nshocks)
-    
-# define the inline function on the bellman operator. 
-# so the input is v (other stuff is fixed)
-    
-    K(gc) = coleman_operator(gc, R, W, model_params)
+    Q = Array{eltype(R)}(undef, statesize, statesize)
 
-    solution = fixedpoint(K, gco, ftol = tol, method = :anderson);
+    policyo = Array{Array{Float64}(undef, Na, Nshocks, Ncntry)}(undef,2)
+
+    policyo[1] = ones(Na, Nshocks, Ncntry)
+    policyo[2] = (1/Ncntry)*ones(Na, Nshocks, Ncntry)
+  
+    K(policy) = coleman_operator(policy, Q, R, W, p, model_params)
+
+    solution = fixedpoint(K, policyo, ftol = tol, method = :anderson);
     
     if solution.f_converged == false
         println("did not converge")
     end
 
-    return solution
+    Kgc, Kπprob, v, Q = coleman_operator(policy[1], policy[2], Q, R, W, p, model_params)
+
+    return Kgc, Kπprob, v, Q
 
 end
 
 ##########################################################################
 ##########################################################################
 
-function value_function_fixedpoint(W, R, model_params; tol = 10^-6)
+function value_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
-    @unpack Na, Nshocks, β, mc = model_params
+    @unpack Ncntry, Na, Nshocks, β, mc, σϵ = model_params
 
-    u = Array{eltype(R)}(undef, Na, Na, Nshocks)
+    u = Array{eltype(R)}(undef, Na, Na, Nshocks, Ncntry)
     
-    make_utility!(u, W, R, model_params)
+    make_utility!(u, W, R, p, model_params)
 
 # define the inline function on the bellman operator. 
 # so the input is v (other stuff is fixed)
     
-    T(v) = bellman_operator_upwind(v, u, mc.p, β)
+    T(v) = bellman_operator_upwind(v, u, mc.p, β, σϵ)
 
     Vo = -ones(Na, Nshocks) / (1-β); #initial value
     Vo = convert(Array{eltype(u)}, Vo)
