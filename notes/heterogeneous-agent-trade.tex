@@ -512,14 +512,15 @@ where this has a very natural form: you set the marginal utility of consumption 
 \label{eq:euler_equation}
 \end{align}
 
-\subsection{EGM Algorithm}
+\subsection{EGM-Discrete Choice Algorithm}
 
 Here is a proposed approach. This focuses on just the consumer side in one country $i$.
 \begin{itemize}
-\item[\textbf{0.}] Set up an asset grid as usual. Then guess (i) a consumption function $g_{c,ij}(a,z)$ for each $a$, $z$, and product choice $j$ and (ii) choice probabilities $\pi_{ij}(a, z)$.
+\item[\textbf{0.}] Set up an asset grid as usual. Then guess (i) a consumption function $g_{c,ij}(a,z)$ for each $a$, $z$, and product choice $j$ and (ii) choice specific value function $v_{ij}(a,z)$.
+
+\item[\textbf{1.}] Given the guessed value functions compute the choice probabilities from (\ref{eq:choice-prob}) for each $(a,z)$ combination.
 
 \item[\textbf{1.}] Given the consumption function and choice probabilities compute the RHS of (\ref{eq:euler_equation}) first.
-
 
 \item[\textbf{2.}] Then invert to find the new updated consumption choice so
 \begin{align}
@@ -533,25 +534,33 @@ Side note: One of the interesting things about this equation is that the direct 
 
 \item Do steps \textbf{2.} and \textbf{3.} for each $j$ variety choice. This then makes the function $g_{a,ij}(a,z)$ mapping each state and $j$ choice (today) into $a', z'$ states and then from the budget constraint we have an associated consumption function $g_{c,ij}(a,z)$
 
-\item[\textbf{3.}] Compute utility for each $a,z,j$ state given consumption function \textbf{and} including the logit shock integrated out:
+\item[\textbf{3.}] Compute utility for each $a,z,j$ state given consumption function excluding the logit shock (because the $v_{ij}(a,z)$ does not include and how it's used it is excludes the logit shock). 
 \begin{align}
-u(g_{c,ij}(a,z)) + \mathrm{E}_{\epsilon}(\epsilon_{ij} | \{\pi(a, z)\}_M ), \label{eq:utility_azj}
+u(g_{c,ij}(a,z)), \label{eq:utility_azj}
 \end{align}
-where the last term is the expected preference shock, conditional on the choice probabilities. This is needed to properly invert the value function so that it reflects the value associated with the shock. \textbf{Need to look in LMW as there is a closed for this expectation.}
 
-\item[\textbf{4.}] Compute the transition probability matrix ($Q$ in my notation). Now I'm going to set this matrix up so that the consumption of variety $j$ is a state. So an entry in $Q$ will be the probability that a household with these ``states'' $(a,z,j)$ transits to $(a',z',j')$. States here is not quite right, but it's like imagine you are consuming variety $j$, that's your state, what happens.
-    
-    This transition probability is (i) the linearly interpolated asset choice probability $p$ (\textbf{need to explain more} times (ii) the probability that $z$ transits to $z'$ times (iii) the probability that a household with assets $a',z'$ consumes variety $j'$.
+\item[\textbf{4.}] Compute the $\mathrm{E}\left[ v(g_{a,ij}(a,z), z') \right]$. \textbf{I need to expand upon this, but this is includes the transition implied by the policy function, the shock, and then the logit shock (so the log sum thing would show up here).}
 
-\item[\textbf{5.}] Given the structure of $Q$, then just line (\ref{eq:utility_azj}) with $Q$ and invert to find value functions that are associated with each $(a,z,j)$ state. This takes the form where 
+The new suggested approach is rather than first building the whole transition matrix across different all different states, this is computed ``on the fly'' where loops across states today then accumulate different possibilities and an $Ev$ is constructed. 
+
+\item[\textbf{5.}] Given \textbf{3.} and \textbf{4.} we can update the value function using the bellman equation evaluated at the optimal policies:
 \begin{align}
-\vec{v} = (\mathbb{I} - \beta Q) \ / \  \vec{u} \label{eq:v_inversion}
+Tv_{ij}(a, z) = u(g_{c,ij}(a,z)) + \beta \mathrm{E}\left[ v(g_{a,ij}(a,z), z') \right]
 \end{align}
-where, again, each entry in $\vec{u}$ is an $(a,z,j)$ state and it conforms with the analogues entries in $Q$ of the $(a,z,j)$ states and then the resulting output $\vec{v}$ are the value functions corresponding with $(a,z,j)$ state.
 
-\item[\textbf{6.}] Given $v_{ij}(a,z)$ computed from (\ref{eq:v_inversion}), now compute choice probabilities using (\ref{eq:choice-prob}) for each $(a,z)$ combination.
+\item[\textbf{6.}] Compare old and new policy functions, old and new value functions, and then update accordingly.
 
-\item[\textbf{7.}] Compare old and new policy functions, old and new choice probabilities, and then update accordingly.
+Note that $\textbf{4.}$ and $\textbf{5.}$ are trying to be smart about the time and memory intensive part which is finding the value function. This avoids the construction of the $Q$ matrix which is costly when it is done repeatedly and then inverting the $Q$ which is super costly especially when large. 
+
+%\item[\textbf{5.}] Given the structure of $Q$, then just line (\ref{eq:utility_azj}) with $Q$ and invert to find value functions that are associated with each $(a,z,j)$ state. This takes the form where
+%\begin{align}
+%\vec{v} = (\mathbb{I} - \beta Q) \ / \  \vec{u} \label{eq:v_inversion}
+%\end{align}
+%where, again, each entry in $\vec{u}$ is an $(a,z,j)$ state and it conforms with the analogues entries in $Q$ of the $(a,z,j)$ states and then the resulting output $\vec{v}$ are the value functions corresponding with $(a,z,j)$ state.
+%
+%\item[\textbf{6.}] Given $v_{ij}(a,z)$ computed from (\ref{eq:v_inversion}), now compute choice probabilities using (\ref{eq:choice-prob}) for each $(a,z)$ combination.
+
+
 
 \end{itemize}
 

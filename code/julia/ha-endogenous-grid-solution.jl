@@ -238,11 +238,8 @@ function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
     Q = Array{eltype(R)}(undef, statesize, statesize)
 
-    policyo = Array{Array{Float64}(undef, Na, Nshocks, Ncntry)}(undef,2)
+    policyo = vcat(ones(Na, Nshocks, Ncntry), (1/Ncntry)*ones(Na, Nshocks, Ncntry))
 
-    policyo[1] = ones(Na, Nshocks, Ncntry)
-    policyo[2] = (1/Ncntry)*ones(Na, Nshocks, Ncntry)
-  
     K(policy) = coleman_operator(policy, Q, R, W, p, model_params)
 
     solution = fixedpoint(K, policyo, ftol = tol, method = :anderson);
