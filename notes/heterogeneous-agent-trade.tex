@@ -483,20 +483,20 @@ v_{ij}(a, z) = \max_{a'} u \left( \frac{R_i a + w_i z - a'}{p_{ij}} \right) + \b
 \end{align}
 then the first order condition associated with this problem is:
 \begin{align}
-\frac{u'(c_{ij}(a, z))}{p_{ij}} = \beta \mathrm{E} \frac{\partial v(a', z')}{a'}
+\frac{u'(c_{ij}(a, z))}{p_{ij}} = \beta \mathrm{E} \frac{\partial v(a', z')}{\partial a'}
 \end{align}
-which is saying that, conditional on a variety choice the left hand side is the loss in consumption units which is $1 / p_{ij}$ evaluated at the marginal utility of consumption and then this is set equal to the marginal gain from saving a bit more which is how the value function changes with respect to asset holdings. Now we can arrive at the $\frac{\partial v(a', z')}{a'}$ in the following way, so start from the log-sum expression for the expected value function
+which is saying that, conditional on a variety choice the left hand side is the loss in consumption units which is $1 / p_{ij}$ evaluated at the marginal utility of consumption and then this is set equal to the marginal gain from saving a bit more which is how the value function changes with respect to asset holdings. Now we can arrive at the $\frac{\partial v(a', z')}{\partial a'}$ in the following way, so start from the log-sum expression for the expected value function
 \begin{align}
 \mathbb{E}_{\epsilon} v(a', z') =  \sigma_{\epsilon} \log \left\{ \sum_{j'} \exp \left( \frac{  v_{ij}(a', z')}{\sigma_{\epsilon}} \right) \right\}
 \end{align}
 and then differentiate this with respect to asset holdings which gives:
 \begin{align}
-\frac{\partial \mathbb{E}_{\epsilon} v(a', z')}{a'} = \left( \frac{\sigma_{\epsilon}}{\sum_{j'} \exp \left( \frac{  v_{ij}(a', z')}{\sigma_{\epsilon}}\right)} \right)
-\left[ \sum_{j'} \exp \left( \frac{  v_{ij}(a', z')}{\sigma_{\epsilon}}\right) \frac{1}{\sigma_{\epsilon}} \frac{\partial v_{ij}(a', z')}{a'}  \right]
+\frac{\partial \mathbb{E}_{\epsilon} v(a', z')}{\partial a'} = \left( \frac{\sigma_{\epsilon}}{\sum_{j'} \exp \left( \frac{  v_{ij}(a', z')}{\sigma_{\epsilon}}\right)} \right)
+\left[ \sum_{j'} \exp \left( \frac{  v_{ij}(a', z')}{\sigma_{\epsilon}}\right) \frac{1}{\sigma_{\epsilon}} \frac{\partial v_{ij}(a', z')}{\partial a'}  \right]
 \end{align}
 Then if you look at this carefully and notices how the choice probabilities from (\ref{eq:choice-prob}) are embedded in here, we have:
 \begin{align}
-\frac{\partial \mathbb{E}_{\epsilon} v(a', z')}{a'} = \sum_{j'} \pi_{ij}(a', z) \frac{\partial v_{ij}(a', z')}{a'}
+\frac{\partial \mathbb{E}_{\epsilon} v(a', z')}{\partial a'} = \sum_{j'} \pi_{ij}(a', z) \frac{\partial v_{ij}(a', z')}{\partial a'}
 \end{align}
 and then we can just apply the Envelop theorem to the value functions associated with the discrete choices across the options:
 \begin{align}
