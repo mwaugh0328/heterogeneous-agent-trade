@@ -215,6 +215,8 @@ end
 ##########################################################################
 ##########################################################################
 
+
+
 function make_Q!(Q, household, model_params)
 
     @unpack asset_policy, πprob = household
@@ -489,6 +491,31 @@ function log_sum_column(vj, σϵ)
 
 end
 
+##########################################################################
+##########################################################################
+
+function make_state_index!(state_index, model_params)
+    
+    @unpack Na, Nshocks = model_params
+
+    for shk = 1:Nshocks
+
+        shk_counter = Int((shk - 1)*Na)
+
+        for ast = 1:Na
+
+            today = ast + shk_counter
+
+            state_index[today] = (ast,shk)
+
+        end
+
+    end
+
+end
+
+##########################################################################
+##########################################################################
 
 function bellman_operator_upwind(v, u, mc, β, σϵ) 
     # the value function /bellman operator that takes a v then

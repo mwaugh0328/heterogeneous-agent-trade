@@ -65,15 +65,15 @@ end
 
 # # end
 
-function compute_eq(W, R, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+function compute_eq(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
-# Does everything...
-# (1) Sovles hh problem
-# (2) Constructs stationary distribution
-    
-    hh = solve_household_problem(W, R, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
+    # Does everything...
+    # (1) Sovles hh problem
+    # (2) Constructs stationary distribution
 
-    dist = make_stationary_distribution(Q, state_index, model_params, tol = tol_dis, solution_method = stdist_sol_method)
+    hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
+
+    dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
     
 return hh, dist
 
@@ -82,9 +82,13 @@ end
 # ##########################################################################
 # ##########################################################################
 
-function make_stationary_distribution(Q, state_index, model_params; tol = 1e-10, solution_method = "nl-fixedpoint") 
+function make_stationary_distribution(household, model_params; tol = 1e-10, solution_method = "nl-fixedpoint") 
 
 @unpack Na, Nshocks = model_params
+
+Q = Array{Float64}(undef, Na*Nshocks, Na*Nshocks)
+
+make_Q!(Q, household, model_params)
 
 if solution_method == "nl-fixedpoint"
 
@@ -103,6 +107,10 @@ elseif solution_method == "itteration"
     λ = itterate_stationary_distribution(Q; tol = 1e-10)
 
 end
+
+state_index = Array{Tuple{eltype(Na), eltype(Na)}}(undef, Na*Nshocks, 1)
+
+make_state_index!(state_index, model_params)
 
 return distribution(Q, λ, state_index)
 
@@ -226,10 +234,10 @@ function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
     @unpack Na, Nshocks, Ncntry, statesize, β, σϵ = model_params
 
-    foo, foobar = policy_function_itteration(R, W, p, model_params, Niter = 2)
-    policy_o = vcat(foo, foobar)
+    #foo, foobar = policy_function_itteration(R, W, p, model_params, Niter = 2)
+    #policy_o = vcat(foo, foobar)
 
-    # policy_o = vcat(0.5*ones(Na, Nshocks, Ncntry), -ones(Na, Nshocks, Ncntry)/(1-β))
+    policy_o = vcat(0.5*ones(Na, Nshocks, Ncntry), -ones(Na, Nshocks, Ncntry)/(1-β))
 
     # have seen some convergence issues sometimes
 
