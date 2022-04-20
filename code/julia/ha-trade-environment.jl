@@ -144,7 +144,7 @@ function coleman_operator(c, v, R, W, p, model_params)
     # this function is the bottle neck...worth investing here.
     # why so much memory? 
 
-    return Kg, Tv
+    return Kg, Tv, aprime
 
 end
 
@@ -212,6 +212,63 @@ function make_Tv_upwind!(Tv, Kg, asset_policy, model_params)
 
 end
 
+##########################################################################
+##########################################################################
+
+function make_Q!(Q, household, model_params)
+
+    @unpack asset_policy, πprob = household
+    @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
+
+    fill!(Q, 0.0) # this is all setup assumeing Q is zero everywehre
+    # Q is size Na X Nshocks. Country variety not being tracked.
+
+    for cntry = 1:Ncntry
+        # fix a country and then work through each shock, asset situation
+
+        for shk = 1:Nshocks
+
+            shk_counter = Int((shk - 1)*Na)
+
+            for ast = 1:Na
+
+                today = ast + shk_counter
+
+                aprime_h = searchsortedfirst(agrid, asset_policy[ast, shk, cntry])
+                    # asset choice for ast, shk, and variety choice
+            
+                aprime_l = max(aprime_h - 1, 1)
+                
+                p = 1.0 - (asset_policy[ast, shk, cntry] - agrid[aprime_l]) / (agrid[aprime_h] - agrid[aprime_l])
+
+                if isnan(p)
+                    p = 1.0
+                end
+
+                for shkprime = 1:Nshocks
+                        # then work through tomorrow 
+
+                    shk_counter_prime = Int((shkprime - 1)*Na)
+
+                    tommorow = aprime_l + shk_counter_prime
+
+                    Q[today, tommorow] += ( p )*mc.p[shk, shkprime]*πprob[ast, shk, cntry]
+                        # given today (a,z,j) = asset choice(a,z,j) * prob end up with z' * prob choose varity j
+                        # given today (a,z), then the += accumulation here picks up as we work through cntry
+
+                    tommorow = aprime_h + shk_counter_prime
+
+                    Q[today, tommorow] += ( 1.0 - p )*mc.p[shk, shkprime]*πprob[ast, shk, cntry]
+
+
+                end
+
+            end
+
+        end
+    end
+
+end
 
 ##########################################################################
 ##########################################################################

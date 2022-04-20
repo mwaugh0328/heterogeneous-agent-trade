@@ -1,6 +1,7 @@
 struct household{T}
-    Tv::Array{T} # value function
     asset_policy::Array{T} # asset_policy
+    πprob::Array{T} # choice probabilities
+    Tv::Array{T} # value function
 end
 
 struct distribution{T}
@@ -64,55 +65,26 @@ end
 
 # # end
 
-# function compute_eq(W, R, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-#     hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
-# # Does everything...
-# # (1) Sovles hh problem
-# # (2) Constructs stationary distribution
+function compute_eq(W, R, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
+# Does everything...
+# (1) Sovles hh problem
+# (2) Constructs stationary distribution
     
-#     hh, Q, state_index = solve_household_problem(W, R, model_params, tol = tol_vfi, solution_method = hh_solution_method)
+    hh = solve_household_problem(W, R, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
 
-#     dist = make_stationary_distribution(Q, state_index, model_params, tol = tol_dis, solution_method = stdist_sol_method)
+    dist = make_stationary_distribution(Q, state_index, model_params, tol = tol_dis, solution_method = stdist_sol_method)
     
-# return hh, dist
+return hh, dist
 
-# end
+end
 
 # ##########################################################################
 # ##########################################################################
-
-# function solve_household_problem(W, R, model_params; tol = 10^-6, solution_method = "nl-fixedpoint")
-
-#     if solution_method == "nl-fixedpoint"
-
-#         solution = policy_function_fixedpoint(w, R, model_params; tol = tol)
-
-#         Kg = solution.zero
-
-#     elseif solution_method == "itteration"
-
-#         Kg = policy_function_itteration(w, R, model_params; tol = tol, Niter = 500)
-        
-#     end
-    
-#     @unpack Na, Nshocks, statesize = model_params
-    
-#     state_index = Array{Tuple{eltype(Na), eltype(Na)}}(undef, statesize, 1)
-
-#     Q = Array{eltype(R)}(undef, statesize, statesize)
-    
-#     Kg, asset_policy, Q, state_index, Tv = coleman_operator(Kg, Q, state_index, R, W, model_params);
-
-#     return household(Tv, asset_policy), Q, state_index
-
-# end
-
-##########################################################################
-##########################################################################
 
 function make_stationary_distribution(Q, state_index, model_params; tol = 1e-10, solution_method = "nl-fixedpoint") 
 
-@unpack Na, Nshocks, statesize = model_params
+@unpack Na, Nshocks = model_params
 
 if solution_method == "nl-fixedpoint"
 
@@ -182,6 +154,24 @@ function itterate_stationary_distribution(Q; tol = 1e-10, Niter = 5000)
 
 end
 
+# ##########################################################################
+
+function solve_household_problem(R, W, p, model_params; tol = 10^-6, solution_method = "nl-fixedpoint")
+
+    if solution_method == "nl-fixedpoint"
+
+        Kga, πprob, Tv = policy_function_fixedpoint(R, W, p, model_params; tol = tol)
+
+    elseif solution_method == "itteration"
+
+        Kga, πprob, Tv = policy_function_itteration(R, W, p, model_params; tol = tol, Niter = 500)
+        
+    end
+    
+    return household(Kga, πprob, Tv)
+
+end
+
 ##########################################################################
 ##########################################################################
 
@@ -193,7 +183,7 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
     # fastest is using nlsove fixed point to find situation where
     # v = bellman_operator(v)
     
-    @unpack Na, Nshocks, Ncntry, statesize, β = model_params
+    @unpack Na, Nshocks, Ncntry, statesize, β, σϵ = model_params
 
     gc = 0.5*ones(Na, Nshocks, Ncntry)
     v = -ones(Na, Nshocks, Ncntry)/(1-β)
@@ -203,7 +193,7 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
     for iter in 1:Niter
         
-        Kgc, Tv = coleman_operator(gc, v, R, W, p, model_params)
+        Kgc, Tv = coleman_operator(gc, v, R, W, p, model_params)[1:2]
     
         err = maximum(abs, vcat(Kgc - gc, Tv - v) )
 
@@ -221,7 +211,11 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
     end
 
-    return Kgc, Tv
+    Tv, Kga = coleman_operator(gc, v, R, W, p, model_params)[2:3]
+
+    πprob = make_πprob(Tv, σϵ)
+
+    return Kga, πprob, Tv
     
 end
 
@@ -230,7 +224,7 @@ end
 
 function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
-    @unpack Na, Nshocks, Ncntry, statesize, β = model_params
+    @unpack Na, Nshocks, Ncntry, statesize, β, σϵ = model_params
 
     foo, foobar = policy_function_itteration(R, W, p, model_params, Niter = 2)
     policy_o = vcat(foo, foobar)
@@ -251,7 +245,11 @@ function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
     Tv = solution.zero[(Na+1):end, :, :]
 
-    return Kgc, Tv
+    Tv, Kga = coleman_operator(Kgc, Tv, R, W, p, model_params)[2:3]
+
+    πprob = make_πprob(Tv, σϵ)
+
+    return Kga, πprob, Tv
 
 end
 
@@ -280,7 +278,9 @@ function value_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
         println("did not converge")
     end
 
-    return solution.zero, u
+    πprob = make_πprob(solution.zero, σϵ)
+
+    return solution.zero, πprob, u
 
 end
 

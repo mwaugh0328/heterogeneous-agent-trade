@@ -157,11 +157,11 @@ p_{ji} = \frac{d_{ji}(1 +\tau_{ji})w_{i}}{A_{i}}.
 There is a mass of $L_i$ households in each location $i$. Households are immobile across countries. They are infinite lived and have time-sparable preferences over non-durable consumption varieties:
 \begin{align}
 \small
-E_{0} \sum_{t = 0}^{\infty} \beta^{t} u( \{ c(j)_t \}_{M}),
+E_{0} \sum_{t = 0}^{\infty} \beta^{t} u( \{ c_{jt} \}_{M}),
 \end{align}
-where the notation $\{ c(j)_t \}_{M}$ means that the household has preferences over all $j$ varieties supplied by $M$ countries in the world. My focus is on the situation where households each period receive additive Type 1 extreme value shocks $\epsilon(j)$ with dispersion parameter $\sigma_{\epsilon}$ and then households make a discrete choice about which variety $j$ to each period and a continuous choice about how much. More specifically, the utility associated with the choice of variety $j$ and leisure is
+where the notation $\{ c_{jt} \}_{M}$ means that the household has preferences over all $j$ varieties supplied by $M$ countries in the world. My focus is on the situation where households each period receive additive Type 1 extreme value shocks $\epsilon(j)$ with dispersion parameter $\sigma_{\epsilon}$ and then households make a discrete choice about which variety $j$ to each period and a continuous choice about how much. More specifically, the utility associated with the choice of variety $j$ and leisure is
 \begin{align}
-u( c(j)_t ) =  \frac{ c(j)_t ^{1-\gamma}}{1- \gamma} + \epsilon(j)_t. \label{eq:utility}
+u( c(j)_t ) =  \frac{ c_{jt} ^{1-\gamma}}{1- \gamma} + \epsilon(j)_t. \label{eq:utility}
 \end{align}
 where consumption mapped into utils with a standard CRRA function, $\epsilon(j)$ is the taste shock.
 
@@ -174,7 +174,7 @@ a_{t+1} \geq - \phi_{i}.
 \end{align}
 All these pieces come together in the household's budget constraint, conditional on choosing variety $j$ to consume, and focusing on a stationary setting where prices and transfers are constant:
 \begin{align}
-a_{t+1} + p_{ij}c(j)_{t}  \leq    R_{i} a_{t} + w_{i} z_{t} + T_{i,\tau}.\label{eq:trade-budget-constraint}
+a_{t+1} + p_{ij}c_{jt}  \leq    R_{i} a_{t} + w_{i} z_{t} + T_{i,\tau}.\label{eq:trade-budget-constraint}
 \end{align}
 The value of asset purchases and consumption expenditures must be less than or equal to asset payments, labor earnings, and transfers arising from trade policy (the $T_{i,\tau}$).
 
@@ -307,56 +307,53 @@ Or Financial Autarky where
 
 \subsection{The Centralized Equilibrium}
 
-Here is the planning problem:
+Before discussing some properties of the model, the Centralized (Efficient) Equilibrium is an important point of comparison. To characterize this equilibrium, I take a stand on the Social Welfare function and focus on a Utilitarian planner that places equal weight on all households in the global economy. Social welfare is:
 \begin{align}
-\mathcal{W^{SP}} =\sum_{t=0}^{\infty}  \sum_{i} \sum\limits_{z} \beta^{t} \ \int\limits_{\epsilon} u_{j}(c_{i}(z, \epsilon, t), \ell_{i}(z, \epsilon, t), \epsilon) L_{i} \lambda_{i}(z, t).
+\mathcal{W} =\sum_{t=0}^{\infty}  \sum\limits_{z} \sum_{i} \sum_{j} \beta^{t} \  \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \mu_{ij}(z,t) ] \bigg \}\mu_{ij}(z,t) L_{i} \lambda_{i}(z, t).
 \label{eq:sp-social_welfare}
 \end{align}
-Here social welfare is the average value of households utility across countries $j$, productivity states $z$ and preference shocks $\epsilon$. The average is computed with respect to the measure of households $L_{j}\lambda_{j}(z, \epsilon, t)$ with those shock states and preference shocks at date all dates $t$. Utility depends directly upon the consumption allocation $c_{j}(z, \epsilon, t)$, labor supply decision $\ell_{j}(z, \epsilon, t)$, but also directly on the idiosyncratic preference shock to buying other countries goods.
+Working from the inside out, the inner most term is utility from consumption $c_{ij}(z, t)$ conditional on shock, country source and destination plus the expected value of the preference shocks conditional on shock-specific choice probabilities. The inner most term is weighted according to the measure of households in $i$ sourcing from $j$ $\mu_{ij}(z,t)$ times the total measure of households $L_{i}\lambda_{i}(z, t)$ in country $i$ with shock $z$ at date $t$. Then this is done at all dates $t$ and discounted at the same rate $\beta$ that households discount utility.
 
-We cast the Planners Problem in terms of the planner choosing consumption, labor supply allocations, and goods choice probabilities for each state and date. To cast the problem in terms of choice probabilities, we integrate out the preference shocks conditional on a set of choice probabilities for each household state. These choice probabilities prescribe an assignment of those households with the largest relative preference shock to eat that good or not. So given set of states $j, z, t$, utility is
+The Planner maximizes (\ref{eq:sp-social_welfare}) subject to several constraints. The first is the law of motion describing how the measure of households evolves across states
 \begin{align}
-u(c_{i,j}(z, t), \ell_{i,j}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \mu_{i,j}(z,t) ].
-\label{eq:utility-shocks}
+\lambda_{i}(z', t+1)  & =   \sum_{z} \mathcal{P}(z, z') \lambda_{i}(z,  t).  \  \label{eq:planner_law_motion}
 \end{align}
-\textbf{THIS IS NOT RIGHT.} C
-
-\textbf{Law of Motion.} The law of motion describing how the measure of households evolves across states and locations is
+Given a distribution of households, the effective labor units in each country are
 \begin{align}
-\lambda_{i}(z', t+1)  & =   \sum_{z} \mathcal{P}(z, z') \lambda_{i}(z,  t)  \  \label{eq:planner_law_motion} .
+N_{i,t} =& z \sum_{z} L_i \lambda_{i}(z, t),
+\label{eq:planner_labor_supply}
 \end{align}
-Given a distribution of households, the effective labor units in the urban and rural area are
+and then aggregate production of the final good is
 \begin{align}
-N_{i,t} =& z \sum_{z} \sum_{j} \ell_{ij}(z, t) \lambda_{i}(z, t)\nonumber
-\end{align}
-Aggregate production of the final good is
-\begin{align}
-Y_{it} = A_i N_{i,t} .
+Y_{it} = A_i N_{i,t}.
 \label{eq:planner_value_production}
 \end{align}
-Combining the amount of resources available in (\ref{eq:planner_value_production}) with the consumption and moving decisions we have the following resource constraint:
+Combining the amount of resources available in (\ref{eq:planner_value_production}) with the consumption and sourcing decisions yields the following resource constraint:
 \begin{align}
-Y_{it}\  \geq \ & \sum_{j} \sum_{z} d_{j,i} c_{j,i}(z, t) L_{j}\lambda_{j}(z, t)
+Y_{it}\  \geq \ & \sum_{j} \sum_{z} d_{ji} c_{ji}(z, t) \mu_{ji}(z,t) L_{j}\lambda_{j}(z, t)
+\label{eq:planner_rc}
 \end{align}
-which says that production must be greater than or equal to consumption which is the first term on the righthand side of (\ref{eq:planner_income_side_gdp}) and the moving costs associated with the migration of households across locations which is the second term on the righthand side. Here we compactly sum across all $j'$ and $j$ location pairs and reminding ourselves that the moving cost for staying in a location is zero, i.e., $m_{j,j} = 0$.
+which says that production must be greater than or equal to world consumption of variety $i$ inclusive of trade costs $d_{ji}$.
 
-The \textbf{Centralized Planner's Problem} is the following:
+Given the social welfare function in \ref{eq:sp-social_welfare} and the constraints discussed above, the \textbf{Centralized Planner's Problem} is the following:
 {\small
 \begin{align}
-\mathcal{W}^{*} = & \max\limits_{c_{i,j}(z, t),\ \mu_{i,j}(z, t)} \ \sum_{t=0}^{\infty}\sum_{i} \sum_{j} \beta^{t} \bigg \{ u(c_{i,j}(z, t)) + E[ \ \epsilon \ | \ \mu_{i,j}(z,t)]  \bigg \} \mu_{i,j}(z,t) L_{i}\lambda_{i}(z, t) \ \ \nonumber \\
+\mathcal{W}^{*} = & \max\limits_{c_{i,j}(z, t),\ \mu_{i,j}(z, t)} \ \sum_{t=0}^{\infty}  \sum\limits_{z} \sum_{i} \sum_{j} \beta^{t} \  \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \mu_{i,j}(z,t) ] \bigg \}\mu_{i,j}(z,t) L_{i} \lambda_{i}(z, t) \ \ \nonumber \\
 \nonumber \\
-& \ \ \mbox{subject to} \ \ (\ref{eq:planner_value_production}) \ \ (\ref{eq:planner_income_side_gdp}) \ \ \mbox{and} \ \ (\ref{eq:planner_law_motion}) \ \ \mbox{and an inital condition} \ \ \lambda_i(z, 0).
+& \ \ \mbox{subject to} \ \ (\ref{eq:planner_law_motion}) \ \ (\ref{eq:planner_value_production}) \ \ \mbox{and} \ \ (\ref{eq:planner_rc}) \ \ \mbox{and an inital condition} \ \ \lambda_i(z, 0).
 \label{eq:planner_problem}
-\end{align}}
+\end{align}
+}
 
-\textbf{A Stationary Centralized Planner Allocation.}  A Stationary Centralized Planner Allocation are time invariant policy functions $\{\ c_{i,j}(z),\ \mu_{i,j}(z) \ \}$, a probability distribution $\lambda_{ij}(z)$, and positive real numbers $N_{i}$ where:
+\textbf{A Stationary Centralized Planner Allocation.}  A Stationary Centralized Planner Allocation are time invariant policy functions $\{\ c_{i,j}(z),\ \mu_{i,j}(z) \ \}$, a probability distribution $\lambda_{i}(z)$, and positive real numbers $N_{i}$ for each country $i$ where:
 \begin{itemize}
 \item[i] The policy functions solve the Centralized Planner's Problem in (\ref{eq:planner_problem});
-\item[ii] The probability distribution $\lambda_{j}(z, s, x, i)$ associated with $\{\ \mu_{j',j}(z, s, x, i), \ \pi(s',s), \ \varphi(x',x, j), \ \phi(\nu) \ \}$ is a stationary distribution;
-\item[iii] Effective labor units in the rural and urban areas satisfy (\ref{eq:planner_labor_supply}).
+\item[ii] The probability distribution $\lambda_{i}(z)$ associated with (\ref{eq:planner_law_motion}) is a stationary distribution;
+\item[iii] Effective labor units satisfy (\ref{eq:planner_labor_supply}).
 \end{itemize}
 
 
+\newpage
 
 
 
@@ -471,9 +468,90 @@ where the last term follows from imposing the aggregated budget constraint with 
 
 
 
+\appendix
+
+\clearpage
 \newpage
 
-\section{Endogenous Grid Method}
+\begin{center}
+\textbf{\Large Appendix}
+\end{center}
+
+\addcontentsline{toc}{section}{Appendices}
+
+
+\section{Appendix: Static Logit Trade Model}
+
+This case focuses on the most basic model of household heterogeneity: static, log preferences, logit shocks and is a key point of contact.  The value function of a household contemplating the purchase of national variety $j$ is:
+\begin{align}
+v_{ij}( z ) = &   \log\left( \frac{w_{i} z}{p_{ij}} \right) + \epsilon(j)
+\end{align}
+and then the choice probability becomes
+\begin{align}
+\pi_{ij}(z) = & \exp \left( \frac{ v_{ij}(z) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(z) }{\sigma_{\epsilon}} \right) \\
+\nonumber\\
+\pi_{ij}(z) = & \exp \left( \frac{ \log\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  \log\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right)
+\end{align}
+with the $\log$ specification this expression collapses to
+\begin{align}
+\pi_{ij} = \frac{p_{ij}^{\frac{-1}{\sigma_{\epsilon}}}}{\sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}}
+\end{align}
+as wages an efficiency units cancel. To arrive at an expression for aggregate imports, note that individual imports are
+\begin{align}
+M_{ij}(z) = p_{ij} \frac{w_{i}z}{p_{ij}} \pi_{ij}.
+\end{align}
+then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households in those states which gives
+\begin{align}
+M_{ij} =  \frac{p_{ij}^{\frac{-1}{\sigma_{\epsilon}}}}{\sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}} \times \widetilde{P_{i} C_{i}}
+\end{align}
+where the last term follows from imposing the aggregated budget constraint with aggregate labor income equalling aggregate expenditure. Then to get towards something that looks like \citet{eaton2002technology} substitute in the unit shipping costs from (\ref{eq:marginal-product-ship}) and set $-\theta = -1/ \sigma_{\epsilon}$ yielding:
+\begin{align}
+M_{ij} =  \frac{A_j^{\theta}(w_jd_{ij})^{-\theta}}{\sum_{j'} A_j^{\theta}(w_jd_{ij})^{-\theta}} \times \widetilde{P_{i} C_{i}}
+\end{align}
+and it becomes immediate that the trade share (imports divided by consumption) is $\pi_{ij}$ and the ``trade elasticity'' as discussed in \citet{simonovska2014elasticity} is $\theta$.
+
+From here we can derive the \citet{arkolakis2012new} sufficient statistic welfare result. Expected utility  prior to the realization of the tastes shocks is:
+\begin{align}
+\mathcal{W} = \sigma_{\epsilon} \log \bigg \{ \sum_{j'} \exp \left( \frac{ v_{ij'}(z) }{\sigma_{\epsilon}} \right) \bigg \}
+\end{align}
+which again with log preferences can be written as:
+\begin{align}
+\mathcal{W} = \sigma_{\epsilon} \log w_{i}^{\frac{1}{\sigma_{\epsilon}}} \ + \sigma_{\epsilon} \log \bigg \{ \sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}} \bigg \}
+\end{align}
+I'm always free to make one normalization on prices, so a convenient one is to set $w_i = 1.0$. This then implies from \ref{eq:marginal-product-ship} that $p_{ii} = 1 / A_{i}$ and then the countries home share is
+\begin{align}
+\pi_{ii} = \frac{A_i^{\frac{1}{\sigma_{\epsilon}}}}{\sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}}
+\end{align}
+or 
+\begin{align}
+\pi_{ii}^{-1}A_i^{\frac{1}{\sigma_{\epsilon}}} = \sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}
+\end{align}
+And then substituting into the welfare expression gives
+\begin{align}
+\mathcal{W} = \log A_{i}  - \sigma_{\epsilon} \log \pi_{ii}
+\end{align}
+which is, essentially the \citet{arkolakis2012new} expression. The only substantive difference is that the expression above are in units of utils. To put this in consumption units, take the exponent and then swap into the $\theta$ notation and one has:
+\begin{align}
+\mathcal{\tilde W} = A_{i} \pi_{ii}^{\frac{-1}{\theta}}
+\end{align}
+which is exactly the \citet{arkolakis2012new} expression. The following proposition summarizes the result:
+
+\begin{prp}[\textbf{Static Heterogeneity: Gravity, and Welfare}] \label{apx-prp:static} In the static model with log preferences and logit preference shocks where $\theta = 1 / \sigma_{\epsilon}$, the decentralized allocation is characterized a Gravity equation for country $i$'s imports from country $j$:
+{\small
+\begin{align}
+M_{ij} =  \frac{A_j^{\theta}(w_jd_{ij})^{-\theta}}{\sum_{j'} A_j^{\theta}(w_jd_{ij})^{-\theta}} \times \widetilde{P_{i} C_{i}}
+\label{appendix-eq:static-gravity}
+\end{align}
+}
+where $\theta$ is the trade elasticity. The welfare gains from trade (in consumption units) are summarized by 
+\begin{align}
+\mathcal{\tilde W} = A_{i} \pi_{ii}^{\frac{-1}{\theta}}
+\end{align}
+where $\pi_{ii}$ a country $i$'s share of consumption expenditure on goods from itself. 
+\end{prp}
+
+
+\section{Appendix: Endogenous Grid Method}
 
 First, I'm going to derive the Euler equation for this model. I'll abstract from the situation in which the HH is at the borrowing constraint.
 
@@ -534,7 +612,7 @@ Side note: One of the interesting things about this equation is that the direct 
 
 \item Do steps \textbf{2.} and \textbf{3.} for each $j$ variety choice. This then makes the function $g_{a,ij}(a,z)$ mapping each state and $j$ choice (today) into $a', z'$ states and then from the budget constraint we have an associated consumption function $g_{c,ij}(a,z)$
 
-\item[\textbf{4.}] Compute the $\mathrm{E}\left[ v(g_{a,ij}(a,z), z') \right]$. This is performed in the {\tt{make\_Tv\_upwind!}} function. It fixes a country $j$, then works through shocks and asset states today and from the policy function $g_{a,ij}(a,z)$ figures out the asset choice tomorrow. Then the $\mathrm{E}\left[ v(g_{a,ij}(a,z), z') \right]$ is (\ref{eq:log_sum}) over the different variety choices tomorrow (this is the integration over $\epsilon$) multiplied by the probability of $z'$ occurring (this is the integration over $z$). 
+\item[\textbf{4.}] Compute the $\mathrm{E}\left[ v(g_{a,ij}(a,z), z') \right]$. This is performed in the {\tt{make\_Tv\_upwind!}} function. It fixes a country $j$, then works through shocks and asset states today and from the policy function $g_{a,ij}(a,z)$ figures out the asset choice tomorrow. Then the $\mathrm{E}\left[ v(g_{a,ij}(a,z), z') \right]$ is (\ref{eq:log_sum}) over the different variety choices tomorrow (this is the integration over $\epsilon$) multiplied by the probability of $z'$ occurring (this is the integration over $z$).
 
 \item[\textbf{5.}] Given \textbf{4.} update the value function using the bellman equation evaluated at the optimal policies:
 \begin{align}
@@ -551,13 +629,37 @@ Tv_{ij}(a, z) = u(g_{c,ij}(a,z)) + \beta \mathrm{E}\left[ v(g_{a,ij}(a,z), z') \
 %where, again, each entry in $\vec{u}$ is an $(a,z,j)$ state and it conforms with the analogues entries in $Q$ of the $(a,z,j)$ states and then the resulting output $\vec{v}$ are the value functions corresponding with $(a,z,j)$ state.
 %
 %\item[\textbf{6.}] Given $v_{ij}(a,z)$ computed from (\ref{eq:v_inversion}), now compute choice probabilities using (\ref{eq:choice-prob}) for each $(a,z)$ combination.
-
-
-
 \end{itemize}
 
+\section{Appendix: The Planning Problem}
+The Lagrangian associated with the Centralized Planning problem is:
+\begin{align}
+\mathcal{L}  = & \sum_{t=0}^{\infty}  \sum\limits_{z} \sum_{i} \sum_{j} \beta^{t} \  \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \mu_{ij}(z,t) ] \bigg \}\mu_{ij}(z,t) L_{i} \lambda_{i}(z, t), \\
+\nonumber \\
+&+ \sum_{t=0}^{\infty} \sum_{i} \chi_{i}(t) \bigg \{ Y_{it} \  - \ \sum_{j} \sum_{z} d_{ji} c_{ji}(z, t) \mu_{ji}(z,t) L_{j}\lambda_{j}(z, t) \bigg \} \nonumber \\
+\nonumber \\
+&+ \sum_{t=0}^{\infty} \sum_{i} \chi_{2i}(t) \bigg \{1 - \sum_{j}\mu_{ij}(z,t) \bigg \} L_{i} \lambda_{i}(z, t) \nonumber
+\label{eq:pp}
+\end{align}
+Then associated with this problem are two first order conditions. The first one is consumption in $i$ with respect to variety $j$ so:
+\begin{align}
+\frac{\partial \mathcal{L} }{\partial c_{ij}(z, t)} &=  \beta^{t} u'(c_{ij}(z, t)) \mu_{ij}(z,t) L_{i} \lambda_{i}(z, t) - \chi_{j}(t) d_{ij} \mu_{ij}(z,t) L_{i} \lambda_{i}(z, t) = 0 \\
+\nonumber \\
+& \Rightarrow \ \ \beta^{t} u'(c_{ij}(z, t) ) = \chi_{j}(t) d_{ij},
+\end{align}
+which says that the marginal utility of consumption of ($i$ consuming variety $j$) should equal $j$'s multiplier adjusted by the trade cost $d_{ij}$. Then notice that the right hand size is independent of $z$, thus within variety choice we have the result that $u'(c_{ij}(z, t)) = u'(c_{ij}(z', t)) = u'(\bar c_{ij}(t))$ for all $z, z'$ combinations. Then the ratio of marginal utility across variety $j$ is:
+\begin{align}
+\frac{u'(\bar c_{ij}(t))}{u'(\bar c_{ij'}(t))} = \frac{\chi_{j}(t) d_{ij}}{\chi_{j'}(t) d_{ij'}}
+\end{align}
+which is starting to look like a gravity type regression where the $\chi$'s are related to the price index in the source countries, adjusted by the iceberg trade costs (e.g. equation (5) in SW for example). To be more concrete, compare $i,j$ purchases from $i,i$ purchases and with log utility one has
+\begin{align}
+\frac{\bar c_{ij} }{ \bar c_{ii}} = \frac{\chi_{i}(t)}{\chi_{j}(t)}d_{ij}^{-1}
+\end{align}
+which is quite close to a gravity equation where relative consumption equals a source and destination effect adjusted by the trade costs. Key differences are that this is in quantities, not expenditure; this does not reflect the extensive margin; and related to this last point is that the elasticity is $\gamma$.
 
+\newpage
 
+\bibliography{./bibtex/micro_price_bibtex}
 
 \end{onehalfspacing}
 
