@@ -9,6 +9,11 @@ struct NIPA
     NetA::Float64
 end
 
+struct trade
+    bilateral_imports::Array{Float64} # asset_policy
+    bilateral_πprob::Array{Float64} # choice probabilities
+end
+
 ##############################################################################
 
 function get_aprime(asset_policy, πprob, state_index, model_params)
@@ -62,18 +67,16 @@ end
 
 ##############################################################################
 
-function get_trade(R, W, country, asset_policy, πprob, state_index, model_params)
+function get_trade(R, W, asset_policy, πprob, state_index, model_params)
     # grabs the choice of assets given states
 
     @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
     
-    home_consumption = Array{eltype(asset_policy)}(undef, Na*Nshocks)
-    imports = Array{eltype(asset_policy)}(undef, Na*Nshocks)
-    import_share = Array{eltype(asset_policy)}(undef, Na*Nshocks)
+    c_by_variety = Array{eltype(asset_policy)}(undef, Na*Nshocks, Ncntry)
+    variety_share = Array{eltype(asset_policy)}(undef, Na*Nshocks, Ncntry)
 
-    fill!(home_consumption, 0.0) #need to fill given += operator below
-    fill!(imports, 0.0) #need to fill given += operator below
-    fill!(import_share, 0.0) #need to fill given += operator below
+    fill!(c_by_variety, 0.0) #need to fill given += operator below
+    fill!(variety_share, 0.0) #need to fill given += operator below
 
     shocks = exp.(mc.state_values)
 
@@ -81,25 +84,16 @@ function get_trade(R, W, country, asset_policy, πprob, state_index, model_param
 
         for cntry = 1:Ncntry
 
-            if cntry != country
-
-                imports[foo] +=  ( -asset_policy[xxx[1], xxx[2], cntry] 
+            c_by_variety[foo, cntry] +=  ( -asset_policy[xxx[1], xxx[2], cntry] 
                     + R*agrid[xxx[1]] + W*shocks[xxx[2]] ) * πprob[xxx[1], xxx[2], cntry]
 
-                import_share[foo] += πprob[xxx[1], xxx[2], cntry]
-
-            elseif cntry ≈ country
-
-                home_consumption[foo]  += ( -asset_policy[xxx[1], xxx[2], cntry] 
-                + R*agrid[xxx[1]] + W*shocks[xxx[2]] ) * πprob[xxx[1], xxx[2], cntry]
-
-            end
+            variety_share[foo, cntry] += πprob[xxx[1], xxx[2], cntry]
 
         end
         
     end
 
-    return imports, import_share, home_consumption
+    return c_by_variety, variety_share
 
 end
 
@@ -185,7 +179,7 @@ function aggregate(R, W, p, country, household, distribution, model_params; disp
 
     pc = get_consumption(R, W, asset_policy, πprob, state_index, model_params)
 
-    imports, import_share, home_consumption = get_trade(R, W, country, asset_policy, πprob, state_index, model_params)
+    c_by_variety, variety_share = get_trade(R, W, asset_policy, πprob, state_index, model_params)
 
     Aprime = sum(aprime .* λ, dims = 1)[1]
 
@@ -199,9 +193,17 @@ function aggregate(R, W, p, country, household, distribution, model_params; disp
     PC = sum( pc .* λ, dims = 1)[1]
     #aggregate consumption
 
+    imports = sum(c_by_variety[:, 1:end .!= country], dims = 2)
+    # exclude home country imports
+
     M = sum( imports .* λ, dims = 1)[1]
 
+    bilateral_imports = sum( c_by_variety .* λ, dims = 1)
+    bilateral_πprob = sum( variety_share  .* λ, dims = 1)
+
     production = p[country] * sum( ef_units .* λ, dims = 1)[1] 
+
+    home_consumption = sum(c_by_variety[:, 1:end .== country], dims = 2)
 
     X = production - sum( home_consumption .* λ, dims = 1)[1]
 
@@ -244,7 +246,7 @@ function aggregate(R, W, p, country, household, distribution, model_params; disp
 
     end
 
-    return NIPA(PC, M, X, income, production, N, Aprime, NetA)
+    return NIPA(PC, M, X, income, production, N, Aprime, NetA), trade(bilateral_imports, bilateral_πprob)
 
 end
 
