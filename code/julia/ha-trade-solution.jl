@@ -16,54 +16,19 @@ end
 # # # Keep the idea in mind seperate model vs. solution technique.
 # # # so this files is about solution. Model enviornment is in envronment.jl file
 
-# # function clear_asset_market(Pces, W, τ_rev, R, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-# #     vfi_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
+function clear_asset_market(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
 
-# # @assert model_params.ϕ > 0.0
+@assert model_params.ϕ > 0.0
 
-# # hh = solve_household_problem(Pces, W, τ_rev, R, model_params; tol = tol_vfi, solution_method = vfi_solution_method)
+hh, dist = compute_eq(R, W, p, model_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
+        hh_solution_method = hh_solution_method, stdist_sol_method = stdist_sol_method)
 
-# # dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
+output = aggregate(R, W, p, country, hh, dist, model_params)
 
-# # output = aggregate(Pces, W, τ_rev, R, hh, dist, 1.0, model_params)
+return output.Aprime
 
-# # return output.Aprime
-
-# # end
-
-# # function clear_asset_market(Pces, W, 
-# #     τ_rev, R::ForwardDiff.Dual, model_params; tol_vfi = 1e-6, tol_dis = 1e-10)
-# # # for some reason NLsolve fixedpoint does not work well with ForwardDiff.Dual numbers.
-# # # the work around is to use multiple dispatch. So if R a dual number...then revert to 
-# # # basic itterative methods to solve hh problem and stationary distribution.
-
-# # @assert model_params.ϕ > 0.0
-
-# # hh = solve_household_problem(Pces, W, τ_rev, R, model_params; tol = tol_vfi, solution_method = "vfi-itteration")
-
-# # dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = "itteration")
-
-# # output = aggregate(Pces, W, τ_rev, R, hh, dist, 1.0, model_params)
-
-# # return output.Aprime
-
-# # end
-
-# # ##########################################################################
-# # ##########################################################################
-
-# # function compute_eq(Pces, W::ForwardDiff.Dual, τ_rev::ForwardDiff.Dual, 
-# #     R::ForwardDiff.Dual, model_params; tol_vfi = 1e-6, tol_dis = 1e-10)
-# # # Does everything...
-# # # (1) Sovles hh problem
-# # # (2) Constructs stationary distribution
-# # hh = solve_household_problem(Pces, W, τ_rev, R, model_params; tol = tol_vfi, solution_method = "vfi-itteration")
-
-# # dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = "itteration")
-
-# # return hh, dist
-
-# # end
+end
 
 function compute_eq(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
