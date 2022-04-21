@@ -24,6 +24,9 @@ function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
     A_demand = similar(R)
     tradeflows = Array{Float64}(undef,Ncntry,Ncntry)
 
+    hh = Array{household{Float64}, 1}
+    dist = Array{distribution{Float64}, 1}
+
     for cntry = 1:Ncntry
 
         p = (W ./ TFP) .* d[cntry, :]
@@ -194,11 +197,12 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
         v = copy(Tv)
 
-        # if iter == Niter
+        if iter == Niter
 
-        #   println("value function may not have converged")
-        #   println("check the situation")
-        # end
+          println("value function may not have converged")
+          println("check the situation")
+          
+        end
 
     end
 
@@ -220,10 +224,10 @@ function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
     #foo, foobar = policy_function_itteration(R, W, p, model_params, Niter = 2)
     #policy_o = vcat(foo, foobar)
 
-    cguess = range(0.1,3,Na)
-    vguess = -ones(Na, Nshocks, Ncntry)/(1-β)
+    Kgc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
+    Tv = -ones(Na, Nshocks, Ncntry)/(1-β)
 
-    policy_o = vcat(repeat(cguess,1,Nshocks,Ncntry), vguess)
+    policy_o = vcat(Kgc, Tv)
 
     # have seen some convergence issues sometimes
 
