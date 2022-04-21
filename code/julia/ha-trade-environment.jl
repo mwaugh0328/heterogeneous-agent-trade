@@ -13,6 +13,27 @@ using LinearAlgebra
 
 ##########################################################################
 
+@with_kw struct world_model_params
+    β::Float64 = 0.96
+    γ::Float64 = 2.0
+    ϕ::Float64 = 0.0
+    amax::Float64 = 14.0
+    Ncntry::Int64 = 2
+    σϵ::Float64 = 0.25
+    Na::Int64 = 50
+    agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
+    Nshocks::Int64 = 2
+    statesize::Int64 = Int(Na*Nshocks*Ncntry)
+    ρ::Float64 = 0.60
+    σ::Float64 = 0.30
+    mc::MarkovChain{Float64, Matrix{Float64}, 
+    StepRangeLen{Float64, Base.TwicePrecision{Float64},
+     Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
+    TFP::Array{Float64, 1} = ones(Ncntry)
+    d::Array{Float64, 2} = ones(Ncntry,Ncntry)
+end
+
+
 @with_kw struct model_params
     β::Float64 = 0.96
     γ::Float64 = 2.0
@@ -554,4 +575,18 @@ function bellman_operator_upwind(v, u, mc, β, σϵ)
 
     return Tv
       
+end
+
+##########################################################################
+##########################################################################
+
+function make_d!(d, dij)
+    Ncntry = size(d)[1]
+
+    for cntry = 1:Ncntry
+
+        d[1:end .!= cntry, :] .= dij
+
+    end
+
 end

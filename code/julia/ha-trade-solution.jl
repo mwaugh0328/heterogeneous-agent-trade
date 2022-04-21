@@ -11,24 +11,42 @@ struct distribution{T}
 end
 
 # # ##########################################################################
-# # # functions used to find a solution to the households problem and then
-# # # the stationary equillibrium. 
-# # # Keep the idea in mind seperate model vs. solution technique.
-# # # so this files is about solution. Model enviornment is in envronment.jl file
+# # # functions used to find a solution
 
-function clear_asset_market(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
 
 @assert model_params.ϕ > 0.0
 
-hh, dist = compute_eq(R, W, p, model_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
-        hh_solution_method = hh_solution_method, stdist_sol_method = stdist_sol_method)
+@unpack Ncntry, TFP, d = model_params
 
-output = aggregate(R, W, p, country, hh, dist, model_params)
+    Y = similar(W)
+    A_demand = similar(R)
+    tradeflows = Array{Float64}(undef,Ncntry,Ncntry)
 
-return output.Aprime
+    for cntry = 1:Ncntry
+
+        p = (W ./ TFP) .* d[cntry, :]
+
+        hh, dist = compute_eq(R[cntry], W[cntry], p, model_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
+            hh_solution_method = hh_solution_method, stdist_sol_method = stdist_sol_method)
+
+        output, tradestats = aggregate(R[cntry], W[cntry], p, cntry, hh, dist, model_params)
+
+        Y[cntry] = output.production
+
+        tradeflows[cntry, :] = tradestats.bilateral_imports
+
+        A_demand[cntry] = output.Aprime
+
+    end
+
+return Y, tradeflows, A_demand
 
 end
+
+# ##########################################################################
+# ##########################################################################
 
 function compute_eq(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")

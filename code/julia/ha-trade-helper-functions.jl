@@ -162,6 +162,7 @@ function aggregate(R, W, p, country, household, distribution, model_params; disp
 
     @unpack state_index, λ = distribution
     @unpack πprob, asset_policy = household
+    @unpack TFP = model_params
 
     #####
     wz, ef_units = get_laborincome(W, state_index, model_params)
@@ -201,7 +202,7 @@ function aggregate(R, W, p, country, household, distribution, model_params; disp
     bilateral_imports = sum( c_by_variety .* λ, dims = 1)
     bilateral_πprob = sum( variety_share  .* λ, dims = 1)
 
-    production = p[country] * sum( ef_units .* λ, dims = 1)[1] 
+    production = p[country] * TFP[country]*sum( ef_units .* λ, dims = 1)[1] 
 
     home_consumption = sum(c_by_variety[:, 1:end .== country], dims = 2)
 
