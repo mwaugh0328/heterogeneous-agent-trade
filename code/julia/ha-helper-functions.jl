@@ -1,32 +1,30 @@
 struct NIPA
-    C::Float64
-    AD::Float64
+    PC::Float64 #consumption
+    M::Float64 #imports
+    X::Float64 #exports
     income::Float64
+    production::Float64
     N::Float64
     Aprime::Float64
-    LFP::Float64
     NetA::Float64
 end
 
 ##############################################################################
 
-function get_aprime(asset_policy, work_policy, state_index, model_params)
+function get_aprime(asset_policy, πprob, state_index, model_params)
     # grabs the choice of assets given states
-    # shock is first index,
-    # assets is second index,
 
-    @unpack Woptions, agrid, statesize = model_params
+    @unpack Na, Nshocks, Ncntry = model_params
     
-    asset_prime = Array{eltype(asset_policy)}(undef, statesize)
+    asset_prime = Array{eltype(asset_policy)}(undef, Na*Nshocks)
     fill!(asset_prime, 0.0) #need to fill given += operator below
 
-    @views @inbounds for (foo, xxx) in enumerate(state_index)
+    for (foo, xxx) in enumerate(state_index)
 
-        for wrk = 1:Woptions
+        for cntry = 1:Ncntry
 
-            asset_prime[foo] += sum(agrid .* (asset_policy[xxx[1], : ,xxx[2], wrk] * work_policy[xxx[1], xxx[2], wrk] ))
-                    # aprime choice given work and car choice
-                    # which is all assets * prob its chosen sumed over 
+            asset_prime[foo] += asset_policy[xxx[1], xxx[2], cntry]*πprob[xxx[1], xxx[2], cntry]
+
         end
 
     end
@@ -37,32 +35,71 @@ end
 
 ##############################################################################
 
-function get_consumption(Pces, W, τ_rev, R, asset_policy, work_policy, state_index, model_params)
- 
-    @unpack Na, Nshocks, Woptions, agrid, statesize, mc = model_params
+function get_consumption(R, W, asset_policy, πprob, state_index, model_params)
+    # grabs the choice of assets given states
 
-    c = Array{eltype(R)}(undef, statesize)
-    fill!(c, 0.0)
+    @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
+    
+    pconsumption = Array{eltype(asset_policy)}(undef, Na*Nshocks)
+    fill!(consumption, 0.0) #need to fill given += operator below
 
-    exp_statevals = Array{eltype(R)}(undef, Nshocks)
-    exp_statevals .= exp.(mc.state_values)
+    shocks = exp.(mc.state_values)
 
-    @views @inbounds for (foo, xxx) in enumerate(state_index)
+    for (foo, xxx) in enumerate(state_index)
 
-        for wrk = 1:Woptions
+        for cntry = 1:Ncntry
 
-            wz = labor_income(exp_statevals[xxx[2]], W, wrk)
-            # will return labor income depending upon how much working.
-         
-            c[foo] += sum( asset_policy[xxx[1], : ,xxx[2], wrk] * work_policy[xxx[1], xxx[2], wrk]
-                        .* consumption(Pces, τ_rev, R.*agrid[xxx[1]], agrid, wz)) 
-        # given different aprim, all the consumption 
+            pconsumption[foo] +=  ( -asset_policy[xxx[1], xxx[2], cntry] 
+                    + R*agrid[xxx[1]] + W*shocks[xxx[2]] ) * πprob[xxx[1], xxx[2], cntry]
 
         end
-
+        
     end
 
-    return c
+    return pconsumption
+
+end
+
+##############################################################################
+
+function get_trade(R, W, country, asset_policy, πprob, state_index, model_params)
+    # grabs the choice of assets given states
+
+    @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
+    
+    home_consumption = Array{eltype(asset_policy)}(undef, Na*Nshocks)
+    imports = Array{eltype(asset_policy)}(undef, Na*Nshocks)
+    import_share = Array{eltype(asset_policy)}(undef, Na*Nshocks)
+
+    fill!(home_consumption, 0.0) #need to fill given += operator below
+    fill!(imports, 0.0) #need to fill given += operator below
+    fill!(mport_share, 0.0) #need to fill given += operator below
+
+    shocks = exp.(mc.state_values)
+
+    for (foo, xxx) in enumerate(state_index)
+
+        for cntry = 1:Ncntry
+
+            if cntry ≆ country
+
+                imports[foo] +=  ( -asset_policy[xxx[1], xxx[2], cntry] 
+                    + R*agrid[xxx[1]] + W*shocks[xxx[2]] ) * πprob[xxx[1], xxx[2], cntry]
+
+                import_share[foo] += πprob[xxx[1], xxx[2], cntry]
+
+            elseif cntry ≈ country
+
+                home_consumption = ( -asset_policy[xxx[1], xxx[2], cntry] 
+                + R*agrid[xxx[1]] + W*shocks[xxx[2]] ) * πprob[xxx[1], xxx[2], cntry]
+
+            end
+
+        end
+        
+    end
+
+    return imports, import_share, home_consumption
 
 end
 
@@ -82,12 +119,9 @@ end
 
 ##############################################################################
 
-function get_laborincome(W, work_policy, state_index, model_params)
-    # grabs the current shock in level terms
-    # asset is first index,
-    # shock is second index,
-    # car is thrid index 
-    @unpack statesize, Woptions, mc = model_params
+function get_laborincome(W, state_index, model_params)
+
+    @unpack Na, Nshocks, mc = model_params
     
     wz = Array{eltype(W)}(undef, statesize)
     fill!(wz,0.0)
@@ -99,12 +133,7 @@ function get_laborincome(W, work_policy, state_index, model_params)
 
         ef_units[foo] = exp.(mc.state_values[xxx[2]])
 
-        for wrk = 1:Woptions
-
-            wz[foo] += labor_income(ef_units[foo], W, wrk).* work_policy[xxx[1], xxx[2], wrk]
-            # will return labor income depending upon how much working.
-
-        end
+        wz[foo] += labor_income(ef_units[foo], W)
 
     end
 
@@ -114,42 +143,11 @@ end
 
 ##############################################################################
 
-function get_labor(W, work_policy, state_index, distribution, model_params)
-
-    @unpack statesize = model_params
-
-    wz, ef_units = get_laborincome(W, work_policy, state_index, model_params)
-
-    labor_supply = Array{eltype(W)}(undef, statesize)
-
-    fill!(labor_supply, 0.0) #need to fill given += operator below
-
-    for (foo, xxx) in enumerate(state_index)
-
-        labor_supply[foo] += work_policy[xxx[1], xxx[2], 1]
-
-    end
-
-    LFP = sum(labor_supply .* distribution, dims = 1)[1]
-
-    N = sum( ef_units .* labor_supply .* distribution, dims = 1)[1]
-
-    return labor_supply, N, LFP, wz, ef_units
-    # matrix that is of size Na*Nshocks*Ncars
-
-end
-
-
-##############################################################################
-
 function get_astate(state_index, model_params)
-    # grabs the current asset level
-    # shock is first index,
-    # assets is second index,
-    # car is thrid index 
-    @unpack statesize, agrid = model_params
+
+    @unpack Na, Nshocks, agrid = model_params
     
-    asset_state = Array{eltype(agrid)}(undef, statesize)
+    asset_state = Array{eltype(agrid)}(undef, Na*Nshocks)
 
     for (foo, xxx) in enumerate(state_index)
         
@@ -164,15 +162,17 @@ end
 
 ##############################################################################
 
-function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; display = false)
+function aggregate(R, W, p, country, household, distribution, model_params; display = false)
 
     # organization...
 
     @unpack state_index, λ = distribution
-    @unpack work_policy, asset_policy = hh
+    @unpack πprob, asset_policy = household
 
     #####
-    labor_supply, N, LFP, wz, ef_units = get_labor(W, work_policy, state_index, λ, model_params)
+    wz, ef_units = gt_laborincome(W, state_index, model_params)
+
+    N = sum( ef_units .* distribution, dims = 1)[1]
 
     #####
     # Get stuff from hh side
@@ -180,10 +180,12 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
     a = get_astate(state_index, model_params)
     # assets today
 
-    aprime = get_aprime(hh.asset_policy, work_policy, state_index, model_params)
+    aprime = get_aprime(asset_policy, πprob, state_index, model_params)
     # # assets tomorrow Noption * statesize as assets are contingent on car choice
 
-    c = get_consumption(Pces, W, τ_rev, R, asset_policy, work_policy, state_index, model_params)
+    pc = get_consumption(R, W, asset_policy, πprob, state_index, model_params)
+
+    imports, import_share, home_consumption = get_trade(R, W, country, asset_policy, πprob, state_index, model_params)
 
     Aprime = sum(aprime .* λ, dims = 1)[1]
 
@@ -194,29 +196,23 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
 
     NetA = -(R * A) + Aprime
 
-    C = sum( c .* λ, dims = 1)[1]
-    #aggregate nondurable consumption
-    # then multiply the prob of being in that state and sum to aggregate 
+    PC = sum( pc .* λ, dims = 1)[1]
+    #aggregate consumption
 
-    AD = C + NetA
-    # this is aggregate demand. So how many coconuts do you need which 
-    # includes consumption and then stuff to save /lend out
+    M = sum( imports .* λ, dims = 1)[1]
+
+    production = p[country] * sum( ef_units .* λ, dims = 1)[1] 
+
+    X = production - sum( home_consumption .* λ, dims = 1)[1]
 
     ####
     # then compute GDP like measure
 
-    expenditure = Pces *( C + NetA - τ_rev)
-    # to get expenditure to line up with production and income,
-    # need to put everything in same units, mulitipying by P index does this
-    # net off tariff revenue too
-
-    price_production = W / TFP # comes of profit max condition that p = w / A
-
-    production = price_production * sum( TFP .* ef_units .* labor_supply .* λ, dims = 1)[1] 
-
     income = sum( wz.* λ, dims = 1)[1] 
+
+    expenditure = PC + X - M
     # aggregate labor income 
-    # take shock and multiply by prob of being in that state, sum to aggregate
+    # is this correct price
 
     if display == true
         digits = 6
@@ -225,8 +221,14 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
         println("NIPA")
         println("---------------------------------")
         println("")
-        println("Aggregate Non-Durable Consumption")
-        println(round(C, digits = digits))
+        println("Aggregate Consumption")
+        println(round(PC, digits = digits))
+        println("")
+        println("Aggregate Imports")
+        println(round(PC, digits = digits))
+        println("")
+        println("Aggregate Exports")
+        println(round(PC, digits = digits))
         println("")
         println("Aggregate Net Asset Position")
         println(round(NetA, digits = digits))
@@ -239,211 +241,12 @@ function aggregate(Pces, W, τ_rev, R, hh, distribution, TFP, model_params; disp
         println("")
         println("GDP, Produciton Side")
         println(round(production, digits = digits))
-        println("")
-        println("Aggregate Participation Rate")
-        println(round(LFP, digits = digits))
 
     end
 
-
-
-    return NIPA(
-        C,
-        AD,
-    income,
-        N,
-        Aprime,
-        LFP,
-        NetA
-        )
+    return NIPA(PC, M, X, income, production, N, Aprime, NetA)
 
 end
 
 ##############################################################################
 ##############################################################################
-
-function make_dataset(output, output_int, solution, initialR, Tperiods)
-    #multiple dispatch version for endogenous Rend
-    
-    Ncntry = size(output)[1]
-
-    Rvec = vcat(Rint, solution[2*Ncntry*Tperiods + 1 : end])
-    
-    if length(Rvec) == Ncntry*Tperiods
-
-        R = reshape(Rvec, Ncntry, Tperiods)
-
-    else
-
-        @assert length(Rvec) == Tperiods
-
-        R = reshape(repeat(Rvec, inner = Ncntry, outer = 1), Ncntry, Tperiods)
-
-        initialR = repeat(initialR, inner = Ncntry, outer = 1)
-
-    end
-    
-    backfilllength = 10
-    bigR = []
-    bigT = []
-    bigC = []
-    bigN = []
-    bigLFP = []
-    bigNetA = []
-    country_index = []
-
-    backfill= Array{Float64}(undef, backfilllength )
-
-    for cnt = 1:Ncntry
-
-        fill!(backfill, initialR[cnt])
-
-        fooR = [R[cnt ,xxx] for xxx in 1:Tperiods]
-
-        prepend!(fooR, backfill)
-        append!(bigR, fooR)
-
-        ###############################################
-        # Net Asset Position
-        fill!(backfill, output_int[cnt].NetA[1])
-
-        NetA = [output[cnt][xxx].NetA[1] for xxx in 1:Tperiods]
-
-        prepend!(NetA, backfill)
-        append!(bigNetA, NetA)
-
-        ###############################################
-        # Counsumption
-        fill!(backfill, output_int[cnt].C[1])
-
-        C = [output[cnt][xxx].C[1] for xxx in 1:Tperiods]
-
-        prepend!(C, backfill)
-        append!(bigC, C)
-
-        ###############################################
-        # Time and country index
-
-        time = -9:1:(length(C)-10)
-    
-
-        append!(bigT,time)
-        append!(country_index, Int.(cnt.*ones(length(time))))
-    
-        ###############################################
-        # Labor Supply
-        fill!(backfill, output_int[cnt].N[1])
-
-        N = [output[cnt][xxx].N[1] for xxx in 1:Tperiods]
-
-        prepend!(N, backfill)
-        append!(bigN, N)
-
-
-        ###############################################
-        # LFP
-        fill!(backfill, output_int[cnt].LFP[1])
-
-        LFP = [output[cnt][xxx].LFP[1] for xxx in 1:Tperiods]
-
-        prepend!(LFP, backfill)
-        append!(bigLFP, LFP)
-    end
-
-    df = DataFrames.DataFrame(country_index = country_index,
-            time = bigT, 
-            consumption = bigC,
-            labor_supply = bigN,
-            intrest_rate = bigR,
-            LFP = bigLFP,
-            NetAsset = bigNetA
-            );
-
-    return df
-
-end
-
-function make_dataset(output, output_int, R, Tperiods)
-    #multiple dispatch version for fixed R
-    
-    Ncntry = size(output)[1]
-    
-    backfilllength = 10
-    bigR = []
-    bigT = []
-    bigC = []
-    bigN = []
-    bigLFP = []
-    bigNetA = []
-    country_index = []
-
-    backfill= Array{Float64}(undef, backfilllength )
-
-    for cnt = 1:Ncntry
-
-        fill!(backfill, R)
-
-        fooR = [R for xxx in 1:Tperiods]
-
-        prepend!(fooR, backfill)
-        append!(bigR, fooR)
-
-        ###############################################
-        # Net Asset Position
-        fill!(backfill, output_int[cnt].NetA[1])
-
-        NetA = [output[cnt][xxx].NetA[1] for xxx in 1:Tperiods]
-
-        prepend!(NetA, backfill)
-        append!(bigNetA, NetA)
-
-        ###############################################
-        # Counsumption
-        fill!(backfill, output_int[cnt].C[1])
-
-        C = [output[cnt][xxx].C[1] for xxx in 1:Tperiods]
-
-        prepend!(C, backfill)
-        append!(bigC, C)
-
-        ###############################################
-        # Time and country index
-
-        time = -9:1:(length(C)-10)
-    
-
-        append!(bigT,time)
-        append!(country_index, Int.(cnt.*ones(length(time))))
-    
-        ###############################################
-        # Labor Supply
-        fill!(backfill, output_int[cnt].N[1])
-
-        N = [output[cnt][xxx].N[1] for xxx in 1:Tperiods]
-
-        prepend!(N, backfill)
-        append!(bigN, N)
-
-
-        ###############################################
-        # LFP
-        fill!(backfill, output_int[cnt].LFP[1])
-
-        LFP = [output[cnt][xxx].LFP[1] for xxx in 1:Tperiods]
-
-        prepend!(LFP, backfill)
-        append!(bigLFP, LFP)
-    end
-
-    df = DataFrames.DataFrame(country_index = country_index,
-            time = bigT, 
-            consumption = bigC,
-            labor_supply = bigN,
-            intrest_rate = bigR,
-            LFP = bigLFP,
-            NetAsset = bigNetA
-            );
-
-    return df
-
-end

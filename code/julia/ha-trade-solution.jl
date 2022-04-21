@@ -237,7 +237,10 @@ function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
     #foo, foobar = policy_function_itteration(R, W, p, model_params, Niter = 2)
     #policy_o = vcat(foo, foobar)
 
-    policy_o = vcat(0.5*ones(Na, Nshocks, Ncntry), -ones(Na, Nshocks, Ncntry)/(1-β))
+    cguess = range(0.1,3,Na)
+    vguess = -ones(Na, Nshocks, Ncntry)/(1-β)
+
+    policy_o = vcat(repeat(cguess,1,Nshocks,Ncntry), vguess)
 
     # have seen some convergence issues sometimes
 

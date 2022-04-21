@@ -244,20 +244,20 @@ where one can see a bug and a feature of this model. Here there is an ``index nu
 
 \textbf{Trade Flows} It's first worth walking though imports for a given set of states. So for households with states $a$ and $z$ we have
 \begin{align}
-M_{ij}(a, z; S_i) = p_{ij} c_{ij}(a, z; S_i) \ \pi_{ij}(a, z; S_i).
+M_{ij}(a, z; S_i) = p_{ij} c_{ij}(a, z; S_i).
 \end{align}
-Then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households in those states so
+Then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households choosing variety $j$ and who in those states so
 \begin{align}
-M_{ij} = L_i \sum_{z}\sum_{a} M_{ij}(a, z; S_i) \lambda_i(a, z; S_i).
+M_{ij} = L_i \sum_{z}\sum_{a} M_{ij}(a, z; S_i) \pi_{ij}(a, z; S_i) \lambda_i(a, z; S_i).
 \label{eq:imports}
 \end{align}
 The same can be done for a countries exports. Again, focusing on exports to a location given a set of states we have
 \begin{align}
-X_{ji}(a, z; S_j) = p_{ji} c_{ji}(a, z; S_j) \pi_{ji}(a, z; S_j)
+X_{ji}(a, z; S_j) = p_{ji} c_{ji}(a, z; S_j) 
 \end{align}
 Then aggregate exports from country $i$ to country $j$
 \begin{align}
-X_{ji} = L_j \sum_{z}\sum_{a} X_{ji}(a, z; S_j) \lambda_j(a, z; S_j)
+X_{ji} = L_j \sum_{z}\sum_{a} X_{ji}(a, z; S_j) \pi_{ji}(a, z; S_j) \lambda_j(a, z; S_j)
 \label{eq:exports}
 \end{align}
 
@@ -320,7 +320,7 @@ The Planner maximizes (\ref{eq:sp-social_welfare}) subject to several constraint
 \end{align}
 Given a distribution of households, the effective labor units in each country are
 \begin{align}
-N_{i,t} =& z \sum_{z} L_i \lambda_{i}(z, t),
+N_{i,t} =&  L_i \sum_{z} z \lambda_{i}(z, t),
 \label{eq:planner_labor_supply}
 \end{align}
 and then aggregate production of the final good is
@@ -402,21 +402,11 @@ and then the choice probability becomes
 \nonumber\\
 \pi_{ij}(z; S_i) = & \exp \left( \frac{ u\left( \frac{w_{i}z}{p_{ij}} \right) ) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ u\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right)
 \end{align}
-where the last line follows from the properties of the $\exp$ function and that the continuation value function is exactly the same independent of the good chosen. Two more steps. With the CRRA utility speciation, a houeholds efficiency units drops out and thus the choice probability does not depend upon $z$. Then with $\log$ this expression collapses to
+where the last line follows from the properties of the $\exp$ function and that the continuation value function is exactly the same independent of the good chosen. Two more steps. Then with $\log$ this expression collapses to
 \begin{align}
-\pi_{ij}(S_i) = \frac{p_{ij}^{-\sigma_{\epsilon}}}{\sum_{j'} p_{ij'}^{-\sigma_{\epsilon}}}
+\pi_{ij}(S_i) = \frac{p_{ij}^{-1 / \sigma_{\epsilon}}}{\sum_{j'} p_{ij'}^{-1 / \sigma_{\epsilon}}}
 \end{align}
-where here we recover the well known ``ces-logit-isomorphisim'' between the logit demand system and the CES aggregator in \ref{eq:ces-armington} above by setting $\sigma_\epsilon = 1 - \theta$.
-
-Like in the CES case, a similar aggregate gravity type relationship can be recovered. Individual imports are
-\begin{align}
-M_{ij}(z; S_i) = p_{ij} \frac{w_{i}z}{p_{ij}} \pi_{ij}(S_i).
-\end{align}
-then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households in those states which gives
-\begin{align}
-M_{ij} =  \frac{p_{ij}^{-\sigma_{\epsilon}}}{\sum_{j'} p_{ij'}^{-\sigma_{\epsilon}}} \times \widetilde{P_{i} C_{i}}
-\end{align}
-where the last term follows from imposing the aggregated budget constraint with aggregate labor income equalling aggregate expenditure.
+where here we recover the well known ``ces-logit-isomorphisim'' between the logit demand system and the CES aggregator in \ref{eq:ces-armington}.
 
 %\section{When Household Heterogeneity Does Not Matter?}
 %
@@ -498,19 +488,33 @@ with the $\log$ specification this expression collapses to
 \end{align}
 as wages an efficiency units cancel. To arrive at an expression for aggregate imports, note that individual imports are
 \begin{align}
-M_{ij}(z) = p_{ij} \frac{w_{i}z}{p_{ij}} \pi_{ij}.
+M_{ij}(z) = p_{ij} \frac{w_{i}z}{p_{ij}}.
 \end{align}
 then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households in those states which gives
 \begin{align}
+M_{ij} = \sum_{z} p_{ij} \frac{w_{i}z}{p_{ij}} \pi_{ij} \lambda(z) \\
+\nonumber \\
+M_{ij} = \pi_{ij} \sum_{z} w_{i}z \lambda(z)\\
+\nonumber \\
 M_{ij} =  \frac{p_{ij}^{\frac{-1}{\sigma_{\epsilon}}}}{\sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}} \times \widetilde{P_{i} C_{i}}
 \end{align}
 where the last term follows from imposing the aggregated budget constraint with aggregate labor income equalling aggregate expenditure. Then to get towards something that looks like \citet{eaton2002technology} substitute in the unit shipping costs from (\ref{eq:marginal-product-ship}) and set $-\theta = -1/ \sigma_{\epsilon}$ yielding:
 \begin{align}
 M_{ij} =  \frac{A_j^{\theta}(w_jd_{ij})^{-\theta}}{\sum_{j'} A_j^{\theta}(w_jd_{ij})^{-\theta}} \times \widetilde{P_{i} C_{i}}
 \end{align}
-and it becomes immediate that the trade share (imports divided by consumption) is $\pi_{ij}$ and the ``trade elasticity'' as discussed in \citet{simonovska2014elasticity} is $\theta$.
+and it becomes immediate that the trade share (imports divided by consumption) is $\pi_{ij}$. 
 
-From here we can derive the \citet{arkolakis2012new} sufficient statistic welfare result. Expected utility  prior to the realization of the tastes shocks is:
+Given this representation of trade flows, I'm going to derive the ``trade elasticity'' and then welfare. I'll define the trade elasticity as the following:
+\begin{align}
+\frac{\partial \pi_{ij} / \pi_{ii}}{\partial d_{ij}} \times \frac{d_{ij}}{\pi_{ij} / \pi_{ii}}
+\end{align}
+or the percent change in trade relative to domestic trade due to a change in trade costs which is our labeling of the elasticity in \citet{simonovska2014elasticity}. In this setup the ``trade elasticity'' is:
+\begin{align}
+\frac{\partial \pi_{ij} / \pi_{ii}}{\partial d_{ij}} \times \frac{d_{ij}}{\pi_{ij} / \pi_{ii}} = -\theta 
+\end{align}
+so it simply reflects the dispersion parameter $\sigma_{\epsilon}$.
+
+I can also derive the \citet{arkolakis2012new} sufficient statistic welfare result. Expected utility  prior to the realization of the tastes shocks is:
 \begin{align}
 \mathcal{W} = \sigma_{\epsilon} \log \bigg \{ \sum_{j'} \exp \left( \frac{ v_{ij'}(z) }{\sigma_{\epsilon}} \right) \bigg \}
 \end{align}
@@ -522,7 +526,7 @@ I'm always free to make one normalization on prices, so a convenient one is to s
 \begin{align}
 \pi_{ii} = \frac{A_i^{\frac{1}{\sigma_{\epsilon}}}}{\sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}}
 \end{align}
-or 
+or
 \begin{align}
 \pi_{ii}^{-1}A_i^{\frac{1}{\sigma_{\epsilon}}} = \sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}
 \end{align}
@@ -543,11 +547,15 @@ M_{ij} =  \frac{A_j^{\theta}(w_jd_{ij})^{-\theta}}{\sum_{j'} A_j^{\theta}(w_jd_{
 \label{appendix-eq:static-gravity}
 \end{align}
 }
-where $\theta$ is the trade elasticity. The welfare gains from trade (in consumption units) are summarized by 
+where the trade elasticity defined as 
+\begin{align}
+\frac{\partial ( M_{ij} / M_{ii} )}{\partial d_{ij}} \times \frac{d_{ij}}{( M_{ij} / M_{ii} )} = -\theta,
+\end{align}
+and is determined by the dispersion of the preferences shocks. Finally the welfare gains from trade in consumption units are summarized by
 \begin{align}
 \mathcal{\tilde W} = A_{i} \pi_{ii}^{\frac{-1}{\theta}}
 \end{align}
-where $\pi_{ii}$ a country $i$'s share of consumption expenditure on goods from itself. 
+where $\pi_{ii}$ a country $i$'s share of consumption expenditure on goods from itself.
 \end{prp}
 
 
