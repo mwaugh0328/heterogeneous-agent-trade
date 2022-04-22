@@ -15,3 +15,7 @@ R = 1.029*ones(Ncntry);
 W = 1.0*ones(Ncntry);
 
 @time Y, tradeflows, Ademand = world_equillibrium(R, W, mdl_prm)
+
+
+# @time Y, tradeflows, Ademand = world_equillibrium(R, W, mdl_prm)
+#   0.928947 seconds (9.30 M allocations: 1.170 GiB, 14.82% gc time)

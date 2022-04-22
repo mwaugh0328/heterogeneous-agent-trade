@@ -80,7 +80,7 @@ function coleman_operator(policy, R, W, p, model_params)
     # this integrates over z
 
     #Step (3) Work through each county option
-    @inbounds @views for cntry = 1:Ncntry
+     for cntry = 1:Ncntry
 
         gc = muc_inverse.( p[cntry] * Emuc, γ)
         # invert from rhs of euler equation
@@ -191,6 +191,8 @@ function make_Tv_upwind!(Tv, Kg, asset_policy, model_params)
             # appears to by 2x faster not too use function
 
                 aprime_h = searchsortedfirst(agrid, asset_policy[ast, shk, cntry])
+                #searchsortedfirst.(Ref(agrid), asset_policy[:,shk, cntry])
+                # broadcaseted version
             
                 aprime_l = max(aprime_h - 1, 1)
             
@@ -246,7 +248,7 @@ function make_Q!(Q, household, model_params)
     fill!(Q, 0.0) # this is all setup assumeing Q is zero everywehre
     # Q is size Na X Nshocks. Country variety not being tracked.
 
-    for cntry = 1:Ncntry
+    @inbounds @views for cntry = 1:Ncntry
         # fix a country and then work through each shock, asset situation
 
         for shk = 1:Nshocks
@@ -312,9 +314,7 @@ function log_sum_v(vj, σϵ)
 
     vj_max = maximum(vj)
 
-    foo = vj .- vj_max
-
-    return σϵ*log( sum( exp.( ( foo )/ σϵ )) ) + vj_max
+    return σϵ*log( sum( exp.( ( vj .- vj_max )/ σϵ )) ) + vj_max
 
 end
 
