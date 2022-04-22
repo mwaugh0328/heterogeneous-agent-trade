@@ -310,17 +310,20 @@ end
 ##########################################################################
 ##########################################################################
 function log_sum_v(vj, σϵ, Ncntry)
+    # this just does a loop on it.
+    # amazingly faster and way more memory effecient
+
     foo = 0.0
 
     vj_max = maximum(vj)
 
-    for xxx = 1:Ncntry
+    @inbounds for xxx = 1:Ncntry
 
         foo += exp( ( vj[xxx] - vj_max ) / σϵ )
 
     end
 
-    return σϵ*log(  foo ) + vj_max
+    return σϵ*log( foo ) + vj_max
 
 end
 
@@ -329,6 +332,7 @@ function log_sum_v(vj, σϵ)
     vj_max = maximum(vj)
 
     foo = @. exp( ( vj - vj_max ) / σϵ )
+    # not haveing ./ on the σϵ was a problem
 
     return σϵ*log( sum( foo )) + vj_max
 

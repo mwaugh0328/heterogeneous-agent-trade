@@ -2,7 +2,7 @@ include("ha-trade-environment.jl")
 include("ha-trade-solution.jl")
 include("ha-trade-helper-functions.jl")
 
-Ncntry = 8
+Ncntry = 12
 d = 1.5.*ones(Ncntry,Ncntry)
 d[diagind(d)] .= 1.0
 
