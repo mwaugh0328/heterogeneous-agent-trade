@@ -21,13 +21,7 @@ p[country] = 1.0
 R = 1.029;
 W = 1.0;
 
-@time hh, dist = compute_eq(R, W, p, mdl_prm)
 
-
-
-@time agstats, tradestats = aggregate(R, W, p, country, hh, dist, mdl_prm, display = true)
-
-c_by_variety, variety_share = get_trade(R, W, hh.asset_policy, hh.πprob, dist.state_index, mdl_prm)
 
 # asset_dist = get_distribution(dist.state_index, dist.λ);
 
