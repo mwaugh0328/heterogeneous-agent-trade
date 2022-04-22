@@ -24,10 +24,7 @@ function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
     A_demand = similar(R)
     tradeflows = Array{Float64}(undef,Ncntry,Ncntry)
 
-    hh = Array{household{Float64}, 1}
-    dist = Array{distribution{Float64}, 1}
-
-    for cntry = 1:Ncntry
+    Threads.@threads for cntry = 1:Ncntry
 
         p = (W ./ TFP) .* d[cntry, :]
 

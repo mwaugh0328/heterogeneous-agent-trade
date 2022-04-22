@@ -210,12 +210,12 @@ function make_Tv_upwind!(Tv, Kg, asset_policy, model_params)
                     # work through each shock state tommorow to construct
                     # EV
                     
-                    Ev += ( p )*mc.p[shk, shkprime]*log_sum_v( Tv[aprime_l, shkprime, :] , σϵ)
+                    Ev += ( p )*mc.p[shk, shkprime]*log_sum_v( Tv[aprime_l, shkprime, :] , σϵ, Ncntry)
                     # so Ev | states today = transition to aprime (p), transition to z',
                     # then multiplies by v tommorow. v tommorow is the log sum thing across different 
                     # options
                 
-                    Ev += ( 1.0 - p )*mc.p[shk, shkprime]*log_sum_v( Tv[aprime_h, shkprime, :] , σϵ)
+                    Ev += ( 1.0 - p )*mc.p[shk, shkprime]*log_sum_v( Tv[aprime_h, shkprime, :] , σϵ, Ncntry)
                     # note the += here, so we are accumulting this different 
                     # posibilities
 
@@ -309,12 +309,28 @@ end
 
 ##########################################################################
 ##########################################################################
+function log_sum_v(vj, σϵ, Ncntry)
+    foo = 0.0
+
+    vj_max = maximum(vj)
+
+    for xxx = 1:Ncntry
+
+        foo += exp( ( vj[xxx] - vj_max ) / σϵ )
+
+    end
+
+    return σϵ*log(  foo ) + vj_max
+
+end
 
 function log_sum_v(vj, σϵ)
 
     vj_max = maximum(vj)
 
-    return σϵ*log( sum( exp.( ( vj .- vj_max )/ σϵ )) ) + vj_max
+    foo = @. exp( ( vj - vj_max ) / σϵ )
+
+    return σϵ*log( sum( foo )) + vj_max
 
 end
 
@@ -506,9 +522,9 @@ function log_sum_column(vj, σϵ)
 
     vj_max = maximum(vj, dims = 3)
 
-    foo = vj .- vj_max
+    #foo = vj .- vj_max
 
-    return reshape(σϵ*log.( sum( exp.( ( foo ) / σϵ ) , dims = 3) ) + vj_max, Na, Nshocks)
+    return reshape(σϵ*log.( sum( exp.( ( vj .- vj_max ) / σϵ ) , dims = 3) ) + vj_max, Na, Nshocks)
 
 end
 
