@@ -9,6 +9,7 @@ using Octavian
 using ForwardDiff
 using Interpolations
 using LinearAlgebra
+using LoopVectorization
 
 
 ##########################################################################
@@ -73,19 +74,26 @@ function coleman_operator(policy, R, W, p, model_params)
     πprob = make_πprob(v, σϵ)
     muc_ϵ = Array{eltype(R)}(undef, Na, Nshocks)
 
+    ã = Array{eltype(R)}(undef, Na, Nshocks)
+    gc = similar(ã )
+    Emuc = Array{eltype(R)}(undef, Na, Nshocks)
+
     ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
     # this integrates over ϵ
 
-    Emuc = β*R*( matmul( muc_ϵ , mc.p'))
+    #matmul!(Emuc, β*R*muc_ϵ , mc.p')
+
+    Emuc .= β*R*( matmul( muc_ϵ , mc.p'))
+
+    #Emuc *= 
     # this integrates over z
 
     #Step (3) Work through each county option
-     for cntry = 1:Ncntry
+     @inbounds @views for cntry = 1:Ncntry
 
-        gc = muc_inverse.( p[cntry] * Emuc, γ)
-        # invert from rhs of euler equation
-        
-        ã = @. (p[cntry] * gc + agrid - W*shocks') / R
+        muc_inverse!( gc, p[cntry] * Emuc, γ)
+
+        ã .= @. (p[cntry] * gc + agrid - W*shocks') / R
         # off budget constraint a = (p_jc_j + a' - w*z ) / R
 
         # then linear interpolation to get back on grid.
@@ -93,9 +101,9 @@ function coleman_operator(policy, R, W, p, model_params)
     
             foo = LinearInterpolation(ã[:,shk], agrid, extrapolation_bc = (Flat(), Flat()) )
 
-            aprime[:, shk, cntry] = foo.(agrid)
+            aprime[:, shk, cntry] .= foo.(agrid)
     
-            Kg[:, shk, cntry] = @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry]
+            Kg[:, shk, cntry] .= @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry]
             # again off budget constraint pc = -a + Ra + wz
     
         end
@@ -128,27 +136,29 @@ function coleman_operator(c, v, R, W, p, model_params)
     πprob = make_πprob(v, σϵ)
     muc_ϵ = Array{eltype(R)}(undef, Na, Nshocks)
 
+    ã = Array{eltype(R)}(undef, Na, Nshocks)
+    gc = similar(ã )
+    Emuc = Array{eltype(R)}(undef, Na, Nshocks)
+
     ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
     # this integrates over ϵ
 
-    Emuc = β*R*( matmul( muc_ϵ , mc.p'))
-    # this integrates over z
+    #matmul!(Emuc, β*R*muc_ϵ , mc.p')
+
+    Emuc .= β*R*( matmul( muc_ϵ , mc.p'))
 
     #Step (3) Work through each county option
-    @inbounds @views for cntry = 1:Ncntry
+     @inbounds @views for cntry = 1:Ncntry
 
-        gc = muc_inverse.( p[cntry] * Emuc, γ)
-        # invert from rhs of euler equation
-        
-        ã = @. (p[cntry] * gc + agrid - W*shocks') / R
+        muc_inverse!( gc, p[cntry] * Emuc, γ)
+
+        ã .= @. (p[cntry] * gc + agrid - W*shocks') / R
         # off budget constraint a = (p_jc_j + a' - w*z ) / R
 
         # then linear interpolation to get back on grid.
         for shk = 1:Nshocks
     
-            foo = LinearInterpolation(ã[:,shk], agrid, extrapolation_bc = (Flat(), Flat()) )
-
-            aprime[:, shk, cntry] = foo.(agrid)
+            aprime[:, shk, cntry] .= LinearInterpolation(ã[:,shk], agrid, extrapolation_bc = (Flat(), Flat()) ).(agrid)
     
             Kg[:, shk, cntry] = @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry]
             # again off budget constraint pc = -a + Ra + wz
@@ -298,14 +308,26 @@ end
 ##########################################################################
 ##########################################################################
 
+function make_πprob(vj, σ)
 
-function make_πprob(vj, σϵ)
-    
-        foo = vj .- maximum(vj, dims = 3)
+    foo = vj .- maximum(vj, dims = 3)
 
-        return exp.( foo ./ σϵ ) ./ sum( exp.( foo ./ σϵ ) , dims = 3) 
-    
+    #foo[isnan.(foo)] .= 0.0
+
+    @fastmath foo .= @. exp( foo / σ )
+
+    return foo ./ sum( foo, dims = 3) 
+   
 end
+
+
+# function make_πprob(vj, σϵ)
+    
+#         foo = vj .- maximum(vj, dims = 3)
+
+#         return exp.( foo ./ σϵ ) ./ sum( exp.( foo ./ σϵ ) , dims = 3) 
+    
+# end
 
 ##########################################################################
 ##########################################################################
@@ -350,13 +372,26 @@ function ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
 
         for shk = 1:Nshocks
             
-            muc_ϵ[ast,shk] =  dot((πprob[ast, shk, :]), ( muc.(c[ast, shk, :] , γ) ./ p ))
+            #muc_ϵ[ast,shk] = dot((πprob[ast, shk, :]), ( muc.(c[ast, shk, :] , γ) ./ p ))
+            muc_ϵ[ast,shk] = mydot(πprob[ast, shk, :], c[ast, shk, :], p, γ) 
+
             # this is the inside part of 54
             # not sure why matmul does not work here...kicks back error
 
         end
     end
 
+end
+
+function mydot(πprob, c, p, γ)
+    s = 0.0
+
+    @turbo for i ∈ eachindex(πprob)
+
+        s += πprob[i] * ( muc(c[i], γ) / p[i] )
+
+    end
+    s
 end
 
 ##########################################################################
@@ -387,18 +422,25 @@ function muc(c, γ)
     # the marginal utility of consumption with
     # CRRA preferences
 
-    c^(-γ) 
+    @fastmath @. c^(-γ) 
 
 end
 
 ##########################################################################
 ##########################################################################
+function muc_inverse!(out, c, γ)
+    # the marginal utility of consumption with
+   # CRRA preferences
+
+   out .= @. c^( -one(γ) / γ )
+
+end
 
 function muc_inverse(c, γ)
      # the marginal utility of consumption with
     # CRRA preferences
 
-    c^( 1.0 / -γ )
+    @. c^( 1.0 / -γ )
 
 end
 

@@ -2,7 +2,7 @@ include("ha-trade-environment.jl")
 include("ha-trade-solution.jl")
 include("ha-trade-helper-functions.jl")
 
-Ncntry = 12
+Ncntry = 18
 d = 1.5.*ones(Ncntry,Ncntry)
 d[diagind(d)] .= 1.0
 
@@ -14,7 +14,7 @@ mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, Nshocks = 5,
 R = 1.029*ones(Ncntry);
 W = 1.0*ones(Ncntry);
 
-@time Y, tradeflows, Ademand = world_equillibrium(R, W, mdl_prm)
+@time Y, tradeflows, Ademand = world_equillibrium(R, W, mdl_prm, hh_solution_method = "itteration")
 
 
 # @time Y, tradeflows, Ademand = world_equillibrium(R, W, mdl_prm)

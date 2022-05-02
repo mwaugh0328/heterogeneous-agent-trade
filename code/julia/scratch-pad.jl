@@ -8,7 +8,7 @@ mdl_prm = model_params(Ncntry = 5, Na = 100, Nshocks = 5, γ = 3.0, ϕ = 3, amax
 
 @unpack Na, Nshocks, Ncntry, β = mdl_prm
 
-gc = ones(Na, Nshocks, Ncntry)
+gc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
 
 v = -ones(size(gc)) / (1- β)
 
@@ -22,7 +22,10 @@ R = 1.029;
 W = 1.0;
 
 
+coleman_operator(vcat(gc, v), R, W, p, mdl_prm);
 
+
+# 5.223938078928472 5.4027668230460515 … 6.322303847099735 7.404063489447438
 # asset_dist = get_distribution(dist.state_index, dist.λ);
 
 # plot(mdl_prm.agrid, asset_dist)

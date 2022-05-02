@@ -24,14 +24,23 @@ function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
     A_demand = similar(R)
     tradeflows = Array{Float64}(undef,Ncntry,Ncntry)
 
+    hh = Array{household{Float64}}(undef,Ncntry)
+    dist = Array{distribution{Float64}}(undef,Ncntry)
+
     Threads.@threads for cntry = 1:Ncntry
 
         p = (W ./ TFP) .* d[cntry, :]
 
-        hh, dist = compute_eq(R[cntry], W[cntry], p, model_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
+        hh[cntry], dist[cntry] = compute_eq(R[cntry], W[cntry], p, model_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
             hh_solution_method = hh_solution_method, stdist_sol_method = stdist_sol_method)
 
-        output, tradestats = aggregate(R[cntry], W[cntry], p, cntry, hh, dist, model_params)
+    end
+
+    for cntry = 1:Ncntry
+
+        p = (W ./ TFP) .* d[cntry, :]
+
+        output, tradestats = aggregate(R[cntry], W[cntry], p, cntry, hh[cntry], dist[cntry], model_params)
 
         Y[cntry] = output.production
 
@@ -115,12 +124,15 @@ function itterate_stationary_distribution(Q; tol = 1e-10, Niter = 5000)
     λ .= 1.0 / size(Q)[1]
     
     Lnew = similar(λ)
+    Qtran = transpose(Q)
     
     for iter in 1:Niter
         
         #Lnew = transpose(Q) * λ
         
-        Lnew = law_of_motion(λ, transpose(Q))
+        #Lnew = law_of_motion(λ, transpose(Q))
+
+        mul!(Lnew, Qtran, λ) 
         #this ordering is also better in julia
         # than my matlab implementation of Q*λ (1, na*nshock)
                 
@@ -131,7 +143,7 @@ function itterate_stationary_distribution(Q; tol = 1e-10, Niter = 5000)
         # but in the vfi it causes a slowdown?
         
         err < tol && break
-
+        
         if iter == Niter
 
             println("distribution may not have converged")
@@ -176,23 +188,24 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
     
     @unpack Na, Nshocks, Ncntry, statesize, β, σϵ = model_params
 
-    gc = 0.5*ones(Na, Nshocks, Ncntry)
+    gc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
     v = -ones(Na, Nshocks, Ncntry)/(1-β)
 
     Kgc = similar(gc)
     Tv = similar(v)
 
+
     for iter in 1:Niter
         
         Kgc, Tv = coleman_operator(gc, v, R, W, p, model_params)[1:2]
-    
-        err = maximum(abs, vcat(Kgc - gc, Tv - v) )
+
+        err = vec_max(Kgc, gc)
 
         err < tol && break
-                
-        gc = copy(Kgc)
+ 
+        copy!(gc,Kgc)
 
-        v = copy(Tv)
+        copy!(v,Tv)
 
         if iter == Niter
 
@@ -209,6 +222,17 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
     return Kga, πprob, Tv
     
+end
+
+function vec_max(x,y)
+    s = 0.0
+
+    @inbounds @turbo for i ∈ eachindex(x)
+
+        s = ifelse(abs(x[i]-y[i]) > s, abs(x[i]-y[i]), s)
+
+    end
+    s
 end
 
 ##########################################################################
@@ -236,11 +260,11 @@ function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
         println("did not converge")
     end
 
-    Kgc = solution.zero[1:Na, :, :]
+    #Kgc = solution.zero[1:Na, :, :]
 
-    Tv = solution.zero[(Na+1):end, :, :]
+    #Tv = solution.zero[(Na+1):end, :, :]
 
-    Tv, Kga = coleman_operator(Kgc, Tv, R, W, p, model_params)[2:3]
+    Tv, Kga = coleman_operator(solution.zero[1:Na, :, :], solution.zero[(Na+1):end, :, :], R, W, p, model_params)[2:3]
 
     πprob = make_πprob(Tv, σϵ)
 

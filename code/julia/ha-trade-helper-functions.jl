@@ -167,7 +167,7 @@ function aggregate(R, W, p, country, household, distribution, model_params; disp
     #####
     wz, ef_units = get_laborincome(W, state_index, model_params)
 
-    N = sum( ef_units .* λ, dims = 1)[1]
+    N = dot(ef_units, λ)
 
     #####
     # Get stuff from hh side
@@ -182,36 +182,36 @@ function aggregate(R, W, p, country, household, distribution, model_params; disp
 
     c_by_variety, variety_share = get_trade(R, W, asset_policy, πprob, state_index, model_params)
 
-    Aprime = sum(aprime .* λ, dims = 1)[1]
+    Aprime = dot(aprime, λ)
 
     # aggregate asset demand 
 
-    A = sum(a .* λ, dims = 1)[1]
+    A = dot(a , λ)
     # aggregate asset positoin entering the period
 
     NetA = -(R * A) + Aprime
 
-    PC = sum( pc .* λ, dims = 1)[1]
+    PC = dot(pc , λ)
     #aggregate consumption
 
     imports = sum(c_by_variety[:, 1:end .!= country], dims = 2)
     # exclude home country imports
 
-    M = sum( imports .* λ, dims = 1)[1]
+    M = dot(imports , λ)
 
     bilateral_imports = sum( c_by_variety .* λ, dims = 1)
     bilateral_πprob = sum( variety_share  .* λ, dims = 1)
 
-    production = p[country] * TFP[country]*sum( ef_units .* λ, dims = 1)[1] 
+    production = p[country] * TFP[country]* N
 
     home_consumption = sum(c_by_variety[:, 1:end .== country], dims = 2)
 
-    X = production - sum( home_consumption .* λ, dims = 1)[1]
+    X = production - dot(home_consumption , λ)
 
     ####
     # then compute GDP like measure
 
-    income = sum( wz.* λ, dims = 1)[1] 
+    income = dot(wz, λ)
 
     expenditure = PC + X - M
     # aggregate labor income 
