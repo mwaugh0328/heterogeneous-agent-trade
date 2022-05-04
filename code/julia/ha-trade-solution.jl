@@ -57,6 +57,27 @@ end
 # ##########################################################################
 # ##########################################################################
 
+function micro_trade_elasticity(R, W, p, home, source, model_params; tol_vfi = 1e-6, hh_solution_method = "nl-fixedpoint")
+
+    hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
+
+    return (hh.πprob[:,:,source] ./ hh.πprob[:,:,home])
+
+end
+
+function micro_trade_elasticity(W, p, home, source, model_params)
+    #using mulitiple dispatch here... if no R, then it's 
+    # the static model
+
+    πprob = logit_trade(W, p, model_params)[2]
+
+    return (πprob[:,:,source] ./ πprob[:,:,home])
+
+end
+
+# ##########################################################################
+# ##########################################################################
+
 function compute_eq(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
     # Does everything...
