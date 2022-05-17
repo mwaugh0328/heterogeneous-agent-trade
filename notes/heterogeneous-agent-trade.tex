@@ -184,7 +184,7 @@ The state variables of a individual household are it's asset holdings and effici
 
 The value function of a household in country $i$ is
 \begin{align}
-v_{i}(a, z; S_i) = &  \max_{ij} \big  \{ \  v_{ij}(a, z; S_i)  \ \big \}
+v_{i}(a, z; S_i) = &  \max_{j} \big  \{ \  v_{ij}(a, z; S_i)  \ \big \}
 \label{eq:valuefun}
 \end{align}
 which is the maximum across the discrete choices of different national varieties. The value function conditional on a choice of variety is
@@ -558,13 +558,13 @@ where here we recover the well known ``ces-logit-isomorphisim'' between the logi
 %where $\pi_{ii}$ a country $i$'s share of consumption expenditure on goods from itself.
 %\end{prp}
 
-\section{Appendix: The Generalized Trade Elasticity}
+\section{The Generalized Trade Elasticity}
 
-My definition of the trade elasticity is the partial equilibrium response of imports from $j$ relative to domestic consumption due to a permanent change in trade costs between steady states. By partial equilibrium, I mean that wages and interest rates as fixed at their initial equilibrium values. By permanent, I work this out under the heuristic of a ``steady-state to steady-state comparison'' where I factor in how the stationary distribution changes due to changes in behavior. This definition is consistent with the broad terminology used in the trade literature, e.g. \citet{arkolakis2012new} and \citet{simonovska2014elasticity}.
+My definition of the trade elasticity is the partial equilibrium response of imports from $j$ relative to domestic consumption due to a permanent change in trade costs between steady states. By partial equilibrium, I mean that wages and interest rates as fixed at their initial equilibrium values. By permanent, I work this out under the heuristic of a ``steady-state to steady-state comparison'' where I factor in how the stationary distribution changes due to changes in behavior. This definition is consistent with the broad terminology used in the trade literature, e.g. \citet{arkolakis2012new} and \citet{simonovska2014elasticity}. Consistent with this discussion and the notation below, I compute the partial derivatives (not total) of objects with respect to trade costs.
 
 Mathematically, the trade elasticity equals the difference between the elasticities for how trade between $i$ and $j$ change minus how home trade changes:
 \begin{align}
-\frac{\partial ( M_{ij} / M_{ii} )}{\partial d_{ij}} \times \frac{d_{ij}}{( M_{ij} / M_{ii} )} =& \frac{\partial ( M_{ij} / M_{ij} )}{\partial d_{ij} / d_{ij}}  - \frac{\partial ( M_{ij} / M_{ij} )}{\partial d_{ij} / d_{ij}}.
+\frac{\partial ( M_{ij} / M_{ii} )}{\partial d_{ij}} \times \frac{d_{ij}}{( M_{ij} / M_{ii} )} =& \frac{\partial ( M_{ij} / M_{ij} )}{\partial d_{ij} / d_{ij}}  - \frac{\partial ( M_{ij} / M_{ii} )}{\partial d_{ij} / d_{ij}}.
 \label{eq:def_trade_elasticity}
 \end{align}
 The change in imports between $i$ and $j$ with respect to a change in trade costs is:
@@ -573,13 +573,13 @@ The change in imports between $i$ and $j$ with respect to a change in trade cost
  \frac{\partial \pi_{ij}(a,z)}{\partial d_{ij}} p_{ij}c_{ij}(a,z)\lambda(a,z)  +
 \frac{\partial \lambda(a,z)}{\partial d_{ij}} p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \bigg \}.
 \end{align}
-Then divide the stuff on the inside of the brackets by household level imports $p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda(a,z)$ and multiply on the outside giving,
+Divide the stuff on the inside of the brackets by household level imports $p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda(a,z)$ and multiply on the outside giving,
 \begin{align}
 \frac{\partial  M_{ij}}{\partial d_{ij}} = \sum_{a,z} \bigg \{ \frac{\partial p_{ij}c_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial d_{ij}} +
  \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij}}  +
 \frac{\partial \lambda(a,z) / \lambda(a,z)}{\partial d_{ij}} \bigg \} p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda(a,z).
 \end{align}
-Now define the following ``weight'' which is the share of goods that those with states $a,z$ account for in total expenditures from $j$ as
+Define the following weight which is the share of goods that those with states $a,z$ account for in total expenditures from $j$ as
 \begin{align}
 \omega_{ij}(a,z) = \frac{p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda(a,z)}{M_{ij}}.
 \end{align}
@@ -593,7 +593,14 @@ or more succinctly as
 \begin{align}
 \frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} = \sum_{a,z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} + \theta_{ij}(a,z)^{D} \bigg \}\omega_{ij}(a,z)
 \end{align}
-where the elasticity of aggregate imports into $i$ from $j$ is a weighted average of micro-level elasticities at the household level. And household level elasticities are decomposed into \textbf{(i)} an intensive margin trade elasticity $\theta_{ij}(a,z)^{I}$ which reflects how much more a household buys as trade costs decline; \textbf{(ii)} the extensive margin trade elasticity $\theta(a,z)_{ij}^{E}$ which reflects how households switch their variety choice as trade costs decline; and \textbf{(iii)} the distribution elasticity $\theta(a,z)_{ij}^{D}$ so how the mass of agents change across household states $a,z$.
+where the elasticity of aggregate imports into $i$ from $j$ is a weighted average of three different micro-level elasticities. The micro-level elasticities are:
+\begin{itemize}
+\item[\textbf{(i)}] An intensive margin trade elasticity $\theta_{ij}(a,z)^{I}$ which reflects the change in spending by a household on variety from $j$ as trade costs decline.
+
+\item[\textbf{(ii)}]  The next term is the extensive margin trade elasticity $\theta(a,z)_{ij}^{E}$ which reflects how households substitute across varieties as trade costs decline. As I show below in Section \ref{}, this takes the place as the standard trade elasticity in, e.g., \citet{eaton2002technology}.
+
+\item[\textbf{(iii)}] The distribution elasticity $\theta(a,z)_{ij}^{D}$ so how the mass of agents change across household states $a,z$. This last elasticity may seem a bit odd as being present in a partial equilibrium elasticity. But I include it hear because the flip side of changes in the intensive and extensive margin is that household saving behavior (even at fixed wages and interest rates) generally will change with the commodity choice. It's in this sense that it's a relevant margin to keep track of.
+\end{itemize}
 
 Given the expression in (\ref{eq:def_trade_elasticity}), Proposition \ref{apx-prp:GET} follows:
 
@@ -619,23 +626,19 @@ and the expenditure weights are defined as
 \end{align}
 }
 \end{prp}
-Proposition \ref{apx-prp:GET} is just derived off of the aggregation of imports at the micro level|no market clearing, functional forms, etc. However, by using the households budget constraint and the Type 1 extreme value distributional assumption more can be said about the intensive and extensive margin trade elasticity and illustrate how the household's consumption-savings problem matters.
+An interesting feature of Proposition \ref{apx-prp:GET} is that it's derived only off the aggregation of imports at the micro level|no market clearing, functional forms, etc. However, by using the households budget constraint and the Type 1 extreme value distributional assumption more can be said about these elasticities and illustrate how the household's consumption-savings problem matters.
 
-\textbf{The Micro Intensive Margin Trade Elasticity.} By working off the budget constraint one can express the intensive margin elasticity as
+\textbf{The Intensive Margin Trade Elasticity.} By using the households budget constraint one can express the intensive margin elasticity as
 \begin{align}
 \underbrace{\frac{\partial p_{ij}c_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}}_{\theta_{ij}(a,z)^{I}} &= -\frac{\partial g_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} \frac{ \partial p_{ij}/ p_{ij}}{\partial d_{ij}/ d_{ij}} \times \frac{1}{p_{ij}c_{ij}(a,z)}, \\
 \nonumber \\
-&= -\frac{\partial g_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} \times \frac{1}{p_{ij}c_{ij}(a,z)}.
+&= -\frac{\partial g_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} \times \frac{1}{p_{ij}c_{ij}(a,z)},
 \end{align}
-where recall that $g_{ij}(a,z)$ is the policy function mapping states into asset holdings next period $a'$  and the last line follows from $\frac{ \partial p_{ij}/ p_{ij}}{\partial d_{ij}/ d_{ij}} = 1$. What this expression means is that the intensive margin elasticity is about a households consumption-savings behavior, i.e., how a household adjusts assets given a change in the prices of goods. For example, the way this works is that a reduction in trade costs lowers prices and relaxes the budget constraint, and then the intensive margin elasticity depends on how the incremental amount of resources available to spend is dived between assets and consumption. 
+where recall that $g_{ij}(a,z)$ is the policy function mapping states into asset holdings next period $a'$ and the last line follows from $\frac{ \partial p_{ij}/ p_{ij}}{\partial d_{ij}/ d_{ij}} = 1$. What this means is that the intensive margin elasticity is about a households consumption-savings behavior, i.e., how a household adjusts assets given a change in the price $p_{ij}$. 
 
-A couple of notes:
-\begin{itemize}
-\item Is there a way to connect this with the marginal propensity to consume (or save)?
-\item I'm doing everything as if it's discrete. Will need to change notation above. 
-\end{itemize}
+To be concrete, the way this works is that a reduction in trade costs lowers prices and relaxes the budget constraint, and then the intensive margin elasticity depends on how the new resources available to spend are dived between assets and consumption. In the static case where assets are not held, then any change in the price $p_{ij}$ is offset by a change in consumption and this elasticity is zero.
 
-\textbf{The Micro Extensive Margin Trade Elasticity.} The Type 1 extreme value distributional assumption allows for a characterization of the choice probability and, hence, how the choice probabilities respond to changes in trade costs. As a first step, define the denominator of the choice probability as:
+\textbf{The Extensive Margin Trade Elasticity.} The Type 1 extreme value distributional assumption allows for a sharp characterization of the choice probability and, hence, how the choice probabilities change. As a first step, define the denominator of the choice probability as:
 \begin{align}
 \Phi_{i}(a,z) = \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z) }{\sigma_{\epsilon}} \right).
 \end{align}
@@ -644,19 +647,37 @@ The elasticity of the choice probability with respect to a change in trade costs
 \underbrace{ \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{E}} &= \frac{1}{\sigma_{\epsilon}}\frac{\partial v_{ij}(a,z)}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i}(a,z) / \Phi_{i}(a,z)}{\partial d_{ij}/d_{ij}}.
 \label{eq:apx:ext-margin}
 \end{align}
-The key issue here is the first term: which reflects how the choice specific value function changes with trade costs. In other words, how much more valuable does choice $j$ become when it's cheaper to import variety $j$. The second term reflects the fact that the change choice $j$ depends upon a comparison relative to the overall change in the value of options across variety, i.e., how $\Phi_{i}$ changes.
+The first term reflects how the choice specific value function changes with trade costs. In other words, how much more valuable does choice $j$ become when it's cheaper to import variety $j$. The second term reflects the fact that the change choice $j$ depends upon a comparison relative to the overall change in the value of options across variety, i.e., how $\Phi_{i}$ changes.
 
-In general, the first term in (\ref{eq:apx:ext-margin}) is a complicated object: is state dependent and forward looking in with the value function showing up. More subtle it is the idea that the household's income fluctuations problem imposes a cross-equation restriction on between the intensive margin and extensive margin given how assets and consumption are responding to changes in prices via changes in trade costs.
+Admittedly, the terms in (\ref{eq:apx:ext-margin}) are complicated objects: their state dependent and forward looking with the value functions showing up. More subtle it is the idea that the household's income fluctuations problem imposes a cross-equation restriction between the intensive margin elasticity in and extensive margin given how assets and consumption are responding to changes in prices via changes in trade costs. This last point becomes more transparent when looking at the distribution margin trade elasticity.
 
-
-
-\section{Appendix: The Gains from Trade}
-
-This section works through the gains from a permanent change in trade costs, across steady states. So the idea here is, again, heuristic in the sense that I'm thinking a situation where the change is small and there is an immediate jump to the new steady state.
-
-To walk through this I'm going to first express everything relative to the home country $i$. So the observation is that the expected value function over the taste shocks is
+\textbf{The Distribution Trade Elasticity.} I can connect the intensive and extensive margin trade elasticities with how the distribution changes in the following way. First, notice that the mass of households $\lambda(a,z)$ depends if a function of the asset policy function $g_{ij}(a,z)$ and the choice probability $\pi_{ij}(a,z)$. Represent this funcation as
 \begin{align}
-v_i(a, z) =  \sigma_{\epsilon} \log \left\{ \sum_{j'} \exp \left( \frac{  v_{ij}(a, z)}{\sigma_{\epsilon}} \right) \right\}
+\lambda(a,z) = f_{\lambda}(\pi_{ij}(a,z),g_{ij}(a,z)),
+\end{align}
+Then we can express how the distribution changes
+\begin{align}
+\frac{\partial \lambda(a,z)/\lambda(a,z)}{\partial d_{ij}/d_{ij}}  = \frac{\partial f_{\lambda} / f_{\lambda} }{\partial d_{ij}/d_{ij}} \bigg [ \frac{\partial \pi_{ij}(a,z)}{\partial d_{ij}} +  \frac{\partial g_{ij}(a,z)}{\partial d_{ij}} \bigg ]
+\end{align}
+which emphasizes the point that how the distribution changes is fundamentally interlinked to the behaviorial responses of households through how they substitute across products and how they substitute across time. 
+
+\section{The Welfare Gains from Trade}
+
+This section derives the gains from a permanent change in trade costs, across steady states. Like the discussion above, the idea here is that I'm thinking a situation where the change is small and there is an immediate jump to the new steady state. Unlike the trade elasticity, I'm going to take total derivatives that will encompass general equilibrium changes in wages and interest rates. 
+
+The analysis proceeds in several steps. To compute how social welfare changes, I'll focus on a utilitarian social welfare function so:
+\begin{align}
+W_{i} = \sum_{a,z} v_{i}(a,z)\lambda(a,z)
+\end{align}
+Then the total change in total welfare is
+\begin{align}
+\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = \sum_{a,z} \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda(a,z)/ \lambda(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} \lambda(a,z).
+\end{align}
+What illustrates is that the gains from trade come through two forces. The first component reflects changes in household-level welfare. So conditional on a distribution of households across states, are housholds better or worse off. The second component is about reallocation, i.e., if|at the old $v$'s|does the distribution change so that social welfare gets better or worse. The change in social welfare is then the weighted average of these two forces with the weights being those at the initial distribution. 
+
+How does household-level welfare change? With the Type 1 extreme value distribution some progress can be made in several steps. First, notice that I can  express everything relative to the home country $i$. Recall that the value function is
+\begin{align}
+v_i(a, z) =  \sigma_{\epsilon} \log \left\{ \sum_{j'} \exp \left( \frac{  v_{ij}(a, z)}{\sigma_{\epsilon}} \right) \right\},
 \end{align}
 and then I'm going to make the observation that I can substitute out the sum part with the exp of the home value function relative to the micro-level ``home choice''
 \begin{align}
@@ -667,52 +688,70 @@ and thus the value function can be represented as
 v_i(a, z) = -\sigma_{\epsilon} \log \pi_{ii}(a,z) + u(c_{ii}(a,z)) + \beta \mathbb{E} v_{i}(g_{ii}(a,z),z)
 \label{eq:apx-home-valuefun}
 \end{align}
-where the expectation on the right-hand side is with respect to $z$ and $\epsilon$. The key innovation here is that now everything is written with respect to the home choice. Now the strategy is to differentiate (\ref{eq:apx-home-valuefun}) with respect to a percent change in trade costs and use the recursive structure to iterate forward and construct the overall change.
+The key innovation here is that now everything is written with respect to the home choice. This is essentially the dynamic analog to Equation (15), Footnote 42 of \citet{eaton2002technology} and \citet{arkolakis2012new} and I explicitly show this in the example section below. 
 
-Furthermore, in all of this, I set $w_i$ to be the numerarie and $A_i = 1$ so $p_{ii}$ equals one and needs not be carried around.
-
-One more detail, to facilitate interpretation, it will be useful to compute the Euler equation associated with asset holdings when the borrowing constraint does not bind. This euler equation is:
+Now the strategy is to totally differentiate (\ref{eq:apx-home-valuefun}) with respect to trade costs and use the recursive structure to iterate forward and construct the change across time. Furthermore, in all of this, I set $w_i$ to be the numeraire and $A_i = 1$ so $p_{ii}$ equals one and needs not be carried around. One more detail, to facilitate interpretation, it will be useful to compute the Euler equation associated with asset holdings when the borrowing constraint does not bind. This euler equation is:
 \begin{align}
 -u'(c_{ii}(a,z)) = \beta \mathbb{E} \bigg \{ -\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + u'(c_{ii}(a',z'))R \bigg \},
 \end{align}
-which says that the agent should be indifferent between the marginal utility of consumption forgone to hold some more assets and two components (i) the benefit from how a change in assets changes in their variety choice and (ii) the direct benefit of the returns on the assets evaluated at the marginal utility of consumption. Something that is confusing me is how is this consistent with Euler Equation below for the endogenous grid method. 
+which says that the agent should be indifferent between the marginal utility of consumption forgone to hold some more assets and two components (i) the benefit from how a change in assets changes in their variety choice and (ii) the direct benefit of the returns on the assets evaluated at the marginal utility of consumption. 
 
-Let's do this!
+\hrulefill
+
+Digression on chain rule. I'm going to write the continuation value function where it is nested upon itself
 \begin{align}
-\frac{\partial v_i(a, z)}{\partial d_{ij} / d_{ij}} = -\sigma_{\epsilon} \theta^{E}_{ii}(a,z) + u'(c_{ii}(a,z))\frac{\partial R}{\partial d_{ij} / d_{ij}}a - u'(c_{ii}(a,z))\frac{\partial g_{ii}(a,z)}{\partial d_{ij} / d_{ij}}
-+ \beta E \frac{\partial v_i(g_{ii}(a,z), z')}{\partial d_{ij} / d_{ij}}
+v(g(a,z,d), v(a,z,d))
 \end{align}
-Side note: I think I'm conflating total derivatives and partial derivatives... so the notation is a bit messed up. Then the derivative of the continuation value function is:
+and then the total derivative of this nested function is
 \begin{align}
-\frac{\partial v_i(g(a,z), z')}{\partial d_{ij} / d_{ij}} =& \underbrace{\bigg [-\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + u'(c_{ii}(a',z'))R \bigg ]}_{\frac{\partial v_i(g_{ii}(a,z), z')}{\partial a}}\frac{\partial g_{ii}(a,z)}{\partial d_{ij} / d_{ij}} + \\
-\nonumber
-& -\sigma_{\epsilon} \theta^{E}_{ij}(a',z') + u'(c_{ii}(a',z'))\frac{\partial R}{\partial d_{ij} / d_{ij}}a' - u'(c_{ii}(a',z'))\frac{\partial g_{ii}(a',z')}{\partial d_{ij} / d_{ij}}
-+ \beta E \frac{\partial v_i(g_{ii}(a',z'), z'')}{\partial d_{ij} / d_{ij}}
+\frac{\mathrm{d} v(g(a,z,d), v(a,z,d))}{\mathrm{d} d} =& \frac{\partial v}{\partial d}\frac{\mathrm{d}g}{\mathrm{d}d} +  \frac{\partial v}{\partial v}\frac{\mathrm{d}v}{\mathrm{d}d} \\
+\nonumber \\ 
+ =& \frac{\partial v}{\partial d}\frac{\mathrm{d}g}{\mathrm{d}d} +  \frac{\mathrm{d}v}{\mathrm{d}d}
+\end{align}
+Does this make sense? I think there is a bit of abuse of notation because the last term is the total derivative, but treating $a$ as a parameter. 
+
+\hrulefill
+
+
+
+Totally differentiating the value function gives
+\begin{align}
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} =& \nonumber  \\
+\nonumber \\
+ -\sigma_{\epsilon} & \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}}  + u'(c_{ii}(a,z))\frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}a - u'(c_{ii}(a,z))\frac{\mathrm{d} g_{ii}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}
++ \beta E \frac{\mathrm{d} v_i(g_{ii}(a,z), z')}{\mathrm{d} d_{ij} / d_{ij}}
+\end{align}
+Then the derivative of the continuation value function is:
+\begin{align}
+& \frac{\mathrm{d} v_i(g(a,z), z')}{\mathrm{d} d_{ij} / d_{ij}} = \underbrace{\bigg [-\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + u'(c_{ii}(a',z'))R \bigg ]}_{\frac{\partial v_i(g_{ii}(a,z), z')}{\partial a}}\frac{\mathrm{d} g_{ii}(a,z)}{\mathrm{d} d_{ij} / d_{ij}} \ \ + \\
+\nonumber \\
+& -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\mathrm{d}d_{ij} / d_{ij}}   + u'(c_{ii}(a',z'))\frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}a' - u'(c_{ii}(a',z'))\frac{\mathrm{d} g_{ii}(a',z')}{\mathrm{d} d_{ij} / d_{ij}}
++ \beta E \frac{\mathrm{d} v_i(g_{ii}(a',z'), z'')}{\mathrm{d} d_{ij} / d_{ij}}
 \end{align}
 And now combine and collect terms so
 \begin{align}
-\frac{\partial v_i(a, z)}{\partial d_{ij} / d_{ij}} =& -\sigma_{\epsilon} \theta^{E}_{ij}(a,z) \\
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} =& -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}} \\
 \nonumber \\
-& + \underbrace{u'(c_{ii}(a,z))\frac{\partial R}{\partial d_{ij} / d_{ij}}a}_{\gamma_{ii}(a,z)}  \\
+& + \underbrace{u'(c_{ii}(a,z))\frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}a}_{\gamma_{ii}(a,z)}  \\
 \nonumber \\
-& + \underbrace{\bigg \{- u'(c_{ii}(a,z)) + \beta \mathbb{E} \big [-\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + u'(c_{ii}(a',z'))R \big ] \bigg \}\frac{\partial g_{ii}(a,z)}{\partial d_{ij} / d_{ij}}}_{\delta_{ii}(a,z)} \\
+& + \underbrace{\bigg \{- u'(c_{ii}(a,z)) + \beta \mathbb{E} \big [-\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + u'(c_{ii}(a',z'))R \big ] \bigg \}\frac{\mathrm{d} g_{ii}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}}_{\delta_{ii}(a,z)} \\
 \nonumber \\
-& + \beta \mathbb{E} \bigg \{ -\sigma_{\epsilon} \theta^{E}_{ij}(a',z') +  u'(c_{ii}(a',z'))\frac{\partial R}{\partial d_{ij} / d_{ij}}a' \ldots
+& + \beta \mathbb{E} \bigg \{ -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}} +  u'(c_{ii}(a',z'))\frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}a' \ \  \ldots
 \end{align}
 Let me walk through the interpretation of each term:
 \begin{itemize}
 \item $-\sigma_{\epsilon} \theta^{E}_{ij}(a,z)$ is the standard gains from trade term reflecting the idea that gains work through changes in expenditures across different varieties. With static logit, this is exactly the ACR formula.
-\item $u'(c_{ii}(a,z))\frac{\partial R}{\partial d_{ij} / d_{ij}}a$ is what I would call how trade facilitates more risk sharing. I think as trade costs decline the amount of resources available for risk sharing expands and this changes the interest rate. Which way does it go? 
+\item $u'(c_{ii}(a,z))\frac{\partial R}{\partial d_{ij} / d_{ij}}a$ is what I would call how trade facilitates more risk sharing. I think as trade costs decline the amount of resources available for risk sharing expands and this changes the interest rate. Which way does it go?
 
-\item The third term is interesting because it is the stuff in the outer brackets is the Euler equation for assets. The idea here is that if the household is unconstrained, then it is zero as there is no gain through changes in asset behavior. Asset holdings are already chosen so that margins are equated, thus, on the margin any benefit of lower trade costs on asset behavior is zero. Essentially an application of the Envelope Theorem. 
+\item The third term is interesting because it is the stuff in the outer brackets is the Euler equation for assets. The idea here is that if the household is unconstrained, then it is zero as there is no gain through changes in asset behavior. Asset holdings are already chosen so that margins are equated, thus, on the margin any benefit of lower trade costs on asset behavior is zero. Essentially an application of the Envelope Theorem.
 
     Now in this economy, it may not be zeroed our because of borrowing constrained households, thus this term is positive (?) this means that the change in trade costs are relaxing the constraints on some households and get's them back on their euler equation.
-    
+
     Finally, notice how the outside brackets is multiplied by the change in the asset policy function. What this picks up is that if the household is still constrained, then assets can't change and overall second term is zero. So the only people that benefit and contribute to social welfare are those on the margin between constrained and not-constrained.
 
 \item The final term is about this continuing on.
 \end{itemize}
-so the total gains from trade are 
+so the total gains from trade are
 \begin{align}
 \frac{\partial v_i(a, z)}{\partial d_{ij} / d_{ij}} = \mathbb{E} \sum_{t = 0} \beta^{t} \bigg \{ -\sigma_{\epsilon} \theta^{E}_{ii}(a_{t},z_{t}) + \gamma_{ii}(a_{t},z_{t}) + \delta_{ii}(a_{t},z_{t}) \bigg \}
 \label{eq:apx-welfare-v}
@@ -730,21 +769,21 @@ where the last term in the brackets is the distribution elasticity and that foll
 \frac{\partial W_{i} / W_{i}}{\partial d_{ij} / d_{ij}} = \sum_{a,z} \bigg \{ \frac{\partial v_i(a, z) / v_{i}(a, z)}{\partial d_{ij} / d_{ij}}  +  \theta_{ij}(a,z)^{D} \bigg \} \frac{\lambda(a,z)v_{i}(a,z)}{W_{i}}
 \label{eq:apx-social-welfare}
 \end{align}
-this is clear. It's not ideal since the value function is linear in terms and does not give rise to super clean representation. 
+this is clear. It's not ideal since the value function is linear in terms and does not give rise to super clean representation.
 
-What does this pick up. The first component in social welfare reflects changes in households in individual states, i.e. (\ref{eq:apx-welfare-v}). And this is about gains from substitution, gains from risk sharing, and the relaxation of borrowing constraints. The second component reflects how the distribution changes and if|at the old $v$'s|the distribution gets better or worse. 
+What does this pick up. The first component in social welfare reflects changes in households in individual states, i.e. (\ref{eq:apx-welfare-v}). And this is about gains from substitution, gains from risk sharing, and the relaxation of borrowing constraints. The second component reflects how the distribution changes and if|at the old $v$'s|the distribution gets better or worse.
 
-\begin{prp}[\textbf{The Welfare Gains from Trade}] \label{apx-prp:gains-trade} The welfare gains from trade are given by 
+\begin{prp}[\textbf{The Welfare Gains from Trade}] \label{apx-prp:gains-trade} The welfare gains from trade are given by
 {\footnotesize
 \begin{align}
 \frac{\partial W_{i} / W_{i}}{\partial d_{ij} / d_{ij}} = \sum_{a,z} \bigg \{ \frac{\partial v_i(a, z) / v_{i}(a, z)}{\partial d_{ij} / d_{ij}}  +  \theta_{ij}(a,z)^{D} \bigg \} \frac{\lambda(a,z)v_{i}(a,z)}{W_{i}}
 \label{eq:apx-social-welfare}
 \end{align}
 }
-which reflects the change in household level gains and how the distribution of households across states changes. Household level gains are given by 
+which reflects the change in household level gains and how the distribution of households across states changes. Household level gains are given by
 {\footnotesize
 \begin{align}
-\nonumber 
+\nonumber
 \frac{\partial v_i(a, z)}{\partial d_{ij} / d_{ij}} = \mathbb{E} \sum_{t = 0} \beta^{t} \bigg \{ -\sigma_{\epsilon} \theta^{E}_{ij}(a_{t},z_{t}) + \gamma_{ij}(a_{t},z_{t}) + \delta_{ij}(a_{t},z_{t}) \bigg \}
 \end{align}
 }where each term represents:
@@ -755,15 +794,46 @@ which reflects the change in household level gains and how the distribution of h
 
 \item Gains from relaxing borrowing constraints:
 \begin{align}
-\nonumber  
+\nonumber
 \delta_{ii}(a,z) = \bigg \{- u'(c_{ii}(a,z)) + \beta \mathbb{E} \bigg [-\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + u'(c_{ii}(a',z'))R \bigg ] \bigg \}\frac{\partial g_{ii}(a,z)}{\partial d_{ij} / d_{ij}}
 \end{align}
 \end{itemize}
 \end{prp}
 
-\section{Appendix: Examples}
+\section{Examples}
 
-\subsection{Static, Log-Logit, \citet{arkolakis2012new}}
+This section works through a couple of examples that illustrate how it works and connect with the literature.
+
+\subsection{Static, Log Preferences, \citet{arkolakis2012new}}
+
+This case is interesting because it replicates the results of \citet{arkolakis2012new}. Starting from Proposition \ref{apx-prp:GET}, the trade elasticities are
+\begin{align}
+\nonumber
+\theta_{ij}(z)^{I} = 0, \forall \ \ i,j \ \ \ \ \ \ \theta_{ij}(z)^{E} = -\frac{1}{\sigma_{\epsilon}}, \ \ \ \ \ \theta_{ii}(z)^{E} = 0, \ \ \ \ \
+\theta_{ij}(z)^{D} = 0, \forall \ \ i,j
+\end{align}
+which implies that the aggregate trade elasticity:
+\begin{align}
+\nonumber
+\theta_{ij} =& \sum_{a,z} \bigg \{  -\frac{1}{\sigma_{\epsilon}}  \bigg \}\omega_{ij}(z) \nonumber \\
+\nonumber \\
+\theta_{ij} =& \ \ -\frac{1}{\sigma_{\epsilon}}
+\end{align}
+where the last line follows from the definition of the weights $\omega_{ij}(z)$ summing to one. What this says that the trade elasticity is constant across trading partners and depends on the inverse of how variable the taste shocks are. So if taste shocks are larger, then consumers are less willing to substitute across national varieties and, hence, the trade elasticity is small.
+
+Then following Proposition \ref{apx-prp:gains-trade} the gains from trade formula is
+\begin{align}
+\frac{\partial W_{i} / W_{i}}{\partial d_{ij} / d_{ij}} = \sum_{z} \bigg \{ \frac{\partial v_i(z) / v_{i}(z)}{\partial d_{ij} / d_{ij}}  +  \theta_{ij}(z)^{D}\bigg \} \frac{\lambda(z)v_{i}(z)}{W_{i}}
+\end{align}
+and then because only the substitution response is relevant in this case and the distribution over $z$ is exogenous, welfare gains
+\begin{align}
+\frac{\partial W_{i} / W_{i}}{\partial d_{ij} / d_{ij}} = \sum_{z} \bigg \{ -\sigma_{\epsilon} \frac{\partial \pi_{ii}(z) / \pi_{ii}(z)}{\partial d_{ij} / d_{ij}}  \frac{1}{-\sigma_{\epsilon}\log \pi_{ii}(z)} \bigg \} \frac{\lambda(z)v_{i}(z)}{W_{i}}
+\end{align}
+Then the final observation is that choice probability is independent of $z$ giving
+\begin{align}
+\frac{\partial W_{i} / W_{i}}{\partial d_{ij} / d_{ij}} = -\sigma_{\epsilon} \frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}}  \frac{1}{W_i}
+\end{align}
+which is exactly the ACR formula. The change in welfare is simply determined by one over the trade elasticity and how much the home trade share changes.
 
 \subsection{Dynamic, Log Preferences}
 
