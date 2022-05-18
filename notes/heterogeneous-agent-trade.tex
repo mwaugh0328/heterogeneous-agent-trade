@@ -845,9 +845,9 @@ and the gains from trade are given by
 
 \subsection{Dynamic, Log Preferences}
 
-This example is interesting because it retains a constant trade elasticity and then the welfare gains formula looks like ACR+ kind of thing. There is a bit more to it, but a key insight is that policy function does not depend upon the variety choice and this implies that choice probabilities are independent of $z$, there is a constant trade elasticity as the intensive margin is turned off, and then the gains from trade take a bit cleaner formulation in Proposition \ref{apx-prp:gains-trade} with the 
+This example is interesting because it retains a constant trade elasticity and then the welfare gains formula looks like ACR+ kind of thing. There is a bit more to it, but a key insight is that policy function does not depend upon the variety choice and this implies that choice probabilities are independent of $z$, there is a constant trade elasticity as the intensive margin is turned off, and then the gains from trade take a bit cleaner formulation in Proposition \ref{apx-prp:gains-trade}.
 
-With log preferences the $j$ choice value function is
+\textbf{Step 1: Individual Choices.} With log preferences the $j$ choice value function is
 \begin{align}
 v_{ij}(a, z) = &  \max_{\ a' \in \mathcal{A} }\bigg  \{ \log\left (\frac{Ra + wz - a'}{p_{ij}} \right )  + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\}
 \end{align}
@@ -856,7 +856,16 @@ which is then
 v_{ij}(a, z) = &  \max_{\ a' \in \mathcal{A} }\bigg  \{ \log(Ra + wz - a' )  + \beta \, \mathbb{E} [v_{i}(a', z' )]  \bigg\} - \log p_{ij}
 \label{eq:value_fun_option_log_p}
 \end{align}
-which then leads to the observation that the optimal $a'$ conditional on a choice $j$ is \textbf{independent} of the price of the consumption good. So what is going on is if you consume an expensive or cheap good, then consumption simply scales up or down so that assets next period are exactly the same. Then the choice probability becomes
+which then leads to the observation that the optimal $a'$ conditional on a choice $j$ is \textbf{independent} of the price of the consumption good. So what is going on is if you consume an expensive or cheap good, then consumption simply scales up or down so that assets next period are exactly the same. 
+
+This observation has the other following implication. Compare households expenditures with the same state $a,z$ but different choices. Equation (\ref{eq:value_fun_option_log_p}) implies
+\begin{align}
+p_{ij}c_{ij}(a,z) = p_{ii}c_{ii}(a,z)
+\label{eq:apx-same-spending}
+\end{align}
+so within states, people always spend the same amount. This fact will be useful below. 
+
+Finally notice that the choice probability becomes
 \begin{align}
 \pi_{ij}(a, z; S_i) = & \exp \left( \frac{ v_{ij}(a, z;  S_i ) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z;  S_i ) }{\sigma_{\epsilon}} \right) \\
 \nonumber\\
@@ -864,15 +873,49 @@ which then leads to the observation that the optimal $a'$ conditional on a choic
 \end{align}
 which is exactly the same as discussed above in the static model.
 
-Now we know (i) from (\ref{eq:apx-intensive-margin}) because the asset choice is independent of prices, the intensive margin elasticity $\theta_{ij}(a,z)^I$ is zero, i.e. any change in prices is fully offset by a change in consumption. Second, the distribution elasticity is zero from (\ref{eq:apx-distribution-margin}) because assets are not responding to changes in prices and what about $\pi$s (but these are independent of $a$ and $z$ so there is no differential change?
+\textbf{Step 2: Micro Trade Elasticities.} I'm going to be super systematic about this:
+\begin{itemize}
+\item Starting with (\ref{eq:apx-intensive-margin}) and because the asset choice is independent of prices,  the intensive margin elasticity $\theta_{ij}(a,z)^I$ is zero. 
 
-Finally, just like the static model, the partial derivative of the $i,j$ choice value function $\frac{\partial v_{ij}(a,z)}{\partial d_{ij}/d_{ij}} = -1$Then following Proposition \ref{apx-prp:GET} and (\ref{eq:apx-trade-elasticity}) the trade elasticity is
+\item The distribution elasticity is zero from (\ref{eq:apx-distribution-margin}) because assets are not responding to changes in prices and what about $\pi$s (but these are independent of $a$ and $z$ so there is no differential change? This is not clear from formula. Need to articulate this better.
+    
+\item The extensive margin elasticity is:
+\begin{align}
+\theta_{ij}(a,z)^E =& \frac{1}{\sigma_{\epsilon}}\frac{\partial v_{ij}(a,z)}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}}\\
+\nonumber \\
+=& \frac{1}{\sigma_{\epsilon}}\frac{\partial p_{ij} / p_{ij}}{\partial d_{ij}/d_{ij}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i}(z) / \Phi_{i}(z)}{\partial d_{ij}/d_{ij}} \\
+\nonumber \\
+=& \frac{1}{\sigma_{\epsilon}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}}
+\label{eq:apx-log-partial-valuefun}
+\end{align}
+where the first line removes the $a,z$ indexing of $\Phi_i$ because they don't shape the choice probabilities. The next line then partially differentiates the value function with respect to the change in trade costs where I'm exploiting how with log preferences one can pull out the price term. And then the final line notes that the price elasticity is one. Now here is one more key fact that:
+\begin{align}
+\theta_{ii}(a,z)^E =&  \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}}
+\end{align}
+where a key thing to notice is that the $i,i$ elasticity is the same as the second terms above in (\ref{eq:apx-log-partial-valuefun}). This is important to keep in mind.
+\end{itemize}
+
+\textbf{Step 3: The Expenditure Weights.} Recall that 
+\begin{align}
+\omega_{ij}(a,z) = \frac{p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda_{i}(a,z)}{M_{ij}}.
+\end{align}
+and note that we can relabel $p_{ij}c_{ij}(a,z) = x(a,z)$ given the fact discussed above in (\ref{eq:apx-same-spending}). Then with the choice probabilities being independent of $a,z$ this becomes
+\begin{align}
+\omega_{ij}(a,z) =& \frac{x(a,z)\pi_{ij} \lambda_{i}(a,z)}{\sum_{a,z}x(a,z)\pi_{ij} \lambda_{i}(a,z)}, \\
+\nonumber \\
+=& \frac{x(a,z) \lambda_{i}(a,z)}{\sum_{a,z} x(a,z) \lambda_{i}(a,z)}
+\end{align}
+which is independent of source $j$. 
+
+\textbf{Step 4: The Trade Elasticity.} Now just mechanically follow Proposition \ref{apx-prp:GET}:
 \begin{align}
 \nonumber
-\theta_{ij} =& \sum_{z} \bigg \{ 0 + -\frac{1}{\sigma_{\epsilon}} - \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} \ + 0 \bigg \}\omega_{ij}(z) - \sum_{z} \bigg \{  0 - \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} + 0 \bigg \}\omega_{ii}(z) \\
+\theta_{ij} =& \sum_{a,z} \bigg \{ 0 + \frac{1}{\sigma_{\epsilon}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} \ + 0 \bigg \}\omega_{i}(a,z) - \sum_{z} \bigg \{  0 + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} + 0 \bigg \}\omega_{i}(a,z) \\
 \nonumber \\
-\theta =& -\frac{1}{\sigma_{\epsilon}} \nonumber
+= & \frac{1}{\sigma_{\epsilon}} \nonumber
 \end{align}
+
+
 
 
 
