@@ -706,13 +706,13 @@ which says that the agent should be indifferent between the marginal utility of 
 
 Redo. Digression on chain rule. I'm going to
 \begin{align}
-v(g(a,z,d), z')
+v(a',z') = v(g(a,z,d), z')
 \end{align}
-so the first term inside indicates that $v$ depends upon the choice of $a$ and the dependence of $v$ on $d$ (and not through assets) is implicit. Then the total derivative of this is
+where I substitute in the policy function for $a'$. Then first term inside indicates that $v$ depends upon the choice of $a'$ and this works through the policy function. And the dependence of $v$ on $d$ (and not through assets) is implicit. Then the total derivative of this is
 \begin{align}
-\frac{\mathrm{d} v(g(a,z,d), z')}{\mathrm{d} d} =& \frac{\partial v}{\partial a}\frac{\mathrm{d}g}{\mathrm{d}d} +  \frac{\partial v(\overline{g(a,z,d)},z')}{\partial d}
+\frac{\mathrm{d} v(g(a,z,d), z')}{\mathrm{d} d} =& \frac{\partial v}{\partial a'}\frac{\mathrm{d}g}{\mathrm{d}d} +  \frac{\partial v(\overline{g(a,z,d)},z')}{\partial d}
 \end{align}
-So the first term is the partial change of $v$ with respect to $a$ times how the policy function totally changes with respect to $d$. The second term is the partial change of $v$ with respect to $d$, \textbf{holding fixed assets} at their chosen level. That's why I'm emphasizing the bar on top. Now what is confusing to me is that this has partial, not total derivatives. But this term is mathematically the same as
+So the first term is the partial change of $v$ with respect to $a'$ times how the policy function totally changes with respect to $d$. The second term is the partial change of $v$ with respect to $d$, \textbf{holding fixed assets} at their chosen level. That's why I'm emphasizing the bar on top. Now what is confusing to me is that this has partial, not total derivatives. But this term is mathematically the same as
 \begin{align}
 \frac{\partial v(\overline{g(a,z,d)},z')}{\partial d} = \frac{\mathrm{d} v(a', z')}{\mathrm{d} d }
 \end{align}
@@ -799,9 +799,9 @@ The first is the non-assets, static, log preference case. This delivers the benc
 \begin{align}
 \pi_{ij}(z) &= \exp \left( \frac{ \log\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  \log\left( \frac{w_{i}z}{p_{ij'}} \right) }{\sigma_{\epsilon}} \right) \\
 \nonumber \\
-\pi_{ij} &= \exp \left( \frac{ \log\left( p_{ij} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  \log\left( p_{ij'} \right) }{\sigma_{\epsilon}} \right).
+\pi_{ij} &= \exp \left( \frac{ -\log\left( p_{ij} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  -\log\left( p_{ij'} \right) }{\sigma_{\epsilon}} \right).
 \end{align}
-And thus, the $\Phi_{i}(z)$ showing up in the extensive margin calculation (\ref{eq:apx-extensive-margin}) is independent of $z$.  Then the final observation is that the partial derivative of the $i,j$ choice value function $\frac{\partial v_{ij}(a,z)}{\partial d_{ij}/d_{ij}} = -1$ and zero everywhere else. Then following Proposition \ref{apx-prp:GET} and (\ref{eq:apx-trade-elasticity}) the trade elasticity is
+And thus, the $\Phi_{i}(z)$ showing up in the extensive margin calculation (\ref{eq:apx-extensive-margin}) is independent of $z$.  Then the final observation is that the partial derivative of the $i,j$ choice value function $\frac{\partial v_{ij}(z)}{\partial d_{ij}/d_{ij}} = -1$ and zero everywhere else. Then following Proposition \ref{apx-prp:GET} and (\ref{eq:apx-trade-elasticity}) the trade elasticity is
 \begin{align}
 \nonumber
 \theta_{ij} =& \sum_{z} \bigg \{ 0 + -\frac{1}{\sigma_{\epsilon}} - \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} \ + 0 \bigg \}\omega_{ij}(z) - \sum_{z} \bigg \{  0 - \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} + 0 \bigg \}\omega_{ii}(z) \\
@@ -825,6 +825,37 @@ and the gains from trade are given by
 \end{corr}
 
 \subsection{Dynamic, Log Preferences}
+
+This example is interesting because it retains a constant trade elasticity and then the welfare gains formula looks like ACR+ kind of thing. There is a bit more to it, but a key insight is that policy function does not depend upon the variety choice and this implies that choice probabilities are independent of $z$, there is a constant trade elasticity as the intensive margin is turned off, and then the gains from trade take a bit cleaner formulation in Proposition \ref{apx-prp:gains-trade} with the 
+
+With log preferences the $j$ choice value function is
+\begin{align}
+v_{ij}(a, z) = &  \max_{\ a' \in \mathcal{A} }\bigg  \{ \log\left (\frac{Ra + wz - a'}{p_{ij}} \right )  + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\}
+\end{align}
+which is then
+\begin{align}
+v_{ij}(a, z) = &  \max_{\ a' \in \mathcal{A} }\bigg  \{ \log(Ra + wz - a' )  + \beta \, \mathbb{E} [v_{i}(a', z' )]  \bigg\} - \log p_{ij}
+\label{eq:value_fun_option_log_p}
+\end{align}
+which then leads to the observation that the optimal $a'$ conditional on a choice $j$ is \textbf{independent} of the price of the consumption good. So what is going on is if you consume an expensive or cheap good, then consumption simply scales up or down so that assets next period are exactly the same. Then the choice probability becomes
+\begin{align}
+\pi_{ij}(a, z; S_i) = & \exp \left( \frac{ v_{ij}(a, z;  S_i ) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z;  S_i ) }{\sigma_{\epsilon}} \right) \\
+\nonumber\\
+\pi_{ij} = & \exp \left( \frac{  -\log p_{ij} }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ -\log p_{ij} }{\sigma_{\epsilon}} \right)
+\end{align}
+which is exactly the same as discussed above in the static model.
+
+Now we know (i) from (\ref{eq:apx-intensive-margin}) because the asset choice is independent of prices, the intensive margin elasticity $\theta_{ij}(a,z)^I$ is zero, i.e. any change in prices is fully offset by a change in consumption. Second, the distribution elasticity is zero from (\ref{eq:apx-distribution-margin}) because assets are not responding to changes in prices and what about $\pi$s (but these are independent of $a$ and $z$ so there is no differential change?
+
+Finally, just like the static model, the partial derivative of the $i,j$ choice value function $\frac{\partial v_{ij}(a,z)}{\partial d_{ij}/d_{ij}} = -1$Then following Proposition \ref{apx-prp:GET} and (\ref{eq:apx-trade-elasticity}) the trade elasticity is
+\begin{align}
+\nonumber
+\theta_{ij} =& \sum_{z} \bigg \{ 0 + -\frac{1}{\sigma_{\epsilon}} - \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} \ + 0 \bigg \}\omega_{ij}(z) - \sum_{z} \bigg \{  0 - \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} + 0 \bigg \}\omega_{ii}(z) \\
+\nonumber \\
+\theta =& -\frac{1}{\sigma_{\epsilon}} \nonumber
+\end{align}
+
+
 
 
 \newpage
