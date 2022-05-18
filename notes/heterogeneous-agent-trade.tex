@@ -669,7 +669,11 @@ which emphasizes the point that how the distribution changes is fundamentally in
 
 This section derives the gains from a permanent change in trade costs, across steady states. Like the discussion above, the idea here is that I'm thinking a situation where the change is small and there is an immediate jump to the new steady state. Unlike the trade elasticity, I'm going to take total derivatives that will encompass general equilibrium changes in wages and interest rates.
 
-The analysis proceeds in several steps. To compute how social welfare changes, I'll focus on a utilitarian social welfare function so:
+The analysis proceeds in several steps. 
+
+First, I'm going to focus on country $i$ and study a change in trade costs $d_{ij}$. To simplify the algebra, I'm going to choose $w_i$ to be the numeraire. Then I'm going to normalize $A_i = 1$. What this implies is that $p_{ii} = \frac{w_i}{A_i}$ equals one and it's derivative with respect to things is zero.
+
+Second, To compute how social welfare changes, I focus on a utilitarian social welfare function (Pareto weights across households, within a country, are the same):
 \begin{align}
 W_{i} = \sum_{a,z} v_{i}(a,z)\lambda_{i}(a,z)
 \label{eq:apx-social-welfare}
@@ -679,24 +683,39 @@ Then the total change in total welfare is
 \frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = \sum_{a,z} \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} \lambda_{i}(a,z).
 \label{eq:apx-social-welfare-change}
 \end{align}
-What illustrates is that the gains from trade come through two forces. The first component reflects changes in household-level welfare. So conditional on a distribution of households across states, are housholds better or worse off. The second component is about reallocation, i.e., if|at the old $v$'s|does the distribution change so that social welfare gets better or worse. The change in social welfare is then the weighted average of these two forces with the weights being those at the initial distribution.
+What illustrates is that the gains from trade come through two forces. The first component reflects changes in household-level welfare. So conditional on a distribution of households across states, are households better or worse off. The second component is about reallocation, i.e., if|at the old $v$'s|does the distribution change so that social welfare gets better or worse. The change in social welfare is then the weighted average of these two forces with the weights being those at the initial distribution.
 
-How does household-level welfare change? With the Type 1 extreme value distribution some progress can be made in several steps. First, notice that I can  express everything relative to the home country $i$. Recall that the value function is
+How does household-level welfare change? With the Type 1 extreme value distribution some progress can be made in several steps. First, notice that I can express everything relative to the home country $i$. Recall that the value function (with the expectation taken over the different preference shocks) is
 \begin{align}
-v_i(a, z) =  \sigma_{\epsilon} \log \left\{ \sum_{j'} \exp \left( \frac{  v_{ij}(a, z)}{\sigma_{\epsilon}} \right) \right\},
+v_i(a, z) =  \sigma_{\epsilon} \log \left\{ \sum_{j'} \exp \left( \frac{  v_{ij'}(a, z)}{\sigma_{\epsilon}} \right) \right\},
+\label{eq:apx-epsilon-vfun}
 \end{align}
-and then I'm going to make the observation that I can substitute out the sum part with the exp of the home value function relative to the micro-level ``home choice''
+and then I'm going to make the observation that I can substitute out the sum part (\ref{eq:apx-epsilon-vfun} with the exp of the home value function relative to the micro-level ``home choice'' so
+\begin{align}
+\pi_{ii}(a, z) = \exp \left( \frac{ v_{ii}(a, z) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z) }{\sigma_{\epsilon}} \right), \\
+\nonumber \\
+\pi_{ii}(a, z) \times \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z) }{\sigma_{\epsilon}} \right) = \exp \left( \frac{ v_{ii}(a, z) }{\sigma_{\epsilon}} \right), \\
+\nonumber \\
+\sum_{j'} \exp \left( \frac{ v_{ij'}(a, z) }{\sigma_{\epsilon}} \right) = \exp \left( \frac{ v_{ii}(a, z) }{\sigma_{\epsilon}} \right) \Bigg / \pi_{ii}(a, z).
+\label{eq:apx-homeshare-vfun}
+\end{align}
+Then substituting (\ref{eq:apx-homeshare-vfun}) into the value function in (\ref{eq:apx-epsilon-vfun}) gives:
 \begin{align}
 v_i(a, z) =  \sigma_{\epsilon} \log \left\{ \frac{ \exp \left( \frac{  v_{ii}(a, z)}{\sigma_{\epsilon}}\right )}{\pi_{ii}(a,z)}  \right\}
+\label{eq:apx-homeshare-vfun2}
 \end{align}
-and thus the value function can be represented as
+and recall that the home choice value function is
 \begin{align}
-v_i(a, z) = -\sigma_{\epsilon} \log \pi_{ii}(a,z) + u(c_{ii}(a,z)) + \beta \mathbb{E} v_{i}(g_{ii}(a,z),z)
+v_{ii}(a, z) = u(c_{ii}(a,z)) + \beta \mathbb{E} v_{i}(g_{ii}(a,z),z)
+\end{align}
+where the expectation operator is over the $z$s and the $v_{i}$ is the same value function as in (\ref{eq:apx-epsilon-vfun}) so the taste shocks are integrated out. Taking logs and exp's of (\ref{eq:apx-homeshare-vfun2}) allows for the $v_i$ value function to be represented as
+\begin{align}
+v_i(a, z) = -\sigma_{\epsilon} \log \pi_{ii}(a,z) + u(c_{ii}(a,z)) + \beta \mathbb{E} v_{i}(g_{ii}(a,z),z).
 \label{eq:apx-home-valuefun}
 \end{align}
-The key innovation here is that now everything is written with respect to the home choice. This is essentially the dynamic analog to Equation (15), Footnote 42 of \citet{eaton2002technology} and \citet{arkolakis2012new} and I explicitly show this in the example section below.
+The key innovation here is that now everything is written with respect to the home choice. Where are the taste shocks? What is going on is that the home choice $\pi_{ii}$ summarizes the expected value of those shocks and their benefits. No need to explicitly carry around the $v_{ij}$s. This is essentially the dynamic analog to Equation (15), Footnote 42 of \citet{eaton2002technology} and \citet{arkolakis2012new} and I explicitly show this in the example section below.
 
-Now the strategy is to totally differentiate (\ref{eq:apx-home-valuefun}) with respect to trade costs and use the recursive structure to iterate forward and construct the change across time. Furthermore, in all of this, I set $w_i$ to be the numeraire and $A_i = 1$ so $p_{ii}$ equals one and needs not be carried around. One more detail, to facilitate interpretation, it will be useful to compute the Euler equation associated with asset holdings when the borrowing constraint does not bind. This euler equation is:
+Now the strategy is to totally differentiate (\ref{eq:apx-home-valuefun}) with respect to trade costs and use the recursive structure to iterate forward and construct the change across time.  One more detail, to facilitate interpretation, it will be useful to compute the Euler equation associated with asset holdings when the borrowing constraint does not bind. This euler equation is:
 \begin{align}
 -u'(c_{ii}(a,z)) = \beta \mathbb{E} \bigg \{ -\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + u'(c_{ii}(a',z'))R \bigg \},
 \end{align}
