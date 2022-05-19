@@ -670,7 +670,7 @@ and the gains from trade are given by
 
 \subsection{Dynamic, Log Preferences}
 
-This example is interesting because it retains an aggregate constant trade elasticity, but at the micro-level it is not quite with things canceling in a way during aggregation. Second, the welfare gains from trade formula looks like ACR+ kind of thing. Because this is a bit more involved I'm going to be super systematic about this. 
+This example is interesting because it retains an aggregate constant trade elasticity, but at the micro-level it is not quite with things canceling in a way during aggregation. Second, the welfare gains from trade formula looks like ACR kind of thing. Because this is a bit more involved I'm going to be super systematic about this. 
 
 \textbf{Step 1: Individual Choices.} With log preferences the $j$ choice value function is
 \begin{align}
@@ -681,7 +681,7 @@ which is then
 v_{ij}(a, z) = &  \max_{\ a' \in \mathcal{A} }\bigg  \{ \log(Ra + wz - a' )  + \beta \, \mathbb{E} [v_{i}(a', z' )]  \bigg\} - \log p_{ij}
 \label{eq:value_fun_option_log_p}
 \end{align}
-which then leads to the observation that the optimal $a'$ conditional on a choice $j$ is \textbf{independent} of the price and moreover independent of the choice $j$. So what is going on is if you consume an expensive or cheap good, then consumption simply scales up or down so that assets next period are exactly the same. This observation has the implication that expenditures on consumption are the same across choices. Compare households expenditures with the same state $a,z$ but different choices. Equation (\ref{eq:value_fun_option_log_p}) implies
+which then leads to the observation that the optimal $a'$ conditional on a choice $j$ is \textbf{independent} of the price and the choice $j$. So what is going on is if you consume an expensive or cheap good, then consumption simply scales up or down so that assets next period are exactly the same. This observation has the implication that expenditures on consumption are the same across choices. Compare households expenditures with the same state $a,z$ but different choices. Equation (\ref{eq:value_fun_option_log_p}) implies
 \begin{align}
 p_{ij}c_{ij}(a,z) = p_{ii}c_{ii}(a,z)
 \label{eq:apx-same-spending}
@@ -694,7 +694,19 @@ Finally, this observation implies that the choice probabilities are independent 
 \nonumber\\
 \pi_{ij} = & \exp \left( \frac{  -\log p_{ij} }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ -\log p_{ij'} }{\sigma_{\epsilon}} \right)
 \end{align}
-which is exactly the same as discussed above in the static model.
+which is exactly the same as discussed above in the static model. These observations are all consistent with the Generalized Euler Equation below. To see this
+\begin{align}
+\frac{u'(c_{ij}(a, z))}{p_{ij}} = \max \left\{ \beta R_{i} \mathbb{E} \left[ \sum_{j'} \pi_{ij}(a', z') \frac{u'(c_{ij}(a', z'))}{p_{ij}} \right] \ , \  u' \left( \frac{R_i a + w_i - \phi_{i}}{p_{ij}} \right) \right \}
+\end{align}
+and then impose log preferences and notice that
+\begin{align}
+(Ra + wz - a')^{-1} = \max \left\{ \beta R \mathbb{E} \left[ \sum_{j'} \pi_{ij}(a', z') (Ra' + wz - a'')^{-1} \right] \ , \   (R a + w - \phi_{i})^{-1} \right \}
+\end{align}
+and then because the term multiplying the $\pi_{ij}$'s does not depend upon $j$ it can be pulled out and
+\begin{align}
+(Ra + wz - a')^{-1} = \max \bigg \{ \beta R \mathbb{E} (Ra' + wz' - a'')^{-1}  \ , \   (R a + w - \phi_{i})^{-1}  \bigg \}
+\end{align}
+and thus the asset choice is independent from the variety choice $j$. 
 
 \textbf{Step 2: Micro Trade Elasticities.} I'm going to be super systematic about this:
 \begin{itemize}
@@ -706,7 +718,7 @@ which is exactly the same as discussed above in the static model.
 \begin{align}
 \theta_{ij}(a,z)^E =& \frac{1}{\sigma_{\epsilon}}\frac{\partial v_{ij}(a,z)}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}}\\
 \nonumber \\
-=& \frac{1}{\sigma_{\epsilon}}\frac{\partial p_{ij} / p_{ij}}{\partial d_{ij}/d_{ij}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i}(z) / \Phi_{i}(z)}{\partial d_{ij}/d_{ij}} \\
+=& -\frac{1}{\sigma_{\epsilon}}\frac{\partial p_{ij} / p_{ij}}{\partial d_{ij}/d_{ij}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i}(z) / \Phi_{i}(z)}{\partial d_{ij}/d_{ij}} \\
 \nonumber \\
 =& -\frac{1}{\sigma_{\epsilon}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}}
 \label{eq:apx-log-partial-valuefun}
@@ -742,7 +754,7 @@ which are independent of source $j$. This is the second important observation th
 \end{align}
 where the last line follows because the $a,z$ terms in the micro level trade elasticities exactly cancel given that expenditure weights are source independent. And the aggregate trade elasticity is constant and parameterized by the dispersion in tastes.
 
-Then from here I can just follow Proposition \ref{apx-prp:gains-trade}. First the individual gains are
+\textbf{Step 5: The Grains From Trade.} Then from here I can just follow Proposition \ref{apx-prp:gains-trade}. First the individual gains are
 {\footnotesize
 \begin{align}
 \nonumber
@@ -758,15 +770,19 @@ Then from here I can just follow Proposition \ref{apx-prp:gains-trade}. First th
 \delta_{ii}(a,z) = \bigg \{- c_{ii}(a,z)^{-1} + \beta \mathbb{E} \big [ c_{ii}(a',z')^{-1}R \big ] \bigg \}\frac{\mathrm{d} g_{ii}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}
 \end{align}
 \end{itemize}
-The one issue is does $R$ actually change? Right now I'm doubting that it does. Check this on the computer. IF it does not, then I think these other terms are zero.  
+One final step. Claim is that because the asset policy function $g$ is independent of the price of varieties, then any change in trade costs will not affect $R$ and thus the total derivative $\frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}$ equals zero and then the total derivative $\frac{\mathrm{d} g_{ii}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}$ on the asset policy function is zero. And then $\frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}$ is zero as well. 
 
-Then social welfare becomes
-{\footnotesize
+So there is a super strong result:
+\begin{corr}[\textbf{Separation of Trade and Heterogeneity}] In the dynamic heterogenous agent trade model the trade elasticity is
 \begin{align}
-\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = \underbrace{-\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}}_{ACR} \ \ + \ \ \sum_{a,z} \bigg \{ \mathbb{E} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ \gamma_{ii}(a_{t},z_{t}) + \delta_{ii}(a_{t},z_{t}) \bigg \}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} \lambda_{i}(a,z).
-\nonumber
+\theta = -\frac{1}{\sigma_{\epsilon}} \nonumber
 \end{align}
-}where again, I'm not sure if the last term in particular is relevant. Does the distribution actually change.
+and the gains from trade are given by
+\begin{align}
+\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = -\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}.
+\end{align}
+\end{corr}
+
 
 Should check this stuff on computer. 
 
@@ -812,7 +828,7 @@ So then putting everything together we have:
 \end{align}
 where this has a very natural form: you set the marginal utility of consumption today equal to the marginal utility of consumption tomorrow adjusted by the return on delaying consumption, and the expected value of the marginal utility of consumption which reflects how the uncertainty over both ones' preference over different varieties and shocks to efficiency units. Taking into account the borrowing constraint then gives the generalized Euler equation from which the endogenous grid method will exploit:
 \begin{align}
-\frac{u'(c_{ij}(a, z))}{p_{ij}} = \max \left\{ \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij}(a', z') \frac{u'(c_{ij}(a', z'))}{p_{ij}} \right] \ , \  u \left( \frac{R_i a + w_i - \phi_{i}}{p_{ij}} \right) \right \}
+\frac{u'(c_{ij}(a, z))}{p_{ij}} = \max \left\{ \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij}(a', z') \frac{u'(c_{ij}(a', z'))}{p_{ij}} \right] \ , \  u' \left( \frac{R_i a + w_i - \phi_{i}}{p_{ij}} \right) \right \}
 \label{eq:euler_equation}
 \end{align}
 
@@ -828,7 +844,7 @@ Here is a proposed approach. This focuses on just the consumer side in one count
 
 \item[\textbf{2.}] Then invert to find the new updated consumption choice so
 \begin{align}
-c_{ij}(\tilde a, z) = u^{' -1}\left\{ p_{ij} \max \left\{ \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij}(a', z') \frac{u'(c_{ij}(a', z'))}{p_{ij}} \right] \ , \  u \left( \frac{R_i a + w_i - \phi_{i}}{p_{ij}} \right) \right \} \right \}
+c_{ij}(\tilde a, z) = u^{' -1}\left\{ p_{ij} \max \left\{ \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij}(a', z') \frac{u'(c_{ij}(a', z'))}{p_{ij}} \right] \ , \  u' \left( \frac{R_i a + w_i - \phi_{i}}{p_{ij}} \right) \right \} \right \}
 \end{align}
 where $u^{' -1}$ is the inverse function of the marginal utility of consumption.
 
