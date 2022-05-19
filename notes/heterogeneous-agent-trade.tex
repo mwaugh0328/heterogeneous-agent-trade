@@ -357,106 +357,6 @@ Given the social welfare function in \ref{eq:sp-social_welfare} and the constrai
 
 
 
-\subsection{Special Cases / Running Examples}
-
-There are two special cases that I will refer back to repeatedly in the text. One is what I will call the CES case in which I mean that the household has access to a constant elasticity aggregator over the different varieties. The second case is the ``hand-to-mouth'' case in which households have no access to borrowing or lending.
-
-\textbf{CES case.} This case is relatively familiar and standard. Here there is an aggregator over national varieties of the CES class, so
-\begin{align}
-c = \bigg \{ \sum_{j}^{M}  c_{j}^{\frac{\theta - 1}{\theta}} \bigg \}^{\frac{\theta}{\theta - 1}},
-\label{eq:ces-armington}
-\end{align}
-where $\theta$ controls the elasticity of substitution across products. Then each household has the following demand curve for a region's variety:
-\begin{align}
-c_{ij}(a,z; S_i) & = \left(\frac{p_{ij}}{P_i}\right)^{-\theta}c_{i}(a,z; S_i).
-\label{eq:ces-demand-curve}
-\end{align}
-which is given the total amount of consumption $c_{i}(a,z; S_i)$ a household chooses given their states and $P_i$ is the CES price index:
-\begin{align}
-P_{i} &= \bigg \{ \sum_{j}^{M} p_{ij}^{1 - \theta} \ \bigg \}^{\frac{1}{1-\theta}}.
-\label{eq:ces-price-index}
-\end{align}
-what is unique about this setting is that household expenditure shares on different goods are independent of their state. So the expenditure share of a household in location $i$ with state $a$ and $z$ is
-\begin{align}
-\frac{p_{ij}c_{ij}(a,z; S_i)}{P_i c_{i}(a,z; S_i)} & = \left(\frac{p_{ij}}{P_i}\right)^{1-\theta},
-\label{eq:ces-expenditure-share}
-\end{align}
-which depends only on prices that all households face. What is happening here is that the CES aggregator is homothetic in total consumption. So while households are choosing different levels of total consumption to solve their income-fluctuations problem, how that demand is divided up is always the same. From here, one can aggregate and arrive at a ``gravity-like'' import demand system with
-households with states $a$ and $z$ importing
-\begin{align}
-M_{ij}(a, z; S_i) = p_{ij} \left(\frac{p_{ij}}{P_i}\right)^{-\theta} c_{i}(a,z; S_i).
-\end{align}
-Then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households in those states which gives
-\begin{align}
-M_{ij} =  \left(\frac{p_{ij}}{P_i}\right)^{1-\theta} \times P_{i} C_{i}
-\end{align}
-where the last term follows by noting that the sum of $c_{i}(a,z; S_i)$ across the distribution is aggregate consumption and then this is put in value terms by multiplying and dividing by the CES price index.
-
-\textbf{Hand-to-Mouth, No Labor Supply,Log Households.} This case focuses on the situation described|so there does not exist a risk free asset to smooth consumption, nor can households adjust their labor supply. The value function of a household contemplating the purchase of national variety $j$ is:
-\begin{align}
-v_{ij}(a, z;  S_i  ) = &   u\left( \frac{w_{i}z}{p_{ij}} \right) + \epsilon(j)  + \beta \, \mathbb{E} [v_{i}(z'; S_i' )]
-\end{align}
-and then the choice probability becomes
-\begin{align}
-\pi_{ij}(z; S_i) = & \exp \left( \frac{ v_{ij}(z;  S_i ) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(z;  S_i ) }{\sigma_{\epsilon}} \right) \\
-\nonumber\\
-\pi_{ij}(z; S_i) = & \exp \left( \frac{ u\left( \frac{w_{i}z}{p_{ij}} \right) ) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ u\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right)
-\end{align}
-where the last line follows from the properties of the $\exp$ function and that the continuation value function is exactly the same independent of the good chosen. Two more steps. Then with $\log$ this expression collapses to
-\begin{align}
-\pi_{ij}(S_i) = \frac{p_{ij}^{-1 / \sigma_{\epsilon}}}{\sum_{j'} p_{ij'}^{-1 / \sigma_{\epsilon}}}
-\end{align}
-where here we recover the well known ``ces-logit-isomorphisim'' between the logit demand system and the CES aggregator in \ref{eq:ces-armington}.
-
-%\section{When Household Heterogeneity Does Not Matter?}
-%
-%Before studying computational results. It's worth thinking about when and when not the household heterogeneity may not matter. In the first couple of remarks below, I abstract from issues related to tariffs
-%
-%\subsection{Issue \# 1: Trade Imbalance}
-%
-%To see how this works, let's connecting trade and financial flows. The trade side of the model in (\ref{sec:trade}) determines how aggregate demand in each country is sourced across different countries:
-%\begin{align}
-%P_{i}C_i  = p_{i}\bigg \{ \left(\frac{p_{i}}{P_i}\right)^{-\theta}C_i  \bigg \} +  \underbrace{\sum_{j \neq i}^{M}  p^{cif}_{ij}\bigg \{ \left(\frac{p_{ij}}{P_i}\right)^{-\theta}C_i
-%\bigg \}}_{IM_{i}} + \underbrace{\sum_{j \neq i}^{M}  \tau_{ij} p^{cif}_{ij} \bigg \{ \left( \frac{p_{ij}}{P_{j}} \right)^{-\theta}C_i \bigg \}}_{T_{i,\tau}}.
-%\label{eq:goods-supply-imports}
-%\end{align}
-%where $p^{cif}_{ij} = \frac{d_{ji} w_{i}}{A_{i}}$, so these prices including shipping costs, but exclude tariffs. Imports here are defined as ``customs value'' per NIPA guidelines, i.e., the price paid for foreign goods excluding tariffs. Substituting in (\ref{eq:goods-supply-imports}) into the (\ref{eq:goods-supply-exports}) and then into the aggregated budget constraint (\ref{eq:aggregate_budget_constraint}) implies the following relation:
-%\begin{align}
-%\underbrace{\sum_{j \neq i}^{M}  p_{ji}\bigg \{ \left(\frac{p_{ji}}{P_j}\right)^{-\theta}\big [ C_j \big ]\bigg \}}_{EX_{i}} \ - \ \underbrace{\sum_{j \neq i}^{M}  p_{ij}\bigg \{ \left(\frac{p_{ij}}{P_i}\right)^{-\theta}[ C_i  \big ] \bigg \}}_{IM_{i}}  = \bigg[-R\mathrm{A_i} +  \mathrm{A_i'} \bigg]
-%\label{eq:imbalance}
-%\end{align}
-%that is the trade imbalance must equal the net asset position of a country.
-%
-%From this condition, one can show how this reduces to standard relationships exploited in the trade literature. First, consider the case of Financial Autarky, so that condition (\ref{eq:fa-condition}) holds. Net asset holdings in each country are zero (though recall, gross asset positions for individual households within a country may be non-zero). This implies
-%\begin{align}
-%\underbrace{\sum_{j \neq i}^{M}  p_{ji}\bigg \{ \left(\frac{p_{ji}}{P_j}\right)^{-\theta}\big [ C_j \big ]\bigg \}}_{EX_{i}} \ = \ \underbrace{\sum_{j \neq i}^{M}  p_{ij}\bigg \{ \left(\frac{p_{ij}}{P_i}\right)^{-\theta}[ C_i  \big ] \bigg \}}_{IM_{i}},
-%\label{eq:imbalance_v2}
-%\end{align}
-%or balanced trade. There is one more step, however, what shows up in (\ref{eq:imbalance}) is demand $C_i$, not supply or income. But from the aggregated budget constraint, and abstracting from tariffs, condition (\ref{eq:fa-condition}), implies that the value of output (and labor income) must equal the value of consumption
-%\begin{align}
-%p_{i} Y_{i}  = P_{i}  C_i ,
-%\end{align}
-%and after substituting in the relationship between wages and prices we have
-%\begin{align}
-%\underbrace{\sum_{j \neq i}^{M}  p_{ji}\bigg \{ \left(\frac{p_{ji}}{P_j}\right)^{-\theta} \left( \frac{ w_j N_j }{P_j} \right) \bigg \}}_{EX_{i}} \ = \ \underbrace{\sum_{j \neq i}^{M}  p_{ij}\bigg \{ \left(\frac{p_{ij}}{P_i}\right)^{-\theta}\left( \frac{w_i N_i}{P_i}  \right) \bigg \}}_{IM_{i}},
-%\label{eq:imbalance_v3}
-%\end{align}
-%which is the same exact system of equations explored in canonical trade models. Alvarez Lucas is probably best example. What else?
-%
-%There is one more issue which is addressed next. In this system of equations is $N_i$ shows up ant it's labor supply.
-%
-%\subsection{Issue \# 2: Labor Supply and Market Incompleteness}
-%
-%Obviously set N exogenous recovers everything.
-%
-%Work out efficient allocation. N is different? What about $\frac{dw}{d\tau}$?
-%
-%\subsection{Issue \# 3: Tariffs and Insurance}
-%
-%When lump-sum rebated, the implied distribution of potential labor earnings contracts? easy to show? This is like some of the tax progressivity stuff.
-
-
-
 
 \appendix
 
@@ -470,93 +370,7 @@ where here we recover the well known ``ces-logit-isomorphisim'' between the logi
 \addcontentsline{toc}{section}{Appendices}
 
 
-%\section{Appendix: Static Logit Trade Model}
-%
-%This case focuses on the most basic model of household heterogeneity: static, log preferences, logit shocks and is a key point of contact.  The value function of a household contemplating the purchase of national variety $j$ is:
-%\begin{align}
-%v_{ij}( z ) = &   \log\left( \frac{w_{i} z}{p_{ij}} \right) + \epsilon(j)
-%\end{align}
-%and then the choice probability becomes
-%\begin{align}
-%\pi_{ij}(z) = & \exp \left( \frac{ v_{ij}(z) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(z) }{\sigma_{\epsilon}} \right) \\
-%\nonumber\\
-%\pi_{ij}(z) = & \exp \left( \frac{ \log\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  \log\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right)
-%\end{align}
-%with the $\log$ specification this expression collapses to
-%\begin{align}
-%\pi_{ij} = \frac{p_{ij}^{\frac{-1}{\sigma_{\epsilon}}}}{\sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}}
-%\end{align}
-%as wages an efficiency units cancel. To arrive at an expression for aggregate imports, note that individual imports are
-%\begin{align}
-%M_{ij}(z) = p_{ij} \frac{w_{i}z}{p_{ij}}.
-%\end{align}
-%then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households in those states which gives
-%\begin{align}
-%M_{ij} = \sum_{z} p_{ij} \frac{w_{i}z}{p_{ij}} \pi_{ij} \lambda(z) \\
-%\nonumber \\
-%M_{ij} = \pi_{ij} \sum_{z} w_{i}z \lambda(z)\\
-%\nonumber \\
-%M_{ij} =  \frac{p_{ij}^{\frac{-1}{\sigma_{\epsilon}}}}{\sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}} \times \widetilde{P_{i} C_{i}}
-%\end{align}
-%where the last term follows from imposing the aggregated budget constraint with aggregate labor income equalling aggregate expenditure. Then to get towards something that looks like \citet{eaton2002technology} substitute in the unit shipping costs from (\ref{eq:marginal-product-ship}) and set $-\theta = -1/ \sigma_{\epsilon}$ yielding:
-%\begin{align}
-%M_{ij} =  \frac{A_j^{\theta}(w_jd_{ij})^{-\theta}}{\sum_{j'} A_j^{\theta}(w_jd_{ij})^{-\theta}} \times \widetilde{P_{i} C_{i}}
-%\end{align}
-%and it becomes immediate that the trade share (imports divided by consumption) is $\pi_{ij}$.
-%
-%Given this representation of trade flows, I'm going to derive the ``trade elasticity'' and then welfare. I'll define the trade elasticity as the following:
-%\begin{align}
-%\frac{\partial \pi_{ij} / \pi_{ii}}{\partial d_{ij}} \times \frac{d_{ij}}{\pi_{ij} / \pi_{ii}}
-%\end{align}
-%or the percent change in trade relative to domestic trade due to a change in trade costs which is our labeling of the elasticity in \citet{simonovska2014elasticity}. In this setup the ``trade elasticity'' is:
-%\begin{align}
-%\frac{\partial \pi_{ij} / \pi_{ii}}{\partial d_{ij}} \times \frac{d_{ij}}{\pi_{ij} / \pi_{ii}} = -\theta
-%\end{align}
-%so it simply reflects the dispersion parameter $\sigma_{\epsilon}$.
-%
-%I can also derive the \citet{arkolakis2012new} sufficient statistic welfare result. Expected utility  prior to the realization of the tastes shocks is:
-%\begin{align}
-%\mathcal{W} = \sigma_{\epsilon} \log \bigg \{ \sum_{j'} \exp \left( \frac{ v_{ij'}(z) }{\sigma_{\epsilon}} \right) \bigg \}
-%\end{align}
-%which again with log preferences can be written as:
-%\begin{align}
-%\mathcal{W} = \sigma_{\epsilon} \log w_{i}^{\frac{1}{\sigma_{\epsilon}}} \ + \sigma_{\epsilon} \log \bigg \{ \sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}} \bigg \}
-%\end{align}
-%I'm always free to make one normalization on prices, so a convenient one is to set $w_i = 1.0$. This then implies from \ref{eq:marginal-product-ship} that $p_{ii} = 1 / A_{i}$ and then the countries home share is
-%\begin{align}
-%\pi_{ii} = \frac{A_i^{\frac{1}{\sigma_{\epsilon}}}}{\sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}}
-%\end{align}
-%or
-%\begin{align}
-%\pi_{ii}^{-1}A_i^{\frac{1}{\sigma_{\epsilon}}} = \sum_{j'} p_{ij'}^{\frac{-1}{\sigma_{\epsilon}}}
-%\end{align}
-%And then substituting into the welfare expression gives
-%\begin{align}
-%\mathcal{W} = \log A_{i}  - \sigma_{\epsilon} \log \pi_{ii}
-%\end{align}
-%which is, essentially the \citet{arkolakis2012new} expression. The only substantive difference is that the expression above are in units of utils. To put this in consumption units, take the exponent and then swap into the $\theta$ notation and one has:
-%\begin{align}
-%\mathcal{\tilde W} = A_{i} \pi_{ii}^{\frac{-1}{\theta}}
-%\end{align}
-%which is exactly the \citet{arkolakis2012new} expression. The following proposition summarizes the result:
-%
-%\begin{prp}[\textbf{Static Heterogeneity: Gravity, and Welfare}] \label{apx-prp:static} In the static model with log preferences and logit preference shocks where $\theta = 1 / \sigma_{\epsilon}$, the decentralized allocation is characterized a Gravity equation for country $i$'s imports from country $j$:
-%{\small
-%\begin{align}
-%M_{ij} =  \frac{A_j^{\theta}(w_jd_{ij})^{-\theta}}{\sum_{j'} A_j^{\theta}(w_jd_{ij})^{-\theta}} \times \widetilde{P_{i} C_{i}}
-%\label{appendix-eq:static-gravity}
-%\end{align}
-%}
-%where the trade elasticity defined as
-%\begin{align}
-%\frac{\partial ( M_{ij} / M_{ii} )}{\partial d_{ij}} \times \frac{d_{ij}}{( M_{ij} / M_{ii} )} = -\theta,
-%\end{align}
-%and is determined by the dispersion of the preferences shocks. Finally the welfare gains from trade in consumption units are summarized by
-%\begin{align}
-%\mathcal{\tilde W} = A_{i} \pi_{ii}^{\frac{-1}{\theta}}
-%\end{align}
-%where $\pi_{ii}$ a country $i$'s share of consumption expenditure on goods from itself.
-%\end{prp}
+
 
 \section{The Generalized Trade Elasticity}
 
@@ -669,7 +483,7 @@ which emphasizes the point that how the distribution changes is fundamentally in
 
 This section derives the gains from a permanent change in trade costs, across steady states. Like the discussion above, the idea here is that I'm thinking a situation where the change is small and there is an immediate jump to the new steady state. Unlike the trade elasticity, I'm going to take total derivatives that will encompass general equilibrium changes in wages and interest rates.
 
-The analysis proceeds in several steps. 
+The analysis proceeds in several steps.
 
 First, I'm going to focus on country $i$ and study a change in trade costs $d_{ij}$. To simplify the algebra, I'm going to choose $w_i$ to be the numeraire. Then I'm going to normalize $A_i = 1$. What this implies is that $p_{ii} = \frac{w_i}{A_i}$ equals one and it's derivative with respect to things is zero.
 
@@ -735,7 +549,7 @@ So the first term is the partial change of $v$ with respect to $a'$ times how th
 \begin{align}
 \frac{\partial v(\overline{g(a,z,d)},z')}{\partial d} = \frac{\mathrm{d} v(a', z')}{\mathrm{d} d }
 \end{align}
-where the RHS is the total derivative of $v$ treating $a'$ as a parameter. In other words, the LHS says, how does $v$ change (everything else) holding fixed assets. The RHS says how does everything else change holding fixed assets. There the same. And the RHS is the value function evaluated at the new states $a'$, $z'$. 
+where the RHS is the total derivative of $v$ treating $a'$ as a parameter. In other words, the LHS says, how does $v$ change (everything else) holding fixed assets. The RHS says how does everything else change holding fixed assets. There the same. And the RHS is the value function evaluated at the new states $a'$, $z'$.
 
 \hrulefill
 
@@ -814,23 +628,34 @@ Proposition \ref{apx-prp:gains-trade} nests several interesting cases that conne
 
 \subsection{Static, Log Preferences}
 
-The first is the non-assets, static, log preference case. This delivers the benchmark gains from trade formula in \citet{arkolakis2012new}. The first step is to derive the trade elasticity. A couple insights are necessary. First, from (\ref{eq:apx-intensive-margin}) and because there is no asset choice the intensive margin elasticity $\theta_{ij}(z)^I$ is zero, i.e. any change in prices is fully offset by a change in consumption. Second, because there is no asset choice and household level shocks are exogenously specified, then the distribution elasticity is zero. Third, the choice probabilities become independent of household level productivity, so
+The first is the non-assets, static, log preference case. This delivers the benchmark gains from trade formula in \citet{arkolakis2012new}. The first step is to derive the trade elasticity. A couple observations are necessary.
+\begin{itemize}
+\item From the formula for the intensive margin elasticity (\ref{eq:apx-intensive-margin}) and because there is no asset choice then $\theta_{ij}(z)^I$ is zero, so any change in prices are fully offset by a change in consumption. 
+\item Second, because there is no asset choice and household level shocks are exogenously specified, then the distribution elasticity is zero. 
+
+\item Third, the choice probabilities become independent of household level productivity, so
 \begin{align}
-\pi_{ij}(z) &= \exp \left( \frac{ \log\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  \log\left( \frac{w_{i}z}{p_{ij'}} \right) }{\sigma_{\epsilon}} \right) \\
+\nonumber \pi_{ij}(z) &= \exp \left( \frac{ \log\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  \log\left( \frac{w_{i}z}{p_{ij'}} \right) }{\sigma_{\epsilon}} \right) \\
 \nonumber \\
-\pi_{ij} &= \exp \left( \frac{ -\log\left( p_{ij} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  -\log\left( p_{ij'} \right) }{\sigma_{\epsilon}} \right).
+\nonumber \pi_{ij} &= \exp \left( \frac{ -\log\left( p_{ij} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  -\log\left( p_{ij'} \right) }{\sigma_{\epsilon}} \right).
 \end{align}
-And thus, the $\Phi_{i}(z)$ showing up in the extensive margin calculation (\ref{eq:apx-extensive-margin}) is independent of $z$.  Then the final observation is that the partial derivative of the $i,j$ choice value function $\frac{\partial v_{ij}(z)}{\partial d_{ij}/d_{ij}} = -1$ and zero everywhere else. Then following Proposition \ref{apx-prp:GET} and (\ref{eq:apx-trade-elasticity}) the trade elasticity is
+And thus, the $\Phi_{i}(z)$ showing up in the extensive margin calculation (\ref{eq:apx-extensive-margin}) is independent of $z$.  
+
+\item Then the final observation is that the partial derivative of the $i,j$ choice value function $\frac{\partial v_{ij}(z)}{\partial d_{ij}/d_{ij}} = -1$ and zero everywhere else. 
+\end{itemize}
+Then following Proposition \ref{apx-prp:GET} and (\ref{eq:apx-trade-elasticity}) the trade elasticity is
 \begin{align}
 \nonumber
 \theta_{ij} =& \sum_{z} \bigg \{ 0 + -\frac{1}{\sigma_{\epsilon}} - \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} \ + 0 \bigg \}\omega_{ij}(z) - \sum_{z} \bigg \{  0 - \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} + 0 \bigg \}\omega_{ii}(z) \\
 \nonumber \\
 \theta =& -\frac{1}{\sigma_{\epsilon}} \nonumber
 \end{align}
-which just reflects the dispersion in tastes and it's independent of country pairs. In other words, the trade elasticity is constant and parameterized. Combining these observations and mechanically following Proposition \ref{apx-prp:gains-trade} the gains from trade are
+where the second line follows because the terms inside the brackets are independent of $z$ and thus can be pulled outside and the weights $\omega_{ij}(z)$ sum to one. What this means is the trade elasticity is constant and parameterized by the dispersion in tastes. I think the feature delivering this is that the elasticities at the micro-level are constant, so then the aggregate elasticity simply follows because I don't need to say anything about what is going on with the weights. 
+
+Now combining these observations and mechanically following Proposition \ref{apx-prp:gains-trade} the gains from trade are
 \begin{align}
 \frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = -\frac{1}{\theta} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}
-\end{align}
+\end{align}.
 which is exactly the \citet{arkolakis2012new} formula. The change in welfare gains from equal the inverse of trade elasticity multiplied by how much the home trade share changes.
 
 \begin{corr}[\textbf{ACR 2012}] In the static heterogenous agent trade model the trade elasticity is
@@ -845,7 +670,7 @@ and the gains from trade are given by
 
 \subsection{Dynamic, Log Preferences}
 
-This example is interesting because it retains a constant trade elasticity and then the welfare gains formula looks like ACR+ kind of thing. There is a bit more to it, but a key insight is that policy function does not depend upon the variety choice and this implies that choice probabilities are independent of $z$, there is a constant trade elasticity as the intensive margin is turned off, and then the gains from trade take a bit cleaner formulation in Proposition \ref{apx-prp:gains-trade}.
+This example is interesting because it retains an aggregate constant trade elasticity, but at the micro-level it is not quite with things canceling in a way during aggregation. Second, the welfare gains from trade formula looks like ACR+ kind of thing. Because this is a bit more involved I'm going to be super systematic about this. 
 
 \textbf{Step 1: Individual Choices.} With log preferences the $j$ choice value function is
 \begin{align}
@@ -856,65 +681,94 @@ which is then
 v_{ij}(a, z) = &  \max_{\ a' \in \mathcal{A} }\bigg  \{ \log(Ra + wz - a' )  + \beta \, \mathbb{E} [v_{i}(a', z' )]  \bigg\} - \log p_{ij}
 \label{eq:value_fun_option_log_p}
 \end{align}
-which then leads to the observation that the optimal $a'$ conditional on a choice $j$ is \textbf{independent} of the price of the consumption good. So what is going on is if you consume an expensive or cheap good, then consumption simply scales up or down so that assets next period are exactly the same. 
-
-This observation has the other following implication. Compare households expenditures with the same state $a,z$ but different choices. Equation (\ref{eq:value_fun_option_log_p}) implies
+which then leads to the observation that the optimal $a'$ conditional on a choice $j$ is \textbf{independent} of the price and moreover independent of the choice $j$. So what is going on is if you consume an expensive or cheap good, then consumption simply scales up or down so that assets next period are exactly the same. This observation has the implication that expenditures on consumption are the same across choices. Compare households expenditures with the same state $a,z$ but different choices. Equation (\ref{eq:value_fun_option_log_p}) implies
 \begin{align}
 p_{ij}c_{ij}(a,z) = p_{ii}c_{ii}(a,z)
 \label{eq:apx-same-spending}
 \end{align}
-so within states, people always spend the same amount. This fact will be useful below. 
+so within states, people always spend the same amount. This fact will be useful below.
 
-Finally notice that the choice probability becomes
+Finally, this observation implies that the choice probabilities are independent of the state only prices matter so
 \begin{align}
-\pi_{ij}(a, z; S_i) = & \exp \left( \frac{ v_{ij}(a, z;  S_i ) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z;  S_i ) }{\sigma_{\epsilon}} \right) \\
+\pi_{ij}(a, z) = & \exp \left( \frac{ v_{ij}(a, z) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z ) }{\sigma_{\epsilon}} \right) \\
 \nonumber\\
-\pi_{ij} = & \exp \left( \frac{  -\log p_{ij} }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ -\log p_{ij} }{\sigma_{\epsilon}} \right)
+\pi_{ij} = & \exp \left( \frac{  -\log p_{ij} }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ -\log p_{ij'} }{\sigma_{\epsilon}} \right)
 \end{align}
 which is exactly the same as discussed above in the static model.
 
 \textbf{Step 2: Micro Trade Elasticities.} I'm going to be super systematic about this:
 \begin{itemize}
-\item Starting with (\ref{eq:apx-intensive-margin}) and because the asset choice is independent of prices,  the intensive margin elasticity $\theta_{ij}(a,z)^I$ is zero. 
+\item Starting with (\ref{eq:apx-intensive-margin}) and because the asset choice is independent of prices,  the intensive margin elasticity $\theta_{ij}(a,z)^I$ is zero. This is not obvious actually because of how prices would enter into $v_{i}$. I do think one can expand out and completely separate out the effects of prices. 
 
 \item The distribution elasticity is zero from (\ref{eq:apx-distribution-margin}) because assets are not responding to changes in prices and what about $\pi$s (but these are independent of $a$ and $z$ so there is no differential change? This is not clear from formula. Need to articulate this better.
-    
+
 \item The extensive margin elasticity is:
 \begin{align}
 \theta_{ij}(a,z)^E =& \frac{1}{\sigma_{\epsilon}}\frac{\partial v_{ij}(a,z)}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}}\\
 \nonumber \\
 =& \frac{1}{\sigma_{\epsilon}}\frac{\partial p_{ij} / p_{ij}}{\partial d_{ij}/d_{ij}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i}(z) / \Phi_{i}(z)}{\partial d_{ij}/d_{ij}} \\
 \nonumber \\
-=& \frac{1}{\sigma_{\epsilon}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}}
+=& -\frac{1}{\sigma_{\epsilon}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}}
 \label{eq:apx-log-partial-valuefun}
 \end{align}
-where the first line removes the $a,z$ indexing of $\Phi_i$ because they don't shape the choice probabilities. The next line then partially differentiates the value function with respect to the change in trade costs where I'm exploiting how with log preferences one can pull out the price term. And then the final line notes that the price elasticity is one. Now here is one more key fact that:
+where the first line removes the $a,z$ indexing of $\Phi_i$ because they don't shape the choice probabilities. The next line then partially differentiates the value function with respect to the change in trade costs and I'm exploiting how with log preferences one can pull out the price term. And then the final line notes that the price elasticity is minus one. One more fact that:
 \begin{align}
 \theta_{ii}(a,z)^E =&  \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}}
 \end{align}
-where a key thing to notice is that the $i,i$ elasticity is the same as the second terms above in (\ref{eq:apx-log-partial-valuefun}). This is important to keep in mind.
+where a key thing to notice is that the $i,i$ elasticity is the same as the second and third terms above in (\ref{eq:apx-log-partial-valuefun}).
 \end{itemize}
+It's worth emphasizing that the micro trade elasticities are \textbf{not} constant across states $a,z$. Unlike the static model with log preferences, they are varying by income and assets as the derivative of the value function is showing up. But what \textbf{is} occurring is that across different destinations, within states, they are varying in the same exact way. This is one aspect of this case that facilitates aggregation. However, the necessary aspect is that the expenditure weights work out in the right way, I show this next. 
 
-\textbf{Step 3: The Expenditure Weights.} Recall that 
+\textbf{Step 3: Expenditure Weights.} Recall that the micro level trade elasticities when aggregated are weighted by
 \begin{align}
 \omega_{ij}(a,z) = \frac{p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda_{i}(a,z)}{M_{ij}}.
 \end{align}
-and note that we can relabel $p_{ij}c_{ij}(a,z) = x(a,z)$ given the fact discussed above in (\ref{eq:apx-same-spending}). Then with the choice probabilities being independent of $a,z$ this becomes
+and note that we can relabel $p_{ij}c_{ij}(a,z) = x(a,z)$ given (\ref{eq:apx-same-spending}), that expenditures are independent of the destination. With the choice probabilities independent of $a,z$ the weights become
 \begin{align}
 \omega_{ij}(a,z) =& \frac{x(a,z)\pi_{ij} \lambda_{i}(a,z)}{\sum_{a,z}x(a,z)\pi_{ij} \lambda_{i}(a,z)}, \\
 \nonumber \\
 =& \frac{x(a,z) \lambda_{i}(a,z)}{\sum_{a,z} x(a,z) \lambda_{i}(a,z)}
 \end{align}
-which is independent of source $j$. 
+which are independent of source $j$. This is the second important observation that will facilitate aggregation.
 
 \textbf{Step 4: The Trade Elasticity.} Now just mechanically follow Proposition \ref{apx-prp:GET}:
 \begin{align}
 \nonumber
-\theta_{ij} =& \sum_{a,z} \bigg \{ 0 + \frac{1}{\sigma_{\epsilon}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} \ + 0 \bigg \}\omega_{i}(a,z) - \sum_{z} \bigg \{  0 + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} + 0 \bigg \}\omega_{i}(a,z) \\
+\theta_{ij} =& \sum_{a,z} \bigg \{ 0 + -\frac{1}{\sigma_{\epsilon}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} \ + 0 \bigg \}\omega_{i}(a,z) \\
 \nonumber \\
-= & \frac{1}{\sigma_{\epsilon}} \nonumber
+& - \sum_{z} \bigg \{  0 + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} + 0 \bigg \}\omega_{i}(a,z) \\
+\nonumber \\
+= & -\frac{1}{\sigma_{\epsilon}} \nonumber
 \end{align}
+where the last line follows because the $a,z$ terms in the micro level trade elasticities exactly cancel given that expenditure weights are source independent. And the aggregate trade elasticity is constant and parameterized by the dispersion in tastes.
 
+Then from here I can just follow Proposition \ref{apx-prp:gains-trade}. First the individual gains are
+{\footnotesize
+\begin{align}
+\nonumber
+\frac{\partial v_i(a, z)}{\partial d_{ij} / d_{ij}} = \underbrace{-\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}}_{ACR} \ \ + \ \  
+\mathbb{E} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ \gamma_{ii}(a_{t},z_{t}) + \delta_{ii}(a_{t},z_{t}) \bigg \}
+\end{align}
+}where the first term is exactly in the static model except for the discounting bit. But what facilitates this is that the choice probabilities are independent of $a,z$ and it can be pulled out of the expected discounted sum stuff. Then the subsequent terms take a slightly cleaner form:
+\begin{itemize}
+\item Gains from risk sharing: $\gamma_{ij}(a,z) = \frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}\frac{a}{c_{ii}(a,z)}$
+\item Gains from relaxing borrowing constraints:
+\begin{align}
+\nonumber
+\delta_{ii}(a,z) = \bigg \{- c_{ii}(a,z)^{-1} + \beta \mathbb{E} \big [ c_{ii}(a',z')^{-1}R \big ] \bigg \}\frac{\mathrm{d} g_{ii}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}
+\end{align}
+\end{itemize}
+The one issue is does $R$ actually change? Right now I'm doubting that it does. Check this on the computer. IF it does not, then I think these other terms are zero.  
+
+Then social welfare becomes
+{\footnotesize
+\begin{align}
+\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = \underbrace{-\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}}_{ACR} \ \ + \ \ \sum_{a,z} \bigg \{ \mathbb{E} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ \gamma_{ii}(a_{t},z_{t}) + \delta_{ii}(a_{t},z_{t}) \bigg \}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} \lambda_{i}(a,z).
+\nonumber
+\end{align}
+}where again, I'm not sure if the last term in particular is relevant. Does the distribution actually change.
+
+Should check this stuff on computer. 
 
 
 
