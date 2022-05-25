@@ -964,6 +964,54 @@ The final thing I'm going to do is compute the social gain to a small change in 
 \end{align}
 where the last line inserts the relationship between the multiplier and the marginal utility of consumption. Now this thing says that the change in welfare equals essentially how much the resource constraint is relaxed by the change in trade costs. So it's like the $c_{ij}(t) \pi_{ij}(t) L_{i}$ is how much stuff people in $i$ get from $g$ and $\partial d_{ij} / d_{ij}$ this is perturbing it by the percent change in trade costs, then this bit $u'(c_{ij}(t))$ converts it into utils.
 
+\begin{prp}[\textbf{The Efficient Allocation and the Gains from Trade}] The allocation that satisfies the Centralized Planning Problem is characterized by consumption allocations satisfying:
+\begin{align}
+u'(c_{ij}(t) ) = \chi_{j}(t) d_{ij} \nonumber
+\end{align}
+where $\chi_{j}(t)$ is the shadow price of variety $j$. The choice probabilities are
+\begin{align}
+\pi_{ij}(t) =\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}}\right) \bigg / \sum_{j'}\exp \left( \frac{u(c_{ij'}(t)) - u'(c_{ij'}(t))c_{ij'}(t)}{\sigma_{\epsilon}} \right)
+\nonumber
+\end{align}
+and the gains from trade are given by
+\begin{align}
+\frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times \ u'(c_{ij}(t)) c_{ij}(t) \pi_{ij}(t) L_{i}.
+\nonumber
+\end{align}
+\end{prp}
+The one issue with this last result is that it's a bit opaque relative to the other welfare results that I derived. Let me connect them. So per the arguments above, I can write the ex-ante utility  and inserting the allocations associated with the planner as
+\begin{align}
+v_i(t) = -\sigma_{\epsilon} \log \pi_{ii} + u(c_{ii}(t))
+\end{align}
+and then 
+\begin{align}
+\frac{\partial v_i(t)}{\partial d_{ij} / d_{ij}} = -\sigma_{\epsilon} \frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}}
+\end{align}
+so the gains only work through the home share. Notice this holds if this is a global change or not. Now this elasticity is 
+\begin{align}
+\frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}} =& -\frac{\pi_{ij}}{\sigma_{\epsilon}} \bigg \{ u'(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} - \bigg [u'(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} + u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}}c_{ij}(t) \bigg ] \bigg \} \\
+\nonumber \\
+=& -\frac{\pi_{ij}}{\sigma_{\epsilon}}u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}}c_{ij}(t)
+\end{align}
+Then notice the following from the consumption allocation that
+\begin{align}
+u'(c_{ij}(t) ) = \chi_{j}(t) d_{ij} \ \ \Rightarrow \ \ u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} = \chi_{j}(t)d_{ij}
+\end{align}
+where I'm just differentiating both sides by $d_{ij}$ and the dividing through by $d$ to make an elasticity. Then this implies that 
+\begin{align}
+\frac{\partial \pi_{ii}(t) / \pi_{ii}(t)}{\partial d_{ij} / d_{ij}} =& \frac{\pi_{ij}(t)}{\sigma_{\epsilon}}u'(c_{ij}(t))c_{ij}(t)
+\end{align}
+and then 
+\begin{align}
+\frac{\partial v_i(t)}{\partial d_{ij} / d_{ij}} = \pi_{ij}u'(c_{ij}(t))c_{ij}(t)
+\end{align}
+which means that the total change in social welfare equals
+\begin{align}
+\frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{\partial W_i}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times u'(c_{ij}(t)) c_{ij}(t) \pi_{ij}(t) L_i
+\end{align}
+and I'm done. 
+
+
 \newpage
 
 \bibliography{./bibtex/micro_price_bibtex}
