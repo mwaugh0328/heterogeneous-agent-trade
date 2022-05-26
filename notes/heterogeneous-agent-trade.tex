@@ -130,7 +130,7 @@ Reserve Bank of Minneapolis or the Federal Reserve System. This project was deve
 
 This section describes the model, the decentralized competitive equilibrium, and then the centralized equilibrium. Trade is in the Armigton tradition with each country producing a nationally differentiated variety. Households face the ``income fluctuations problem'' as in the standard incomplete markets tradition (see, e.g., \citet{ljungqvist2012recursive}). 
 
-The key twist is that I do not employ modeling techniques with aggregation at household level across national varieties. Instead, I lean into the household heterogeneity and have households make a discrete choice over the varieties they consume in addition to their savings decisions. Aggregate trade flows, trade elasticities, and the gains from trade then defined by the aggregation of household-level decisions to purchase imported varieties, their elasticity of demand, and micro-level gains from trade.
+The key twist is that I do not employ modeling techniques with aggregation at household level across national varieties. Instead, I lean into the household heterogeneity and have households make a discrete choice over the varieties they consume in addition to their savings decisions. Aggregate trade flows, trade elasticities, and the gains from trade then defined by the explicit aggregation of household-level decisions to purchase different varieties, their elasticity of demand, and their gains from trade.
 
 \subsection{Production and Trade}\label{sec:trade}
 
@@ -141,7 +141,7 @@ Q_i = A_i N_i,
 \end{align}
 where $A_i$ is total factor productivity and $N_i$ are the efficiency units of labor supplied by households in country $i$.
 
-In the next several sections, I focus on only one type of barrier to trade. That is there are iceberg trade costs $d_{ji}$ for a good to go from supplier $i$ to buyer $j$. In Section \ref{sec:policy}, I explicity model  tariffs and Governments in each country, but for now I just focus on these technological barriers to trade. 
+In the next several sections, I focus on only one type of barrier to trade. That is there are iceberg trade costs $d_{ji} > 1$ for a good to go from supplier $i$ to buyer $j$. In Section \ref{sec:policy}, I explicity model  tariffs and Governments in each country, but for now I just focus on these technological barriers to trade.
 
 Profit maximization of the competitive goods producers in location $i$ results in the wage per efficiency unit reflecting the value of the marginal product of labor
 \begin{align}
@@ -155,7 +155,7 @@ p_{ji} = \frac{d_{ji}w_{i}}{A_{i}}.
 \end{align}
 This is the trade and production side of the model. While sparse, it's worth reminding you (the reader) that with, say, a representative agent and a constant elasticity Armigton Aggregator much comes out of this part of the model. There is ``gravity equation'' relating bilateral trade flows to country characteristics with a constant trade elasticity. And there are two sufficient statistics (the trade elasticity and home trade share) that globally characterize welfare gains from trade. In the next section, I give up on the representative agent and confront households with a non-trivial problem to solve. 
 
-Before proceeding, I'll note that lack of physical capital in the model. As I discuss next, the households are saving in via pure exchange as in \citet{huggett1993risk} rather than in physical capital as in \citet{aiyagari1994uninsured}.
+Before proceeding, note that lack of physical capital in the model. As I discuss next, the households are saving in via pure exchange of non-state contingent IOUs as in \citet{huggett1993risk} rather than in physical capital as in \citet{aiyagari1994uninsured}.
 
 \subsection{Households}
 
@@ -180,7 +180,7 @@ a_{t+1} \geq - \phi_{i}.
 \end{align}
 All these pieces come together in the household's budget constraint, conditional on choosing variety $j$ to consume, and focusing on a stationary setting where prices are constant:
 \begin{align}
-a_{t+1} + p_{ij}c_{ijt}  \leq    R_{i} a_{t} + w_{i} z_{t}.\label{eq:trade-budget-constraint}
+p_{ij}c_{ijt} +  a_{t+1} \leq    R_{i} a_{t} + w_{i} z_{t}.\label{eq:trade-budget-constraint}
 \end{align}
 The value of asset purchases and consumption expenditures must be less than or equal to asset payments, labor earnings.
 
@@ -226,7 +226,7 @@ v_i(a, z) = -\sigma_{\epsilon} \log \pi_{ii}(a,z) + u(c_{ii}(a,z)) + \beta \math
 \end{align}
 Where the ex-ante value function (prior to the realization of the preference shocks) can be purely expressed as a sum of the log home choice probability, utility over physical consumption of the home good, and recursively the expected value function tomorrow. What's going on here is that the home choice probability $\pi_{ii}$ completely summarizes the expected value of those shocks, their benefits, and how households respond to them in the future.\footnote{Home choice probabilities are not necessarily the same as home trade shares, but it is closely related to Equation (15), Footnote 42 of \citet{eaton2002technology} and I'm heading towards situations where this result plus restrictions on $u$ give rise to the result in \citet{arkolakis2012new}.}
 
-Equation (\ref{eq:log_sum-home}) it can be used to deliver more insight about the how the savings motives of households are interacting with the variety choices. Focusing on a household consuming the home good, the Euler Equation in (\ref{eq:euler_equation}) can be represented as:
+Equation (\ref{eq:log_sum-home}) together with (\ref{eq:euler_equation}) also provides more insight about the how the savings motives of households interact with the variety choice. Focusing on a household consuming the home good, the Euler Equation in (\ref{eq:euler_equation}) can be represented as:
 \begin{align}
 \frac{u'(c_{ii}(a,z))}{p_{ii}} = \beta \mathbb{E} \bigg \{ -\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + \frac{u'(c_{ii}(a',z'))R}{p_{ii}} \bigg \},
 \label{eq:euler_equation-home}
@@ -235,60 +235,57 @@ which says that an unconstrained household should be indifferent between the mar
 
 \subsection{Aggregation}
 
-Define the probability distribution of households across individual states $\lambda_{i}(a, z; S_i )$ which is the probability measure of households with asset levels $a$ individual shock $z$ in country $i$. This distribution evolves according to
+In this section, I explicitly aggregate household behavior. At the core of aggregation is a probability distribution $\lambda_{i}(a, z)$ which describes where households are across individual states. This distribution evolves according to
 \begin{align}
-\lambda_i(a', z', S_i') = \sum_{z}\sum_{j} \sum_{a: a' = g_{ij}(a, z; S_i)} \pi_{ij}(a, z; S_i) \mathcal{P}(z, z') \lambda_i(a, z; S_i).
+\lambda_i(a', z') = \sum_{j} \int_{z}\int\displaylimits_{a: a' = g_{ij}(a, z)} \pi_{ij}(a, z) \mathcal{P}(z, z') \lambda_i(a, z).
 \label{eq:law_motion}
 \end{align}
+where the inner most term describes the mass of households choosing variety $j$, multiplied by the probability that $z$ transits to $z'$, multiplied by the existing measure of households with states $a$ and $z$. This is integrated with respect to those actually choosing asset holdings $a'$, over all $z$'s, and then summed over the different variety choices. 
 
-\textbf{Aggregate Labor Supply.}  Aggregate efficiency units are
+Given this distribution, everything else follows. Aggregate efficiency units are
 \begin{align}
-N_i = L_{i}\sum_{z} \sum_{a}\ z \lambda_i(a, z; S_i) \label{eq:ag-labor-supply}
+N_i = L_{i}\int_{z} \int_{a}\ z \lambda_i(a, z). \label{eq:ag-labor-supply}
 \end{align}
-where the inner most term reflects efficiency units multiplied by the measure of households with that state. This is all multiplied by $L_i$ which is the mass of households in country $i$.
-
-\textbf{Asset Holdings.} The aggregate quantity of asset holdings simply sums across the distribution conditional on choosing
+And then the aggregate quantity of asset holdings sums across the distribution conditional on choosing
 \begin{align}
-\mathrm{A}_i' = L_{i} \sum_{z}\sum_{j}\sum_{a}  g_{ij}(a, z; S_i) \pi_{ij}(a, z; S_i) \lambda_i(a, z; S_i).
+\mathrm{A}_i' = L_{i}\sum_{j} \int_{z} \int_{a}  g_{ij}(a, z) \pi_{ij}(a, z) \lambda_i(a, z).
 \label{eq:aggregate_asset}
 \end{align}
 
-\textbf{National Income and Consumption} Starting from the production side of our economy, the value of aggregate production must equal aggregate payments to labor so
+Then I can essentially reconstruct national income and product identities. Starting from the production side, the value of aggregate production must equal aggregate payments to labor so
 \begin{align}
-p_{i} Y_{i} = p_{i} A_{i} N_{i} = L_i \sum_{z} \sum_{a} w_{i} \ z \ \lambda_i(a, z; S_i)
+p_{i} Y_{i} = p_{i} A_{i} N_{i} = L_i \int_{z} \int_{a} w_{i} \ z \ \lambda_i(a, z)
 \label{eq:value_production}
 \end{align}
 where the last term sums over wage payments for each household type. Then by summing over individual consumers' budget constraint and substituting in (\ref{eq:value_production}), we arrive at the aggregated budget constraint:
 \begin{align}
-p_{i} Y_{i}  = \widetilde{P_{i} C_i}  + \bigg[-R_i\mathrm{A_i} +  \mathrm{A_i'} \bigg] - T_{i,\tau},
+p_{i} Y_{i}  = \widetilde{P_{i} C_i}  + \bigg[-R_i\mathrm{A_i} +  \mathrm{A_i'} \bigg],
 \label{eq:aggregate_budget_constraint}
 \end{align}
-where national income equals the value of aggregate consumption $\widetilde{P_{i} C_i}$, the country's the net asset position, all net of transfers. Here the value of aggregate consumption is
+where national income equals the value of aggregate consumption $\widetilde{P_{i} C_i}$ and the country's the net asset position. Here the value of aggregate consumption is
 \begin{align}
-\widetilde{P_{i} C_i} = L_{i} \sum_{z}\sum_{j}\sum_{a}  p_{ij} c_{ij}(a, z; S_i) \pi_{ij}(a, z; S_i) \lambda_i(a, z; S_i)
+\widetilde{P_{i} C_i} = L_{i} \sum_{j} \int_{z} \int_{a}  p_{ij} c_{ij}(a, z) \pi_{ij}(a, z) \lambda_i(a, z)
 \end{align}
 where one can see a bug and a feature of this model. Here there is an ``index number problem`` in the sense that there is not an ideal price index for which one can decompose aggregate values in to a price and quantity component. This is in contrast to, e.g., a model where households consume a CES bundle of goods.
 
-\textbf{Trade Flows} It's first worth walking though imports for a given set of states. So for households with states $a$ and $z$ we have
+To complete the national income accounting, I construct aggregate imports as
 \begin{align}
-M_{ij}(a, z; S_i) = p_{ij} c_{ij}(a, z; S_i).
-\end{align}
-Then aggregate imports from country $i$ to country $j$ sums over this weighted by the mass of households choosing variety $j$ and who in those states so
-\begin{align}
-M_{ij} = L_i \sum_{z}\sum_{a} M_{ij}(a, z; S_i) \pi_{ij}(a, z; S_i) \lambda_i(a, z; S_i).
+M_{ij} = L_i \int_{z} \int_{a}  p_{ij} c_{ij}(a, z) \pi_{ij}(a, z) \lambda_i(a, z).
 \label{eq:imports}
 \end{align}
-The same can be done for a countries exports. Again, focusing on exports to a location given a set of states we have
+Then aggregate exports from country $i$ to country $j$ are constructed in a similar manner. 
 \begin{align}
-X_{ji}(a, z; S_j) = p_{ji} c_{ji}(a, z; S_j)
-\end{align}
-Then aggregate exports from country $i$ to country $j$
-\begin{align}
-X_{ji} = L_j \sum_{z}\sum_{a} X_{ji}(a, z; S_j) \pi_{ji}(a, z; S_j) \lambda_j(a, z; S_j)
+X_{ji} = L_j \int_{z} \int_{a}  p_{ji} c_{ji}(a, z) \pi_{ji}(a, z) \lambda_i(a, z)
 \label{eq:exports}
 \end{align}
+Then the standard national income accounting identity arises
+\begin{align}
+p_{i} Y_{i}  = \widetilde{P_{i} C_i} + \bigg[\ \sum_{j\neq i}X_{ji} -  \sum_{j\neq i}M_{ij} \bigg]
+\label{eq:gdp}
+\end{align}
+where the national production or GDP equals consumption plus exports minus imports. I know this is intermediate macro type stuff, but a comparison of (\ref{eq:aggregate_budget_constraint}) and (\ref{eq:gdp}) makes clear that the trade imbalance is connected with a countries net asset position. Now this is not intermediate macro type stuff, not even standard trade stuff|a feature of this model is that through the household's problem asset positions and trade flows fundamentally linked. 
 
-\subsection{Market Clearing and the Decentralized Equilibrium}
+\subsection{The Decentralized Equilibrium}
 
 Given the definitions above, I discuss the market clearing conditions than an equilibrium must respect.
 
