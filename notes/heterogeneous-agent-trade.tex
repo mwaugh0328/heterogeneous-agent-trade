@@ -126,85 +126,112 @@ Reserve Bank of Minneapolis or the Federal Reserve System. This project was deve
 \newpage
 \normalsize
 
-\section{The Model}
+\section{The Heterogeneous Agent Trade Model}
 
-The model is setup in a simple and transparent way. Trade is in the Armigton tradition with each country producing a nationally differentiated variety. Households follow the standard incomplete markets tradition. The key departure is that I lean into household heterogeneity and have households make a discrete choice over the varieties they consume. Aggregate trade flows between countries are, thus, given by the explicit aggregation of households and the choices they make.
+This section describes the model, the decentralized competitive equilibrium, and then the centralized equilibrium. Trade is in the Armigton tradition with each country producing a nationally differentiated variety. Households face the ``income fluctuations problem'' as in the standard incomplete markets tradition (see, e.g., \citet{ljungqvist2012recursive}). 
 
-\subsection{Trade and Production}\label{sec:trade}
+The key twist is that I do not employ modeling techniques with aggregation at household level across national varieties. Instead, I lean into the household heterogeneity and have households make a discrete choice over the varieties they consume in addition to their savings decisions. Aggregate trade flows, trade elasticities, and the gains from trade then defined by the aggregation of household-level decisions to purchase imported varieties, their elasticity of demand, and micro-level gains from trade.
 
-There are $M$ locations which I will call a country. Each country produces a differentiated product as in the Armington tradition and these differentiated products. In country $i$, competitive firms have the following production technology to produce variety $i$:
+\subsection{Production and Trade}\label{sec:trade}
+
+There are $M$ locations which I call a country. Each country produces a differentiated product as in the Armington tradition. In country $i$, competitive firms' production technology to produce variety $i$ is:
 \begin{align}
-q_i = A_i N_i,
+Q_i = A_i N_i,
 \label{eq:production}
 \end{align}
-where $N_i$ are the efficiency units of labor supplied by households in country $i$.
+where $A_i$ is total factor productivity and $N_i$ are the efficiency units of labor supplied by households in country $i$.
 
-Trade faces several obstacles. There are iceberg trade costs $d_{ji}$ for a good to go from supplier $i$ to buyer $j$. Cross-border trade faces policy obstacles, i.e. tariffs $\tau_{ji}$. The notation here is such that $\tau_{ji}$ which is the ad-valorem tariff rate that country $j$ imposes on the commodity that county $i$ produces.
+In the next several sections, I focus on only one type of barrier to trade. That is there are iceberg trade costs $d_{ji}$ for a good to go from supplier $i$ to buyer $j$. In Section \ref{sec:policy}, I explicity model  tariffs and Governments in each country, but for now I just focus on these technological barriers to trade. 
 
 Profit maximization of the competitive goods producers in location $i$ results in the wage per efficiency unit reflecting the value of the marginal product of labor
 \begin{align}
 w_{i} = p_{i} A_{i}.
 \label{eq:marginal-product}
 \end{align}
-Given iceberg trade costs and tariffs, the unit cost for country $j$ to purchase a good from location $i$ is
+Given iceberg trade costs, the unit cost for country $j$ to purchase a good from location $i$ is
 \begin{align}
-p_{ji} = \frac{d_{ji}(1 +\tau_{ji})w_{i}}{A_{i}}.
+p_{ji} = \frac{d_{ji}w_{i}}{A_{i}}.
 \label{eq:marginal-product-ship}
 \end{align}
+This is the trade and production side of the model. While sparse, it's worth reminding you (the reader) that with, say, a representative agent and a constant elasticity Armigton Aggregator much comes out of this part of the model. There is ``gravity equation'' relating bilateral trade flows to country characteristics with a constant trade elasticity. And there are two sufficient statistics (the trade elasticity and home trade share) that globally characterize welfare gains from trade. In the next section, I give up on the representative agent and confront households with a non-trivial problem to solve. 
+
+Before proceeding, I'll note that lack of physical capital in the model. As I discuss next, the households are saving in via pure exchange as in \citet{huggett1993risk} rather than in physical capital as in \citet{aiyagari1994uninsured}.
 
 \subsection{Households}
 
-There is a mass of $L_i$ households in each location $i$. Households are immobile across countries. They are infinite lived and have time-sparable preferences over non-durable consumption varieties:
+There is a mass of $L_i$ households in each country. Households are immobile across countries. They are infinite lived and have time-sparable preferences over non-durable consumption varieties:
 \begin{align}
-\small
-E_{0} \sum_{t = 0}^{\infty} \beta^{t} u( \{ c_{jt} \}_{M}),
+E_{0} \sum_{t = 0}^{\infty} \beta^{t} \tilde{u}( \{ c_{ij,t} \}_{M}),
 \end{align}
-where the notation $\{ c_{jt} \}_{M}$ means that the household has preferences over all $j$ varieties supplied by $M$ countries in the world. My focus is on the situation where households each period receive additive Type 1 extreme value shocks $\epsilon(j)$ with dispersion parameter $\sigma_{\epsilon}$ and then households make a discrete choice about which variety $j$ to each period and a continuous choice about how much. More specifically, the utility associated with the choice of variety $j$ and leisure is
+where the notation $\{ c_{ij,t} \}_{M}$ means that the household has preferences over all $j$ varieties supplied by $M$ countries in the world. Here I'm indexing things by $ij$ to denote the variety $j$ that is consumed in location $i$.
+
+Households' period utility function is of the random utility class. Specifically, the utility associated with the choice of variety $j$ is
 \begin{align}
-u( c(j)_t ) =  \frac{ c_{jt} ^{1-\gamma}}{1- \gamma} + \epsilon(j)_t. \label{eq:utility}
+\tilde{u}( c_{ij,t} ) =  u(c_{ij,t}) + \epsilon_{j,t}. \label{eq:utility}
 \end{align}
-where consumption mapped into utils with a standard CRRA function, $\epsilon(j)$ is the taste shock.
+where the $\epsilon_{j,t}$ are iid random variables across time, households, and countries. For much of the analysis, I assume that these shocks are distributed Type 1 Extreme Value with dispersion parameter $\sigma_{\epsilon}$. For now, all I assume that the utility function over the physical good $c_{ij,t}$ is well behaved. To be concrete, in the analysis below I explore different specifications and highlight the rather unique case of $\log$ utility. 
 
-A household's efficiency units are stochastic and they evolve according to a discrete state Markov chain. Mathematically, $z$ is a households efficiently units and $\mathcal{P}(z,z')$ describes the probability of a household with state $z$ efficiency units transiting to state $z'$.
+A household's efficiency units are stochastic and they evolve according to a discrete state Markov chain. Mathematically, $z$ is a households efficiently units and $\mathcal{P}(z,z')$ describes the probability of a household with state $z$ efficiency units transiting to state $z'$. Again, I assume that $\mathcal{P}$ is well behaved in the necessary ways. 
 
-Households can save and borrow in a non-state contingent asset $a$. The units of the asset are chosen to be the numeraire and pays out with gross interest rate $R$. I discuss this more in depth below, but the determination of $R_{i}$ is either exogenously given or the rate that clears the bond market (local or global). An country specific, exogenous debt limit $\phi_{i}$ constrains borrowing so:
+Households can save and borrow in a non-state contingent asset $a$. The units of the asset are chosen to be the numeraire and pays out with gross interest rate $R_i$. I discuss this more in depth below, but the determination of $R_{i}$ is with that which clears the bond market local or global. An country specific, exogenous debt limit $\phi_{i}$ constrains borrowing so:
 \begin{align}
 a_{t+1} \geq - \phi_{i}.
 \label{eq:borrowing-constraint}
 \end{align}
-All these pieces come together in the household's budget constraint, conditional on choosing variety $j$ to consume, and focusing on a stationary setting where prices and transfers are constant:
+All these pieces come together in the household's budget constraint, conditional on choosing variety $j$ to consume, and focusing on a stationary setting where prices are constant:
 \begin{align}
-a_{t+1} + p_{ij}c_{jt}  \leq    R_{i} a_{t} + w_{i} z_{t} + T_{i,\tau}.\label{eq:trade-budget-constraint}
+a_{t+1} + p_{ij}c_{ijt}  \leq    R_{i} a_{t} + w_{i} z_{t}.\label{eq:trade-budget-constraint}
 \end{align}
-The value of asset purchases and consumption expenditures must be less than or equal to asset payments, labor earnings, and transfers arising from trade policy (the $T_{i,\tau}$).
+The value of asset purchases and consumption expenditures must be less than or equal to asset payments, labor earnings.
 
-\subsection{Recursive Formulation of the Household Problem}
+\subsection{The Household Problem}
 
-The state variables of a individual household are it's asset holdings and efficiency units. The aggregate states (and outcomes in other countries) only matter through prices and transfers and thus I summarize the aggregate state in country $i$ as $S_i = (\{ w_i \}_{M}, T_i, R_{i})$ which is the collection of the wage per efficiency units, transfers, and interest rates. The wage vector $\{ w_i \}_{M}$ is sufficient here since they determine prices in (\ref{eq:marginal-product-ship}) and, thus, consumers can make the appropriate choice of commodities.
+The state variables of a individual household are its asset holdings and efficiency units. As alluded to above, for now I focus on a stationary setting where aggregates are not changing and, thus, I abstract from carrying them around.\footnote{If you \emph{do} want to carry them around, notice that all that households in each country care about are prices (today and in the future). The distributions of households in other countries, per se, don't matter. Thus, the relevant aggregate states in country $i$ are $\big [ \ \{ w_i \}_{M}, R_i \big ]$ which is the collection wage per efficiency units and the interest rate.}
 
-The value function of a household in country $i$ is
+The value function of a household in country $i$, after the variety shocks are realized, is
 \begin{align}
-v_{i}(a, z; S_i) = &  \max_{j} \big  \{ \  v_{ij}(a, z; S_i)  \ \big \}
+\tilde{v}_{i}(a, z) = &  \max_{j} \big  \{ \  v_{ij}(a, z)  \ \big \}
 \label{eq:valuefun}
 \end{align}
-which is the maximum across the discrete choices of different national varieties. The value function conditional on a choice of variety is
+which is the maximum across the value functions associated with the discrete choices of different national varieties. The value function conditional on a choice of variety is
 \begin{align}
-v_{ij}(a, z;  S_i  ) = &  \max_{\ a' }\bigg  \{ u(c(j))  + \beta \, \mathbb{E} [v_{i}(a', z'; S_i' )]  \bigg\}
+v_{ij}(a, z) = &  \max_{\ a' \ }\bigg  \{ u(c_{ij}) + \epsilon_{j}  + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\} 
 \label{eq:value_fun_option} \\
 \nonumber \\
 \mbox{subject to}  \ & (\ref{eq:trade-budget-constraint}) \  \mathrm{and} \ (\ref{eq:borrowing-constraint}) \nonumber
 \end{align}
-where households choose asset holdings and the level of consumption is residually determined through the budget constraint. The continuation value function is the expectation over (\ref{eq:valuefun}) where the expectation is taken with respect to $z'$ and taste shocks in the future. What this last point means is that households understand that their may be situations where, e.g., they really desire the high priced imported good and, hence, save accordingly.
+where households choose asset holdings and the level of consumption is residually determined through the budget constraint. Associated with the solution to this problem is a policy function $g_{ij}(a,z)$ which solves (\ref{eq:value_fun_option}) and maps current states into asset holdings tomorrow $a'$. 
 
-As is well known, the Type 1 extreme value shocks give rise to the following choice probabilities for each differentiated good. So
+The continuation value function on the right-hand side of (\ref{eq:value_fun_option}) is the expectation over (\ref{eq:valuefun}) with respect to (i) $z'$ and (ii) the variety taste shocks. One implication of this last point means is that households understand that their may be situations where they really desire, say, a high priced imported good and, hence, save accordingly.
+
+As is well known, the Type 1 extreme value shocks give rise to the following choice probabilities for each differentiated good:
 \begin{align}
-\pi_{ij}(a, z; S_i) = \exp \left( \frac{ v_{ij}(a, z;  S_i ) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z;  S_i ) }{\sigma_{\epsilon}} \right) \label{eq:choice-prob}
+\pi_{ij}(a, z) = \exp \left( \frac{ v_{ij}(a, z) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z) }{\sigma_{\epsilon}} \right), \label{eq:choice-prob}
 \end{align}
 which is the probability that a household with assets $a$ and efficiency units $z$ chooses country variety $j$. And then the expectation of (\ref{eq:valuefun}) with respect to the taste shocks takes the familiar log-sum form
 \begin{align}
-\mathbb{E}_{\epsilon} v_i(a, z; S_i) = \sigma_{\epsilon} \log \left\{ \sum_{j'} \exp \left( \frac{  v_{ij}(a, z;  S_i )}{\sigma_{\epsilon}} \right) \right\} \label{eq:log_sum}
+v_i(a, z) = \sigma_{\epsilon} \log \left\{ \sum_{j'} \exp \left( \frac{  v_{ij}(a, z)}{\sigma_{\epsilon}} \right) \right\}. \label{eq:log_sum}
 \end{align}
-Associated with the problem (\ref{eq:valuefun}) are an asset policy function $g_{ij}(a, z; S_i)$ which prescribes asset holdings given a state and variety choice, and then define $c_{ij}(a, z; S_i)$ as the consumption function which prescribes consumption given states and variety choice.
+Associated with this problem in (\ref{eq:value_fun_option}) is the a Euler Equation for each variety choice $j$:
+\begin{align}
+\frac{u'(c_{ij}(a, z))}{p_{ij}} = \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij'}(a', z') \frac{u'(c_{ij'}(a', z'))}{p_{ij'}} \right] 
+\label{eq:euler_equation}
+\end{align}
+that holds as long as the household is not borrowing constrained. This has a very natural interpretation:, a household equates marginal utility of consumption today with expected discounted marginal utility of consumption tomorrow adjusted by the return on delaying consumption. The interesting feature here is that the expected value of the marginal utility of consumption reflects the uncertainty over one's preference over different varieties tomorrow via the choice probabilities. But these are not purely exogenously as asset choices today influence the choice probabilities tomorrow.
+
+Before moving on to aggregation, I'm going to make one useful observation that helps with some of the analysis. Stare at (\ref{eq:choice-prob}) and (\ref{eq:log_sum}) long enough, one can arrive a kind of dynamic, sufficient statistic representation of $v_i(a, z)$ where it is purely summarized by home choices. Appendix \ref{apx-prp:gains-trade} works through the individual steps, but the end result is that (\ref{eq:log_sum}) can be summarized as
+\begin{align}
+v_i(a, z) = -\sigma_{\epsilon} \log \pi_{ii}(a,z) + u(c_{ii}(a,z)) + \beta \mathbb{E}_{z'} v_{i}(a',z').
+\label{eq:log_sum-home}
+\end{align}
+Where the ex-ante value function (prior to the realization of the preference shocks) can be purely expressed as a sum of the log home choice probability, utility over physical consumption of the home good, and recursively the expected value function tomorrow. What's going on here is that the home choice probability $\pi_{ii}$ completely summarizes the expected value of those shocks, their benefits, and how households respond to them in the future.\footnote{Home choice probabilities are not necessarily the same as home trade shares, but it is closely related to Equation (15), Footnote 42 of \citet{eaton2002technology} and I'm heading towards situations where this result plus restrictions on $u$ give rise to the result in \citet{arkolakis2012new}.}
+
+Equation (\ref{eq:log_sum-home}) it can be used to deliver more insight about the how the savings motives of households are interacting with the variety choices. Focusing on a household consuming the home good, the Euler Equation in (\ref{eq:euler_equation}) can be represented as:
+\begin{align}
+\frac{u'(c_{ii}(a,z))}{p_{ii}} = \beta \mathbb{E} \bigg \{ -\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + \frac{u'(c_{ii}(a',z'))R}{p_{ii}} \bigg \},
+\label{eq:euler_equation-home}
+\end{align}
+which says that an unconstrained household should be indifferent between the marginal utility of consumption forgone to hold some more assets and two components: (i) the benefit from how a change in assets changes in their variety choice in the future and is summarized by how the home choice probability changes and (ii) the direct benefit of the returns on the assets evaluated at the marginal utility of consumption.
 
 \subsection{Aggregation}
 
@@ -829,7 +856,7 @@ So then putting everything together we have:
 where this has a very natural form: you set the marginal utility of consumption today equal to the marginal utility of consumption tomorrow adjusted by the return on delaying consumption, and the expected value of the marginal utility of consumption which reflects how the uncertainty over both ones' preference over different varieties and shocks to efficiency units. Taking into account the borrowing constraint then gives the generalized Euler equation from which the endogenous grid method will exploit:
 \begin{align}
 \frac{u'(c_{ij}(a, z))}{p_{ij}} = \max \left\{ \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij}(a', z') \frac{u'(c_{ij}(a', z'))}{p_{ij}} \right] \ , \  u' \left( \frac{R_i a + w_i - \phi_{i}}{p_{ij}} \right) \right \}
-\label{eq:euler_equation}
+\label{eq:apx-euler_equation}
 \end{align}
 
 \subsection{EGM-Discrete Choice Algorithm}
@@ -891,7 +918,7 @@ One more point about the inner term in (\ref{eq:apx-social-welfare-2}), my claim
 \begin{align}
 \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] = -\sigma_{\epsilon} \log \pi_{ij}(z,t)
 \end{align}
-where this is like the standard ``selection correction'' where if $\pi$ becomes smaller, then this value becomes larger meaning only those with the largest relative shocks are chosen and higher utility for those, conditional on being selected, is felt. 
+where this is like the standard ``selection correction'' where if $\pi$ becomes smaller, then this value becomes larger meaning only those with the largest relative shocks are chosen and higher utility for those, conditional on being selected, is felt.
 
 Given this formulation, the planner then does the following: he is choosing consumption and choice probabilities for all country pair combinations, state by state, for the infinite future. The Lagrangian associated with the Planning Problem is:
 \begin{align}
@@ -910,7 +937,7 @@ Then associated with this problem are two first order conditions. The first one 
 \nonumber \\
 & \Rightarrow \ \ u'(c_{ij}(z, t) ) = \chi_{j}(t) d_{ij},
 \end{align}
-which says that the marginal utility of consumption of ($i$ consuming variety $j$) should equal it's costs. What is this cost, it's the $j$'s multiplier adjusted by the trade cost $d_{ij}$ which gives this ``price'' like interpretation of the multiplier, it's like the shadow value of commodity $j$ which reflects how scarce or not the commodity is then multiplied by the transport costs.  
+which says that the marginal utility of consumption of ($i$ consuming variety $j$) should equal it's costs. What is this cost, it's the $j$'s multiplier adjusted by the trade cost $d_{ij}$ which gives this ``price'' like interpretation of the multiplier, it's like the shadow value of commodity $j$ which reflects how scarce or not the commodity is then multiplied by the transport costs.
 
 This first order condition has several implications. First, because the right hand size is independent of $z$, then $u'(c_{ij}(z, t)) = u'(c_{ij}(z', t)) = u'(\bar c_{ij}(t))$ for all $z, z'$ combinations. So within choice, the marginal utility of consumption is equated.
 
@@ -918,7 +945,7 @@ Second, across variety choice, the ratio of marginal utility across variety $j$ 
 \begin{align}
 \frac{u'(\bar c_{ij}(t))}{u'(\bar c_{ij'}(t))} = \frac{\chi_{j}(t) d_{ij}}{\chi_{j'}(t) d_{ij'}}
 \end{align}
-which says that consumption differences relate to the ratio of the multipliers on the resource constraint and the trade costs. This again gives the price like interpretation of the multipliers, i.e. that differences in the ratio of the marginal utility of consumption reflect relative scarcity or the shadow values. 
+which says that consumption differences relate to the ratio of the multipliers on the resource constraint and the trade costs. This again gives the price like interpretation of the multipliers, i.e. that differences in the ratio of the marginal utility of consumption reflect relative scarcity or the shadow values.
 
 The second first order condition is with respect to the choice probabilities. So
 \begin{align}
@@ -983,11 +1010,11 @@ The one issue with this last result is that it's a bit opaque relative to the ot
 \begin{align}
 v_i(t) = -\sigma_{\epsilon} \log \pi_{ii} + u(c_{ii}(t))
 \end{align}
-and then 
+and then
 \begin{align}
 \frac{\partial v_i(t)}{\partial d_{ij} / d_{ij}} = -\sigma_{\epsilon} \frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}}
 \end{align}
-so the gains only work through the home share. Notice this holds if this is a global change or not. Now this elasticity is 
+so the gains only work through the home share. Notice this holds if this is a global change or not. Now this elasticity is
 \begin{align}
 \frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}} =& -\frac{\pi_{ij}}{\sigma_{\epsilon}} \bigg \{ u'(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} - \bigg [u'(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} + u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}}c_{ij}(t) \bigg ] \bigg \} \\
 \nonumber \\
@@ -997,11 +1024,11 @@ Then notice the following from the consumption allocation that
 \begin{align}
 u'(c_{ij}(t) ) = \chi_{j}(t) d_{ij} \ \ \Rightarrow \ \ u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} = \chi_{j}(t)d_{ij}
 \end{align}
-where I'm just differentiating both sides by $d_{ij}$ and the dividing through by $d$ to make an elasticity. Then this implies that 
+where I'm just differentiating both sides by $d_{ij}$ and the dividing through by $d$ to make an elasticity. Then this implies that
 \begin{align}
 \frac{\partial \pi_{ii}(t) / \pi_{ii}(t)}{\partial d_{ij} / d_{ij}} =& \frac{\pi_{ij}(t)}{\sigma_{\epsilon}}u'(c_{ij}(t))c_{ij}(t)
 \end{align}
-and then 
+and then
 \begin{align}
 \frac{\partial v_i(t)}{\partial d_{ij} / d_{ij}} = \pi_{ij}u'(c_{ij}(t))c_{ij}(t)
 \end{align}
@@ -1009,7 +1036,7 @@ which means that the total change in social welfare equals
 \begin{align}
 \frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{\partial W_i}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times u'(c_{ij}(t)) c_{ij}(t) \pi_{ij}(t) L_i
 \end{align}
-and I'm done. 
+and I'm done.
 
 
 \newpage
