@@ -72,11 +72,13 @@ function get_trade(R, W, asset_policy, πprob, state_index, model_params)
 
     @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
     
-    c_by_variety = Array{eltype(asset_policy)}(undef, Na*Nshocks, Ncntry)
-    variety_share = Array{eltype(asset_policy)}(undef, Na*Nshocks, Ncntry)
+    pc_by_state = Array{eltype(asset_policy)}(undef, Na*Nshocks, Ncntry)
+    pcπ_by_state = Array{eltype(asset_policy)}(undef, Na*Nshocks, Ncntry)
+    πprob_by_state = Array{eltype(asset_policy)}(undef, Na*Nshocks, Ncntry)
 
-    fill!(c_by_variety, 0.0) #need to fill given += operator below
-    fill!(variety_share, 0.0) #need to fill given += operator below
+    fill!(pc_by_state , 0.0) #need to fill given += operator below
+    fill!(pcπ_by_state , 0.0) #need to fill given += operator below
+    fill!(πprob_by_state, 0.0) #need to fill given += operator below
 
     shocks = exp.(mc.state_values)
 
@@ -84,16 +86,22 @@ function get_trade(R, W, asset_policy, πprob, state_index, model_params)
 
         for cntry = 1:Ncntry
 
-            c_by_variety[foo, cntry] +=  ( -asset_policy[xxx[1], xxx[2], cntry] 
-                    + R*agrid[xxx[1]] + W*shocks[xxx[2]] ) * πprob[xxx[1], xxx[2], cntry]
+            pc = ( -asset_policy[xxx[1], xxx[2], cntry] + R*agrid[xxx[1]] + W*shocks[xxx[2]] )
+            #should watch this line
 
-            variety_share[foo, cntry] += πprob[xxx[1], xxx[2], cntry]
+            pc_by_state[foo, cntry] += pc
+
+            pcπ_by_state[foo, cntry] +=  pc * πprob[xxx[1], xxx[2], cntry]
+                    # this is p*c*π_{ij} by state
+
+            πprob_by_state[foo, cntry] += πprob[xxx[1], xxx[2], cntry]
+            # this is π_{ij} by state
 
         end
         
     end
 
-    return c_by_variety, variety_share
+    return pcπ_by_state , πprob_by_state, pc_by_state
 
 end
 
@@ -180,7 +188,7 @@ function aggregate(R, W, p, country, household, distribution, model_params; disp
 
     pc = get_consumption(R, W, asset_policy, πprob, state_index, model_params)
 
-    c_by_variety, variety_share = get_trade(R, W, asset_policy, πprob, state_index, model_params)
+    pcπ_by_state, π_by_state = get_trade(R, W, asset_policy, πprob, state_index, model_params)[1:2]
 
     Aprime = dot(aprime, λ)
 
@@ -194,17 +202,17 @@ function aggregate(R, W, p, country, household, distribution, model_params; disp
     PC = dot(pc , λ)
     #aggregate consumption
 
-    imports = sum(c_by_variety[:, 1:end .!= country], dims = 2)
+    imports = sum(pcπ_by_state[:, 1:end .!= country], dims = 2)
     # exclude home country imports
 
     M = dot(imports , λ)
 
-    bilateral_imports = sum( c_by_variety .* λ, dims = 1)
-    bilateral_πprob = sum( variety_share  .* λ, dims = 1)
+    bilateral_imports = sum( pcπ_by_state.* λ, dims = 1)
+    bilateral_πprob = sum( π_by_state.* λ, dims = 1)
 
     production = p[country] * TFP[country]* N
 
-    home_consumption = sum(c_by_variety[:, 1:end .== country], dims = 2)
+    home_consumption = sum(pcπ_by_state[:, 1:end .== country], dims = 2)
 
     X = production - dot(home_consumption , λ)
 

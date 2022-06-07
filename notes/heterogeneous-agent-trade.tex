@@ -493,6 +493,22 @@ The second term reflects the impact of the borrowing constraint. What this means
 
 The final term in (\ref{eq:value-fun-dd}) says that the extensive margin elasticity depends upon how things change in the future idiosyncratically as $z$ evolves and through the behavioral response of assets.
 
+\afterpage{
+\clearpage
+
+\begin{figure}[!t]
+\centering{\includegraphics[scale = 0.58]{./figures/micro-elasticity.pdf}}
+\caption{Micro-level Trade Elasticities, $\theta_{ij}(a,z)$}\label{fig:auto_sales_diff_diff}
+\end{figure}
+
+
+\begin{figure}[!t]
+\centering{\includegraphics[scale = 0.58]{./figures/trade-share.pdf}}
+\caption{Micro-level Trade, $M_{ij}(a,z) / M_{ii}(a,z)$ }\label{fig:auto_sales_diff_diff}
+\end{figure}
+
+}
+
 \subsection{Gains from Trade}
 
 In this section I compute how social welfare changes to a from a permanent change in trade costs. This section derives these gains across steady states, the idea here is that I'm thinking a situation where the change is small and there is an immediate jump to the new steady state. In the quantitative section I study transition paths, but the purpose here is to illustrate mechanics and where the gains from trade arise from. Unlike the trade elasticity, I'll total derivatives that will encompass general equilibrium changes in wages and interest rates.
@@ -534,8 +550,7 @@ The second term $u'(c_{ii}(a,z))a \ \frac{\mathrm{d} R_{i}}{\mathrm{d} d_{ij} / 
 The third term reflects the \emph{gains from relaxing borrowing constraints}. This is similar to the discussion around the extensive margin elasticity. Recall that if the household is unconstrained, then this term is zero and there is no gain through changes in asset behavior as households are properly equating the marginal benefits of changes in their asset holdings. For some households, this term may not be zero because of borrowing constraints, thus this term is positive and \emph{may} represent a gain from trade and this depends upon if the household changes its behavior. So if the household is still constrained, then assets can't adjust so the outside term is zero and, thus, overall the second term is zero. The implication is that the only contribution to social welfare through these effects are those who are on the margin between constrained and unconstrained.
 
 Finally, these three terms repeat themselves into the expected future, appropriately discounted. Proposition \ref{prp:gains-trade} summarizes the result below.
-
-\begin{prp}[\textbf{The H-A Welfare Gains from Trade}] \label{prp:gains-trade} The welfare gains from trade are given by
+\begin{prp}[\textbf{H-A Welfare Gains from Trade}] \label{prp:gains-trade} The welfare gains from trade are given by
 {\footnotesize
 \begin{align}
 \frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = \int_{z} \int_{a}  \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} L_i \lambda_{i}(a,z).

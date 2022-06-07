@@ -50,7 +50,7 @@ function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
 
     end
 
-return Y, tradeflows, A_demand
+return Y, tradeflows, A_demand, hh, dist
 
 end
 
