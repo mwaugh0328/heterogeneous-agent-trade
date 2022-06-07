@@ -424,14 +424,14 @@ Working off of the definition of aggregate imports in (\ref{eq:imports}), Propos
 \begin{prp}[\textbf{The H-A Trade Elasticity}] \label{prp:GET} The trade elasticity between country $i$ and country $j$ is:
 {\footnotesize
 \begin{align}
-\theta_{ij} = \sum_{a,z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z) - \bigg \{ \theta_{ii}(a,z)^{I} + \theta_{ii}(a,z)^{E} \bigg \}\omega_{ii}(a,z)
+\theta_{ij} = 1 + \int_{a} \int_{z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z) - \bigg \{ \theta_{ii}(a,z)^{I} + \theta_{ii}(a,z)^{E} \bigg \}\omega_{ii}(a,z)
 \label{eq:trade-elasticity}
 \end{align}
 }which is the difference between $ij$ and $ii$ expenditure-weighted micro-level elasticities. The micro-level elasticities for households with states $a,z$ are decomposed into an intensive and extensive elasticity
 {\footnotesize
 \begin{align}
 \nonumber
-\theta_{ij}(a,z)^{I} = \frac{\partial p_{ij}c_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \ \ \ \theta_{ij}(a,z)^{E} = \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \
+\theta_{ij}(a,z)^{I} = \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \ \ \ \theta_{ij}(a,z)^{E} = \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \
 \end{align}
 }
 and the expenditure weights are defined as
@@ -448,16 +448,12 @@ Proposition \ref{prp:GET} is derived only off the aggregation of imports at the 
 
 \textbf{The Intensive Margin Trade Elasticity.} By using the households budget constraint in (\ref{eq:trade-budget-constraint}) the intensive margin elasticity becomes:
 \begin{align}
-\underbrace{\frac{\partial p_{ij}c_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}}_{\theta_{ij}(a,z)^{I}} &= -\frac{\partial g_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} \frac{ \partial p_{ij}/ p_{ij}}{\partial d_{ij}/ d_{ij}} \times \frac{1}{p_{ij}c_{ij}(a,z)}, \\
-\nonumber \\
-&= -\frac{\partial g_{ij}(a,z)}{\partial p_{ij}/ p_{ij}}\frac{1}{p_{ij}c_{ij}(a,z)},
+\underbrace{\frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}}_{\theta_{ij}(a,z)^{I}} &= \bigg [-\frac{\partial g_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}} ,
 \label{eq:intensive-margin}
 \end{align}
-where $g_{ij}(a,z)$ is the policy function mapping states into asset holdings next period $a'$. And the last line follows from perfect pass-through of changes in trade costs to prices, $\frac{ \partial p_{ij}/ p_{ij}}{\partial d_{ij}/ d_{ij}} = 1$.
+where $g_{ij}(a,z)$ is the policy function mapping states into asset holdings next period $a'$. Equation (\ref{eq:intensive-margin}) says that the intensive margin elasticity is related to how a household adjusts its wealth relative to expenditure, given change in the price $p_{ij}$. To be concrete, the way this works is that a reduction in trade costs lowers prices and relaxes the household's budget constraint|conditional on choice $j$. And then the intensive margin elasticity depends on how the new resources are dived between assets and consumption.
 
-Equation (\ref{eq:intensive-margin}) says that the intensive margin elasticity is related to how a household adjusts its wealth relative to expenditure, given change in the price $p_{ij}$. To be concrete, the way this works is that a reduction in trade costs lowers prices and relaxes the household's budget constraint|conditional on choice $j$. And then the intensive margin elasticity depends on how the new resources are dived between assets and consumption.
-
-The feature that's shaping micro responses at the intensive margin is market incompleteness and a households ability to partially insure. In the efficient allocation discussed above, the intensive margin elasticity is zero as the planner correctly reallocates resources across households and any change in trade costs is completely offset by expenditures. In the decentralized allocation, the household is on its own and must judge how to reallocate gains from a reduction in prices via trade costs between current consumption versus the future. Heterogeneity matters because the trade-off current consumption versus the future is not invariant to a household's state $a, z$.
+The feature that's shaping micro responses at the intensive margin is market incompleteness and a households ability to partially insure. In the efficient allocation discussed above, the intensive margin elasticity is zero as the planner correctly reallocates resources across households and any change in trade costs is completely offset by expenditures. In the decentralized allocation, the household is on its own and must judge how to reallocate the gains from a reduction in prices between current consumption versus the future. Heterogeneity matters because the trade-off current consumption versus the future is not invariant to a household's state $a, z$.
 
 \textbf{The Extensive Margin Trade Elasticity.} With the Type 1 extreme value distributional assumption, I can connect how the choice probabilities change and a household's problem. As a first step, define the denominator of the choice probability in (\ref{eq:choice-prob}) as:
 \begin{align}
@@ -489,27 +485,32 @@ where $\mathbf{MPC}_{ij}(a,z)$ is the household's marginal propensity to consume
 
 Putting (\ref{eq:elasticity-mpc}) in the context of Constant Relative Risk Aversion (CRRA) preferences makes things clearer. If relative risk aversion is greater than one, this implies that poor, high marginal utility households who are also likely high MPC households are\emph{ more elastic relative} to rich households on the extensive margin.\footnote{In the $\log$ preference case (and I work through this case more in depth below), this term becomes zero and the first term in (\ref{eq:value-fun-dd}) is constant and not varying with wealth.} This is the sense in which wealthy or poor households will have systematically different extensive margin elasticities and, like the discussion around the intensive margin elasticity, the households consumption-savings motives play a role.
 
-The second term reflects the impact of the borrowing constraint. What this means is if a household is not borrowing constrained, it's Euler equation holds and then the second term is zero. Borrowing constrained households will not be on their Euler equation and this \emph{may} be a force to make households more elastic. But because the change in the asset policy function multiplies the outside term, it only matters for those whom the price change allows them to go from constrained to unconstrained.
-
-The final term in (\ref{eq:value-fun-dd}) says that the extensive margin elasticity depends upon how things change in the future idiosyncratically as $z$ evolves and through the behavioral response of assets.
-
 \afterpage{
 \clearpage
 
 \begin{figure}[!t]
-\centering{\includegraphics[scale = 0.58]{./figures/micro-elasticity.pdf}}
-\caption{Micro-level Trade Elasticities, $\theta_{ij}(a,z)$}\label{fig:auto_sales_diff_diff}
+\centering{\includegraphics[scale = 0.57]{./figures/micro-elasticity.pdf}}
+\caption{Elasticities, $-\theta_{ij}(a,z)$}\label{fig:elasticity}
 \end{figure}
 
 
 \begin{figure}[!t]
-\centering{\includegraphics[scale = 0.58]{./figures/trade-share.pdf}}
-\caption{Micro-level Trade, $M_{ij}(a,z) / M_{ii}(a,z)$ }\label{fig:auto_sales_diff_diff}
+\centering{\includegraphics[scale = 0.57]{./figures/trade-share.pdf}}
+\caption{Trade, $M_{ij}(a,z) / M_{ii}(a,z)$ }\label{fig:micro-trade}
 \end{figure}
 
 }
 
-\subsection{Gains from Trade}
+The second term reflects the impact of the borrowing constraint. What this means is if a household is not borrowing constrained, it's Euler equation holds and then the second term is zero. Borrowing constrained households will not be on their Euler equation and this \emph{may} be a force to make households more elastic. But because the change in the asset policy function multiplies the outside term, it only matters for those whom the price change allows them to go from constrained to unconstrained.
+
+The final term in (\ref{eq:value-fun-dd}) says that the extensive margin elasticity depends upon how things change in the future idiosyncratically as $z$ evolves and through the behavioral response of assets.
+
+Figure \ref{fig:elasticity} and \ref{fig:micro-trade} provide a sense of how this all plays out.\footnote{In Figures \ref{fig:elasticity} and \ref{fig:micro-trade}, the key quantitative details are that it's a two symmetric country world with an import share relative to GDP of about 10 percent; $u$ is CRRA with relative risk aversion equal to 1.5; the dispersion parameter $\sigma_{\epsilon}$ is set to 0.25.} Figure \ref{fig:elasticity} plots the absolute value of the trade elasticity (intensive and extensive margin) by household state (assets are on the x-axis, productivity is on the y-axis) and the borrowing constraint $\phi$ is demarcated in the south-west corner. What this shows is how the trade elasticity systematically varies with assets and income. So poor households, especially those near the borrowing constraint, are very price elastic with a trade elasticity of between -10 and -12. Richer households with more assets and income are less price elastic with this elasticity hovering around -4 (which is the same as $1 / \sigma_{\epsilon}$).
+
+Because rich and poor households face the same prices, differences in elasticities then map into different trade shares. Figure \ref{fig:micro-trade} shows this point by plotting expenditure on the foreign good relative to the home good, state by state. First, note that because of trade costs and symmetry across countries, the home good is the relatively cheaper good. Thus, poor, high-price-elastic households spend more on the home good versus the foreign good. In fact for those near the borrowing constraint in this example, it's near zero. Thus, this is a model where micro-level heterogeneity in trade elasticities leads to micro-level variation in expenditure patterns that vary with assets and income. 
+
+
+\subsection{The Gains from Trade}
 
 In this section I compute how social welfare changes to a from a permanent change in trade costs. This section derives these gains across steady states, the idea here is that I'm thinking a situation where the change is small and there is an immediate jump to the new steady state. In the quantitative section I study transition paths, but the purpose here is to illustrate mechanics and where the gains from trade arise from. Unlike the trade elasticity, I'll total derivatives that will encompass general equilibrium changes in wages and interest rates.
 
@@ -611,10 +612,202 @@ and is (i) independent of the household heterogeneity and (ii) summarized by the
 
 \addcontentsline{toc}{section}{Appendices}
 
+\section{The Planning Problem}\label{sec:apx-planner}
+
+As above, I focus on a utilitarian social welfare function so Pareto weights across households:
+\begin{align}
+W = \sum_{t=0}^{\infty} \sum_{i} \int\limits_{z} \beta^{t} v_{i}(z,t) L_{i}\lambda_{i}(z,t),
+\label{eq:apx-social-welfare}
+\end{align}
+and here $v_i$ a households utility in country $i$. Now, I'm going to place the social welfare function in sequence space and then unpack the benefits from the preference shock in the following way:
+\begin{align}
+W = \sum_{t=0}^{\infty}  \sum_{i} \sum_{j} \int\limits_{z}  \beta^{t} \  \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t)
+\label{eq:apx-social-welfare-2}
+\end{align}
+so the inner term is period utility given the associated consumption allocation $c_{ij}$ and then the expected value of the preference shock conditional on the choice probability $\pi_{ij}(z,t)$. This inner term is then weighted by the number of households that receive that utility, i.e. the choice probability times the mass of households with shock $z$ at date $t$. The sum across $j$ adds up all households in country $i$. Then the sum across $i$ reflects that this is global welfare.
+
+One more point about the inner term in (\ref{eq:apx-social-welfare-2}), my claim is that with the Type 1 extreme value shocks:
+\begin{align}
+\mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] = -\sigma_{\epsilon} \log \pi_{ij}(z,t)
+\end{align}
+where this is like the ``selection correction'' where if $\pi$ becomes smaller, then this value becomes larger meaning only those with the largest relative shocks are chosen and higher utility for those, conditional on being selected, is felt.
+
+Given this formulation, the planner then does the following: he is choosing consumption and choice probabilities for all country pair combinations, state by state, for the infinite future. The Lagrangian associated with the Planning Problem is:
+\begin{align}
+\mathcal{L}  = & \sum_{t=0}^{\infty}   \sum_{i} \sum_{j} \int\limits_{z}  \beta^{t} \  \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t), \\
+\nonumber \\
+&+ \sum_{t=0}^{\infty} \sum_{i} \beta^{t} \chi_{i}(t) \bigg \{ Y_{it} \  - \ \sum_{j} \int\limits_{z}  d_{ji} c_{ji}(z, t) \pi_{ji}(z,t) L_{j}\lambda_{j}(z, t) \bigg \} \nonumber \\
+\nonumber \\
+&+ \sum_{t=0}^{\infty} \sum_{i} \int\limits_{z}  \beta^{t} \chi_{2i}(z,t) \bigg \{1 - \sum_{j}\pi_{ij}(z,t) \bigg \} L_{i} \lambda_{i}(z, t) \nonumber
+\label{eq:planning-problem}
+\end{align}
+where the first term is the objective function, the second line is the resource constraint which says that output from country $i$ must equal the consumption of commodity $i$ globally including the transport costs. Then the third line is there to ensure that choice probabilities are probabilities and sum to one. The final thing I'm doing is that I'm scaling the multipliers by $\beta^t$ so that the algebra is a bit easier.
+
+Then associated with this problem are two first order conditions. The first one is consumption in $i$ with respect to variety $j$ so:
+\begin{align}
+\frac{\partial \mathcal{L} }{\partial c_{ij}(z, t)} &=  \beta^{t} u'(c_{ij}(z, t)) \pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) - \beta^{t} \chi_{j}(t) d_{ij} \pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) = 0 \\
+\nonumber \\
+& \Rightarrow \ \ u'(c_{ij}(z, t) ) = \chi_{j}(t) d_{ij},
+\end{align}
+which says that the marginal utility of consumption of ($i$ consuming variety $j$) should equal it's costs. What is this cost, it's the $j$'s multiplier adjusted by the trade cost $d_{ij}$ which gives this ``price'' like interpretation of the multiplier, it's like the shadow value of commodity $j$ which reflects how scarce or not the commodity is then multiplied by the transport costs.
+
+This first order condition has several implications. First, because the right hand size is independent of $z$, then $u'(c_{ij}(z, t)) = u'(c_{ij}(z', t)) = u'(c_{ij}(t))$ for all $z, z'$ combinations. So within choice, the marginal utility of consumption is equated.
+
+Second, across variety choice, the ratio of marginal utility across variety $j$ is:
+\begin{align}
+\frac{u'(c_{ij}(t))}{u'(c_{ij'}(t))} = \frac{\chi_{j}(t) d_{ij}}{\chi_{j'}(t) d_{ij'}}
+\end{align}
+which says that consumption differences relate to the ratio of the multipliers on the resource constraint and the trade costs. This again gives the price like interpretation of the multipliers, i.e. that differences in the ratio of the marginal utility of consumption reflect relative scarcity or the shadow values. This is essentially a within country \citet{backus1993} condition. 
+
+The second first order condition is with respect to the choice probabilities. So
+\begin{align}
+\frac{\partial \mathcal{L} }{\partial \pi_{ij}(z, t)} \ = \ & \beta^{t}\bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \} L_{i} \lambda_{i}(z, t) + \beta^{t}\frac{\partial \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ]}{\partial \pi_{ij}}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) \nonumber \\
+\nonumber \\
+& - \beta^{t} \chi_{j}(t) d_{ij} c_{ij}(z, t) L_{i}\lambda_{i}(z, t) - \beta^{t} \chi_{2i}(z,t) L_{i} \lambda_{i}(z, t)  = 0
+\end{align}
+where the first two terms are the marginal, social benefit of changing the choice probabilities. This reflects how utility shifts by adding more households to that choice and then how the expected preference shock changes. The last two terms reflect the costs of changing the choice probabilities which are the resources to provide the additional consumption and the cost of moving households out of other choices which is what the multiplier $\chi_{2i}(z,t)$ represents.
+
+Further simplifying gives:
+\begin{align}
+\frac{\partial \mathcal{L} }{\partial \pi_{ij}(z, t)} \ = \ &  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] + \frac{\partial \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ]}{\partial \pi_{ij}} \pi_{ij}(z, t)  - \chi_{j}(t) d_{ij} c_{ij}(z, t)  - \chi_{2i}(z,t)  = 0.
+\end{align}
+Then inserting the observations made above about the Type 1 extreme value distribution and then connecting things with the consumption allocation one has
+\begin{align}
+u(c_{ij}(t) ) -\sigma_{\epsilon} \log \pi_{ij}(z,t) - \sigma_{\epsilon} - u'(c_{ij}(t) )c_{ij}(t)   = \chi_{2i}(z,t).
+\end{align}
+Then some algebra gets toward a closed-form expression for the choice probability
+\begin{align}
+-\sigma_{\epsilon} \log \pi_{ij}(z,t) = -u(c_{ij}(t)  ) + u'(c_{ij}(t) )c_{ij}(t)  + \sigma_{\epsilon} + \chi_{2i}(z,t), \\
+\nonumber \\
+\pi_{ij}(z,t) = \exp \left( \frac{u(c_{ij}(t)  ) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} + 1 \right) \bigg / \exp \left( \chi_{2i}(z,t) / \sigma_{\epsilon} \right).
+\end{align}
+The choice probabilities must sum to one, so we can set the multiplier so
+\begin{align}
+\exp \left( \chi_{2i}(z,t) / \sigma_{\epsilon} \right) = \sum_{j'}\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} - 1 \right),
+\end{align}
+which implies
+\begin{align}
+\chi_{2i}(z,t) = \sigma_{\epsilon}  \log \bigg \{ \sum_{j'}\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} - 1 \right) \bigg \},
+\end{align}
+Notice how this multiplier is looking like the expected utility term when prior to the realization to the preference shock. Then the choice probability is
+\begin{align}
+\pi_{ij}(t) =\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}}\right) \bigg / \sum_{j'}\exp \left( \frac{u(c_{ij'}(t)) - u'(c_{ij'}(t))c_{ij'}(t)}{\sigma_{\epsilon}} \right),
+\end{align}
+which is independent of $z$. This has the standard Type 1 shape, but the inner most term says that the choice probability should reflect the ``net'' social benefit of having someone chose that good. The net part is the utility a household receives net of the cost of providing that amount of the consumption. And the cost is, well, $c$ converted into utils which is what the marginal utility bit is doing. The formal statement is below:
+
+\begin{prp}[\textbf{The Efficient Allocation}]\label{apx-prp:efficient-allocation} The allocation that satisfies the Centralized Planning Problem in (\ref{eq:planner_problem}) is:
+\begin{enumerate}
+\item A consumption allocation satisfying:
+\begin{align}
+u'(c_{ij}(z,t) ) = \chi_{j}(t) d_{ij}
+\label{apx-eq:planner-consumption}
+\end{align}
+where $\chi_{j}(t)$ is the shadow price of variety $j$.
+\item The choice probabilities are
+\begin{align}
+\pi_{ij}(t) =\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}}\right) \bigg / \sum_{j'}\exp \left( \frac{u(c_{ij'}(t)) - u'(c_{ij'}(t))c_{ij'}(t)}{\sigma_{\epsilon}} \right)
+\label{apx-eq:planner-choice-prob}
+\end{align}
+and are independent of $z$ because of (\ref{apx-eq:planner-consumption}).
+\end{enumerate}
+\end{prp}
+
+\textbf{The Gains from Trade.} I'm going to do is compute the social gain to a change in trade costs. I'm going to express this in the following way with social welfare depending directly upon the trade costs $d$, and then indirectly as the allocations of $c$ and $\pi$ depend upon $d$ as well.
+\begin{align}
+W(d, c_{ij}(d), \pi_{ij}(d))
+\end{align}
+And then totally differentiate social welfare, so
+\begin{align}
+\frac{\mathrm{d} W}{\mathrm{d}d} = \frac{\partial W}{\partial d} + \frac{\partial W}{\partial c_{ij}(d)}\frac{\partial c_{ij}(d)}{\partial d} + \frac{\partial W}{\partial \pi_{ij}(d)}\frac{\partial \pi_{ij}(d)}{\partial d}
+\end{align}
+and then I invoke the Envelope Theorem. What this means here is that I evaluate this derivative at the optimal allocation. But the optimal allocation is...well optimal, so on the margin any gain from changing consumption or choice probabilities is zero. So the indirect effects (at the optimal allocation) are zero. Thus only direct effects matter. Then computing the direct effect gives
+\begin{align}
+\partial W = - & \sum_{t=0}^{\infty} \beta^{t} \ \chi_{j}(t) c_{ij}(t) \pi_{ij}(t) L_{i} \partial d_{ij} \\
+\nonumber \\
+=& - \sum_{t=0}^{\infty} \beta^{t} \ u'(c_{ij}(t)) c_{ij}(t) \pi_{ij}(t) L_{i} \partial d_{ij} / d_{ij}
+\end{align}
+where the last line inserts the relationship between the multiplier and the marginal utility of consumption. Now this thing says that the change in welfare equals essentially how much the resource constraint is relaxed by the change in trade costs. So it's like the $c_{ij}(t) \pi_{ij}(t) L_{i}$ is how much stuff people in $i$ get from $g$ and $\partial d_{ij} / d_{ij}$ this is perturbing it by the percent change in trade costs, then this bit $u'(c_{ij}(t))$ converts it into utils.
+
+\textbf{The Elasticity of Trade.} This is a bit non-standard from my perspective, but here is my argument. Claim \#1: The intensive margin trade elastic is minus one, i.e. any change in $d_{ij}$ results in a one for one increase, $c_{ij}$ So I don't need to mess with this.
+
+Claim \#2: Then all I need to compute is the extensive margin elasticity. So I'm going to note that
+\begin{align}
+\frac{\partial \pi_{ij} / \pi_{ij}}{\partial d_{ij} / d_{ij}} =& \frac{1}{\sigma_{\epsilon}} \bigg [ u'(c_{ij}(t)\frac{\partial c_{ij}(t)}{\partial d_{ij}/ d_{ij}} - u''(c_{ij}(t)\frac{\partial c_{ij}(t)}{\partial d_{ij}/ d_{ij}}c_{ij}(t) - u'(c_{ij}(t)\frac{\partial c_{ij}(t)}{\partial d_{ij}/ d_{ij}} \bigg] - \frac{\partial \Phi_{i}(t) /\Phi_i(t)}{\partial d_{ij}/ d_{ij}} \\
+\nonumber \\
+=& \frac{-1}{\sigma_{\epsilon}} \bigg [ u''(c_{ij}(t)\frac{\partial c_{ij}(t)}{\partial d_{ij}/ d_{ij}}c_{ij}(t) \bigg] - \frac{\partial \Phi_{i}(t) /\Phi_i(t)}{\partial d_{ij}/ d_{ij}}
+\end{align}
+which the first line follows from the quotient rule and where $\Phi_{i}(t)$ is the part of the denominator in the choice probability. Recall the trade elasticity is relative to own trade so
+\begin{align}
+\frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}} = - \frac{\partial \Phi_{i}(t) /\Phi_i(t)}{\partial d_{ij}/ d_{ij}}
+\end{align}
+Then using my Generalized Trade Elasticity formula, I have that:
+\begin{align}
+\theta_{ij} = \theta_{ij}^{E} = \frac{-1}{\sigma_{\epsilon}} \bigg [ u''(c_{ij}(t)\frac{\partial c_{ij}(t)}{\partial d_{ij}/ d_{ij}}c_{ij}(t) \bigg]
+\end{align}
+Then here is what is interesting. I mention this fact below
+\begin{align}
+u'(c_{ij}(t) ) = \chi_{j}(t) d_{ij} \ \ \Rightarrow \ \ u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} = \chi_{j}(t)d_{ij}
+\end{align}
+so this means that the trade elasticity is:
+\begin{align}
+\theta_{ij} =  \frac{-1}{\sigma_{\epsilon}} \bigg [ u'(c_{ij}(t)) c_{ij}(t) \bigg]
+\end{align}
+where here you can already see the ``standard result'' with log preferences that the trade elasticity is independent of $i,j$ and is the one over the dispersion parameter like in \citet{eaton2002technology}. The next interesting piece is if this is combined with the gains from trade formula which is (in a stationary setting)
+\begin{align}
+\frac{\partial W}{\partial d_{ij} / d_ij} =  \frac{-1}{1-\beta} \theta_{ij} \pi_{ij}L_{i},
+\end{align}
+in other words, the gains from trade are how many people are buying $i,j$ times the trade elasticity.
+
+\begin{prp}[\textbf{Trade Elasticities and Welfare Gains in the Efficient Allocation}]\label{prp:gains-efficient-allocation} The elasticity of trade to a change in trade costs between $i,j$ in the efficient allocation is:
+\begin{align}
+\theta_{ij} =  -\frac{1}{\sigma_{\epsilon}} \bigg [ u'(c_{ij}) c_{ij} \bigg]. \label{eq:eff-trade-elasticity}
+\end{align}
+And the welfare gains from a reduction in trade costs between $i,j$ are
+\begin{align}
+\frac{\mathrm{d} W}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times u'(c_{ij}) c_{ij} \pi_{ij} L_i
+\label{eq:eff-trade-gains}
+\end{align}
+which is the discounted, direct effect from relaxing the resource constraint in (\ref{eq:planner_rc}).
+\end{prp}
 
 
+The one issue with this last result is that it's a bit opaque relative to the other welfare results that I derived. Let me connect them. So per the arguments above, I can write the ex-ante utility  and inserting the allocations associated with the planner as
+\begin{align}
+v_i(t) = -\sigma_{\epsilon} \log \pi_{ii} + u(c_{ii}(t))
+\end{align}
+and then
+\begin{align}
+\frac{\partial v_i(t)}{\partial d_{ij} / d_{ij}} = -\sigma_{\epsilon} \frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}}
+\end{align}
+so the gains only work through the home share. Notice this holds if this is a global change or not. Now this elasticity is
+\begin{align}
+\frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}} =& -\frac{\pi_{ij}}{\sigma_{\epsilon}} \bigg \{ u'(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} - \bigg [u'(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} + u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}}c_{ij}(t) \bigg ] \bigg \} \\
+\nonumber \\
+=& -\frac{\pi_{ij}}{\sigma_{\epsilon}}u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}}c_{ij}(t)
+\end{align}
+Then notice the following from the consumption allocation that
+\begin{align}
+u'(c_{ij}(t) ) = \chi_{j}(t) d_{ij} \ \ \Rightarrow \ \ u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} = \chi_{j}(t)d_{ij}
+\end{align}
+where I'm just differentiating both sides by $d_{ij}$ and the dividing through by $d$ to make an elasticity. Then this implies that
+\begin{align}
+\frac{\partial \pi_{ii}(t) / \pi_{ii}(t)}{\partial d_{ij} / d_{ij}} =& \frac{\pi_{ij}(t)}{\sigma_{\epsilon}}u'(c_{ij}(t))c_{ij}(t)
+\end{align}
+and then
+\begin{align}
+\frac{\partial v_i(t)}{\partial d_{ij} / d_{ij}} = \pi_{ij}u'(c_{ij}(t))c_{ij}(t)
+\end{align}
+which means that the total change in social welfare equals
+\begin{align}
+\frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{\partial W_i}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times u'(c_{ij}(t)) c_{ij}(t) \pi_{ij}(t) L_i
+\end{align}
+and I'm done.
 
-\section{The Generalized Trade Elasticity}
+
+\newpage
+
+
+\section{The H-A Trade Elasticity}
 
 My definition of the trade elasticity is the partial equilibrium response of imports from $j$ relative to domestic consumption due to a permanent change in trade costs between steady states. By partial equilibrium, I mean that wages and interest rates as fixed at their initial equilibrium values. By permanent, I work this out under the heuristic of a ``steady-state to steady-state comparison'' where I factor in how the stationary distribution changes due to changes in behavior. This definition is consistent with the broad terminology used in the trade literature, e.g. \citet{arkolakis2012new} and \citet{simonovska2014elasticity}. Consistent with this discussion and the notation below, I compute the partial derivatives (not total) of objects with respect to trade costs.
 
@@ -625,15 +818,13 @@ Mathematically, the trade elasticity equals the difference between the elasticit
 \end{align}
 The change in imports between $i$ and $j$ with respect to a change in trade costs is:
 \begin{align}
-\frac{\partial  M_{ij}}{\partial d_{ij}} = \sum_{a,z} \bigg \{ \frac{\partial p_{ij}c_{ij}(a,z)}{\partial d_{ij}} \pi_{ij}(a,z)\lambda_{i}(a,z) +
- \frac{\partial \pi_{ij}(a,z)}{\partial d_{ij}} p_{ij}c_{ij}(a,z)\lambda_{i}(a,z)  +
-\frac{\partial \lambda_{i}(a,z)}{\partial d_{ij}} p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \bigg \}.
+\frac{\partial  M_{ij}}{\partial d_{ij}} = \int_{a,z} \bigg \{\frac{\partial p_{ij}}{\partial d_{ij}} c_{ij}(a,z) \pi_{ij}(a,z) +  \frac{\partial c_{ij}(a,z)}{\partial d_{ij}} p_{ij} \pi_{ij}(a,z) +
+ \frac{\partial \pi_{ij}(a,z)}{\partial d_{ij}} p_{ij}c_{ij}(a,z) \bigg \}\lambda_{i}(a,z) L_i.
 \end{align}
 Divide the stuff on the inside of the brackets by household level imports $p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda_{i}(a,z)$ and multiply on the outside giving,
 \begin{align}
-\frac{\partial  M_{ij}}{\partial d_{ij}} = \sum_{a,z} \bigg \{ \frac{\partial p_{ij}c_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial d_{ij}} +
- \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij}}  +
-\frac{\partial \lambda_{i}(a,z) / \lambda_{i}(a,z)}{\partial d_{ij}} \bigg \} p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda_{i}(a,z).
+\frac{\partial  M_{ij}}{\partial d_{ij}} = \int_{a,z}  \bigg \{ \frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}}  + \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij}} +
+ \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij}}  \bigg \} p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda_{i}(a,z).
 \end{align}
 Define the following weight which is the share of goods that those with states $a,z$ account for in total expenditures from $j$ as
 \begin{align}
@@ -641,37 +832,29 @@ Define the following weight which is the share of goods that those with states $
 \end{align}
 where the sum of $\omega_{ij}(a,z)$ equals total imports $M_{ij}$. This gives a nice expression for the import elasticity
 \begin{align}
-\frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} = \sum_{a,z} \bigg \{ \underbrace{ \frac{\partial p_{ij}c_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{I}}+
-\underbrace{\frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{E}} +
-\underbrace{\frac{\partial \lambda_{i}(a,z) / \lambda_{i}(a,z)}{\partial d_{ij} / d_{ij}}}_{\theta_{ij}(a,z)^{D}} \bigg \} \omega_{ij}(a,z)
+\frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} = 1 + \sum_{a,z} \bigg \{ \underbrace{ \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{I}}+
+\underbrace{\frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{E}} \bigg \} \omega_{ij}(a,z)
 \end{align}
 or more succinctly as
 \begin{align}
-\frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} = \sum_{a,z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} + \theta_{ij}(a,z)^{D} \bigg \}\omega_{ij}(a,z)
+\frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} = 1 + \sum_{a,z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z)
 \end{align}
-where the elasticity of aggregate imports into $i$ from $j$ is a weighted average of three different micro-level elasticities. The micro-level elasticities are:
-\begin{itemize}
-\item[\textbf{(i)}] An intensive margin trade elasticity $\theta_{ij}(a,z)^{I}$ which reflects the change in spending by a household on variety from $j$ as trade costs decline.
+where the elasticity of aggregate imports into $i$ from $j$ is a weighted average of three different micro-level elasticities. 
 
-\item[\textbf{(ii)}]  The next term is the extensive margin trade elasticity $\theta(a,z)_{ij}^{E}$ which reflects how households substitute across varieties as trade costs decline. As I show below in Section \ref{}, this takes the place as the standard trade elasticity in, e.g., \citet{eaton2002technology}.
-
-\item[\textbf{(iii)}] The distribution elasticity $\theta(a,z)_{ij}^{D}$ so how the mass of agents change across household states $a,z$. This last elasticity may seem a bit odd as being present in a partial equilibrium elasticity. But I include it hear because the flip side of changes in the intensive and extensive margin is that household saving behavior (even at fixed wages and interest rates) generally will change with the commodity choice. It's in this sense that it's a relevant margin to keep track of.
-\end{itemize}
+Note that the one out front arises from complete pass-through of changes in trade costs to changes in prices. And that this one only shows up in for the $\frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} $ elasticity as there is no direct effect on prices, $p_{ii}$.
 
 Given the expression in (\ref{eq:def_trade_elasticity}), Proposition \ref{apx-prp:GET} follows:
-
-\begin{prp}[\textbf{The Generalized Trade Elasticity}] \label{apx-prp:GET} The trade elasticity between country $i$ and country $j$ is:
+\begin{prp}[\textbf{The H-A Trade Elasticity}] \label{apx-prp:GET} The trade elasticity between country $i$ and country $j$ is:
 {\footnotesize
 \begin{align}
-\theta_{ij} = \sum_{a,z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} + \theta_{ij}(a,z)^{D} \bigg \}\omega_{ij}(a,z) - \bigg \{ \theta_{ii}(a,z)^{I} + \theta_{ii}(a,z)^{E} + \theta_{ii}(a,z)^{D} \bigg \}\omega_{ii}(a,z)
+\theta_{ij} = 1 + \int_{a}\int_{z}  \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z) - \bigg \{ \theta_{ii}(a,z)^{I} + \theta_{ii}(a,z)^{E} \bigg \}\omega_{ii}(a,z)
 \label{eq:apx-trade-elasticity}
 \end{align}
-}which is the difference in expenditure weighted micro-level elasticities. The micro-level elasticities for households with states $a,z$ are decomposed into an intensive, extensive, and distributional elasticity
+}which is the difference in expenditure weighted micro-level elasticities. The micro-level elasticities for households with states $a,z$ are decomposed into an intensive and extensive margin elasticity
 {\footnotesize
 \begin{align}
 \nonumber
-\theta_{ij}(a,z)^{I} = \frac{\partial p_{ij}c_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \ \ \ \theta_{ij}(a,z)^{E} = \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \ \
-\theta_{ij}(a,z)^{D} = \frac{\partial \lambda_{i}(a,z) / \lambda_{i}(a,z)}{\partial d_{ij} / d_{ij}}
+\theta_{ij}(a,z)^{I} = \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \ \ \ \theta_{ij}(a,z)^{E} = \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, 
 \end{align}
 }
 and the expenditure weights are defined as
@@ -682,16 +865,12 @@ and the expenditure weights are defined as
 \end{align}
 }
 \end{prp}
-An interesting feature of Proposition \ref{apx-prp:GET} is that it's derived only off the aggregation of imports at the micro level|no market clearing, functional forms, etc. However, by using the households budget constraint and the Type 1 extreme value distributional assumption more can be said about these elasticities and illustrate how the household's consumption-savings problem matters.
-
 By using the households budget constraint one can express the intensive margin elasticity as
 \begin{align}
-\underbrace{\frac{\partial p_{ij}c_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}}_{\theta_{ij}(a,z)^{I}} &= -\frac{\partial g_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} \frac{ \partial p_{ij}/ p_{ij}}{\partial d_{ij}/ d_{ij}} \times \frac{1}{p_{ij}c_{ij}(a,z)}, \\
-\nonumber \\
-&= -\frac{\partial g_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} \times \frac{1}{p_{ij}c_{ij}(a,z)},
+\underbrace{\frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}}_{\theta_{ij}(a,z)^{I}} &= \bigg [-\frac{\partial g_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}} ,
 \label{eq:apx-intensive-margin}
 \end{align}
-where recall that $g_{ij}(a,z)$ is the policy function mapping states into asset holdings next period $a'$ and the last line follows from $\frac{ \partial p_{ij}/ p_{ij}}{\partial d_{ij}/ d_{ij}} = 1$. What this means is that the intensive margin elasticity is about a households consumption-savings behavior, i.e., how a household adjusts assets given a change in the price $p_{ij}$.
+where recall that $g_{ij}(a,z)$ is the policy function mapping states into asset holdings next period $a'$. What this means is that the intensive margin elasticity is about a households consumption-savings behavior, i.e., how a household adjusts assets given a change in the price $p_{ij}$. 
 
 The Type 1 extreme value assumption allows for a characterization of how the choice probabilities change. As a first step, define the denominator of the choice probability as:
 \begin{align}
@@ -706,7 +885,7 @@ Now interestingly, I can say more about the value function part
 \begin{align}
 \frac{\partial v_{ij}(a,z)}{\partial d_{ij}/d_{ij}}  =& -u'(c_{ij}(a,z))c_{ij}(a,z) + \bigg [ -\frac{u'(c_{ij}(a,z))}{p_{ij}}\frac{\partial g_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} \bigg ] + \beta \mathrm{E} \bigg \{\frac{\partial v}{\partial a'}\frac{\partial g_{ij}(a,z)}{\partial p_{ij}/ p_{ij}}\frac{ \partial p_{ij}/ p_{ij}}{\partial d_{ij}/ d_{ij}}  \\
 \nonumber \\
-&+  \frac{\partial v(\overline{g_{ij}(a,z)},z')}{\partial p_{ij}/ p_{ij}}\frac{ \partial p_{ij}/ p_{ij}}{\partial d_{ij}/ d_{ij}} \bigg \}
+&+  \frac{\partial v(g_{ij}(a,z),z')}{\partial p_{ij}/ p_{ij}}\frac{ \partial p_{ij}/ p_{ij}}{\partial d_{ij}/ d_{ij}} \bigg \}
 \end{align}
 which can then be further expressed using the Euler equation below as
 \begin{align}
@@ -726,19 +905,6 @@ I can then connect the first term with things like the relative risk aversion an
 \end{align}
 And just to emphasize how this works, it's a derivative of $u'(c_{ij}(a,z))c_{ij}(a,z)$. So as assets go up, with $\rho > 1$ this implies that $u'(c_{ij}(a,z))c_{ij}(a,z)$ goes down! And this is a force for things to be less elastic for rich guys. As assets go down, this implies that $u'(c_{ij}(a,z))c_{ij}(a,z)$ goes up, and this is a force for poor guys to be more elastic.
 
-\textbf{The Distribution Trade Elasticity.} I can connect the intensive and extensive margin trade elasticities with how the distribution changes in the following way. First, notice that the mass of households $\lambda_{i}(a,z)$ depends if a function of the asset policy function $g_{ij}(a,z)$ and the choice probability $\pi_{ij}(a,z)$. Represent this function as
-\begin{align}
-%why does this only dependon i,j%
-\lambda_{i}(a,z) = f_{\lambda}(\pi_{ij}(a,z),g_{ij}(a,z)),
-\end{align}
-Then we can express how the distribution changes
-\begin{align}
-\frac{\partial \lambda_{i}(a,z)/\lambda_{i}(a,z)}{\partial d_{ij}/d_{ij}}  = \frac{\partial f_{\lambda, 1} / f_{\lambda} }{\partial d_{ij}/d_{ij}} \frac{\partial \pi_{ij}(a,z)}{\partial d_{ij}} +
-\frac{\partial f_{\lambda, 2} / f_{\lambda} }{\partial d_{ij}/d_{ij}} \frac{\partial g_{ij}(a,z)}{\partial d_{ij}}
-\label{eq:apx-distribution-margin}
-\end{align}
-which emphasizes the point that how the distribution changes is fundamentally interlinked to the behaviorial responses of households through how they substitute across products and how they substitute across time.
-
 \section{The Welfare Gains from Trade}
 
 This section derives the gains from a permanent change in trade costs, across steady states. Like the discussion above, the idea here is that I'm thinking a situation where the change is small and there is an immediate jump to the new steady state. Unlike the trade elasticity, I'm going to take total derivatives that will encompass general equilibrium changes in wages and interest rates.
@@ -749,12 +915,12 @@ First, I'm going to focus on country $i$ and study a change in trade costs $d_{i
 
 Second, To compute how social welfare changes, I focus on a utilitarian social welfare function (Pareto weights across households, within a country, are the same):
 \begin{align}
-W_{i} = \sum_{a,z} v_{i}(a,z)\lambda_{i}(a,z)
+W_{i} = \int_{a}\int_{z}  v_{i}(a,z)\lambda_{i}(a,z)
 \label{eq:apx-social-welfare}
 \end{align}
 Then the total change in total welfare is
 \begin{align}
-\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = \sum_{a,z} \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} \lambda_{i}(a,z).
+\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = \int_{a}\int_{z}  \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} \lambda_{i}(a,z).
 \label{eq:apx-social-welfare-change}
 \end{align}
 What illustrates is that the gains from trade come through two forces. The first component reflects changes in household-level welfare. So conditional on a distribution of households across states, are households better or worse off. The second component is about reallocation, i.e., if|at the old $v$'s|does the distribution change so that social welfare gets better or worse. The change in social welfare is then the weighted average of these two forces with the weights being those at the initial distribution.
@@ -842,7 +1008,7 @@ Let me walk through the interpretation of each term:
 \begin{itemize}
 \item $-\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}}$ is the standard gains from trade term reflecting the idea that gains work through changes in expenditures across different varieties. With static logit, this is exactly the ACR formula.
 
-\item $u'(c_{ii}(a,z))\frac{\partial R}{\partial d_{ij} / d_{ij}}a$ or what I'm labeling as $\gamma_{ii}(a,z)$ is what I would call how trade facilitates more risk sharing. I think as trade costs decline the amount of resources available for risk sharing expands and this changes the interest rate. Which way does it go?
+\item $u'(c_{ii}(a,z))\frac{\partial R}{\partial d_{ij} / d_{ij}}a$ or what I'm labeling as $\gamma_{ii}(a,z)$ is what I would call how trade facilitates more asset trade. I think as trade costs decline the amount of resources available for asset trade expands and this changes the interest rate. Which way does it go?
 
 \item The third term which I'm labeling as $\delta_{ii}(a,z)$  is the Euler equation for assets. Honestly, it's pretty cool the way this shows up here. The idea is that if the household is unconstrained, then this term is zero as there is no gain through changes in asset behavior. Asset holdings are already chosen optimally so that margins are equated, thus, on the margin any benefit of lower trade costs on changes in asset behavior is zero. Essentially an application of the Envelope Theorem.
 
@@ -857,12 +1023,12 @@ Iterating on (\ref{eq:apx-welfare-vterms}) into the future, the gains from trade
 \frac{\partial v_i(a, z)}{\partial d_{ij} / d_{ij}} = \mathbb{E} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a_{t},z_{t}) / \pi_{ii}(a_{t},z_{t})}{\mathrm{d}d_{ij} / d_{ij}} + \gamma_{ii}(a_{t},z_{t}) + \delta_{ii}(a_{t},z_{t}) \bigg \}
 \label{eq:apx-welfare-v}
 \end{align}
-Where the first component is the expected discounted gains from substitution, gains from risk sharing and the relaxation of borrowing constraints. Combining (\ref{eq:apx-welfare-v}) and (\ref{eq:apx-social-welfare-change}) yields the following proposition for the gains from trade
+Where the first component is the expected discounted gains from substitution, gains from asset trade and the relaxation of borrowing constraints. Combining (\ref{eq:apx-welfare-v}) and (\ref{eq:apx-social-welfare-change}) yields the following proposition for the gains from trade
 
 \begin{prp}[\textbf{The Welfare Gains from Trade}] \label{apx-prp:gains-trade} The welfare gains from trade are given by
 {\footnotesize
 \begin{align}
-\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = \sum_{a,z} \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} \lambda_{i}(a,z).
+\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = \int_{a}\int_{z}  \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} \lambda_{i}(a,z).
 \nonumber
 \end{align}
 }which reflects the change in household level gains and how the distribution of households changes. Household level gains are given by
@@ -875,7 +1041,7 @@ Where the first component is the expected discounted gains from substitution, ga
 \begin{itemize}
 \item Gains from substitution: $-\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}}$.
 
-\item Gains from risk sharing: $\gamma_{ij}(a,z) = u'(c_{ii}(a,z))\frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}a$
+\item Gains from asset trade: $\gamma_{ij}(a,z) = u'(c_{ii}(a,z))\frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}a$
 
 \item Gains from relaxing borrowing constraints:
 \begin{align}
@@ -885,48 +1051,6 @@ Where the first component is the expected discounted gains from substitution, ga
 \end{itemize}
 \end{prp}
 Proposition \ref{apx-prp:gains-trade} nests several interesting cases that connect with the literature and further illustrate the mechanics.
-
-\subsection{Static, Log Preferences}
-
-The first is the non-assets, static, log preference case. This delivers the benchmark gains from trade formula in \citet{arkolakis2012new}. The first step is to derive the trade elasticity. A couple observations are necessary.
-\begin{itemize}
-\item From the formula for the intensive margin elasticity (\ref{eq:apx-intensive-margin}) and because there is no asset choice then $\theta_{ij}(z)^I$ is zero, so any change in prices are fully offset by a change in consumption.
-\item Second, because there is no asset choice and household level shocks are exogenously specified, then the distribution elasticity is zero.
-
-\item Third, the choice probabilities become independent of household level productivity, so
-\begin{align}
-\nonumber \pi_{ij}(z) &= \exp \left( \frac{ \log\left( \frac{w_{i}z}{p_{ij}} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  \log\left( \frac{w_{i}z}{p_{ij'}} \right) }{\sigma_{\epsilon}} \right) \\
-\nonumber \\
-\nonumber \pi_{ij} &= \exp \left( \frac{ -\log\left( p_{ij} \right) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{  -\log\left( p_{ij'} \right) }{\sigma_{\epsilon}} \right).
-\end{align}
-And thus, the $\Phi_{i}(z)$ showing up in the extensive margin calculation (\ref{eq:apx-extensive-margin}) is independent of $z$.
-
-\item Then the final observation is that the partial derivative of the $i,j$ choice value function $\frac{\partial v_{ij}(z)}{\partial d_{ij}/d_{ij}} = -1$ and zero everywhere else.
-\end{itemize}
-Then following Proposition \ref{apx-prp:GET} and (\ref{eq:apx-trade-elasticity}) the trade elasticity is
-\begin{align}
-\nonumber
-\theta_{ij} =& \sum_{z} \bigg \{ 0 + -\frac{1}{\sigma_{\epsilon}} - \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} \ + 0 \bigg \}\omega_{ij}(z) - \sum_{z} \bigg \{  0 - \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} + 0 \bigg \}\omega_{ii}(z) \\
-\nonumber \\
-\theta =& -\frac{1}{\sigma_{\epsilon}} \nonumber
-\end{align}
-where the second line follows because the terms inside the brackets are independent of $z$ and thus can be pulled outside and the weights $\omega_{ij}(z)$ sum to one. What this means is the trade elasticity is constant and parameterized by the dispersion in tastes. I think the feature delivering this is that the elasticities at the micro-level are constant, so then the aggregate elasticity simply follows because I don't need to say anything about what is going on with the weights.
-
-Now combining these observations and mechanically following Proposition \ref{apx-prp:gains-trade} the gains from trade are
-\begin{align}
-\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = -\frac{1}{\theta} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}
-\end{align}.
-which is exactly the \citet{arkolakis2012new} formula. The change in welfare gains from equal the inverse of trade elasticity multiplied by how much the home trade share changes.
-
-\begin{corr}[\textbf{ACR 2012}] In the static heterogenous agent trade model the trade elasticity is
-\begin{align}
-\theta = -\frac{1}{\sigma_{\epsilon}} \nonumber
-\end{align}
-and the gains from trade are given by
-\begin{align}
-\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = -\frac{1}{\theta} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}.
-\end{align}
-\end{corr}
 
 \subsection{Dynamic, Log Preferences}
 
@@ -970,9 +1094,7 @@ and thus the asset choice is independent from the variety choice $j$.
 
 \textbf{Step 2: Micro Trade Elasticities.} I'm going to be super systematic about this:
 \begin{itemize}
-\item Starting with (\ref{eq:apx-intensive-margin}) and because the asset choice is independent of prices,  the intensive margin elasticity $\theta_{ij}(a,z)^I$ is zero. This is not obvious actually because of how prices would enter into $v_{i}$. I do think one can expand out and completely separate out the effects of prices.
-
-\item The distribution elasticity is zero from (\ref{eq:apx-distribution-margin}) because assets are not responding to changes in prices and what about $\pi$s (but these are independent of $a$ and $z$ so there is no differential change? This is not clear from formula. Need to articulate this better.
+\item Starting with (\ref{eq:apx-intensive-margin}) and because the asset choice is independent of prices, the intensive margin elasticity $\theta_{ij}(a,z)^I$ is -1 and then this cancels with the one on the outside coming from price effects. 
 
 \item The extensive margin elasticity is:
 \begin{align}
@@ -1003,18 +1125,18 @@ and note that we can relabel $p_{ij}c_{ij}(a,z) = x(a,z)$ given (\ref{eq:apx-sam
 \end{align}
 which are independent of source $j$. This is the second important observation that will facilitate aggregation.
 
-\textbf{Step 4: The Trade Elasticity.} Now just mechanically follow Proposition \ref{apx-prp:GET}:
+\textbf{Step 4: The Trade Elasticity.} Now just mechanically follow Proposition \ref{prp:GET}:
 \begin{align}
 \nonumber
-\theta_{ij} =& \sum_{a,z} \bigg \{ 0 + -\frac{1}{\sigma_{\epsilon}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} \ + 0 \bigg \}\omega_{i}(a,z) \\
+\theta_{ij} =& \int_{a,z} \bigg \{  -\frac{1}{\sigma_{\epsilon}} + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} \  \bigg \}\omega_{i}(a,z) \\
 \nonumber \\
-& - \sum_{z} \bigg \{  0 + \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}} + 0 \bigg \}\omega_{i}(a,z) \\
+& - \int_{a,z} \bigg \{   \beta \mathbb{E} \frac{\partial v_{i}(a',z')}{\partial d_{ij}/d_{ij}} -  \frac{\partial \Phi_{i} / \Phi_{i}}{\partial d_{ij}/d_{ij}}  \bigg \}\omega_{i}(a,z) \\
 \nonumber \\
 = & -\frac{1}{\sigma_{\epsilon}} \nonumber
 \end{align}
 where the last line follows because the $a,z$ terms in the micro level trade elasticities exactly cancel given that expenditure weights are source independent. And the aggregate trade elasticity is constant and parameterized by the dispersion in tastes.
 
-\textbf{Step 5: The Grains From Trade.} Then from here I can just follow Proposition \ref{apx-prp:gains-trade}. First the individual gains are
+\textbf{Step 5: The Grains From Trade.} Then from here I can just follow Proposition \ref{prp:gains-trade}. First the individual gains are
 {\footnotesize
 \begin{align}
 \nonumber
@@ -1023,7 +1145,7 @@ where the last line follows because the $a,z$ terms in the micro level trade ela
 \end{align}
 }where the first term is exactly in the static model except for the discounting bit. But what facilitates this is that the choice probabilities are independent of $a,z$ and it can be pulled out of the expected discounted sum stuff. Then the subsequent terms take a slightly cleaner form:
 \begin{itemize}
-\item Gains from risk sharing: $\gamma_{ij}(a,z) = \frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}\frac{a}{c_{ii}(a,z)}$
+\item Gains from asset trade: $\gamma_{ij}(a,z) = \frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}\frac{a}{c_{ii}(a,z)}$
 \item Gains from relaxing borrowing constraints:
 \begin{align}
 \nonumber
@@ -1032,19 +1154,38 @@ where the last line follows because the $a,z$ terms in the micro level trade ela
 \end{itemize}
 One final step. Claim is that because the asset policy function $g$ is independent of the price of varieties, then any change in trade costs will not affect $R$ and thus the total derivative $\frac{\mathrm{d} R}{\mathrm{d} d_{ij} / d_{ij}}$ equals zero and then the total derivative $\frac{\mathrm{d} g_{ii}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}$ on the asset policy function is zero. And then $\frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}$ is zero as well.
 
-So there is a super strong result:
-\begin{corr}[\textbf{Separation of Trade and Heterogeneity}] In the dynamic heterogenous agent trade model the trade elasticity is
+\begin{corr}[\textbf{Separation of Trade and Heterogeneity}] In the dynamic, heterogenous agent trade model where preferences are logarithmic over the physical commodity
 \begin{align}
-\theta = -\frac{1}{\sigma_{\epsilon}} \nonumber
+\tilde{u}( c_{ij,t} ) =  \log(c_{ij,t}) + \epsilon_{j,t}, \nonumber
 \end{align}
-and the gains from trade are given by
+the trade elasticity is
 \begin{align}
-\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = -\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}.
+\theta = -\frac{1}{\sigma_{\epsilon}}, \nonumber
 \end{align}
+and is independent of the household heterogeneity. Ant the welfare gains from trade are
+\begin{align}
+\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = -\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}. \nonumber
+\end{align}
+and is (i) independent of the household heterogeneity and (ii) summarized by the trade elasticity and the change in the home choice probability.
 \end{corr}
 
+To visualize some of this on the computer, Figures (\ref{fig:log-elasticity}) and (\ref{fig:log-micro-trade}) plot elasticities by state and trade shares. No short-cuts are involved in this calculation, the same exact algorithm is applied. The result is apparent, with log preference, trade elasticities and trade shares become independent of what is going on with the household and, thus, there is pure separation between them. 
 
-Should check this stuff on computer.
+\afterpage{
+\clearpage
+
+\begin{figure}[!t]
+\centering{\includegraphics[scale = 0.57]{./figures/micro-elasticity-log.pdf}}
+\caption{Log Preferences, Trade Elasticities, $-\theta_{ij}(a,z)$}\label{fig:log-elasticity}
+\end{figure}
+
+
+\begin{figure}[!t]
+\centering{\includegraphics[scale = 0.57]{./figures/trade-share-log.pdf}}
+\caption{Log Preferences, Trade, $M_{ij}(a,z) / M_{ii}(a,z)$ }\label{fig:log-micro-trade}
+\end{figure}
+
+}
 
 
 
@@ -1133,183 +1274,6 @@ Tv_{ij}(a, z) = u(g_{c,ij}(a,z)) + \beta \mathrm{E}\left[ v(g_{a,ij}(a,z), z') \
 %\item[\textbf{6.}] Given $v_{ij}(a,z)$ computed from (\ref{eq:v_inversion}), now compute choice probabilities using (\ref{eq:choice-prob}) for each $(a,z)$ combination.
 \end{itemize}
 
-\newpage
-
-\section{Appendix: The Planning Problem}\label{sec:apx-planner}
-
-As above, I focus on a utilitarian social welfare function so Pareto weights across households:
-\begin{align}
-W = \sum_{t=0}^{\infty} \sum_{i} \sum_{z} \beta^{t} v_{i}(z,t) L_{i}\lambda_{i}(z,t),
-\label{eq:apx-social-welfare}
-\end{align}
-and here $v_i$ a households utility in country $i$. Now, I'm going to place the social welfare function in sequence space and then unpack the benefits from the preference shock in the following way:
-\begin{align}
-W = E\sum_{t=0}^{\infty}  \sum_{i} \sum_{j} \sum\limits_{z}  \beta^{t} \  \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t)
-\label{eq:apx-social-welfare-2}
-\end{align}
-so the inner term is period utility given the associated consumption allocation $c_{ij}$ and then the expected value of the preference shock conditional on the choice probability $\pi_{ij}(z,t)$. This inner term is then weighted by the number of households that receive that utility, i.e. the choice probability times the mass of households with shock $z$ at date $t$. The sum across $j$ adds up all households in country $i$. Then the sum across $i$ reflects that this is global welfare.
-
-One more point about the inner term in (\ref{eq:apx-social-welfare-2}), my claim is that with the Type 1 extreme value shocks:
-\begin{align}
-\mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] = -\sigma_{\epsilon} \log \pi_{ij}(z,t)
-\end{align}
-where this is like the standard ``selection correction'' where if $\pi$ becomes smaller, then this value becomes larger meaning only those with the largest relative shocks are chosen and higher utility for those, conditional on being selected, is felt.
-
-Given this formulation, the planner then does the following: he is choosing consumption and choice probabilities for all country pair combinations, state by state, for the infinite future. The Lagrangian associated with the Planning Problem is:
-\begin{align}
-\mathcal{L}  = & \sum_{t=0}^{\infty}   \sum_{i} \sum_{j} \sum\limits_{z} \beta^{t} \  \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t), \\
-\nonumber \\
-&+ \sum_{t=0}^{\infty} \sum_{i} \beta^{t} \chi_{i}(t) \bigg \{ Y_{it} \  - \ \sum_{j} \sum_{z} d_{ji} c_{ji}(z, t) \pi_{ji}(z,t) L_{j}\lambda_{j}(z, t) \bigg \} \nonumber \\
-\nonumber \\
-&+ \sum_{t=0}^{\infty} \sum_{i} \sum\limits_{z} \beta^{t} \chi_{2i}(z,t) \bigg \{1 - \sum_{j}\pi_{ij}(z,t) \bigg \} L_{i} \lambda_{i}(z, t) \nonumber
-\label{eq:planning-problem}
-\end{align}
-where the first term is the objective function, the second line is the resource constraint which says that output from country $i$ must equal the consumption of commodity $i$ globally including the transport costs. Then the third line is there to ensure that choice probabilities are probabilities and sum to one. The final thing I'm doing is that I'm scaling the multipliers by $\beta^t$ so that the algebra is a bit easier.
-
-Then associated with this problem are two first order conditions. The first one is consumption in $i$ with respect to variety $j$ so:
-\begin{align}
-\frac{\partial \mathcal{L} }{\partial c_{ij}(z, t)} &=  \beta^{t} u'(c_{ij}(z, t)) \pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) - \beta^{t} \chi_{j}(t) d_{ij} \pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) = 0 \\
-\nonumber \\
-& \Rightarrow \ \ u'(c_{ij}(z, t) ) = \chi_{j}(t) d_{ij},
-\end{align}
-which says that the marginal utility of consumption of ($i$ consuming variety $j$) should equal it's costs. What is this cost, it's the $j$'s multiplier adjusted by the trade cost $d_{ij}$ which gives this ``price'' like interpretation of the multiplier, it's like the shadow value of commodity $j$ which reflects how scarce or not the commodity is then multiplied by the transport costs.
-
-This first order condition has several implications. First, because the right hand size is independent of $z$, then $u'(c_{ij}(z, t)) = u'(c_{ij}(z', t)) = u'(\bar c_{ij}(t))$ for all $z, z'$ combinations. So within choice, the marginal utility of consumption is equated.
-
-Second, across variety choice, the ratio of marginal utility across variety $j$ is:
-\begin{align}
-\frac{u'(\bar c_{ij}(t))}{u'(\bar c_{ij'}(t))} = \frac{\chi_{j}(t) d_{ij}}{\chi_{j'}(t) d_{ij'}}
-\end{align}
-which says that consumption differences relate to the ratio of the multipliers on the resource constraint and the trade costs. This again gives the price like interpretation of the multipliers, i.e. that differences in the ratio of the marginal utility of consumption reflect relative scarcity or the shadow values.
-
-The second first order condition is with respect to the choice probabilities. So
-\begin{align}
-\frac{\partial \mathcal{L} }{\partial \pi_{ij}(z, t)} \ = \ & \beta^{t}\bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \}L_{i} \lambda_{i}(z, t) + \beta^{t}\frac{\partial \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ]}{\partial \pi_{ij}}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) \nonumber \\
-\nonumber \\
-& - \beta^{t} \chi_{j}(t) d_{ij} c_{ij}(z, t) L_{i}\lambda_{i}(z, t) - \beta^{t} \chi_{2i}(z,t)\pi_{ij}(z,t)L_{i} \lambda_{i}(z, t)  = 0
-\end{align}
-where the first two terms are the marginal, social benefit of changing the choice probabilities. This reflects how utility shifts by adding more households to that choice and then how the expected preference shock changes. The last two terms reflect the costs of changing the choice probabilities which are the resources to provide the additional consumption and the cost of moving households out of other choices which is what the multiplier $\chi_{2i}(z,t)$ represents.
-
-Further simplifying gives:
-\begin{align}
-\frac{\partial \mathcal{L} }{\partial c_{ij}(z, t)} \ = \ &  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] + \frac{\partial \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ]}{\partial \pi_{ij}}  - \chi_{j}(t) d_{ij} c_{ij}(z, t)  - \chi_{2i}(z,t)  = 0.
-\end{align}
-Then inserting the observations made above about the Type 1 extreme value distribution and then connecting things with the consumption allocation one has
-\begin{align}
-u(c_{ij}(t) ) -\sigma_{\epsilon} \log \pi_{ij}(z,t) - \sigma_{\epsilon} - u'(c_{ij}(t) )c_{ij}(t)   = \chi_{2i}(z,t).
-\end{align}
-Then some algebra gets toward a closed-form expression for the choice probability
-\begin{align}
--\sigma_{\epsilon} \log \pi_{ij}(z,t) = -u(c_{ij}(t)  ) + u'(c_{ij}(t) )c_{ij}(t)  + \sigma_{\epsilon} + \chi_{2i}(z,t), \\
-\nonumber \\
-\pi_{ij}(z,t) = \exp \left( \frac{u(c_{ij}(t)  ) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} + 1 \right) \bigg / \exp \left( \chi_{2i}(z,t) / \sigma_{\epsilon} \right).
-\end{align}
-The choice probabilities must sum to one, so we can set the multiplier so
-\begin{align}
-\exp \left( \chi_{2i}(z,t) / \sigma_{\epsilon} \right) = \sum_{j'}\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} + 1 \right),
-\end{align}
-which implies
-\begin{align}
-\chi_{2i}(z,t) = \sigma_{\epsilon}  \log \bigg \{ \sum_{j'}\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} + 1 \right) \bigg \},
-\end{align}
-Notice how this multiplier is looking like the expected utility term when prior to the realization to the preference shock. Then the choice probability is
-\begin{align}
-\pi_{ij}(t) =\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}}\right) \bigg / \sum_{j'}\exp \left( \frac{u(c_{ij'}(t)) - u'(c_{ij'}(t))c_{ij'}(t)}{\sigma_{\epsilon}} \right),
-\end{align}
-which is independent of $z$. This has the standard Type 1 shape, but the inner most term says that the choice probability should reflect the ``net'' social benefit of having someone chose that good. The net part is the utility a household receives net of the cost of providing that amount of the consumption. And the cost is, well, $c$ converted into utils which is what the marginal utility bit is doing.
-
-\textbf{The Gains from Trade.} I'm going to do is compute the social gain to a change in trade costs. I'm going to express this in the following way with social welfare depending directly upon the trade costs $d$, and then indirectly as the allocations of $c$ and $\pi$ depend upon $d$ as well.
-\begin{align}
-W(d, c_{ij}(d), \pi_{ij}(d))
-\end{align}
-And then totally differentiate social welfare, so
-\begin{align}
-\frac{\mathrm{d} W}{\mathrm{d}d} = \frac{\partial W}{\partial d} + \frac{\partial W}{\partial c_{ij}(d)}\frac{\partial c_{ij}(d)}{\partial d} + \frac{\partial W}{\partial \pi_{ij}(d)}\frac{\partial \pi_{ij}(d)}{\partial d}
-\end{align}
-and then I invoke the Envelope Theorem. What this means here is that I evaluate this derivative at the optimal allocation. But the optimal allocation is...well optimal, so on the margin any gain from changing consumption or choice probabilities is zero. So the indirect effects (at the optimal allocation) are zero. Thus only direct effects matter. Then computing the direct effect gives
-\begin{align}
-\partial W = - & \sum_{t=0}^{\infty} \beta^{t} \ \chi_{j}(t) c_{ij}(t) \pi_{ij}(t) L_{i} \partial d_{ij} \\
-\nonumber \\
-=& - \sum_{t=0}^{\infty} \beta^{t} \ u'(c_{ij}(t)) c_{ij}(t) \pi_{ij}(t) L_{i} \partial d_{ij} / d_{ij}
-\end{align}
-where the last line inserts the relationship between the multiplier and the marginal utility of consumption. Now this thing says that the change in welfare equals essentially how much the resource constraint is relaxed by the change in trade costs. So it's like the $c_{ij}(t) \pi_{ij}(t) L_{i}$ is how much stuff people in $i$ get from $g$ and $\partial d_{ij} / d_{ij}$ this is perturbing it by the percent change in trade costs, then this bit $u'(c_{ij}(t))$ converts it into utils.
-
-\textbf{The Elasticity of Trade.} This is a bit non-standard from my perspective, but here is my argument. Claim \#1: The intensive margin trade elastic is zero, i.e. any change in $d_{ij}$ results in $p_{ij}c_{ij}$ to zero, where the $p$'s would be reflecting the correct multipliers. So I don't need to mess with this.
-
-Claim \#2: Then all I need to compute is the extensive margin elasticity. So I'm going to note that
-\begin{align}
-\frac{\partial \pi_{ij} / \pi_{ij}}{\partial d_{ij} / d_{ij}} =& \frac{1}{\sigma_{\epsilon}} \bigg [ u'(c_{ij}(t)\frac{\partial c_{ij}(t)}{\partial d_{ij}/ d_{ij}} - u''(c_{ij}(t)\frac{\partial c_{ij}(t)}{\partial d_{ij}/ d_{ij}}c_{ij}(t) - u'(c_{ij}(t)\frac{\partial c_{ij}(t)}{\partial d_{ij}/ d_{ij}} \bigg] - \frac{\partial \Phi_{i}(t) /\Phi_i(t)}{\partial d_{ij}/ d_{ij}} \\
-\nonumber \\
-=& \frac{-1}{\sigma_{\epsilon}} \bigg [ u''(c_{ij}(t)\frac{\partial c_{ij}(t)}{\partial d_{ij}/ d_{ij}}c_{ij}(t) \bigg] - \frac{\partial \Phi_{i}(t) /\Phi_i(t)}{\partial d_{ij}/ d_{ij}}
-\end{align}
-which the first line follows from the quotient rule and where $\Phi_{i}(t)$ is the part of the denominator in the choice probability. Recall the trade elasticity is relative to own trade so
-\begin{align}
-\frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}} = - \frac{\partial \Phi_{i}(t) /\Phi_i(t)}{\partial d_{ij}/ d_{ij}}
-\end{align}
-Then using my Generalized Trade Elasticity formula, I have that:
-\begin{align}
-\theta_{ij} = \theta_{ij}^{E} = \frac{-1}{\sigma_{\epsilon}} \bigg [ u''(c_{ij}(t)\frac{\partial c_{ij}(t)}{\partial d_{ij}/ d_{ij}}c_{ij}(t) \bigg]
-\end{align}
-Then here is what is interesting. I mention this fact below
-\begin{align}
-u'(c_{ij}(t) ) = \chi_{j}(t) d_{ij} \ \ \Rightarrow \ \ u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} = \chi_{j}(t)d_{ij}
-\end{align}
-so this means that the trade elasticity is:
-\begin{align}
-\theta_{ij} =  \frac{-1}{\sigma_{\epsilon}} \bigg [ u'(c_{ij}(t)) c_{ij}(t) \bigg]
-\end{align}
-where here you can already see the ``standard result'' with log preferences that the trade elasticity is independent of $i,j$ and is the one over the dispersion parameter like in \citet{eaton2002technology}. The next interesting piece is if this is combined with the gains from trade formula which is (in a stationary setting)
-\begin{align}
-\frac{\partial W}{\partial d_{ij} / d_ij} =  \frac{-1}{1-\beta} \theta_{ij} \pi_{ij}L_{i},
-\end{align}
-in other words, the gains from trade are how many people are buying $i,j$ times the trade elasticity.
-
-\begin{prp}[\textbf{The Efficient Allocation and the Gains from Trade}] The allocation that satisfies the Centralized Planning Problem is characterized by consumption allocations satisfying:
-\begin{align}
-u'(c_{ij}(t) ) = \chi_{j}(t) d_{ij} \nonumber
-\end{align}
-where $\chi_{j}(t)$ is the shadow price of variety $j$. The choice probabilities are
-\begin{align}
-\pi_{ij}(t) =\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}}\right) \bigg / \sum_{j'}\exp \left( \frac{u(c_{ij'}(t)) - u'(c_{ij'}(t))c_{ij'}(t)}{\sigma_{\epsilon}} \right)
-\nonumber
-\end{align}
-and the gains from trade are given by
-\begin{align}
-\frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times \ u'(c_{ij}(t)) c_{ij}(t) \pi_{ij}(t) L_{i}.
-\nonumber
-\end{align}
-\end{prp}
-The one issue with this last result is that it's a bit opaque relative to the other welfare results that I derived. Let me connect them. So per the arguments above, I can write the ex-ante utility  and inserting the allocations associated with the planner as
-\begin{align}
-v_i(t) = -\sigma_{\epsilon} \log \pi_{ii} + u(c_{ii}(t))
-\end{align}
-and then
-\begin{align}
-\frac{\partial v_i(t)}{\partial d_{ij} / d_{ij}} = -\sigma_{\epsilon} \frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}}
-\end{align}
-so the gains only work through the home share. Notice this holds if this is a global change or not. Now this elasticity is
-\begin{align}
-\frac{\partial \pi_{ii} / \pi_{ii}}{\partial d_{ij} / d_{ij}} =& -\frac{\pi_{ij}}{\sigma_{\epsilon}} \bigg \{ u'(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} - \bigg [u'(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} + u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}}c_{ij}(t) \bigg ] \bigg \} \\
-\nonumber \\
-=& -\frac{\pi_{ij}}{\sigma_{\epsilon}}u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}}c_{ij}(t)
-\end{align}
-Then notice the following from the consumption allocation that
-\begin{align}
-u'(c_{ij}(t) ) = \chi_{j}(t) d_{ij} \ \ \Rightarrow \ \ u''(c_{ij}(t))\frac{\partial c_{ij}(t)}{\partial d_{ij} / d_{ij}} = \chi_{j}(t)d_{ij}
-\end{align}
-where I'm just differentiating both sides by $d_{ij}$ and the dividing through by $d$ to make an elasticity. Then this implies that
-\begin{align}
-\frac{\partial \pi_{ii}(t) / \pi_{ii}(t)}{\partial d_{ij} / d_{ij}} =& \frac{\pi_{ij}(t)}{\sigma_{\epsilon}}u'(c_{ij}(t))c_{ij}(t)
-\end{align}
-and then
-\begin{align}
-\frac{\partial v_i(t)}{\partial d_{ij} / d_{ij}} = \pi_{ij}u'(c_{ij}(t))c_{ij}(t)
-\end{align}
-which means that the total change in social welfare equals
-\begin{align}
-\frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{\partial W_i}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times u'(c_{ij}(t)) c_{ij}(t) \pi_{ij}(t) L_i
-\end{align}
-and I'm done.
 
 
 \newpage
