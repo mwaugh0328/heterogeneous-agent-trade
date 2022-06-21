@@ -32,7 +32,7 @@ using LoopVectorization
      Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
     TFP::Array{Float64, 1} = ones(Ncntry)
     L::Array{Float64, 1} = ones(Ncntry)
-    d::Array{Float64, 2} = ones(Ncntry,Ncntry)wind
+    d::Array{Float64, 2} = ones(Ncntry,Ncntry)
 end
 
 

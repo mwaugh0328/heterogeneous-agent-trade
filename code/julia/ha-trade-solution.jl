@@ -16,8 +16,8 @@ end
 function world_equillibrium(x, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
 
-    W = x[1:Ncntry]
-    R = x[Ncntry+1:end]
+    W = [1.0; x[1:Ncntry-1]]
+    R = x[Ncntry:end]
 
     Y, tradeflows, A_demand = world_equillibrium(R, W, model_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
@@ -28,7 +28,7 @@ function world_equillibrium(x, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
 
     asset_market = A_demand
 
-    return [asset_market; goods_market]
+    return [asset_market; goods_market[2:end]]
 
 end
 
@@ -46,6 +46,7 @@ function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
     Y = similar(W)
     A_demand = similar(R)
     tradeflows = Array{Float64}(undef,Ncntry,Ncntry)
+    tradeshare = Array{Float64}(undef,Ncntry,Ncntry)
 
     hh = Array{household{Float64}}(undef,Ncntry)
     dist = Array{distribution{Float64}}(undef,Ncntry)
@@ -68,6 +69,8 @@ function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
         Y[cntry] = output.production
 
         tradeflows[cntry, :] = tradestats.bilateral_imports
+
+        tradeshare[cntry, :] = tradestats.bilateral_imports ./ output.PC
         # the way I read this is fix a row, then across the columns this is how much cntry in position cntry
         # is buying/importing from of the other commodities. 
 
@@ -75,7 +78,7 @@ function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
 
     end
 
-return Y, tradeflows, A_demand, hh, dist
+return Y, tradeflows, A_demand, tradeshare, hh, dist
 
 end
 
