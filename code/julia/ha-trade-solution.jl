@@ -13,6 +13,29 @@ end
 # # ##########################################################################
 # # # functions used to find a solution
 
+function world_equillibrium(x, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
+
+    W = x[1:Ncntry]
+    R = x[Ncntry+1:end]
+
+    Y, tradeflows, A_demand = world_equillibrium(R, W, model_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+        hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
+
+    goods_market = Y .- vec(sum(tradeflows, dims = 1))
+    # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
+    # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
+
+    asset_market = A_demand
+
+    return [asset_market; goods_market]
+
+end
+
+# ##########################################################################
+# ##########################################################################
+
+
 function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
 
@@ -45,6 +68,8 @@ function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
         Y[cntry] = output.production
 
         tradeflows[cntry, :] = tradestats.bilateral_imports
+        # the way I read this is fix a row, then across the columns this is how much cntry in position cntry
+        # is buying/importing from of the other commodities. 
 
         A_demand[cntry] = output.Aprime
 
@@ -222,9 +247,15 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
         err = vec_max(Kgc, gc)
 
-        err < tol && break
+        if err < tol
+
+            #println(err)
+
+            break
+        end
+
  
-        copy!(gc,Kgc)
+        copy!(gc, Kgc)
 
         copy!(v,Tv)
 

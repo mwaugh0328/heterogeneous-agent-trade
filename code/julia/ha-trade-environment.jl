@@ -31,7 +31,8 @@ using LoopVectorization
     StepRangeLen{Float64, Base.TwicePrecision{Float64},
      Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
     TFP::Array{Float64, 1} = ones(Ncntry)
-    d::Array{Float64, 2} = ones(Ncntry,Ncntry)
+    L::Array{Float64, 1} = ones(Ncntry)
+    d::Array{Float64, 2} = ones(Ncntry,Ncntry)wind
 end
 
 
@@ -113,7 +114,7 @@ function coleman_operator(policy, R, W, p, model_params)
     # Now I want to infer the value function given updated policy
     Tv = copy(v)
 
-    make_Tv_upwind!(Tv, Kg, aprime, model_params)
+    make_Tv!(Tv, v, Kg, aprime, model_params)
     # then Tv = u(g(a,z)) + β*EV
 
     return vcat(Kg, Tv)
@@ -170,7 +171,7 @@ function coleman_operator(c, v, R, W, p, model_params)
     # Now I want to infer the value function given updated policy
     Tv = copy(v)
 
-    make_Tv_upwind!(Tv, Kg, aprime, model_params)
+    make_Tv!(Tv, v, Kg, aprime, model_params)
     # then Tv = u(g(a,z)) + β*EV
     # this function is the bottle neck...worth investing here.
     # why so much memory? 
@@ -178,6 +179,74 @@ function coleman_operator(c, v, R, W, p, model_params)
     return Kg, Tv, aprime
 
 end
+
+##########################################################################
+##########################################################################
+
+
+function make_Tv!(Tv, v, Kg, asset_policy, model_params)
+    # upwind method that continously updates v as 
+    # EV is evaluated....
+
+    @unpack Na, Nshocks, Ncntry, mc, agrid, β, γ, σϵ = model_params
+
+    Ev = 0.0
+
+    @inbounds @views for cntry = 1:Ncntry
+        # fix the country
+
+        for shk = 1:Nshocks
+
+            for ast = 1:Na
+            
+            # here, given aprime, figure out the position
+            # appears to by 2x faster not too use function
+
+                aprime_h = searchsortedfirst(agrid, asset_policy[ast, shk, cntry])
+                #searchsortedfirst.(Ref(agrid), asset_policy[:,shk, cntry])
+                # broadcaseted version
+            
+                aprime_l = max(aprime_h - 1, 1)
+            
+                p = 1.0 - (asset_policy[ast, shk, cntry] - agrid[aprime_l]) / (agrid[aprime_h] - agrid[aprime_l])
+        
+                if isnan(p)
+                    p = 1.0
+                end
+
+            # now work out what happens tomorrow,
+            # no need to loop through aprime (we know the position)
+            # or country as Ev over variety is the log sum thing
+
+                for shkprime = 1:Nshocks
+                    # work through each shock state tommorow to construct
+                    # EV
+                    
+                    Ev += ( p )*mc.p[shk, shkprime]*log_sum_v( v[aprime_l, shkprime, :] , σϵ, Ncntry)
+                    # so Ev | states today = transition to aprime (p), transition to z',
+                    # then multiplies by v tommorow. v tommorow is the log sum thing across different 
+                    # options
+                
+                    Ev += ( 1.0 - p )*mc.p[shk, shkprime]*log_sum_v( v[aprime_h, shkprime, :] , σϵ, Ncntry)
+                    # note the += here, so we are accumulting this different 
+                    # posibilities
+
+                end
+
+                Tv[ast, shk, cntry] = utility_fast(Kg[ast, shk, cntry], γ) + β*Ev
+
+                #Then the vj = uj + βEV
+
+                Ev = 0.0
+
+            end
+
+        end
+
+    end
+
+end
+
 
 ##########################################################################
 ##########################################################################
