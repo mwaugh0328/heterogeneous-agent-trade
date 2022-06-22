@@ -5,10 +5,17 @@ include("static-trade-environment.jl")
 using MINPACK
 using MAT
 
+####################################################################################
+# brings in EK data 
 file = matopen("../../ek-data/ek-output.mat")
-tradeshare = read(file, "tssdmat")
+tradesharedata = read(file, "tssdmat")'
+# I set my model up so row is an importer, column is exporter and 
+# that accross columns should sum to one this is the oppisite so flip
 
-d = read(file, "rtausd")
+d = read(file, "rtausd")'
+# same deal
+
+####################################################################################
 
 Ncntry = size(d)[1]
 
@@ -22,14 +29,14 @@ Ncntry = size(d)[1]
 TFP = ones(Ncntry)
 
 mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, Nshocks = 5, 
-γ = 2.0, ϕ = 3, amax = 8.0, σ = 0.40, ρ = 0.20, σϵ = 0.25, d = d, TFP = TFP)
+γ = 2.0, ϕ = 3, amax = 8.0, σ = 0.15, ρ = 0.90, σϵ = 0.25, d = d, TFP = TFP)
 
 @unpack Na, Nshocks, Ncntry, TFP = mdl_prm
 
 R = 1.03*ones(Ncntry);
 W = TFP;
 
-f(x) = world_equillibrium(x, mdl_prm, hh_solution_method = "itteration");
+f(x) = world_equillibrium(x, mdl_prm, hh_solution_method = "itteration", stdist_sol_method = "itteration");
 
 function f!(fvec, x)
 
@@ -39,20 +46,20 @@ end
 
 initial_x = [W[2:end]; R]
 
-# n = length(initial_x)
-# diag_adjust = n - 1
+n = length(initial_x)
+diag_adjust = n - 1
 
-# sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
-#       ml=diag_adjust, mu=diag_adjust,
-#       diag=ones(n),
-#       mode= 1,
-#       tol=1e-5,
-#        )
+sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
+      ml=diag_adjust, mu=diag_adjust,
+      diag=ones(n),
+      mode= 1,
+      tol=1e-5,
+       )
 
-# print(sol)
+print(sol)
 
-# Wsol = [1.0; sol.x[1:Ncntry-1]]
-# Rsol = sol.x[Ncntry:end]
+Wsol = [1.0; sol.x[1:Ncntry-1]]
+Rsol = sol.x[Ncntry:end]
 
-# Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, 
-#     mdl_prm, hh_solution_method = "itteration");
+ Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, 
+     mdl_prm, hh_solution_method = "itteration");
