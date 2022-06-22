@@ -4,6 +4,7 @@ include("ha-trade-helper-functions.jl")
 include("static-trade-environment.jl")
 using MINPACK
 using MAT
+using Plots
 
 ####################################################################################
 # brings in EK data 
@@ -14,6 +15,15 @@ tradesharedata = read(file, "tssdmat")'
 
 d = read(file, "rtausd")'
 # same deal
+
+L = [0.054, 0.024, 0.029, 0.094, 0.017, 0.019,
+    0.181, 0.0225, 0.025, 0.159, 0.544, 0.043, 0.010, 0.015,
+    0.026, 0.10, 0.031, 0.186, 1.0]
+
+TFP = [0.36,0.30,0.22,0.47,0.32,0.41,0.61,0.75,0.14,
+    0.57,0.97,0.28,0.22,0.37,0.13,0.33,0.47,0.53,1.0]
+
+TFP .=  TFP.^(1. / 3.6)
 
 ####################################################################################
 
@@ -26,10 +36,10 @@ Ncntry = size(d)[1]
 # d = dtest.*ones(Ncntry,Ncntry)
 # d[diagind(d)] .= 1.0
 
-TFP = ones(Ncntry)
+#TFP = ones(Ncntry)
 
 mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, Nshocks = 5, 
-γ = 2.0, ϕ = 3, amax = 8.0, σ = 0.15, ρ = 0.90, σϵ = 0.25, d = d, TFP = TFP)
+γ = 2.0, ϕ = 3, amax = 8.0, σ = 0.15, ρ = 0.90, σϵ = 0.25, d = d, TFP = TFP, L = L)
 
 @unpack Na, Nshocks, Ncntry, TFP = mdl_prm
 
@@ -63,3 +73,5 @@ Rsol = sol.x[Ncntry:end]
 
  Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, 
      mdl_prm, hh_solution_method = "itteration");
+
+     plot(log.(vec(tradeshare)), log.(vec(tradesharedata)), seriestype = :scatter)
