@@ -11,6 +11,35 @@ struct distribution{T}
 end
 
 # # ##########################################################################
+
+function calibrate_world_equillibrium(x, moments, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration")
+
+    W = [1.0; x[1:Ncntry-1]]
+
+    R = x[Ncntry:2*Ncntry-1]
+
+    TFP = exp.(x[2*Ncntry:end])
+
+    cal_params = world_model_params(model_params, TFP = TFP)
+
+    Y, tradeflows, A_demand, tradeshare = world_equillibrium(R, W, cal_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+    hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
+
+    goods_market = Y .- vec(sum(tradeflows, dims = 1))
+# so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
+# per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
+
+    asset_market = A_demand
+
+    model_data = log.(diag(tradeshare)) .- log.(moments)
+
+    return [asset_market; goods_market[2:end]; model_data]
+
+end
+
+
+# # ##########################################################################
 # # # functions used to find a solution
 
 function world_equillibrium(x, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
