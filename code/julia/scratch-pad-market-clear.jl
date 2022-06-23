@@ -5,45 +5,34 @@ include("static-trade-environment.jl")
 using MINPACK
 using MAT
 using Plots
+using CSV
+using DataFrames
 
 ####################################################################################
 # brings in EK data 
-file = matopen("../../ek-data/ek-output.mat")
-tradesharedata = read(file, "tssdmat")'
-# I set my model up so row is an importer, column is exporter and 
-# that accross columns should sum to one this is the oppisite so flip
 
-d = read(file, "rtausd")'
-# same deal
+dftrade = DataFrame(CSV.File("ek-trade.csv"))
 
-L = [0.054, 0.024, 0.029, 0.094, 0.017, 0.019,
-    0.181, 0.0225, 0.025, 0.159, 0.544, 0.043, 0.010, 0.015,
-    0.026, 0.10, 0.031, 0.186, 1.0]
+d = reshape(dftrade.d, 19,19)
 
-TFP = [0.36,0.30,0.22,0.47,0.32,0.41,0.61,0.75,0.14,
-    0.57,0.97,0.28,0.22,0.37,0.13,0.33,0.47,0.53,1.0]
+df = DataFrame(CSV.File("solution.csv"))
 
-TFP .=  TFP.^(1. / 3.6)
+initial_x = [df.wage[2:end]; df.interest_rate]
+
+TFP = df.TFP
+L = df.L
 
 ####################################################################################
 
 Ncntry = size(d)[1]
 
-#TFP = vec(exp.(read(file, "ssd")))
 
-
-# dtest = 2.0
-# d = dtest.*ones(Ncntry,Ncntry)
-# d[diagind(d)] .= 1.0
-
-#TFP = ones(Ncntry)
-
-mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, Nshocks = 5, 
-γ = 2.0, ϕ = 3, amax = 8.0, σ = 0.15, ρ = 0.90, σϵ = 0.25, d = d, TFP = TFP, L = L)
+mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, Nshocks = 5, β = 0.94, 
+γ = 2.0, ϕ = 1.0, amax = 5.0, σ = 0.05, ρ = 0.90, σϵ = 0.25, d = d, TFP = TFP, L = L)
 
 @unpack Na, Nshocks, Ncntry, TFP = mdl_prm
 
-R = 1.03*ones(Ncntry);
+R = 1.022*ones(Ncntry);
 W = TFP;
 
 f(x) = world_equillibrium(x, mdl_prm, hh_solution_method = "itteration", stdist_sol_method = "itteration");
@@ -54,7 +43,7 @@ function f!(fvec, x)
 
 end
 
-initial_x = [W[2:end]; R]
+###################################################################
 
 n = length(initial_x)
 diag_adjust = n - 1
@@ -68,10 +57,27 @@ sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
 
 print(sol)
 
+###################################################################
+
 Wsol = [1.0; sol.x[1:Ncntry-1]]
 Rsol = sol.x[Ncntry:end]
 
  Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, 
      mdl_prm, hh_solution_method = "itteration");
 
-     plot(log.(vec(tradeshare)), log.(vec(tradesharedata)), seriestype = :scatter)
+plot(log.(vec(tradeshare)), log.(vec(tradesharedata)), seriestype = :scatter)
+
+
+df = DataFrame(country_index = range(1,19), 
+     wage = Wsol,
+     interest_rate = Rsol,
+     TFP = TFP,
+     L = L
+     );
+
+CSV.write("solution.csv", df)
+
+adist = get_distribution(dist[19].state_index, dist[19].λ);
+
+plot(mdl_prm.agrid, adist, alpha = 0.5, lw = 4,
+    color = "dark blue", ylabel = "Probability Mass", xlabel = "Asset Holdings", label = false)
