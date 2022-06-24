@@ -10,16 +10,17 @@ using DataFrames
 
 ####################################################################################
 # brings in EK data 
+Ncntry = 19
 
 dftrade = DataFrame(CSV.File("ek-trade.csv"))
 
-d = reshape(dftrade.d, 19,19)
+d = reshape(dftrade.d, Ncntry,Ncntry)
 
 df = DataFrame(CSV.File("solution.csv"))
 
-initial_x = [df.wage[2:end]; df.interest_rate]
+#initial_x = [df.wage[2:end]; df.interest_rate]
 
-initial_x =[ones(Ncntry-1), 1.022*ones(Ncntry)]
+initial_x =[df.TFP[2:end]; 1.02*ones(Ncntry)]
 
 TFP = df.TFP
 L = df.L
@@ -29,13 +30,13 @@ L = df.L
 Ncntry = size(d)[1]
 
 
-mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, Nshocks = 5, β = 0.935, 
-γ = 2.0, ϕ = 1.0, amax = 5.0, σ = 0.20, ρ = 0.90, σϵ = 0.25, d = d, TFP = TFP, L = L)
+mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, Nshocks = 5, 
+γ = 2.0, ϕ = 2.0, amax = 6.0, σ = 0.15, ρ = 0.90, σϵ = 0.25, d = d, TFP = TFP, L = L)
 
 @unpack Na, Nshocks, Ncntry, TFP = mdl_prm
 
-R = 1.022*ones(Ncntry);
-W = TFP;
+# R = 1.022*ones(Ncntry);
+# W = TFP;
 
 f(x) = world_equillibrium(x, mdl_prm, hh_solution_method = "itteration", stdist_sol_method = "itteration");
 
@@ -67,7 +68,7 @@ Rsol = sol.x[Ncntry:end]
  Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, 
      mdl_prm, hh_solution_method = "itteration");
 
-plot(log.(vec(tradeshare)), log.(vec(tradesharedata)), seriestype = :scatter)
+plot(log.(vec(tradeshare)), log.(dftrade.tradesharedata), seriestype = :scatter)
 
 
 df = DataFrame(country_index = range(1,19), 
