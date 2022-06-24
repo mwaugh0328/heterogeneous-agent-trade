@@ -41,7 +41,7 @@ include("mix-MarkovChain.jl")
     β::Float64 = 0.95
     γ::Float64 = 2.0
     ϕ::Float64 = 0.0
-    amax::Float64 = 14.0
+    amax::Float64 = 8.0
     Ncntry::Int64 = 2
     σϵ::Float64 = 0.25
     Na::Int64 = 50
