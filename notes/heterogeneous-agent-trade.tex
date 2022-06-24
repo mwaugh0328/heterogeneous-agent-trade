@@ -102,7 +102,7 @@ June 2022
 
 ABSTRACT ------------------------------------------------------------------------------------------------------------
 
-This paper develops a model of heterogenous agents and international trade. Heterogenous agents are modeled as in the standard incomplete markets tradition with households facing incomplete insurance against idiosyncratic productivity and taste shocks. Trade in goods follows the Armington tradition but is derived from the ``bottom up'' with micro-level heterogeneity shaping aggregate trade. I show how micro-level trade elasticities, trade, and the gains from trade vary with a household's wealth and how self-insurance motives shape these outcomes. In aggregate, the pattern of trade is distorted relative to the efficient allocation and the gains from trade deviate from standard benchmarks. I use the model to measure the gains from trade and the ability of trade policy to improve outcomes.
+This paper develops a model of heterogenous agents and international trade. Heterogenous agents are modeled as in the standard incomplete markets tradition with households facing incomplete insurance against idiosyncratic productivity and taste shocks. Trade in goods follows the Armington tradition but is derived from the ``bottom up'' with micro-level heterogeneity shaping aggregate trade. I show how micro-level trade elasticities, trade, and the gains from trade vary with a household's wealth and how self-insurance motives shape these outcomes. In aggregate, the pattern of trade is distorted relative to the efficient allocation and the gains from trade deviate from standard benchmarks. Quantitatively, I compute the multi-country, asymmetric global economy and calibrate it to match bilateral trade flows for 19 countries. I use the model to measure the gains from trade and the ability of trade policy to improve outcomes.
 
 ------------------------------------------------------------------------------------------------------------------------------
 %%\vspace{0.25cm}
@@ -483,13 +483,13 @@ Putting (\ref{eq:elasticity-mpc}) in the context of Constant Relative Risk Avers
 \clearpage
 
 \begin{figure}[!t]
-\centering{\includegraphics[scale = 0.57]{./figures/micro-elasticity.pdf}}
+\centering{\includegraphics[width = .62\textwidth]{./figures/micro-elasticity.pdf}}
 \caption{Elasticities, $-\theta_{ij}(a,z)$}\label{fig:elasticity}
 \end{figure}
 
 
 \begin{figure}[!t]
-\centering{\includegraphics[scale = 0.57]{./figures/trade-share.pdf}}
+\centering{\includegraphics[width = .62\textwidth]{./figures/trade-share.pdf}}
 \caption{Trade, $M_{ij}(a,z) / M_{ii}(a,z)$ }\label{fig:micro-trade}
 \end{figure}
 
@@ -497,9 +497,9 @@ Putting (\ref{eq:elasticity-mpc}) in the context of Constant Relative Risk Avers
 
 The final term in (\ref{eq:value-fun-dd}) says that the extensive margin elasticity depends upon how things change in the future idiosyncratically as $z$ evolves and through the behavioral response of assets.
 
-Figure \ref{fig:elasticity} and \ref{fig:micro-trade} provide a sense of how this all plays out.\footnote{In Figures \ref{fig:elasticity} and \ref{fig:micro-trade}, the key quantitative details are that it's a two symmetric country world with an import share relative to GDP of about 10 percent; $u$ is CRRA with relative risk aversion equal to 1.5; the dispersion parameter $\sigma_{\epsilon}$ is set to 0.25.} Figure \ref{fig:elasticity} plots the absolute value of the trade elasticity (intensive and extensive margin) by household state (assets are on the x-axis, productivity is on the y-axis) and the borrowing constraint $\phi$ is demarcated in the south-west corner. This shows is how the trade elasticity systematically varies with assets and income: Poor households, especially those near the borrowing constraint, are very price elastic with a trade elasticity of between -10 and -12; Richer households are less price elastic with this elasticity hovering around -4 (which is the same as $1 / \sigma_{\epsilon}$).
+Figure \ref{fig:elasticity} and \ref{fig:micro-trade} provide a sense of how this all plays out.\footnote{In Figures \ref{fig:elasticity} and \ref{fig:micro-trade}, the key quantitative details are that it's a two symmetric country world with an import share relative to GDP of about 10 percent; $u$ is CRRA with relative risk aversion equal to 1.5; the dispersion parameter $\sigma_{\epsilon}$ is set to 0.25. The productivity process on $z$ is a mixture of a persistent and transitory process as in \citet{} which is what is behind the ``waves'' found in Figures \ref{fig:elasticity} and \ref{fig:micro-trade}.} Figure \ref{fig:elasticity} plots the absolute value of the trade elasticity (intensive and extensive margin) by household state (assets are on the x-axis, productivity state on the y-axis) and the borrowing constraint $\phi$ is demarcated in the south-west corner. This shows is how the trade elasticity systematically varies with assets and income: Poor households, especially those near the borrowing constraint, are very price elastic with a trade elasticity of between -10; Richer households are less price elastic with this elasticity declining below -4 (which is the same as $1 / \sigma_{\epsilon}$).
 
-Because rich and poor households face the same prices, differences in elasticities then map into different trade shares. Figure \ref{fig:micro-trade} plots expenditure on the foreign good relative to the home good, state by state. First, note that because of trade costs and symmetry across countries, the home good is the relatively cheaper good. Thus, poor, high-price-elastic households spend more on the home good versus the foreign good. In fact for those near the borrowing constraint in this example, it's near zero. Thus, this is a model where micro-level heterogeneity in trade elasticities leads to micro-level variation in expenditure patterns that vary with assets and income.
+Because rich and poor households face the same prices, differences in elasticities lead to different trade shares. Figure \ref{fig:micro-trade} plots expenditure on the foreign good relative to the home good. First, note that because of trade costs and symmetry across countries, the home good is the relatively cheaper good. Thus, poor, high-price-elastic households spend more on the home good versus the foreign good. In fact for those near the borrowing constraint in this example, it's near zero. Thus, this is a model where micro-level heterogeneity in trade elasticities leads to micro-level variation in expenditure patterns that vary with assets and income.
 
 This pattern of trade elasticities mimics \citeapos{harrod1936trade} ``Law of Diminishing Elasticity of Demand'' that says that price sensitivity declines with income; see, e.g., \citet{sangani2022markups} who provides evidence in support of this fact and discusses related literature. The evidence in \citet*{auer2022unequal} most closely relates to the patterns in Figure \ref{fig:elasticity} and \ref{fig:micro-trade} in that they find (i) household-level import shares systematically differ between rich and poor (ii) poorer households have higher price elasticities and (iii) rich and poor appear to be facing the same relative price changes.
 
@@ -536,7 +536,7 @@ Let me walk through the interpretation of each term.\footnote{Similar to the Foo
 
 %Connect with partial trade elasticity and figure.
 
-The second term $u'(c_{ii}(a,z))a \ \frac{\mathrm{d} R_{i}}{\mathrm{d} d_{ij} / d_{ij}}$ is what I'll term as \emph{gains to asset trade}. The idea here is that changes in trade costs affect the equilibrium interest rate in the country|even in financial autarky. So through trade induced changes in consumption-savings behavior, a change in trade costs affects net asset demand and, thus, interest rates must adjust to clear the local asset market. An interesting feature of this that it has a strong distributional component in the sense that when interest rates increase households in states of the world who are borrowers would loose and those in the states of the world are lenders would win.  
+The second term $u'(c_{ii}(a,z))a \ \frac{\mathrm{d} R_{i}}{\mathrm{d} d_{ij} / d_{ij}}$ is what I'll term as \emph{gains to asset trade}. The idea here is that changes in trade costs affect the equilibrium interest rate in the country|even in financial autarky. So through trade induced changes in consumption-savings behavior, a change in trade costs affects net asset demand and, thus, interest rates must adjust to clear the local asset market. An interesting feature of this that it has a strong distributional component in the sense that when interest rates increase households in states of the world who are borrowers would loose and those in the states of the world are lenders would win.
 
 Finally, these three terms repeat themselves into the expected future, appropriately discounted. Proposition \ref{prp:gains-trade} summarizes the result below.
 \begin{prp}[\textbf{H-A Welfare Gains from Trade}] \label{prp:gains-trade} The welfare gains from trade are given by
