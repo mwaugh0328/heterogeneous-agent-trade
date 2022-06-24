@@ -56,7 +56,7 @@ function mMarkovChain(nP::Int64, nIID::Int64, ρ::Float64, σP::Float64, σIID::
     # scale to get desired mean
     z_vals .= (w0 / meanZ) .* z_vals
 
-    return P, z_vals
+    return P, log.(z_vals)
 end
 
 
