@@ -11,11 +11,34 @@ using Interpolations
 using LinearAlgebra
 using LoopVectorization
 
+include("mix-MarkovChain.jl")
+
 
 ##########################################################################
 
+# @with_kw struct world_model_params
+#     β::Float64 = 0.96
+#     γ::Float64 = 2.0
+#     ϕ::Float64 = 0.0
+#     amax::Float64 = 14.0
+#     Ncntry::Int64 = 2
+#     σϵ::Float64 = 0.25
+#     Na::Int64 = 50
+#     agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
+#     Nshocks::Int64 = 5
+#     statesize::Int64 = Int(Na*Nshocks*Ncntry)
+#     ρ::Float64 = 0.90
+#     σ::Float64 = 0.039^(0.5)
+#     mc::MarkovChain{Float64, Matrix{Float64}, 
+#     StepRangeLen{Float64, Base.TwicePrecision{Float64},
+#      Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
+#     TFP::Array{Float64, 1} = ones(Ncntry)
+#     L::Array{Float64, 1} = ones(Ncntry)
+#     d::Array{Float64, 2} = ones(Ncntry,Ncntry)
+# end
+
 @with_kw struct world_model_params
-    β::Float64 = 0.96
+    β::Float64 = 0.95
     γ::Float64 = 2.0
     ϕ::Float64 = 0.0
     amax::Float64 = 14.0
@@ -23,36 +46,37 @@ using LoopVectorization
     σϵ::Float64 = 0.25
     Na::Int64 = 50
     agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
-    Nshocks::Int64 = 2
+    Nar::Int64 = 5
+    Nma::Int64 = 2
+    Nshocks::Int64 = Nar*Nma
     statesize::Int64 = Int(Na*Nshocks*Ncntry)
-    ρ::Float64 = 0.60
-    σ::Float64 = 0.30
-    mc::MarkovChain{Float64, Matrix{Float64}, 
-    StepRangeLen{Float64, Base.TwicePrecision{Float64},
-     Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
+    ρ::Float64 = 0.90
+    σar::Float64 = 0.039^(0.5)
+    σma::Float64 = 0.0522^(0.5)
+    mc::MarkovChain{Float64, Matrix{Float64}, Vector{Float64}} = mMarkovChain(Nar,Nma,ρ,σar,σma)
     TFP::Array{Float64, 1} = ones(Ncntry)
     L::Array{Float64, 1} = ones(Ncntry)
     d::Array{Float64, 2} = ones(Ncntry,Ncntry)
 end
 
 
-@with_kw struct model_params
-    β::Float64 = 0.96
-    γ::Float64 = 2.0
-    ϕ::Float64 = 0.0
-    amax::Float64 = 14.0
-    Ncntry::Int64 = 2
-    σϵ::Float64 = 0.25
-    Na::Int64 = 50
-    agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
-    Nshocks::Int64 = 2
-    statesize::Int64 = Int(Na*Nshocks*Ncntry)
-    ρ::Float64 = 0.60
-    σ::Float64 = 0.30
-    mc::MarkovChain{Float64, Matrix{Float64}, 
-    StepRangeLen{Float64, Base.TwicePrecision{Float64},
-     Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
-end
+# @with_kw struct model_params
+#     β::Float64 = 0.96
+#     γ::Float64 = 2.0
+#     ϕ::Float64 = 0.0
+#     amax::Float64 = 14.0
+#     Ncntry::Int64 = 2
+#     σϵ::Float64 = 0.25
+#     Na::Int64 = 50
+#     agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
+#     Nshocks::Int64 = 2
+#     statesize::Int64 = Int(Na*Nshocks*Ncntry)
+#     ρ::Float64 = 0.60
+#     σ::Float64 = 0.30
+#     mc::MarkovChain{Float64, Matrix{Float64}, 
+#     StepRangeLen{Float64, Base.TwicePrecision{Float64},
+#      Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
+# end
 
 function coleman_operator(policy, R, W, p, model_params)
     # takes gc_j(a,z), v_j(a,z) -> Kgc and Tv

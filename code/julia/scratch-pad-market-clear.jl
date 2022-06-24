@@ -18,9 +18,9 @@ d = reshape(dftrade.d, Ncntry,Ncntry)
 
 df = DataFrame(CSV.File("solution.csv"))
 
-#initial_x = [df.wage[2:end]; df.interest_rate]
+initial_x = [df.wage[2:end]; df.interest_rate]
 
-initial_x =[df.TFP[2:end]; 1.02*ones(Ncntry)]
+#initial_x =[df.TFP[2:end]; 1.02*ones(Ncntry)]
 
 TFP = df.TFP
 L = df.L
@@ -30,8 +30,8 @@ L = df.L
 Ncntry = size(d)[1]
 
 
-mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, Nshocks = 5, 
-γ = 2.0, ϕ = 2.0, amax = 6.0, σ = 0.15, ρ = 0.90, σϵ = 0.25, d = d, TFP = TFP, L = L)
+mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, 
+γ = 1.5, ϕ = 2.0, amax = 8.0, σϵ = 0.25, d = d, TFP = TFP, L = L)
 
 @unpack Na, Nshocks, Ncntry, TFP = mdl_prm
 
