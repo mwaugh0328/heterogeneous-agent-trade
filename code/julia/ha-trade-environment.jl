@@ -257,7 +257,7 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
 
                 end
 
-                Tv[ast, shk, cntry] = utility_fast(Kg[ast, shk, cntry], γ) + β*Ev
+                Tv[ast, shk, cntry] = utility(Kg[ast, shk, cntry], γ) + β*Ev
 
                 #Then the vj = uj + βEV
 
@@ -324,7 +324,7 @@ function make_Tv_upwind!(Tv, Kg, asset_policy, model_params)
 
                 end
 
-                Tv[ast, shk, cntry] = utility_fast(Kg[ast, shk, cntry], γ) + β*Ev
+                Tv[ast, shk, cntry] = utility(Kg[ast, shk, cntry], γ) + β*Ev
 
                 #Then the vj = uj + βEV
 
@@ -565,7 +565,7 @@ function utility(c, γ)
         (c < 1e-10 ? -Inf : log(c) )
 
     else
-        (c < 1e-10 ? -Inf : c^( 1.0 - γ) / (1.0 - γ))
+        (c < 1e-10 ? -Inf : c^( one(γ) - γ)  / (one(γ) - γ))
 
     end
 
