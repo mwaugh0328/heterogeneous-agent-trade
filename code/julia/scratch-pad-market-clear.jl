@@ -3,7 +3,6 @@ include("ha-trade-solution.jl")
 include("ha-trade-helper-functions.jl")
 include("static-trade-environment.jl")
 using MINPACK
-using MAT
 using Plots
 using CSV
 using DataFrames

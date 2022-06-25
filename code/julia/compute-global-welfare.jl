@@ -64,6 +64,13 @@ Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol,
 
 plot(log.(vec(tradeshare)), log.(dftrade.tradesharedata), seriestype = :scatter)
 
+dftrade_model_data = DataFrame(
+    trademodel = log.(vec(tradeshare)),
+    tradedata = log.(dftrade.tradesharedata)
+     );
+
+CSV.write("trade_model_data.csv", dftrade_model_data)
+
 # ####################################################################################
 println(" ")
 println(" ")
@@ -104,3 +111,10 @@ print(Δ_sol)
 
 Δ_Y, Δ_tradeflows, Δ_A_demand, Δ_tradeshare, Δ_hh, Δ_dist = world_equillibrium(Δ_Rsol,
 Δ_Wsol, Δ_mdl_prm, hh_solution_method = "itteration");
+
+∂W = welfare_by_state(hh, Δ_hh, 19, mdl_prm.σϵ)
+
+dfwelfare = make_welfare_dataframe(∂W, mdl_prm)
+
+CSV.write("welfare-US-%1.csv", dfwelfare)
+

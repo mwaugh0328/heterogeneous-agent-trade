@@ -267,3 +267,43 @@ end
 
 ##############################################################################
 ##############################################################################
+
+function welfare_by_state(hh, Δ_hh, country, σϵ)
+
+    v = log_sum_column(hh[country].Tv,  σϵ)
+
+    Δ_v = log_sum_column(Δ_hh[country].Tv,  σϵ)
+
+    ∂W = 100.0 .*( v - Δ_v) ./ v  
+    
+    return ∂W
+
+end
+
+function make_welfare_dataframe(∂W, model_params)
+    
+    welfare = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
+    shock = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
+    asset = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
+    
+    state_index = Array{Tuple{eltype(Int64), eltype(Int64)}}(undef, model_params.Na*model_params.Nshocks, 1)
+    
+    make_state_index!(state_index, model_params)
+    
+    for (foo, xxx) in enumerate(state_index)
+        
+        shock[foo] = xxx[2]
+        
+        asset[foo] = model_params.agrid[xxx[1]]
+        
+        welfare[foo] = ∂W[foo]
+    end
+    
+    df = DataFrame(asset = asset, 
+               shock = shock,
+               welfare = welfare, 
+               );
+    
+    return df
+    
+end  
