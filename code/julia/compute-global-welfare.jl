@@ -77,7 +77,7 @@ println(" ")
 println("########### computing counter factual eq ################")
 println(" ")
 
-Δ_d = 0.01
+Δ_d = 0.10
 
 d_prime =  1.0 .+ (d .- 1.0).*(1.0 - Δ_d)
 
@@ -118,7 +118,7 @@ print(Δ_sol)
 
 dfwelfare = make_welfare_dataframe(∂W, mdl_prm)
 
-CSV.write("welfare-US-%1.csv", dfwelfare)
+CSV.write("welfare-US-%10.csv", dfwelfare)
 
 global_trade_elasticity =  (log.(Δ_tradeshare ./ diag(Δ_tradeshare)) .- log.(tradeshare ./ diag(tradeshare))) ./ Δ_d
 
