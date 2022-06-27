@@ -1,0 +1,926 @@
+\documentclass[9pt,pdftex,aspectratio=1610]{beamer}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{subfigure}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{natbib}
+
+\usecolortheme{dolphin}
+\linespread{1.3}
+\definecolor{nblue}{RGB}{0,0,128}
+
+\bibliographystyle{ecta}
+\setbeamercovered{transparent}
+
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+%\setbeamerfont{alerted text}{series=\bfseries}
+
+\hypersetup{colorlinks=true, linkcolor=nblue,
+citecolor=nblue, urlcolor=nblue, bookmarks=false,
+pdfpagemode=UseNone,
+pdfstartview={XYZ null null 1.25},
+pdftitle={The Consumption Response to Trade Shocks: Evidence from the US-China Trade War},
+pdfauthor={ Michael E. Waugh},
+pdfkeywords={economics, trade, dynamics, quant econ, consumption, data science, cars, waugh, incomplete markets, inequality, Ricardo, julia, migration, China, trade war, tariffs }}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{theorems}[numbered]
+\setbeamertemplate{itemize subitem}[circle]
+\setbeamertemplate{enumerate items}[default]
+
+\setbeamerfont{frametitle}{size= \large}
+\setbeamerfont{ framesubtitle }{size = \footnotesize}
+\setbeamertemplate{frametitle}
+{
+\medskip
+\smallskip
+{\textsf{\underline{\insertframetitle\phantom{))))))))}}}}}
+\setbeamertemplate{items}[circle]
+\setbeamertemplate{itemize subitem}[circle]
+
+\theoremstyle{definition}
+
+
+\newtheorem{as}{Assumption}
+\newtheorem{df}{Definition}
+\newtheorem{lm}{Lemma}
+\newtheorem{prp}{Proposition}
+
+\usepackage[normalem]{ulem}
+\newcommand\redout{\bgroup\markoverwith
+{\textcolor{red}{\rule[.5ex]{1pt}{1pt}}}\ULon}
+
+\makeatletter
+\def\blfootnote{\xdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{\Large The Consumption and Welfare Effects of a Tariff Shock\\ \small Evidence from the US-China Trade War}
+\institute[Foo and Bar]{\normalsize\begin{tabular}[h]{c}
+Michael E. Waugh  \\
+Federal Reserve Bank of Minneapolis\blfootnote{The views expressed herein are those of the author and not necessarily those of the Federal
+Reserve Bank of Minneapolis or the Federal Reserve System.} and NBER\\
+\href{https://twitter.com/tradewartracker}{@tradewartracker}
+\end{tabular}}
+
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\setcounter{framenumber}{0}
+\section{}
+\end{frame}
+
+\begin{frame}[t]{This paper\ldots}
+\textbf{1.} Measure tariff-induced changes in consumption (and labor market outcomes) at a narrow geographic level.\\
+\begin{itemize}
+\smallskip
+\item How? I proxy consumption with the universe of new auto sales in the US at monthly frequency, county level. And correlate it with policy actions in the US-China Trade War.
+\smallskip
+\item Clear evidence that Chinese retaliation had an impact. Both auto sales and employment $\searrow$ in high-tariff counties relative to low-tariff counties.
+\end{itemize}
+\bigskip
+\bigskip
+\textbf{2.} Use a heterogenous agent + multi-region, multi-country trade model to interpret \textbf{1.} and measure the welfare effects.
+\begin{itemize}
+\smallskip
+\item How? Simulate and solve the model's dynamic response to tariff shocks and news about them.
+\smallskip
+\item Still work in progress. Today|numerical examples and demonstrate ``proof of concept.''
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[t]{What I am \textcolor{red}{NOT} doing vs. What I am doing}
+\textcolor{red}{NOT} an evauation/quantification of the ``standard model'' in the trade literature\ldots
+\begin{eqnarray*}
+\mbox{trade} \Rightarrow \mbox{prices of goods / variety} \Rightarrow \mbox{consumption} \Rightarrow \mbox{welfare}
+\end{eqnarray*}\\
+\medskip
+e.g, how US tariffs on Chinese goods lowered imports and increased prices, {\footnotesize \citet*{fajgelbaum2019return}, \citet*{amiti2019impact}, \citet*{neiman_NBERw26396}}.\\
+\bigskip
+\bigskip
+My paper is about a conceptually important, but less understood mechanism\ldots
+\begin{eqnarray*}
+\mbox{trade} \Rightarrow \mbox{labor market outcomes} \Rightarrow \mbox{consumption } \Rightarrow \mbox{welfare}
+\end{eqnarray*}\\
+\medskip
+i.e., ``trade as a labor demand shock.''
+\begin{itemize}
+\smallskip
+\item We know something about the first arrow (e.g., {\footnotesize\citet*{david2013china}}).
+\smallskip
+\item We know nothing about the second arrow | this is my contribution.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Tariff Data and County Exposure}
+US tariff data from USTR and Federal Registrar. Chinese tariffs from \citet*{bown_jung_2019}.
+\begin{itemize}
+\smallskip
+\item At HS10 level and then mapped into three-digit NAICS.
+\smallskip
+\item Start from MFN rates in 2017, measure tariff changes onward.
+\end{itemize}
+\bigskip
+My measure of tariff exposure at the county level:
+\begin{eqnarray*}
+\tau_{c,t}^{i} = \sum_{s\in S}\frac{L_{c,s,2017}}{L_{c, S, 2017}} \  \tau_{s,t}^{i} ,
+\end{eqnarray*}\\
+\begin{itemize}
+\smallskip
+\item $\frac{L_{c,s,2017}}{L_{c, S, 2017}}  = $ 2017 share of county $c$'s employment in industry $s$.
+\smallskip
+\item $\tau_{s,t}^{i}$ is the implemented tariff by country $i$, industry $s$, date $t$.
+\smallskip
+\item Idea: if a county's employment is all in soybeans, then the county is protected and/or faces the soybean tariff.
+\end{itemize}
+\medskip
+Final point: Most my focus is on the Chinese retaliation... will show some stuff about US side.
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Trade War! Average US and Chinese Tariffs}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.41]{../figures/oct2020-figs/tariffs_time.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Trade War! Average US and Chinese Tariffs, My Focus}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.41]{../figures/oct2020-figs/tariffs_time_thispaper.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\frametitle{Change in Chinese Tariff Exposure by County}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.43]{C:/github/tradewar-consumption/figures/export_tariff_map.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\frametitle{Change in US Tariff Exposure by County}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.43]{C:/github/tradewar-consumption/figures/import_tariff_map.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{My Consumption Measure: New Auto Sales}
+From IHS Polk. Counts of new auto sales (not values).
+\begin{itemize}
+\item At the county level (by local of registration, not sale),
+\smallskip
+\item Monthly from January 2016 to December 2021.
+\smallskip
+\item By make (e.g. Ford) and model (F-150).
+\end{itemize}
+\medskip
+Derived from registration data from State DMVs.\\
+\bigskip
+While just autos, a very compelling, high-quality measure\ldots
+\begin{itemize}
+\item Essentially an ``administrative'' level dataset. In levels it matches NIPA very closely.
+\smallskip
+\item High-frequency, detailed geographic variation, near real time. Can't be matched by CEX or PSID.
+\smallskip
+\item Not subject to sampling or provider issues as in other propriety datasets (e.g Kilts-Nielsen, Credit/Debit card transactions data).
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\frametitle{Aggregate Auto Sales: IHS vs NIPA}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.43]{../figures/oct2020-figs/nipa-vs-ihs.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Market Facilitation Payments (MFP)}
+Trump Administration and USDA set up the \href{https://www.federalregister.gov/documents/2018/08/30/2018-18842/market-facilitation-program}{Market Facilitation Program} to assist farmers ``directly impacted by unjustified foreign retaliatory tariffs'' (from the website).
+\begin{itemize}
+\smallskip
+\item 2018 program paid out direct \$\$\$  based upon crop harvested.
+\smallskip
+\item Trump Administration authorized up to \$12 billion USD; in my data \$8.6 billion was paid out.
+\end{itemize}
+\bigskip
+This is public record.\\
+\smallskip
+So I applied through the Freedom of Information Act (FOIA) and asked for all payments, who received them, and the addresses to which the payments were made.
+\begin{itemize}
+\smallskip
+\item The address are a unique, novel part of my data.
+\smallskip
+\item I have a measure of the location of where the payment was received, not the location of production.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Summary Statistics}
+\footnotesize
+\vspace{-.5cm}
+\begin{table}[t]
+\setlength {\tabcolsep}{1.75mm}
+\renewcommand{\arraystretch}{2.25}
+\begin{center}
+\begin{tabular}{l c c c c c c c}
+\multicolumn{8}{c}{\small \textbf{Summary Statistics: Tariffs, Autos, Trade, Employment (Sorted on China Tariff)}}\\
+\hline
+\hline
+\footnotesize  $\Delta$ Tariff Quartile
+& \footnotesize  $\Delta$ China Tariff
+& \footnotesize  $\Delta$ US Tariff
+& \footnotesize Autos
+& \footnotesize Total Emp.
+& \footnotesize Goods Emp.
+& \footnotesize Population
+& \footnotesize MFP per person \\
+\hline
+\footnotesize  Upper quartile       & 3.60  & 2.07  & 1,246  & 9,776 & 3,570 & 32,963  & 95.0 \\
+\footnotesize  25th-75th quartiles  & 0.95  &0.97   & 7,735  & 52,311 & 9,245 & 138,896 & 21.0 \\
+\footnotesize  Bottom quartile      & 0.10  &0.40   & 5,443  & 38,331 & 4,715 & 100,452  & 14.7 \\
+\hline
+\footnotesize Average               & 1.39  & 1.10  & 5,524  & 38,075 & 6,678 & 102,518 & 26.2 \\
+\footnotesize Number of Counties &  3,122 \\
+\hline
+\end{tabular}
+\parbox[c]{5.5in}{\vspace{.1cm}
+{\footnotesize \textbf{Note:} All values are for the year 2017; $\Delta$ Tariff is the change in the tariff between end of March 2017 and end of April 2019. Population and Income are from the American Community Survey.
+Employment data from \href{https://www.bls.gov/cew/}{BLS's Quarterly Census of Employment and Wages}. Good employment equals natural resources, manufacturing, and construction.}}
+\end{center}
+\end{table}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\frametitle{Simple 2$\times$2 Diff-in-Diff: Chinese Tariffs Reduced Auto Sales (I)}
+\begin{table}[t]
+\footnotesize
+\setlength {\tabcolsep}{6.05mm}
+\renewcommand{\arraystretch}{2.30}
+\begin{center}
+%\textbf{\caption{Auto Sales Growth}\label{tb:auto_growth}}
+%\vspace{.1cm}
+\begin{tabular}{l c c }
+\multicolumn{3}{c}{\small \textbf{China Tariffs, Auto Sales Growth, Pre and Post}}\\
+\hline
+\hline
+\footnotesize  China Tariff Quartile & \footnotesize  Pre-Trade War &  \footnotesize  Post-Trade War\\
+\hline
+\footnotesize  Upper quartile  & $\begin{array}{c}0.0104 \vspace{-.45cm}\\ \scriptstyle [ \ 0.003 \ ]\end{array}$   & $\begin{array}{c}-0.0305 \vspace{-.45cm}\\ \scriptstyle [ \ 0.004 \ ]\end{array}$ \\
+\footnotesize  Bottom quartile  & $\begin{array}{c}0.0092 \vspace{-.45cm}\\ \scriptstyle [ \ 0.003 \ ]\end{array}$  & $\begin{array}{c}-0.0155\vspace{-.45cm}\\ \scriptstyle [ \ 0.004 \ ]\end{array}$\\
+\hline
+\end{tabular}
+\parbox[c]{3.65in}{\vspace{.1cm}
+{\footnotesize \textbf{Note:} Values  are 12-month log differences averaged across counties and time periods. Pre-Trade War is January 2017 to end of June 2018; Post-Trade War is July 2018-April 2019. Standard errors are reported in brackets.}}
+\end{center}
+\end{table}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[t]
+\frametitle{Visual Diff-in-Diff: Chinese Tariffs Reduced Auto Sales (II)}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.38]{../figures/oct2020-figs/simple_county_by_quantile_china.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Research Design}
+\textbf{Step 1}: Time aggregate levels at the bimonthly level. Then focus on year over year $\log$ differences.\\
+\bigskip
+\bigskip
+\textbf{Step 2}: Explore different permutations of the following specification:
+\begin{eqnarray*}
+\Delta \log Y_{c,t} \ = \ \sum_{i\in \{ch, us\}}\beta_{i} \Delta \log(1 + \tau^{i}_{c,t}) + \sum_{y = B1, 2017}^{B2, 2019}\left( \mathrm{1} \left\{t = y \right\}
+X^{'}_{c}\delta_y \right) + X^{'}_{c,t}\lambda + \alpha_t + \alpha_0 +  \epsilon_{c,t}
+\end{eqnarray*}
+\begin{itemize}
+\item $\beta_{i}$s are the coefficient of interest, answers how the change in the tariff affected employment and consumption.
+\smallskip
+\item $\delta_y$s are the coefficients on interactions of fixed, county-level characteristics with time. Hope is to control for (i) pre-trends and (ii) other $c\times t$ shocks during the treatment period.
+\smallskip
+\item $\lambda$ are coefficients on time varying county-level characteristics; mostly just receipt of Market Facilitation Program payments.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Chinese Retaliatory Tariffs Reduced Auto Sales}
+\vspace{-0.25cm}
+\footnotesize
+\begin{table}[t]
+\footnotesize
+\setlength {\tabcolsep}{.15mm}
+\renewcommand{\arraystretch}{1.5}
+\begin{center}
+%\textbf{\caption{Auto Sales Growth and Chinese Tariff Exposure}\label{tb:autos}}
+\begin{tabular}{l c c c c c}
+\multicolumn{6}{c}{\small \textbf{Auto Sales Growth and Tariff Exposure}}\\
+\hline
+\hline
+& (1) & (2) &  (3)  & (4)  &  (5) \\
+\cmidrule(lr){2-6}
+China $\Delta \log (1 + \tau_{c,t})$
+&  $\begin{array}{c}\textbf{-0.95}^{***}  \vspace{-.32cm}\\ \scriptstyle [ \ 0.20 \ ]\phantom{^{***}}\end{array}$
+&
+&  $\begin{array}{c}\textbf{-0.86}^{***}  \vspace{-.32cm}\\ \scriptstyle [ \ 0.18 \ ]\phantom{^{***}}\end{array}$
+& $\begin{array}{c}\textbf{-1.12}^{***} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.21 \ ]\phantom{^{***}}\end{array}$
+& $\begin{array}{c}\textbf{-1.00}^{***} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.22 \ ]\phantom{^{***}}\end{array}$\\
+
+US $\Delta \log (1 + \tau_{c,t})$
+&
+& $\begin{array}{c}\textbf{-0.84}^{***}  \vspace{-.32cm}\\ \scriptstyle [ \ 0.25 \ ]\phantom{^{***}}\end{array}$
+&  $\begin{array}{c}\textbf{-0.12}\phantom{^{***}} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.65 \ ]\phantom{^{***}}\end{array}$
+& $\begin{array}{c}\phantom{-}\textbf{0.00}\phantom{^{***}} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.31 \ ]\phantom{^{***}}\end{array}$
+& $\begin{array}{c}\phantom{-}\textbf{0.25}\phantom{^{***}}  \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.31 \ ]\phantom{^{***}}\end{array}$\\
+
+$\Delta \log MFP_{c,t}$
+&
+&
+&
+& $\begin{array}{c}\textbf{-0.00}\phantom{^{**}}  \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.00 \ ]\phantom{^{**}} \end{array}$
+& $\begin{array}{c}\textbf{-0.00 }\phantom{^{***}} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.00 \ ]\phantom{^{***}} \end{array}$\\
+
+Time Effects            &N & N  & N & Y & Y\\
+Time $\times$ Observables Controls    &N & N  & N & N & Y \\
+\hline
+\# Observations & 43,480 \\
+Time Period & \multicolumn{2}{l}{Jan/Feb 2017 - March/April 2019}\\
+\hline
+\end{tabular}
+\parbox[c]{4.75in}{\vspace{.1cm}
+{\footnotesize \textbf{Note:} Dependent variable is 12 month, log differenced auto sales. County-level observations are weighted by a county's 2010 population. Standard errors are clustered at the county level and are reported in brackets.}}
+\end{center}
+\end{table}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Chinese and US (!) Tariffs Reduced Employment}
+\vspace{-0.25cm}
+\footnotesize
+\begin{table}[t]
+\footnotesize
+\setlength {\tabcolsep}{.15mm}
+\renewcommand{\arraystretch}{1.5}
+\begin{center}
+%\textbf{\caption{Auto Sales Growth and Chinese Tariff Exposure}\label{tb:autos}}
+\begin{tabular}{l c c c c}
+\multicolumn{5}{c}{\small \textbf{Total Employment Growth and Tariff Exposure}}\\
+\hline
+\hline
+& (1) & (2) &  (3)  & (4)   \\
+\cmidrule(lr){2-5}
+China $\Delta \log (1 + \tau_{c,t})$
+&  $\begin{array}{c}\textbf{-0.30}^{***}  \vspace{-.32cm}\\ \scriptstyle [ \ 0.06 \ ]\phantom{^{***}}\end{array}$
+&
+&  $\begin{array}{c}\textbf{-0.25}^{***}  \vspace{-.32cm}\\ \scriptstyle [ \ 0.06 \ ]\phantom{^{***}}\end{array}$
+& $\begin{array}{c}\textbf{-0.22}^{***} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.06 \ ]\phantom{^{***}}\end{array}$
+\\
+
+US $\Delta \log (1 + \tau_{c,t})$
+&
+& $\begin{array}{c}\textbf{-0.35}^{***}  \vspace{-.32cm}\\ \scriptstyle [ \ 0.09 \ ]\phantom{^{***}}\end{array}$
+&  $\begin{array}{c}\textbf{-0.28}^{***} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.09 \ ]\phantom{^{***}}\end{array}$
+& $\begin{array}{c}\textbf{-0.25}^{***} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.09 \ ]\phantom{^{***}}\end{array}$
+\\
+
+$\Delta \log MFP_{c,t}$
+&
+&
+&
+& $\begin{array}{c}\textbf{-0.003}^{***}  \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.00 \ ]\phantom{^{***}} \end{array}$
+\\
+
+Time Effects            &Y & Y  & Y & Y \\
+Time $\times$ Observables Controls    &Y & Y  & Y & Y \\
+\hline
+\# Observations & 43,480 \\
+Time Period & \multicolumn{2}{l}{Jan/Feb 2017 - March/April 2019}\\
+\hline
+\end{tabular}
+\parbox[c]{4.1in}{\vspace{.1cm}
+{\footnotesize \textbf{Note:} Dependent variable is 12 month, log differenced employment. County-level observations are weighted by a county's 2010 population. Standard errors are clustered at the county level and are reported in brackets.}}
+\end{center}
+\end{table}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[t]{Chinese Tariffs Reduced Goods Producing Employment}
+\vspace{-0.25cm}
+\footnotesize
+\begin{table}[t]
+\footnotesize
+\setlength {\tabcolsep}{.15mm}
+\renewcommand{\arraystretch}{1.5}
+\begin{center}
+%\textbf{\caption{Auto Sales Growth and Chinese Tariff Exposure}\label{tb:autos}}
+\begin{tabular}{l c c c c}
+\multicolumn{5}{c}{\small \textbf{Goods Employment Growth and Tariff Exposure}}\\
+\hline
+\hline
+& (1) & (2) &  (3)  & (4)   \\
+\cmidrule(lr){2-5}
+China $\Delta \log (1 + \tau_{c,t})$
+&  $\begin{array}{c}\textbf{-0.54}^{***}  \vspace{-.32cm}\\ \scriptstyle [ \ 0.14 \ ]\phantom{^{***}}\end{array}$
+&
+&  $\begin{array}{c}\textbf{-0.53}^{***}  \vspace{-.32cm}\\ \scriptstyle [ \ 0.13 \ ]\phantom{^{***}}\end{array}$
+& $\begin{array}{c}\textbf{-0.51}^{***} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.13 \ ]\phantom{^{***}}\end{array}$
+\\
+
+US $\Delta \log (1 + \tau_{c,t})$
+&
+& $\begin{array}{c}\textbf{-0.21}\phantom{^{***}}  \vspace{-.32cm}\\ \scriptstyle [ \ 0.18 \ ]\phantom{^{***}}\end{array}$
+&  $\begin{array}{c}\textbf{-0.06}\phantom{^{***}} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.17 \ ]\phantom{^{***}}\end{array}$
+& $\begin{array}{c}\textbf{-0.04}\phantom{^{***}} \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.17 \ ]\phantom{^{***}}\end{array}$
+\\
+
+$\Delta \log MFP_{c,t}$
+&
+&
+&
+& $\begin{array}{c}\textbf{-0.002}^{**}  \vspace{-.32cm}\\ \scriptstyle \phantom{-}[ \ 0.00 \ ]\phantom{^{**}} \end{array}$
+\\
+
+Time Effects            &Y & Y  & Y & Y \\
+Time $\times$ Observables Controls    &Y & Y  & Y & Y \\
+\hline
+\# Observations & 43,480 \\
+Time Period & \multicolumn{2}{l}{Jan/Feb 2017 - March/April 2019}\\
+\hline
+\end{tabular}
+\parbox[c]{4.1in}{\vspace{.1cm}
+{\footnotesize \textbf{Note:} Dependent variable is 12 month, log differenced employment. County-level observations are weighted by a county's 2010 population. Standard errors are clustered at the county level and are reported in brackets.}}
+\end{center}
+\end{table}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{frame}[t]{An Event Study}
+\textbf{Step 3}: Explore how the tariff effects vary across time:
+\begin{eqnarray*}
+\Delta \log Y_{c,t}   &=& \ \sum_{i\in \{ch, us\}} \ \sum_{y = B1, 2017}^{B2, 2019}  \left( \mathrm{1} \left\{t = y \right\} \beta_{i,y} \Delta \log(1 + \tau^{i}_{c,B2,2019})\right)\\
+\nonumber \\
+&&  \ \ \ \ \
++  \sum_{y = B1, 2017}^{B2, 2019}\left( \mathrm{1} \left\{t = y \right\} X^{'}_{c}\delta_y \right) + X^{'}_{c,t}\lambda + \alpha_t + \alpha_0 +  \epsilon_{c,t}
+\end{eqnarray*}
+\begin{itemize}
+\smallskip
+\item Idea: Fix the tariff to it's value in 2019 and estimate the future tariffs effect for each time period.
+\smallskip
+\item Should reveal any anticipation effects and/or pre-existing trend issues.
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]
+\frametitle{Effect of Chinese Tariffs by Time on Auto Sales}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.41]{../figures/oct2020-figs/reg-china-tariff.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]
+\frametitle{Effect of Chinese Tariffs by Time on Total Employment}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.41]{../figures/oct2020-figs/reg-china-tariff-emp.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\frametitle{Next Step: Use a Model to Interpret and Measure Welfare Effects}
+Why? Three issues:
+\begin{itemize}
+\item[1.] Standard problem that diff-in-diff evidence only about relative statements, not levels.
+\smallskip
+\item[2.] The welfare effects depend on changes in the broader basket of consumption not durables.
+\smallskip
+\item[2.] Evidence is suggestive of expectations mattering, i.e. reactions to news about future tariff actions.
+\end{itemize}
+\bigskip
+How?
+\begin{itemize}
+\item Heterogenous agent (i.e. Bewley-Huggett-Aiyagari) +  multi-region, multi-country trade model.
+\smallskip
+\item Calibrate to evidence above.
+\smallskip
+\item Simulate transition path to tariff shocks and news about them.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Model: Overview}
+\textbf{Time:} Discrete time, infinite horizon.\\
+\bigskip
+\textbf{Geography and Trade:} Two regions in the US (\textcolor{red}{``red''} and \textcolor{blue}{``blue''}) and China. A location produces a differentiated commodity as in Armington and trade occurs subject to trade costs and tariffs.\\
+\bigskip
+\textbf{Households:} They live and work in a region while facing idiosyncratic productivity shocks. They purchase and use the aggregated commodity to:\\
+\begin{itemize}
+\item eat it $c$,
+\item transform it into a durable good $d$, i.e. a ``car''
+\item or save it as an asset $a$.
+\end{itemize}
+\smallskip
+And households can enjoy leisure, $\ell$, by choosing not to work.
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Model: Households and Preferences}
+\medskip
+Mass of $L_i$ households in each location $i$.\\
+\medskip
+Preferences:
+\begin{align*}
+\small
+& E \sum_{t = 0}^{\infty} \beta^{t} u(c_{t},d_{t}, \ell_{t})\\
+\\
+\mbox{where}  \ \ \ & u(c,d,\ell) =  \log \left( c^{\alpha}d^{1-\alpha}  \right) + \nu \ell + \ \epsilon_{dj} + \ \epsilon_{hj} \label{eq:utility-nols}
+\end{align*}
+\medskip
+\begin{itemize}
+\item $\epsilon_{dj}$ are iid Type 1 EV shocks over option $j$ of buying a new car or sticking with old car.
+\medskip
+\item Leisure / work is a discrete choice too.\\
+\smallskip
+Either work or not $(\ell = 0 \ \mbox{or} \ \ell = 1)$ where $\epsilon_{hj}$ are iid Type 1 EV shocks over those options.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Model: Cars}
+\medskip
+The stock of durable consumption evolves according to:
+\begin{align*}
+&\mathtt{if} \ \mathtt{stay}, \ \ d_{t+1} = (1-\delta)d_{t}
+\\
+&\mathtt{if} \ \mathtt{buy \ new}, \ \ d_{t+1} = d(n).
+\end{align*}\\
+\medskip
+Expenditures on durables takes the following form:
+\begin{align*}
+& \ \ \ \ \ \ \ \ \ \mathtt{if} \ \mathtt{stay}, \ \  e_{t} = 0
+\\
+& \ \ \ \ \ \ \ \ \ \mathtt{if} \ \mathtt{buy \ new}, \ \ e_{t} = p_{n}d(n) - p_{u}d_{t}.
+\end{align*}
+\begin{itemize}
+\item $d(n)$ is quality units of a new car. This is normalized, it's not a choice variable.
+\smallskip
+\item $d_{t}$ is quality units of a used car; $\delta$ is the depreciation rate.
+\smallskip
+\item $p_{n}$ is the rate of transformation to convert one unit of non-durable consumption into a \textbf{new} car.
+\smallskip
+\item $p_{u}$ is the rate of transformation for used/depreciated cars.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Model: Work, Assets, and Tariff Revenue}
+\medskip
+A household's efficiency units $z_t$ evolve according to a discrete state Markov chain. They face the wage per efficiency unit $w_{i,t}$.\\
+\bigskip
+Households borrow or accumulate a non-state contingent asset, $a$, with gross return $R$ which pays out in units of the final good. Household's face the debt limit
+\begin{align*}
+a_{t+1} \ \geq \ -\phi.
+\end{align*}\\
+
+Tariff revenue $\tau_{r}$ is lump sum rebated to households. \\
+\bigskip
+Putting this all together, a household's budget constraint is
+\begin{align*}
+w_{i,t} z_{t} (1 - \ell)  + P_{i,t} R a_{t} + P_{i,t} \tau_{r,i,t} \  \geq \ P_{i,t} a_{t+1} + P_{i,t} c_{t} + P_{i,t} e_{t}.
+\end{align*}
+where $P_{i,t}$ is the price index of the final good (next slide) in location $i$.
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Model: Production and Trade}
+\medskip
+The final good is:
+\begin{align*}
+Q = \bigg \{ \sum_{k}^{M}  q_{k}^{\frac{\theta - 1}{\theta}} \bigg \}^{\frac{\theta}{\theta - 1}},
+\end{align*}
+where each location $k$ produces it's nationally differentiated commodity with production technology
+\begin{align*}
+q_k = A_k N_k,
+\end{align*}
+where $N_k$ are the efficiency units of labor supplied by households.\\
+\bigskip
+Trade faces several obstacles:
+\begin{itemize}
+\smallskip
+\item iceberg trade costs $d_{nk}$ for a good to go from supplier $k$ to buyer $n$,
+\smallskip
+\item tariffs on goods that cross borders $\tau_{nk}$ which is the tariff that country $n$ imposes on the commodity that county $k$ produces.
+\end{itemize}
+\smallskip
+And associated with this environment is the price index $P_{i,t}$ seen in the last slide.
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]{Equilibrium}
+\medskip
+The basic idea\ldots
+\begin{itemize}
+\smallskip
+\item[1.] Households' consumption, durables, savings, and work decisions determine goods demand and labor supply.
+\smallskip
+\item[2.] Trade determines goods supply and labor demand.
+\end{itemize}
+\medskip
+Need \textbf{1.} and \textbf{2.} to be consistent.\\
+\bigskip
+\medskip
+One detail. The asset market. Today, I'm not going to clear it (I ran out of time). In future, the plan is to explore
+\begin{itemize}
+\smallskip
+\item[1.] Financial autarky, so bond market clears domestically.
+\smallskip
+\item[2.] Financial integration, so bond market clears internationally.
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]{Calibration}
+\medskip
+Most HH parameters either standard or ``jiggled around'' to make it look plausible.\\
+\bigskip
+Two regions in the US ({\color{red} red} and {\color{blue} blue}) and China.
+\begin{itemize}
+\smallskip
+\item No trade costs, no tariffs between US regions.
+\smallskip
+\item But external trade costs setup so the {\color{red} red} region exports more to China than {\color{blue} blue} region.
+\end{itemize}
+\bigskip
+Simulate the response of the economy to observed change in tariffs.
+\begin{itemize}
+\smallskip
+\item Give households 3 periods of advance news, similar to what happened.
+\smallskip
+\item China targets {\color{red} red} region more than {\color{blue} blue} region.
+\smallskip
+\item Viewed as a permanent change (data seems to validate this!).
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Model: New Cars}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.41]{../figures/oct2020-figs/durable_expenditure.pdf}}
+\end{figure}
+\end{frame}
+
+\begin{frame}[t]{Model: New Cars, Differenced}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.41]{../figures/oct2020-figs/durable_diff.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Model: Labor Supply}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.41]{../figures/oct2020-figs/labor_supply.pdf}}
+\end{figure}
+\end{frame}
+
+\begin{frame}[t]{Model: Labor Supply, Differenced}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.41]{../figures/oct2020-figs/labor_supply_diff.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Model: Non-Durable Expenditure}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.41]{../figures/oct2020-figs/non-durable-consumption.pdf}}
+\end{figure}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[t]{Welfare Losses}
+\begin{figure}
+    \centering
+    \subfigure{\includegraphics[scale = 0.32]{../figures/oct2020-figs/welfare_blue.pdf}}
+    \subfigure{\includegraphics[scale = 0.32]{../figures/oct2020-figs/welfare_red.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\frametitle{My Progress Report}
+\textbf{What I've done:}
+\begin{itemize}
+\item Measured tariff-induced changes in consumption at a narrow geographic level: auto sales growth fell by $\approx$ 4 p.p. in high-tariff counties relative to low-tariff counties.
+\smallskip
+\item Evidence that the fall in consumption relates to a reduction in production and labor market opportunities for those most exposed.
+\smallskip
+\item As of now, all this is $\approx$ consistent with what comes out of a forward-looking/ dynamic heterogenous agent +  multi-region, multi-country trade model.
+\end{itemize}
+\bigskip
+\textbf{I'm working on now!}
+\begin{itemize}
+\item A real calibration/ estimation of model and welfare analysis. Improved treatment of asset market. Talk to me in a month.
+\smallskip
+\item My RA Thomas Hasenzagl and I are piecing together a public GITHUB repository with code to implement Heterogenous Agent Trade (HAT) models, fast and efficiently.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+\newcounter{finalframe}
+\setcounter{finalframe}{\value{framenumber}}
+
+\begin{frame}[allowframebreaks]
+\frametitle{References}
+\scriptsize
+\bibliography{../bibtex/micro_price_bibtex}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[t]
+\frametitle{Unclear/Mixed Evidence on Benefits from US Tariffs}
+\begin{table}[t]
+\footnotesize
+\setlength {\tabcolsep}{4.05mm}
+\renewcommand{\arraystretch}{2.30}
+\begin{center}
+%\textbf{\caption{Auto Sales Growth}\label{tb:auto_growth}}
+%\vspace{.1cm}
+\begin{tabular}{l c c }
+\multicolumn{3}{c}{\small \textbf{US Tariffs, Auto Sales Growth, Pre and Post}}\\
+\hline
+\hline
+\footnotesize  US Tariff Quartile & \footnotesize  Pre-Trade War &  \footnotesize  Post-Trade War\\
+\hline
+\footnotesize  Upper quartile  & $\begin{array}{c}0.0041 \vspace{-.45cm}\\ \scriptstyle [ \ 0.002 \ ]\end{array}$   & $\begin{array}{c}-0.0224 \vspace{-.45cm}\\ \scriptstyle [ \ 0.004 \ ]\end{array}$ \\
+\footnotesize  Bottom quartile  & $\begin{array}{c}0.0137 \vspace{-.45cm}\\ \scriptstyle [ \ 0.003 \ ]\end{array}$  & $\begin{array}{c}-0.0211\vspace{-.45cm}\\ \scriptstyle [ \ 0.004 \ ]\end{array}$\\
+\hline
+\end{tabular}
+\parbox[c]{3.1in}{\vspace{.1cm}
+{\footnotesize \textbf{Note:} Values  are 12-month log differences averaged across counties and time periods. Pre-Trade War is January 2017 to end of June 2018; Post-Trade War is July 2018-April 2019. Standard errors are reported in brackets.}}
+\end{center}
+\end{table}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[t]
+\frametitle{Unclear/Mixed Evidence on Benefits from US Tariffs}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.38]{../figures/oct2020-figs/simple_county_by_quantile_us.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]
+\frametitle{Effect of US Tariffs by Time on Auto Sales}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.38]{../figures/oct2020-figs/reg-us-tariff.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[t]
+\frametitle{Effect of US Tariffs by Time on Total Employment}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.38]{../figures/oct2020-figs/reg-us-tariff-emp.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\frametitle{Detail of my MFP Data\ldots}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.5]{../figures/oct2020-figs/mfp1.png}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\frametitle{Top Recipients: Corporate Farms Spanning Multiple States\ldots}
+\begin{figure}[t]
+\centerline{\includegraphics[scale = 0.5]{../figures/oct2020-figs/mfp2.png}}
+\end{figure}
+\end{frame}
+
+
+
+
+
+\setcounter{framenumber}{\value{finalframe}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\end{document} 

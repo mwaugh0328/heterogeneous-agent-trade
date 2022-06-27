@@ -493,6 +493,7 @@ Putting (\ref{eq:elasticity-mpc}) in the context of Constant Relative Risk Avers
 \caption{Trade, $M_{ij}(a,z) / M_{ii}(a,z)$ }\label{fig:micro-trade}
 \end{figure}
 
+
 }
 
 The final term in (\ref{eq:value-fun-dd}) says that the extensive margin elasticity depends upon how things change in the future idiosyncratically as $z$ evolves and through the behavioral response of assets.
@@ -595,9 +596,26 @@ Essentially, this result takes on the same form as \citet{arkolakis2012new}. Tra
 
 With all that said, relative to say \citet{arkolakis2012new} or \citet{anderson1992discrete}, I must emphasize the complexity of the economy at the micro-level for which this result stands. Households are froward looking, face productivity and taste shocks in the presence of incomplete markets and borrowing constraints. Yet, these details don't matter when the magic of $\log$ kicks in.
 
+\section{Quantitative Analysis}
+
+\begin{figure}[!t]
+\centering{\includegraphics[scale = .45]{./figures/trade-fit.pdf}}
+\caption{Bilateral Trade: Model vs. Data}\label{fig:model-fit}
+\end{figure}
+
+
 \newpage
 
+\begin{figure}[!t]
+\centering{\includegraphics[scale = .65]{./figures/welfare-elasticity.pdf}}
+\caption{Welfare: U.S. Households, 1\% Global Reduction in Trade Costs}\label{fig:welfate-elasticity}
+\end{figure}
 
+To be honest, I found this result surprising. By looking at the choice probabilities in (\ref{eq:choice-prob}) and noting how the value functions determine choices, not period utility functions, one would suspect that the household's income fractions problem would shape aggregate trade outcomes. Corollary \ref{prp:seperation} shows that is not the case but that micro-outcomes and aggregate trade outcomes ``separate.''
+
+Essentially, this result takes on the same form as \citet{arkolakis2012new}. Trade flows take a constant elasticity form with the trade elasticity pinned down by the dispersion parameter on the trade shocks. And then the total change in welfare is summarized by the trade elasticity and how the share of home purchases changes to any change in trade costs. In the sense that \citet{arkolakis2012new} result applies to a Armington-CES model, it also connects with \citet{anderson1987ces} and \citet{anderson1992discrete} in that trade here behaves as if there were a representative agent Armington-CES consumer.
+
+With all that said, relative to say \citet{arkolakis2012new} or \citet{anderson1992discrete}, I must emphasize the complexity of the economy at the micro-level for which this result stands. Households are froward looking, face productivity and taste shocks in the presence of incomplete markets and borrowing constraints. Yet, these details don't matter when the magic of $\log$ kicks in.
 
 
 \appendix
