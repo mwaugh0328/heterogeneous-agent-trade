@@ -120,5 +120,6 @@ dfwelfare = make_welfare_dataframe(∂W, mdl_prm)
 
 CSV.write("welfare-US-%10.csv", dfwelfare)
 
-global_trade_elasticity =  (log.(Δ_tradeshare ./ diag(Δ_tradeshare)) .- log.(tradeshare ./ diag(tradeshare))) ./ Δ_d
+global_trade_elasticity =  (log.(Δ_tradeshare ./ diag(Δ_tradeshare)) .- 
+    log.(tradeshare ./ diag(tradeshare))) ./ (log.(d_prime) .- log.(d))
 
