@@ -23,18 +23,17 @@ agrid = np.linspace(φ, 8, 100)
 p = 1.5 * np.ones(N)
 p[0] = 1
 
+# Labor suppy
+L = np.ones(N)
+
 # Create Model Instance
-m = HATmodel(β, σ, α, φ, δ, σ_ε, N, P)
+m = HATmodel(β, σ, α, φ, δ, σ_ε, N, P, L)
 
-gc0_vec = np.linspace(0.1, 3, agrid.shape[0])
-gc0 = np.repeat(np.repeat(gc0_vec[:,np.newaxis], zgrid.shape[0], axis=1)[:,:,np.newaxis], N, axis=2) 
-v0 = (-1)*np.ones((agrid.shape[0], zgrid.shape[0], N))/(1-β)
-x0 = np.concatenate([gc0, v0])
-
-x1 = m.coleman(agrid, zgrid, x0, 1.029, 1, p)
-gc1 = x1[0:agrid.shape[0], :, :]
-v1 = x1[agrid.shape[0]:, :, :]
- 
+# Find equilibrium
 eqm = m.find_equilibrium(agrid, zgrid, 1.029, 1, p)
+
+
+
+
 
 

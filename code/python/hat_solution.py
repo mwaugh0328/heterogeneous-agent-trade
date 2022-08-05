@@ -4,9 +4,10 @@ from hat_support import *
 
 class HATmodel:
 
-    def __init__(self, β, σ, α, φ, δ, σ_ε, N, P):
+    def __init__(self, β, σ, α, φ, δ, σ_ε, N, P, L):
         self.β, self.σ, self.α, self.φ = β, σ, α, φ
         self.δ, self.σ_ε, self.N, self.P = δ, σ_ε, N, P
+        self.L = L
 
     def utility(self, c):
         σ = self.σ
@@ -157,7 +158,7 @@ class HATmodel:
     def find_log_sum(self, vj, zgrid):
         σ_ε = self.σ_ε
 
-        vj_max = np.max(vj, axis=0)
+        vj_max = np.max(vj, axis=1)
         log_sum = np.array([σ_ε*np.log(np.sum(np.exp((vj[z_i, :]-vj_max[z_i])/σ_ε)))+vj_max[z_i] for z_i in range(len(zgrid))])
 
         return log_sum
