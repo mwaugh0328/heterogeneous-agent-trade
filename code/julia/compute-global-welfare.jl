@@ -71,55 +71,55 @@ dftrade_model_data = DataFrame(
 
 CSV.write("trade_model_data.csv", dftrade_model_data)
 
-# ####################################################################################
-println(" ")
-println(" ")
-println("########### computing counter factual eq ################")
-println(" ")
+# # ####################################################################################
+# println(" ")
+# println(" ")
+# println("########### computing counter factual eq ################")
+# println(" ")
 
-Δ_d = 0.10
+# Δ_d = 0.10
 
-d_prime =  1.0 .+ (d .- 1.0).*(1.0 - Δ_d)
+# d_prime =  1.0 .+ (d .- 1.0).*(1.0 - Δ_d)
 
-Δ_mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, 
-γ = 1.5, ϕ = 2.0, amax = 8.0, σϵ = 0.25, d = d_prime, TFP = TFP, L = L)
+# Δ_mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, 
+# γ = 1.5, ϕ = 2.0, amax = 8.0, σϵ = 0.25, d = d_prime, TFP = TFP, L = L)
 
-f(x) = world_equillibrium(exp.(x), Δ_mdl_prm, hh_solution_method = "itteration", stdist_sol_method = "itteration");
+# f(x) = world_equillibrium(exp.(x), Δ_mdl_prm, hh_solution_method = "itteration", stdist_sol_method = "itteration");
 
-function f!(fvec, x)
+# function f!(fvec, x)
 
-    fvec .= f(x)
+#     fvec .= f(x)
 
-end
+# end
 
-#initial_x =[ones(Ncntry-1); 1.02*ones(Ncntry)]
+# #initial_x =[ones(Ncntry-1); 1.02*ones(Ncntry)]
 
-###################################################################
+# ###################################################################
 
-n = length(initial_x)
-diag_adjust = n - 1
+# n = length(initial_x)
+# diag_adjust = n - 1
 
-Δ_sol = fsolve(f!, log.(initial_x), show_trace = true, method = :hybr;
-      ml=diag_adjust, mu=diag_adjust,
-      diag=ones(n),
-      mode= 1,
-      tol=1e-5,
-       )
+# Δ_sol = fsolve(f!, log.(initial_x), show_trace = true, method = :hybr;
+#       ml=diag_adjust, mu=diag_adjust,
+#       diag=ones(n),
+#       mode= 1,
+#       tol=1e-5,
+#        )
 
-print(Δ_sol)
+# print(Δ_sol)
 
-Δ_Wsol = exp.([0.0; Δ_sol.x[1:Ncntry-1]])
-Δ_Rsol = exp.(Δ_sol.x[Ncntry:end])
+# Δ_Wsol = exp.([0.0; Δ_sol.x[1:Ncntry-1]])
+# Δ_Rsol = exp.(Δ_sol.x[Ncntry:end])
 
-Δ_Y, Δ_tradeflows, Δ_A_demand, Δ_tradeshare, Δ_hh, Δ_dist = world_equillibrium(Δ_Rsol,
-Δ_Wsol, Δ_mdl_prm, hh_solution_method = "itteration");
+# Δ_Y, Δ_tradeflows, Δ_A_demand, Δ_tradeshare, Δ_hh, Δ_dist = world_equillibrium(Δ_Rsol,
+# Δ_Wsol, Δ_mdl_prm, hh_solution_method = "itteration");
 
-∂W = welfare_by_state(hh, Δ_hh, 19, mdl_prm.σϵ)
+# ∂W = welfare_by_state(hh, Δ_hh, 19, mdl_prm.σϵ)
 
-dfwelfare = make_welfare_dataframe(∂W, mdl_prm)
+# dfwelfare = make_welfare_dataframe(∂W, mdl_prm)
 
-CSV.write("welfare-US-%10.csv", dfwelfare)
+# CSV.write("welfare-US-%10.csv", dfwelfare)
 
-global_trade_elasticity =  (log.(Δ_tradeshare ./ diag(Δ_tradeshare)) .- 
-    log.(tradeshare ./ diag(tradeshare))) ./ (log.(d_prime) .- log.(d))
+# global_trade_elasticity =  (log.(Δ_tradeshare ./ diag(Δ_tradeshare)) .- 
+#     log.(tradeshare ./ diag(tradeshare))) ./ (log.(d_prime) .- log.(d))
 

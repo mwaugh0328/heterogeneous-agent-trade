@@ -296,6 +296,36 @@ function welfare_by_state(hh, Δ_hh, country, σϵ)
 
 end
 
+function make_hh_dataframe(dist, hh, country, R, W, model_params)
+
+    @unpack Na, Nshocks, mc, agrid = model_params
+            
+    income = Array{Float64}(undef, Na*Nshocks)
+    weights = Array{Float64}(undef, Na*Nshocks)
+    homeshare = Array{Float64}(undef, Na*Nshocks)
+
+    fill!(income, 0.0) #need to fill given += operator below
+    fill!(weights, 0.0) #need to fill given += operator below
+
+    shocks = exp.(mc.state_values)
+
+    for (foo, xxx) in enumerate(dist[country].state_index)
+
+        income[foo] = (1 - R)*agrid[xxx[1]] + W*shocks[xxx[2]] 
+        weights[foo] = dist[country].λ[foo]
+        homeshare[foo] = hh[country].πprob[xxx[1], xxx[2], country]
+
+    end
+    
+    df = DataFrame(income = income, 
+               weights = weights,
+               homeshare = homeshare,
+               );
+    
+    return df
+    
+end 
+
 function make_welfare_dataframe(∂W, model_params)
     
     welfare = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
