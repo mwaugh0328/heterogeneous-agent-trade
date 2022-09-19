@@ -283,6 +283,7 @@ function social_welfare(hh, Δ_hh, dist, Δ_dist, country, σϵ)
 
 end
 
+##############################################################################
 
 function welfare_by_state(hh, Δ_hh, country, σϵ)
 
@@ -295,6 +296,34 @@ function welfare_by_state(hh, Δ_hh, country, σϵ)
     return ∂W
 
 end
+
+##############################################################################
+
+function θ_by_state(hh, Δ_hh, d, Δ_d, country, model_params)
+
+    @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
+
+    θ_micro = Array{Float64}(undef, Na*Nshocks, Ncntry)
+
+    state_index = Array{Tuple{eltype(Int64), eltype(Int64)}}(undef, model_params.Na*model_params.Nshocks, 1)
+    
+    make_state_index!(state_index, model_params)
+
+    for (foo, xxx) in enumerate(dist[country].state_index)
+
+        Δ_trade .=  Δ_hh[country].πprob[xxx[1],xxx[2], :] ./ Δ_hh[country].πprob[xxx[1],xxx[2],19]
+
+        trade .=  hh[country].πprob[xxx[1],xxx[2], :] ./ hh[country].πprob[xxx[1],xxx[2],19]
+
+        θ_micro[foo, :] .= (log.(Δ_trade) .- log.(trade)) ./ (log.(Δ_d) .- log.(d))
+
+    end
+    
+    return θ_micro
+
+end
+
+##############################################################################
 
 function make_hh_dataframe(dist, hh, country, R, W, model_params)
 
@@ -311,7 +340,7 @@ function make_hh_dataframe(dist, hh, country, R, W, model_params)
 
     for (foo, xxx) in enumerate(dist[country].state_index)
 
-        income[foo] = (1 - R)*agrid[xxx[1]] + W*shocks[xxx[2]] 
+        income[foo] = (1 - R[country])*agrid[xxx[1]] + W[country]*shocks[xxx[2]] 
         weights[foo] = dist[country].λ[foo]
         homeshare[foo] = hh[country].πprob[xxx[1], xxx[2], country]
 
@@ -326,7 +355,9 @@ function make_hh_dataframe(dist, hh, country, R, W, model_params)
     
 end 
 
-function make_welfare_dataframe(∂W, model_params)
+##############################################################################
+
+function make_welfare_dataframe(∂W, R, W, country, model_params)
     
     welfare = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
     shock = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
@@ -341,13 +372,13 @@ function make_welfare_dataframe(∂W, model_params)
         shock[foo] = xxx[2]
         
         asset[foo] = model_params.agrid[xxx[1]]
-        
+
         welfare[foo] = ∂W[foo]
     end
     
     df = DataFrame(asset = asset, 
                shock = shock,
-               welfare = welfare, 
+               welfare = welfare,
                );
     
     return df

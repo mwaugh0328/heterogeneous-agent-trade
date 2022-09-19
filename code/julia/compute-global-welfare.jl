@@ -71,6 +71,10 @@ dftrade_model_data = DataFrame(
 
 CSV.write("trade_model_data.csv", dftrade_model_data)
 
+hhdf = make_hh_dataframe(dist, hh, 19, Rsol, Wsol, mdl_prm)
+
+CSV.write("household_data.csv", hhdf)
+
 # # ####################################################################################
 # println(" ")
 # println(" ")
