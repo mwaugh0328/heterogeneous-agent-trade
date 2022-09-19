@@ -291,31 +291,105 @@ function welfare_by_state(hh, Δ_hh, country, σϵ)
 
     Δ_v = log_sum_column(Δ_hh[country].Tv,  σϵ)
 
-    ∂W = 100.0 .*( v - Δ_v) ./ v  
+    ∂logW = 100.0 .*( v - Δ_v) ./ v  
     
-    return ∂W
+    ∂W = ( v - Δ_v)
+
+    return ∂W, ∂logW
 
 end
 
 ##############################################################################
 
-function θ_by_state(hh, Δ_hh, d, Δ_d, country, model_params)
+function bilateral_consumption(R, W, hh, country, model_params)
+    # grabs the choice of assets given states
+
+    @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
+    
+    pconsumption = Array{Float64}(undef, Na*Nshocks, Ncntry)
+
+    shocks = exp.(mc.state_values)
+
+    state_index = Array{Tuple{eltype(Int64), eltype(Int64)}}(undef, Na*Nshocks, 1)
+    
+    make_state_index!(state_index, model_params)
+
+    for (foo, xxx) in enumerate(state_index)
+
+        for cntry = 1:Ncntry
+
+            pconsumption[foo, cntry] =  ( -hh[country].asset_policy[xxx[1], xxx[2], cntry] 
+                    + R[country]*agrid[xxx[1]] + W[country]*shocks[xxx[2]] ) * hh[country].πprob[xxx[1], xxx[2], cntry]
+
+        end
+        
+    end
+
+    return pconsumption
+
+end
+
+##############################################################################
+
+function πii_elasticity(hh, Δ_hh, d, Δ_d, country, model_params)
+
+    @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
+
+    ∂log_πii = Array{Float64}(undef, Na*Nshocks, 1)
+
+    ∂log_πij = Array{Float64}(undef, Na*Nshocks, Ncntry)
+
+    πij = Array{Float64}(undef, Na*Nshocks, Ncntry)
+
+    state_index = Array{Tuple{eltype(Int64), eltype(Int64)}}(undef, Na*Nshocks, 1)
+    
+    make_state_index!(state_index, model_params)
+
+    τ_change = median(log.(Δ_d[:,country]) .- log.(d[:,country]))
+
+    for (foo, xxx) in enumerate(state_index)
+        
+        ∂log_πii[foo] = (log.(Δ_hh[country].πprob[xxx[1],xxx[2], country] ) 
+            .- log.(hh[country].πprob[xxx[1],xxx[2], country] )) ./ τ_change
+        #./ (log.(Δ_d[:,country]) .- log.(d[:,country]))
+
+        for cntry = 1:Ncntry
+
+            ∂log_πij[foo, cntry] =  (log.(Δ_hh[country].πprob[xxx[1],xxx[2], cntry] ) 
+            .- log.(hh[country].πprob[xxx[1],xxx[2], cntry] )) ./ ( τ_change )
+
+            πij[foo, cntry] = Δ_hh[country].πprob[xxx[1],xxx[2], cntry] / Δ_hh[country].πprob[xxx[1],xxx[2], country]
+        
+        end
+
+    end
+    
+    return ∂log_πii, ∂log_πij, πij
+
+end
+
+##############################################################################
+
+function θ_by_state(pconsumption, Δ_pconsumption, d, Δ_d, country, model_params)
 
     @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
 
     θ_micro = Array{Float64}(undef, Na*Nshocks, Ncntry)
 
-    state_index = Array{Tuple{eltype(Int64), eltype(Int64)}}(undef, model_params.Na*model_params.Nshocks, 1)
+    state_index = Array{Tuple{eltype(Int64), eltype(Int64)}}(undef, Na*Nshocks, 1)
     
     make_state_index!(state_index, model_params)
 
-    for (foo, xxx) in enumerate(dist[country].state_index)
+    τ_change = (log.(Δ_d[:,country]) .- log.(d[:,country]))
 
-        Δ_trade .=  Δ_hh[country].πprob[xxx[1],xxx[2], :] ./ Δ_hh[country].πprob[xxx[1],xxx[2],19]
+    for (foo, xxx) in enumerate(state_index)
 
-        trade .=  hh[country].πprob[xxx[1],xxx[2], :] ./ hh[country].πprob[xxx[1],xxx[2],19]
+        trade =  pconsumption[foo, :] ./ pconsumption[foo, country]
 
-        θ_micro[foo, :] .= (log.(Δ_trade) .- log.(trade)) ./ (log.(Δ_d) .- log.(d))
+        Δ_trade =  Δ_pconsumption[foo, :] ./ Δ_pconsumption[foo, country]
+        
+        θ_micro[foo, :] = (log.(Δ_trade) .- log.(trade)) ./ τ_change
+        #./ (log.(Δ_d[:,country]) .- log.(d[:,country]))
 
     end
     
@@ -328,27 +402,46 @@ end
 function make_hh_dataframe(dist, hh, country, R, W, model_params)
 
     @unpack Na, Nshocks, mc, agrid = model_params
+    @unpack asset_policy,  πprob = hh[country]
             
     income = Array{Float64}(undef, Na*Nshocks)
     weights = Array{Float64}(undef, Na*Nshocks)
     homeshare = Array{Float64}(undef, Na*Nshocks)
+    pconsumption = Array{Float64}(undef, Na*Nshocks)
+    home_π = Array{Float64}(undef, Na*Nshocks)
 
     fill!(income, 0.0) #need to fill given += operator below
     fill!(weights, 0.0) #need to fill given += operator below
+    fill!(pconsumption, 0.0) #need to fill given += operator below
 
     shocks = exp.(mc.state_values)
 
     for (foo, xxx) in enumerate(dist[country].state_index)
 
         income[foo] = (1 - R[country])*agrid[xxx[1]] + W[country]*shocks[xxx[2]] 
+
         weights[foo] = dist[country].λ[foo]
-        homeshare[foo] = hh[country].πprob[xxx[1], xxx[2], country]
+
+        for cntry = 1:Ncntry
+
+            pconsumption[foo] +=  ( -asset_policy[xxx[1], xxx[2], cntry] 
+                    + R[country]*agrid[xxx[1]] + W[country]*shocks[xxx[2]] ) * πprob[xxx[1], xxx[2], cntry]
+
+        end
+
+        home_π[foo] = hh[country].πprob[xxx[1], xxx[2], country]
+
+        homeshare[foo] = (( - asset_policy[xxx[1], xxx[2], country] 
+                    + R[country]*agrid[xxx[1]] + W[country]*shocks[xxx[2]] ) 
+                    * πprob[xxx[1], xxx[2], country]) ./ pconsumption[foo]
 
     end
     
     df = DataFrame(income = income, 
                weights = weights,
                homeshare = homeshare,
+               home_choice = home_π,
+               consumption = pconsumption,
                );
     
     return df
@@ -357,9 +450,10 @@ end
 
 ##############################################################################
 
-function make_welfare_dataframe(∂W, R, W, country, model_params)
+function make_welfare_dataframe(∂W, ∂logW, model_params)
     
     welfare = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
+    welfare_level = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
     shock = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
     asset = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
     
@@ -373,12 +467,15 @@ function make_welfare_dataframe(∂W, R, W, country, model_params)
         
         asset[foo] = model_params.agrid[xxx[1]]
 
-        welfare[foo] = ∂W[foo]
+        welfare[foo] = ∂logW[foo]
+
+        welfare_level[foo] = ∂W[foo]
     end
     
     df = DataFrame(asset = asset, 
                shock = shock,
                welfare = welfare,
+               welfare_level = welfare_level,
                );
     
     return df
