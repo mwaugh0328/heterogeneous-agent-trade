@@ -82,10 +82,14 @@ println("########### computing counter factual eq ################")
 println(" ")
 
 
+country = 4
 
 Δ_d = 0.10
 d_prime = deepcopy(d)
-d_prime[19,4] =  (d[19,4]).*(1.0 - Δ_d)
+d_prime[19,country] =  (d[19,country]).*(1.0 + Δ_d)
+
+country_name = "-"*string(country)
+
 
 Δ_mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, 
 γ = 1.5, ϕ = 2.0, amax = 8.0, σϵ = 0.25, d = d_prime, TFP = TFP, L = L)
@@ -100,11 +104,13 @@ Wsol, Δ_mdl_prm, hh_solution_method = "itteration");
 
 dfwelfare = make_welfare_dataframe(∂W, ∂logW, Δ_mdl_prm)
 
-CSV.write("../../notebooks/welfare-US-can-fix-p.csv", dfwelfare)
+root = "../../notebooks/welfare-US"
+CSV.write(root*country_name*"-fix-p.csv", dfwelfare)
 
 hh_df = make_hh_dataframe(Δp_dist, Δp_hh, 19, Rsol, Wsol, Δ_mdl_prm)
 
-CSV.write("../../notebooks/household-data-can-fix-p.csv", hh_df)
+root = "../../notebooks/household-data-US"
+CSV.write(root*country_name*"-fix-p.csv", hh_df)
 
 
 ###################################################################################
@@ -142,11 +148,13 @@ print(Δ_sol)
 
 dfwelfare = make_welfare_dataframe(∂W, ∂logW, Δ_mdl_prm)
 
-CSV.write("../../notebooks/welfare-US-can.csv", dfwelfare)
+root = "../../notebooks/welfare-US"
+CSV.write(root*country_name*".csv", dfwelfare)
 
 hh_df = make_hh_dataframe(Δ_dist, Δ_hh, 19, Δ_Rsol, Δ_Wsol, Δ_mdl_prm)
 
-CSV.write("../../notebooks/household-data-can.csv", hh_df)
+root = "../../notebooks/household-data-US"
+CSV.write(root*country_name*".csv", hh_df)
 
 # global_trade_elasticity =  (log.(Δ_tradeshare ./ diag(Δ_tradeshare)) .- 
 #     log.(tradeshare ./ diag(tradeshare))) ./ (log.(d_prime) .- log.(d))
