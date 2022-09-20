@@ -75,58 +75,78 @@ hh_df = make_hh_dataframe(dist, hh, 19, Rsol, Wsol, mdl_prm)
 
 CSV.write("../../notebooks/household_data_pre.csv", hh_df)
 
-# ####################################################################################
-# println(" ")
-# println(" ")
-# println("########### computing counter factual eq ################")
-# println(" ")
+####################################################################################
+println(" ")
+println(" ")
+println("########### computing counter factual eq ################")
+println(" ")
 
-# Δ_d = 0.10
 
-# d_prime =  1.0 .+ (d .- 1.0).*(1.0 - Δ_d)
 
-# Δ_mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, 
-# γ = 1.5, ϕ = 2.0, amax = 8.0, σϵ = 0.25, d = d_prime, TFP = TFP, L = L)
+Δ_d = 0.10
+d_prime = deepcopy(d)
+d_prime[19,4] =  (d[19,4]).*(1.0 - Δ_d)
 
-# f(x) = world_equillibrium(exp.(x), Δ_mdl_prm, hh_solution_method = "itteration", stdist_sol_method = "itteration");
+Δ_mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, 
+γ = 1.5, ϕ = 2.0, amax = 8.0, σϵ = 0.25, d = d_prime, TFP = TFP, L = L)
 
-# function f!(fvec, x)
+###################################################################################
+# Fix prices, change d, see what happens...
 
-#     fvec .= f(x)
+Δp_Y, Δp_tradeflows, Δp_A_demand, Δp_tradeshare, Δp_hh, Δp_dist = world_equillibrium(Rsol,
+Wsol, Δ_mdl_prm, hh_solution_method = "itteration");
 
-# end
+∂W, ∂logW = welfare_by_state(hh, Δp_hh, 19, Δ_mdl_prm.σϵ)
 
-# #initial_x =[ones(Ncntry-1); 1.02*ones(Ncntry)]
+dfwelfare = make_welfare_dataframe(∂W, ∂logW, Δ_mdl_prm)
 
-# ###################################################################
+CSV.write("../../notebooks/welfare-US-can-fix-p.csv", dfwelfare)
 
-# n = length(initial_x)
-# diag_adjust = n - 1
+hh_df = make_hh_dataframe(Δp_dist, Δp_hh, 19, Rsol, Wsol, Δ_mdl_prm)
 
-# Δ_sol = fsolve(f!, log.(initial_x), show_trace = true, method = :hybr;
-#       ml=diag_adjust, mu=diag_adjust,
-#       diag=ones(n),
-#       mode= 1,
-#       tol=1e-5,
-#        )
+CSV.write("../../notebooks/household-data-can-fix-p.csv", hh_df)
 
-# print(Δ_sol)
 
-# Δ_Wsol = exp.([0.0; Δ_sol.x[1:Ncntry-1]])
-# Δ_Rsol = exp.(Δ_sol.x[Ncntry:end])
+###################################################################################
+f(x) = world_equillibrium(exp.(x), Δ_mdl_prm, hh_solution_method = "itteration", stdist_sol_method = "itteration");
 
-# Δ_Y, Δ_tradeflows, Δ_A_demand, Δ_tradeshare, Δ_hh, Δ_dist = world_equillibrium(Δ_Rsol,
-# Δ_Wsol, Δ_mdl_prm, hh_solution_method = "itteration");
+function f!(fvec, x)
 
-# ∂W, ∂logW = welfare_by_state(hh, Δ_hh, 19, mdl_prm.σϵ)
+    fvec .= f(x)
 
-# dfwelfare = make_welfare_dataframe(∂W, ∂logW, mdl_prm)
+end
 
-# CSV.write("../../notebooks/welfare-US-%1.csv", dfwelfare)
+#initial_x =[ones(Ncntry-1); 1.02*ones(Ncntry)]
 
-# hh_df = make_hh_dataframe(Δ_dist, Δ_hh, 19, Δ_Rsol, Δ_Wsol, mdl_prm)
+###################################################################
 
-# CSV.write("../../notebooks/household-data-%1.csv", hh_df)
+n = length(initial_x)
+diag_adjust = n - 1
+
+Δ_sol = fsolve(f!, log.(initial_x), show_trace = true, method = :hybr;
+      ml=diag_adjust, mu=diag_adjust,
+      diag=ones(n),
+      mode= 1,
+      tol=1e-5,
+       )
+
+print(Δ_sol)
+
+Δ_Wsol = exp.([0.0; Δ_sol.x[1:Ncntry-1]])
+Δ_Rsol = exp.(Δ_sol.x[Ncntry:end])
+
+Δ_Y, Δ_tradeflows, Δ_A_demand, Δ_tradeshare, Δ_hh, Δ_dist = world_equillibrium(Δ_Rsol,
+Δ_Wsol, Δ_mdl_prm, hh_solution_method = "itteration");
+
+∂W, ∂logW = welfare_by_state(hh, Δ_hh, 19, Δ_mdl_prm.σϵ)
+
+dfwelfare = make_welfare_dataframe(∂W, ∂logW, Δ_mdl_prm)
+
+CSV.write("../../notebooks/welfare-US-can.csv", dfwelfare)
+
+hh_df = make_hh_dataframe(Δ_dist, Δ_hh, 19, Δ_Rsol, Δ_Wsol, Δ_mdl_prm)
+
+CSV.write("../../notebooks/household-data-can.csv", hh_df)
 
 # global_trade_elasticity =  (log.(Δ_tradeshare ./ diag(Δ_tradeshare)) .- 
 #     log.(tradeshare ./ diag(tradeshare))) ./ (log.(d_prime) .- log.(d))
