@@ -745,3 +745,20 @@ function make_d!(d, dij)
     end
 
 end
+
+##########################################################################
+
+function mean_z(model_params)
+    # gets the mean value from the z-shocks
+    # from the amador-allerano code
+
+    @unpack Nshocks, mc = model_params
+
+    shocks = exp.(mc.state_values)
+
+    invZ = real(inv(eigvecs(mc.p))[Nshocks,:])
+    invZ .= invZ ./ sum(invZ)
+
+    return invZ' * shocks
+
+end
