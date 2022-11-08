@@ -1,6 +1,6 @@
 function compute_efficient(cii, model_params)
 
-    @unpack mc, Ncntry, Nshocks, TFP, d, γ = model_params
+    @unpack mc, Ncntry, Nshocks, TFP, d, γ, σϵ = model_params
 
     χ = similar(cii)
     Y = similar(cii)
@@ -14,7 +14,7 @@ function compute_efficient(cii, model_params)
 
     for cntry = 1:Ncntry
 
-        χ[cntry] = utility(cii[cntry], γ) #multiplier
+        χ[cntry] = muc(cii[cntry], γ) #multiplier
 
         Y[cntry] = TFP[cntry] * L[cntry] * N #production
 
@@ -30,11 +30,11 @@ function compute_efficient(cii, model_params)
 
         end
 
-            πprob[importer, :]  = make_πprob_efficient( c[importer, :] , σ, γ)
+            πprob[importer, :]  = make_πprob_efficient( c[importer, :] , σϵ, γ)
     
     end
 
-return Y, c
+    return Y, c, πprob
 
 end
 
@@ -46,6 +46,6 @@ function make_πprob_efficient(c, σ, γ)
 
     @fastmath foo .= @. exp( foo / σ )
 
-    return foo ./ sum( foo, dims = 3) 
+    return foo ./ sum( foo ) 
    
 end
