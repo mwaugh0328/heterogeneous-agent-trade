@@ -302,63 +302,34 @@ p_{i} Y_{i} - \sum_{j}^{M}  X_{ji} = 0, \ \ \forall i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[t]{Micro-Elasticities I: The Intensive Margin}
+\begin{frame}[t]{The H-A Trade Elasticity}
 \smallskip
-How do households respond on the \textbf{intensive} margin to a change in trade costs?
-\begin{align*}
-\theta_{ij}(a,z)^{I} & := \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \\
-\\
-& = \bigg [-\frac{\partial g_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}}.
-\end{align*}\\
-\bigskip
-\medskip
-The idea: A reduction in trade costs relaxes the hh's budget constraint, so the intensive margin elasticity depends on the division of new resources between assets and expenditure.
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[t]{Micro-Elasticities II: The Extensive Margin}
-\smallskip
-How do households respond on the \textbf{extensive} margin?
-\begin{align*}
-\theta_{ij}(a,z)^{E} &:= \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \\
-\nonumber \\
-& = - \frac{\partial \Phi_{i}(a,z) / \Phi_{i}(a,z)}{\partial d_{ij}/d_{ij}} -\frac{1}{\sigma_{\epsilon}}\bigg[u'(c_{ij}(a,z))c_{ij}(a,z)\bigg] + \beta \mathbb{E}\frac{1}{\sigma_{\epsilon}}\frac{\partial v_{i}(a',z')}{\partial d_{ij}/ d_{ij}}.
-\end{align*}\\
-\medskip
-\bigskip
-\uncover<2>{To get a sense of things, vary the second term by wealth\ldots
-\begin{align*}
-\frac{\partial (u'(c_{ij}(a,z))c_{ij}(a,z))}{\partial a} = u'(c_{ij}(a,z))\times \mathbf{MPC}_{ij}(a,z) \times \bigg[-\rho_{ij}(a,z) + 1\bigg],
-\end{align*}\\
-\medskip
-where $\rho_{ij}(a,z)$ is the Arrow-Pratt measure of relative risk aversion.\\
-\medskip
-With CRRA, if risk aversion $> \ 1 \ $, then poor, high marginal utility households (who are also high MPC households) are \emph{more elastic relative} to rich households on the extensive margin.}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\begin{frame}[t]{Macro-Elasticities: The H-A Trade Elasticity}
-\medskip
-Define the aggregate trade elasticity as:
-\begin{align*}
-\theta_{ij} := \frac{\partial ( M_{ij} / M_{ii} )}{\partial d_{ij}} \times \frac{d_{ij}}{( M_{ij} / M_{ii} )}
-\end{align*}\\
-\bigskip
-\uncover<2>{\textbf{Proposition \#1: The H-A Trade Elasticity.} The trade elasticity between country $i$ and country $j$ is:
+\textbf{Proposition \#1: The H-A Trade Elasticity.} The trade elasticity between country $i$ and country $j$ is:
 \begin{align}
 \theta_{ij} = 1 + \int_{a} \int_{z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z) - \bigg \{ \theta_{ii}(a,z)^{I} + \theta_{ii}(a,z)^{E} \bigg \}\omega_{ii}(a,z), \nonumber
 \end{align}
 which is the difference between $ij$ and $ii$ expenditure-weighted micro-level elasticities. The micro-level elasticities for households with states $a,z$ are an intensive and extensive elasticity
 \begin{align}
 \nonumber
-\theta_{ij}(a,z)^{I} = \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \ \ \ \theta_{ij}(a,z)^{E} = \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \
+\begin{alert}<2>{\theta_{ij}(a,z)^{I} = \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}}\end{alert}, \ \ \ \ \ \ \begin{alert}<3>{\theta_{ij}(a,z)^{E} = \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}}\end{alert}, \ \ \ \
 \end{align}
-and $\omega_{ij}(a,z)$ are the expenditure weights.\\}
+and $\omega_{ij}(a,z)$ are the expenditure weights.\\
+\only<2>{
+\medskip
+{\small \begin{align*}
+\begin{alert}<2>{\theta_{ij}(a,z)^{I} = \bigg [-\frac{\partial g_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}}.}\end{alert}
+\end{align*}}\\
+\medskip
+The idea here is that reduction in trade costs relaxes the hh's budget constraint and then the division of new resources between assets and expenditure determines the intensive margin elasticity.}
+\only<3>{
+\medskip
+{\small
+\begin{align*}
+\begin{alert}<3>{\theta_{ij}(a,z)^{E}}\end{alert} = - \frac{\partial \Phi_{i}(a,z) / \Phi_{i}(a,z)}{\partial d_{ij}/d_{ij}} + \begin{alert}<3>{\frac{1}{\sigma_{\epsilon}}\frac{\partial v_{ij}(a,z)}{\partial d_{ij}/d_{ij}} }\end{alert}.
+\end{align*}}\\
+Key is \begin{alert}<3>{$\frac{\partial v_{ij}(a,z)}{\partial d_{ij}/d_{ij}}$}\end{alert}.\\
+\bigskip
+In the paper, I show that if relative risk aversion $ > 1$ than hh's with (i) high $u'(c)$ and (ii) high MPCs are more price elastic. \begin{alert}<3>{\textbf{So poor hh's are the most price sensitive.}}\end{alert}}
 \end{frame}
 
 %intensive margin is all dynamic good point
@@ -402,7 +373,7 @@ and $\omega_{ij}(a,z)$ are the expenditure weights.\\}
 \frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} \approx \int_{z} \int_{a}  \bigg \{ \underbrace{\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}}_{\small \mbox{gains to hh}}  + \underbrace{v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}}_{\small \mbox{gains to reallocation}}   \bigg \} L_i \lambda_{i}(a,z),
 \nonumber
 \end{align*}
-where $v_i$ is a hh's value function before taste shocks are realized.\\
+where $v_i$ is value function before realization of taste shocks; $\approx$ is about abstracting from transition. \\
 \medskip
 Household-level gains are
 \begin{align*}
@@ -444,9 +415,31 @@ Mimics the results of \citet{anderson1987ces} and \citet{arkolakis2012new}| but 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{frame}[t]{H-A Trade under Efficiency}
+\smallskip
+\textbf{Proposition \#4: The Centralized (Efficient) Allocation.} The allocation satisfying the Centralized Planning Problem (with a utilitarian social welfare function) is:\\
+\bigskip
+\textbf{1.} An allocation of consumption satisfying:
+\begin{align}
+u'(c_{ij}(z,t) ) = \chi_{j}(t) d_{ij} \nonumber
+\end{align}
+where $\chi_{j}(t)$ is the multiplier on $j$ resource constraint for variety $j$,\\
+\bigskip
+\medskip
+\textbf{2.} And variety choice probabilities:
+\begin{align}
+\displaystyle \pi_{ij}(t) =\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}}\right) \bigg / \sum_{j'}\exp \left( \frac{u(c_{ij'}(t)) - u'(c_{ij'}(t))c_{ij'}(t)}{\sigma_{\epsilon}} \right). \nonumber
+\end{align}\\
+\bigskip
+\medskip
+\textbf{1.} is like a \citet{backus1993} condition. \ \ \textbf{2.} is new|trade should reflect the net social benefit of buying that commodity.
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}[t]{H-A Gains from Trade under Efficiency}
 \smallskip
-\textbf{Proposition \#4: Trade Elasticities and Welfare Gains in the Efficient Allocation} The trade elasticity between $i,j$ in the efficient allocation is:
+\textbf{Proposition \#5: Trade Elasticities and Welfare Gains in the Efficient Allocation} The trade elasticity between $i,j$ in the efficient allocation is:
 \begin{align}
 \theta_{ij} =  -\frac{1}{\sigma_{\epsilon}} \bigg [ u'(c_{ij}) c_{ij} \bigg]. \nonumber
 \end{align}\\
@@ -458,9 +451,9 @@ And the welfare gains from a reduction in trade costs between $i,j$ are
 which is the discounted, direct effect from relaxing the resource constraint.\\
 \bigskip
 \medskip
-Mimics the results of \citet{AtkesonBurstein2010} but with household (not firm) heterogeneity.\\
+Mimics the results of \citet{AtkesonBurstein2010} but with household (not firm) heterogeneity. With $\log$ preferences the direct effect is equivalent to \citet{arkolakis2012new}.\\
 \bigskip
-With log preferences the direct effect is equivalent to \citet*{arkolakis2012new}.
+
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -724,6 +717,42 @@ These are some issues I'm mulling over:\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Micro-Elasticities I: The Intensive Margin}
+\smallskip
+How do households respond on the \textbf{intensive} margin to a change in trade costs?
+\begin{align*}
+\theta_{ij}(a,z)^{I} & := \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \\
+\\
+& = \bigg [-\frac{\partial g_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}}.
+\end{align*}\\
+\bigskip
+\medskip
+The idea: A reduction in trade costs relaxes the hh's budget constraint, so the intensive margin elasticity depends on the division of new resources between assets and expenditure.
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Micro-Elasticities II: The Extensive Margin}
+\smallskip
+How do households respond on the \textbf{extensive} margin?
+\begin{align*}
+\theta_{ij}(a,z)^{E} &:= \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \\
+\nonumber \\
+& = - \frac{\partial \Phi_{i}(a,z) / \Phi_{i}(a,z)}{\partial d_{ij}/d_{ij}} -\frac{1}{\sigma_{\epsilon}}\bigg[u'(c_{ij}(a,z))c_{ij}(a,z)\bigg] + \beta \mathbb{E}\frac{1}{\sigma_{\epsilon}}\frac{\partial v_{i}(a',z')}{\partial d_{ij}/ d_{ij}}.
+\end{align*}\\
+\medskip
+\bigskip
+\uncover<2>{To get a sense of things, vary the second term by wealth\ldots
+\begin{align*}
+\frac{\partial (u'(c_{ij}(a,z))c_{ij}(a,z))}{\partial a} = u'(c_{ij}(a,z))\times \mathbf{MPC}_{ij}(a,z) \times \bigg[-\rho_{ij}(a,z) + 1\bigg],
+\end{align*}\\
+\medskip
+where $\rho_{ij}(a,z)$ is the Arrow-Pratt measure of relative risk aversion.\\
+\medskip
+With CRRA, if risk aversion $> \ 1 \ $, then poor, high marginal utility households (who are also high MPC households) are \emph{more elastic relative} to rich households on the extensive margin.}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
