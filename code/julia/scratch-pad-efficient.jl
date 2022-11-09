@@ -37,7 +37,7 @@ mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100,
 
 ####################################################################################
 
-initial_x = 0.8.*ones(mdl_prm.Ncntry)
+initial_x = 0.5.*ones(mdl_prm.Ncntry)
 
 f(x) = efficient_equillibrium(x, mdl_prm)
 
