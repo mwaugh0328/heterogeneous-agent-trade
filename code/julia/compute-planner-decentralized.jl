@@ -64,10 +64,14 @@ Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol,
 
 # plot(log.(vec(tradeshare)), log.(dftrade.tradesharedata), seriestype = :scatter)
 
-# dftrade_model_data = DataFrame(
-#     trademodel = log.(vec(tradeshare)),
-#     tradedata = log.(dftrade.tradesharedata)
-#      );
+dftrade_model_data = DataFrame(
+    trademodel = vec(tradeshare),
+    tradedata = dftrade.tradesharedata,
+    trade_efficient = vec(social.tradeshare),
+    tradecost = dftrade.d,
+    importer_index = dftrade.importer_index,
+    exporter_index = dftrade.exporter_index
+     );
 
 # CSV.write("../../notebooks/trade_model_data.csv", dftrade_model_data)
 
