@@ -138,7 +138,7 @@ Qualitatively I characterize\ldots
 \item The efficient allocation and, thus, how market incompleteness shapes these outcomes.
 \end{itemize}
 \bigskip
-Quantitatively, I compute a 19 country model (the \citet{eaton2002technology} data) and (today) study the pattern of trade in the decentralized vs. efficient allocation.
+Quantitatively, I compute a 19 country model (the \citet{eaton2002technology} data) and\ldots\\ today, gains from trade and the role of the asset market, and a little bit about the planner.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -174,25 +174,24 @@ p_{ij} = \frac{d_{ij}w_{j}}{A_{j}}.
 
 \begin{frame}[t]{Model: Households I}
 \smallskip
-Mass of $L_i$ households in each country $i$.\\
+Continuum of households $k \in [0, \ L_i]$ in each country $i$.\\
 \medskip
 Household-level preferences:
 \begin{align*}
-\small
-&  \mathrm{E}\sum_{t = 0}^{\infty} \beta^{t} \ \tilde{u}( \{ c_{ijt}, \epsilon_{jt} \}_{M})\\
-\\
-& \mbox{where}  \ \ \  \tilde{u}( c_{ijt}, \epsilon_{jt} ) =  u(c_{ijt}) + \epsilon_{jt}.
+\mathrm{E}\sum_{t = 0}^{\infty} \beta^{t} \ \tilde{u}^k_{ijt}
 \end{align*}
-\begin{itemize}
-\item $\epsilon_{jt}$ is iid (across time and households) taste shocks over national varieties.
-\end{itemize}
+where conditional direct utility for good $j$ is
+\begin{align*}
+\tilde{u}^k_{ijt} =  u(c^k_{ijt}) + \epsilon^k_{jt}, \ \ \ j = 1, \ldots, M
+\end{align*}\\
 \medskip
 Assumptions:
 \begin{itemize}
+\item Two-stage budgeting as in \citet*{anderson1987ces}\ldots so first chose variety, then continuous choice over quantity. 
 \smallskip
-\item For most of the analysis, I'll only assume $u$ is well behaved.
+\item $\epsilon^k_{jt}$s are iid across time and households and distributed Type 1 Extreme Value with dispersion parameter $\sigma_{\epsilon}$.
 \smallskip
-\item $\epsilon_{jt}$s are distributed Type 1 Extreme Value with dispersion parameter $\sigma_{\epsilon}$.
+\item For now, I only assume $u$ is well behaved.
 \end{itemize}
 \end{frame}
 
@@ -201,7 +200,7 @@ Assumptions:
 
 \begin{frame}[t]{Model: Households II}
 \smallskip
-A household's efficiency units $z_t$ evolve according to a Markov Chain. They face the wage per efficiency unit $w_{it}$.\\
+A household's efficiency units $z^k_t$ evolve according to a Markov Chain. They face the wage per efficiency unit $w_{it}$.\\
 \bigskip
 \medskip
 Households borrow or accumulate a non-state contingent asset, $a$, with gross return $R_{i}$. Household's face the debt limit
@@ -212,7 +211,7 @@ a_{t+1} \geq - \phi_{i}.
 \medskip
 Conditional on a variety choice, a household's budget constraint is
 \begin{align*}
-p_{ij}c_{ijt} +  a_{t+1} \leq    R_{i} a_{t} + w_{it} z_{t}.
+p_{ij}c_{ijt} +  a_{t+1} \leq    R_{i} a_{t} + w_{it} z^k_{t}.
 \end{align*}
 \end{frame}
 
@@ -223,7 +222,7 @@ p_{ij}c_{ijt} +  a_{t+1} \leq    R_{i} a_{t} + w_{it} z_{t}.
 \smallskip
 Focus on a stationary setting. A hh's state are its asset holdings $a$ and shock $z$.\\
 \bigskip
-\textbf{1.} Condition on variety choice (e.g. a US or Italian variety) their problem is:
+\textbf{1.} Condition on variety choice their problem is:
 \begin{align}
 v_{ij}(a, z) =   \max_{\ a', \ c_{ij}  \ }\bigg  \{ u(c_{ij}) + \epsilon_{j}  + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\} \nonumber \\
 \nonumber \\
@@ -409,7 +408,7 @@ and is independent of household heterogeneity. And the welfare gains from trade 
 and is (i) independent of the household heterogeneity and (ii) summarized by the trade elasticity and the change in the home choice probability (and home share).\\
 \bigskip
 \medskip
-Mimics the results of \citet{anderson1987ces} and \citet{arkolakis2012new}| but stronger in the sense that this is a far more complex economy.
+Mimics the results of \citet{anderson1987ces} and \citet{arkolakis2012new}| but stronger in the sense that this is a far more complex economy, i.e. borrowing constraints, risk, and incomplete markets.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -432,7 +431,9 @@ where $\chi_{j}(t)$ is the multiplier on $j$ resource constraint for variety $j$
 \end{align}\\
 \bigskip
 \medskip
-\textbf{1.} is like a \citet{backus1993} condition. \ \ \textbf{2.} is new|trade should reflect the net social benefit of buying that commodity.
+\textbf{1.} is a \citet{backus1993}-like condition. \\
+\smallskip
+\textbf{2.} is new | trade should reflect the net social benefit of buying that commodity.
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -489,21 +490,21 @@ Other important parameters and how I set them for today.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[t]{Quantitative Experiment}
+\begin{frame}[t]{Taking the Model for a Ride}
 \smallskip
 Two ideas I want to illustrate:\\
 \medskip
-\textbf{1.} \textbf{You pick the market, you pick a person}\ldots
+\textbf{1.} \textbf{You pick the market, you pick a person.}
 \begin{itemize}
-  \item In this calibration, the rich are more likely to consume all varieties; the poor are likely to consume the cheapest (which is typically the home good).
+  \item Rich vs. poor benefit differently depending upon the market.
 \end{itemize}
 \bigskip
-\textbf{2.} \textbf{Modern day Stolper-Samuelson}\ldots
+\textbf{2.} \textbf{Modern day Stolper-Samuelson.}
 \begin{itemize}
 \item Who directly benefits from \textbf{1.} effects $R$ $\Rightarrow$ shapes the extent to which their are winners and losers.
 \end{itemize}
 \bigskip
-Next slides: 10\% reduction to US import trade cost on different source markets\ldots Australia, Japan, Canada. Focus on US welfare and break it down by
+Next slides: 10\% reduction to US import trade cost on different source markets\ldots Japan, Canada. Focus on US welfare and break it down by
 \begin{itemize}
 \item[A.] Fix $R$ \& $w$, so what is direct effect of change in trade cost,
 \smallskip
@@ -513,6 +514,158 @@ Next slides: 10\% reduction to US import trade cost on different source markets\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{U.S. Trade: 10\% Reduction to Japan, {\color{red} Fixed $R$ \& $w$} }
+\begin{figure}[t]
+\centering{\includegraphics[scale = .45]{../notes/figures/japan-trade.pdf}}
+\end{figure}
+\end{frame}
+
+\begin{frame}[t]{U.S. Welfare: 10\% Reduction to Japan, {\color{red} Fixed $R$ \& $w$} }
+\begin{figure}[!t]
+\centering{\includegraphics[scale = .45]{../notes/figures/welfare-jpn-fix-p.pdf}}
+\end{figure}
+\end{frame}
+
+\begin{frame}[t]{U.S. Welfare: 10\% Reduction to Japan, {\color{red} GE} }
+\begin{figure}[!t]
+\centering{\includegraphics[scale = .45]{../notes/figures/welfare-jpn.pdf}}
+\end{figure}
+\end{frame}
+
+\begin{frame}[t]
+\frametitle{U.S. Welfare: 10\% Reduction to Japan}
+\begin{table}[t]
+\footnotesize
+\setlength {\tabcolsep}{6.05mm}
+\renewcommand{\arraystretch}{1.80}
+\begin{center}
+\begin{tabular}{l c c}
+\multicolumn{3}{c}{\small \textbf{Welfare by Wealth --- Japan {\color{red} 10\%} Reduction}}\\
+\hline
+\hline
+& \footnotesize  Fixed $R$ \& $w$ & GE: Prices Adjust \\
+\cmidrule(lr){2-2}  \cmidrule(lr){3-3}
+\footnotesize  Asset Quartile & \footnotesize  Welfare (\% Change) & \footnotesize  Welfare (\% Change) \\
+\footnotesize  Bottom quartile  & 0.0193 & -0.095 \\
+\footnotesize  Median & 0.0306 & -0.052 \\
+\footnotesize  Upper quartile  & 0.0535 & 0.030  \\
+\footnotesize  Aggregate & 0.0031 & -0.040 \\
+\cmidrule(lr){2-2}  \cmidrule(lr){3-3}
+\footnotesize  \% losers & 0.0 & 77.8\\
+\hline
+\end{tabular}
+%\parbox[c]{3.65in}{\vspace{.1cm}
+%{\footnotesize \textbf{Note:}}}
+\end{center}
+\end{table}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{U.S. Trade: 10\% Reduction to Canada, {\color{red} Fixed $R$ \& $w$} }
+
+\begin{figure}[t]
+\centering{\includegraphics[scale = .45]{../notes/figures/canada_trade.pdf}}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}[t]{U.S. Welfare: 10\% Reduction to Canada, {\color{red} Fixed $R$ \& $w$} }
+\begin{figure}[t]
+\centering{\includegraphics[scale = .45]{../notes/figures/welfare-can-fix-p.pdf}}
+\end{figure}
+\end{frame}
+
+\begin{frame}[t]{U.S. Welfare: 10\% Reduction to Canada, {\color{red} GE } }
+\begin{figure}[!t]
+\centering{\includegraphics[scale = .45]{../notes/figures/welfare-can.pdf}}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}[t]
+\frametitle{U.S. Welfare: 10\% Reduction to Canada}
+\begin{table}[!t]
+\footnotesize
+\setlength {\tabcolsep}{6.05mm}
+\renewcommand{\arraystretch}{1.80}
+\begin{center}
+\begin{tabular}{l c c}
+\multicolumn{3}{c}{\small \textbf{Welfare by Wealth --- Canada {\color{red} 10\%} Reduction}}\\
+\hline
+\hline
+& \footnotesize  Fixed $R$ \& $w$ & GE: Prices Adjust \\
+\cmidrule(lr){2-2}  \cmidrule(lr){3-3}
+\footnotesize  Asset Quartile & \footnotesize  Welfare (\% Change) & \footnotesize  Welfare (\% Change) \\
+\footnotesize  Bottom quartile  & 0.21 & 0.06 \\
+\footnotesize  Median & 0.28 & 0.09 \\
+\footnotesize  Upper quartile  & 0.39 & 0.14  \\
+\footnotesize  Aggregate & 0.30 &  0.09 \\
+\cmidrule(lr){2-2}  \cmidrule(lr){3-3}
+\footnotesize  \% losers & 0.0 & 0.0\\
+\hline
+\end{tabular}
+%\parbox[c]{3.65in}{\vspace{.1cm}
+%{\footnotesize \textbf{Note:}}}
+\end{center}
+\end{table}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\frametitle{The Planner\ldots}
+\smallskip
+This idea that the being exposed to some markets is better than others shows up in the planners allocation.\\
+\bigskip
+Next two slides..
+\begin{itemize}
+\item Trade in the decentralized equilibrium vs.
+\medskip
+\item the allocation chosen by the planner
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{US Trade in the Decentralized Equilibrium}
+
+\begin{figure}[t]
+\centering{\includegraphics[scale = .55]{../notes/figures/decentralized-trade-us.pdf}}
+\end{figure}
+\end{frame}
+
+\begin{frame}[t]{US Trade in the Planner's Allocation}
+
+\begin{figure}[t]
+\centering{\includegraphics[scale = .55]{../notes/figures/planner-trade-us.pdf}}
+\end{figure}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+\newcounter{finalframe}
+\setcounter{finalframe}{\value{framenumber}}
+
+\begin{frame}[allowframebreaks]
+\frametitle{References}
+\scriptsize
+\bibliography{../notes/bibtex/micro_price_bibtex}
+\end{frame}
+
 
 \begin{frame}[t]{U.S. Welfare: 10\% Reduction to a Small Market (Australia), {\color{red} Fixed $R$ \& $w$} }
 \vspace{-.5cm}
@@ -555,163 +708,6 @@ Next slides: 10\% reduction to US import trade cost on different source markets\
 %{\footnotesize \textbf{Note:}}}
 \end{center}
 \end{table}
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[t]{U.S. Welfare: 10\% Reduction to a Medium Market (Japan), {\color{red} Fixed $R$ \& $w$} }
-\vspace{-.5cm}
-\begin{figure}[!t]
-\centering{\includegraphics[scale = .45]{../notes/figures/welfare-jpn-fix-p.pdf}}
-\end{figure}
-\end{frame}
-
-\begin{frame}[t]{U.S. Welfare: 10\% Reduction to a Medium Market (Japan), {\color{red} GE} }
-\vspace{-.5cm}
-\begin{figure}[!t]
-\centering{\includegraphics[scale = .45]{../notes/figures/welfare-jpn.pdf}}
-\end{figure}
-\end{frame}
-
-\begin{frame}[t]
-\frametitle{U.S. Welfare: 10\% Reduction to a Medium Market (Japan)}
-\begin{table}[t]
-\footnotesize
-\setlength {\tabcolsep}{6.05mm}
-\renewcommand{\arraystretch}{1.80}
-\begin{center}
-\begin{tabular}{l c c}
-\multicolumn{3}{c}{\small \textbf{Welfare by Wealth --- Japan {\color{red} 10\%} Reduction}}\\
-\hline
-\hline
-& \footnotesize  Fixed $R$ \& $w$ & GE: Prices Adjust \\
-\cmidrule(lr){2-2}  \cmidrule(lr){3-3}
-\footnotesize  Asset Quartile & \footnotesize  Welfare (\% Change) & \footnotesize  Welfare (\% Change) \\
-\footnotesize  Bottom quartile  & 0.0193 & -0.095 \\
-\footnotesize  Median & 0.0306 & -0.052 \\
-\footnotesize  Upper quartile  & 0.0535 & 0.030  \\
-\footnotesize  Aggregate & 0.0031 & -0.040 \\
-\cmidrule(lr){2-2}  \cmidrule(lr){3-3}
-\footnotesize  \% losers & 0.0 & 77.8\\
-\hline
-\end{tabular}
-%\parbox[c]{3.65in}{\vspace{.1cm}
-%{\footnotesize \textbf{Note:}}}
-\end{center}
-\end{table}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[t]{U.S. Welfare: 10\% Reduction to a Large Market (Canada), {\color{red} Fixed $R$ \& $w$} }
-\vspace{-.5cm}
-\begin{figure}[t]
-\centering{\includegraphics[scale = .45]{../notes/figures/welfare-can-fix-p.pdf}}
-\end{figure}
-\end{frame}
-
-\begin{frame}[t]{U.S. Welfare: 10\% Reduction to a Large Market (Canada), {\color{red} GE } }
-\vspace{-.5cm}
-\begin{figure}[!t]
-\centering{\includegraphics[scale = .45]{../notes/figures/welfare-can.pdf}}
-\end{figure}
-\end{frame}
-
-
-\begin{frame}[t]
-\frametitle{U.S. Welfare: 10\% Reduction to a Large Market (Canada)}
-\begin{table}[!t]
-\footnotesize
-\setlength {\tabcolsep}{6.05mm}
-\renewcommand{\arraystretch}{1.80}
-\begin{center}
-\begin{tabular}{l c c}
-\multicolumn{3}{c}{\small \textbf{Welfare by Wealth --- Canada {\color{red} 10\%} Reduction}}\\
-\hline
-\hline
-& \footnotesize  Fixed $R$ \& $w$ & GE: Prices Adjust \\
-\cmidrule(lr){2-2}  \cmidrule(lr){3-3}
-\footnotesize  Asset Quartile & \footnotesize  Welfare (\% Change) & \footnotesize  Welfare (\% Change) \\
-\footnotesize  Bottom quartile  & 0.21 & 0.06 \\
-\footnotesize  Median & 0.28 & 0.09 \\
-\footnotesize  Upper quartile  & 0.39 & 0.14  \\
-\footnotesize  Aggregate & 0.30 &  0.09 \\
-\cmidrule(lr){2-2}  \cmidrule(lr){3-3}
-\footnotesize  \% losers & 0.0 & 0.0\\
-\hline
-\end{tabular}
-%\parbox[c]{3.65in}{\vspace{.1cm}
-%{\footnotesize \textbf{Note:}}}
-\end{center}
-\end{table}
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[t]{U.S. Welfare: 10\% {\color{red} Increase} to a Small Market (Australia), {\color{red} GE} }
-\vspace{-.5cm}
-\begin{figure}[!t]
-\centering{\includegraphics[scale = .45]{../notes/figures/welfare-aut-increase.pdf}}
-\end{figure}
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[t]
-\frametitle{Where I'm headed next\ldots}
-\smallskip
-Lot's to do, but ``big picture'' this is where I'm aiming:\\
-\bigskip
-\textbf{1.} Can trade policy improve outcomes?
-\begin{itemize}
-\smallskip
-\item This is a useful laboratory to think about policy because (i) there is scope for it and (ii) have a direct representation of utility (not an indirect representation).
-\end{itemize}
-\bigskip
-\textbf{2.} How financial globalization relates globalization in goods trade?
-\begin{itemize}
-\smallskip
-\item The model provides a coherent account of both trade in goods and assets. I think it'd be interesting to see what happens.
-\end{itemize}
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[t]
-\frametitle{Problems\ldots}
-\smallskip
-These are some issues I'm mulling over:\\
-\bigskip
-\textbf{1.} Differences in hh-level shares too different (at least for US).\\
-\bigskip
-\textbf{2.} How to think about China?\\
-\bigskip
-\textbf{3.} Sectors?\\
-\end{frame}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\appendix
-
-\newcounter{finalframe}
-\setcounter{finalframe}{\value{framenumber}}
-
-\begin{frame}[allowframebreaks]
-\frametitle{References}
-\scriptsize
-\bibliography{../notes/bibtex/micro_price_bibtex}
 \end{frame}
 
 
