@@ -45,7 +45,11 @@ end
 function world_equillibrium(x, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
 
-    W = [1.0; x[1:Ncntry-1]]
+    @unpack Ncntry, TFP, d = model_params
+
+    @assert length(x) ≈ ( Ncntry + (Ncntry - one(Ncntry)) )
+
+    W = [1.0; x[1:(Ncntry - one(Ncntry))]]
     R = x[Ncntry:end]
 
     Y, tradeflows, A_demand = world_equillibrium(R, W, model_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
@@ -58,6 +62,33 @@ function world_equillibrium(x, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
     asset_market = A_demand
 
     return [asset_market; goods_market[2:end]]
+
+end
+
+# ##########################################################################
+# ##########################################################################
+
+function world_equillibrium_FG(x, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
+
+    @unpack Ncntry = model_params
+
+    @assert length(x) ≈ Ncntry
+
+    W = [1.0; x[1:(Ncntry - one(Ncntry))]]
+
+    R = ones(Ncntry)*x[end]
+
+    Y, tradeflows, A_demand = world_equillibrium(R, W, model_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+        hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
+
+    goods_market = Y .- vec(sum(tradeflows, dims = 1))
+    # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
+    # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
+
+    asset_market = A_demand
+
+    return [sum(asset_market); goods_market[2:end]]
 
 end
 
