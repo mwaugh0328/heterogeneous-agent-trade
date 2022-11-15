@@ -174,9 +174,7 @@ p_{ij} = \frac{d_{ij}w_{j}}{A_{j}}.
 
 \begin{frame}[t]{Model: Households I}
 \smallskip
-Continuum of households $k \in [0, \ L_i]$ in each country $i$.\\
-\medskip
-Household-level preferences:
+Continuum of households $k \in [0, \ L_i]$ in each country $i$. Household preferences:
 \begin{align*}
 \mathrm{E}\sum_{t = 0}^{\infty} \beta^{t} \ \tilde{u}^k_{ijt}
 \end{align*}
@@ -187,12 +185,14 @@ where conditional direct utility for good $j$ is
 \medskip
 Assumptions:
 \begin{itemize}
-\item Two-stage budgeting as in \citet*{anderson1987ces}\ldots so first chose variety, then continuous choice over quantity. 
+\item Two-stage budgeting as in \citet*{anderson1987ces}\ldots so first chose variety, then continuous choice over quantity.
 \smallskip
-\item $\epsilon^k_{jt}$s are iid across time and households and distributed Type 1 Extreme Value with dispersion parameter $\sigma_{\epsilon}$.
+\item $\epsilon^k_{jt}$s are iid across hh and time; distributed Type 1 Extreme Value with dispersion parameter $\sigma_{\epsilon}$.
 \smallskip
 \item For now, I only assume $u$ is well behaved.
 \end{itemize}
+\medskip
+Alternative interpretation | the ``infinite shopping aisle'' we use in \citet{p-iq}.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -382,7 +382,7 @@ Household-level gains are
 \medskip
 HH-level gains pick up two effects:
 \begin{itemize}
-\item An ACR-like term reflecting how it's home choice changes\ldots basically the gains from substitution.
+\item An ACR-like term reflecting how a hh's home choice change, i.e., the gains from substitution.
 \smallskip
 \item How hh's wealth ($+$ or $-$) changes through GE effects on interest rates.
 \end{itemize}
@@ -416,11 +416,11 @@ Mimics the results of \citet{anderson1987ces} and \citet{arkolakis2012new}| but 
 
 \begin{frame}[t]{H-A Trade under Efficiency}
 \smallskip
-\textbf{Proposition \#4: The Centralized (Efficient) Allocation.} The allocation satisfying the Centralized Planning Problem (with a utilitarian social welfare function) is:\\
+\textbf{Proposition \#4: The Centralized (Efficient) Allocation.} The allocation satisfying the Centralized Planning Problem (with a utilitarian SWF and country-specific Pareto weights $\psi_i$) is:\\
 \bigskip
 \textbf{1.} An allocation of consumption satisfying:
 \begin{align}
-u'(c_{ij}(z,t) ) = \chi_{j}(t) d_{ij} \nonumber
+\psi_{i} u'(c_{ij}(z,t) ) = \chi_{j}(t) d_{ij} \nonumber
 \end{align}
 where $\chi_{j}(t)$ is the multiplier on $j$ resource constraint for variety $j$,\\
 \bigskip
@@ -447,7 +447,7 @@ where $\chi_{j}(t)$ is the multiplier on $j$ resource constraint for variety $j$
 \bigskip
 And the welfare gains from a reduction in trade costs between $i,j$ are
 \begin{align}
-\frac{\mathrm{d} W}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times u'(c_{ij}) c_{ij} \pi_{ij} L_i, \nonumber
+\frac{\mathrm{d} W}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times \psi_{i} u'(c_{ij}) c_{ij} \pi_{ij} L_i, \nonumber
 \end{align}
 which is the discounted, direct effect from relaxing the resource constraint.\\
 \bigskip
