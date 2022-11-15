@@ -735,46 +735,44 @@ Two observations stand out. For the larger change in trade costs, everyone in al
 
 \section{The Planning Problem}\label{sec:apx-planner}
 
-I focus on a utilitarian social welfare function so common Pareto weights across households:
+I focus on a utilitarian social welfare function with Pareto weights that vary across countries:
 \begin{align}
-W = \sum_{t=0}^{\infty} \sum_{i} \int\limits_{z} \beta^{t} v_{i}(z,t) L_{i}\lambda_{i}(z,t),
+W = \sum_{t=0}^{\infty} \sum_{i}  \int\limits_{z} \beta^{t} \psi_{i} v_{i}(z,t) L_{i}\lambda_{i}(z,t),
 \label{eq:apx-social-welfare}
 \end{align}
-and here $v_i$ a households utility in country $i$. Now, I'm going to place the social welfare function in sequence space and then unpack the benefits from the preference shock in the following way:
+and here $v_i$ a households utility in country $i$ and $\psi_{i}$ is the Planners weight on those residing in country $i$. Now, I'm going to place the social welfare function in sequence space and then unpack the benefits from the preference shock in the following way:
 \begin{align}
-W = \sum_{t=0}^{\infty}  \sum_{i} \sum_{j} \int\limits_{z}  \beta^{t} \  \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t)
+W = \sum_{t=0}^{\infty}  \sum_{i}  \sum_{j}  \int\limits_{z}  \beta^{t} \  \psi_{i} \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t)
 \label{eq:apx-social-welfare-2}
 \end{align}
-so the inner term is period utility given the associated consumption allocation $c_{ij}$ and then the expected value of the preference shock conditional on the choice probability $\pi_{ij}(z,t)$. This inner term is then weighted by the number of households that receive that utility, i.e. the choice probability times the mass of households with shock $z$ at date $t$. The sum across $j$ adds up all households in country $i$. Then the sum across $i$ reflects that this is global welfare.
+so the inner term is period utility given the associated consumption allocation $c_{ij}$ and then the expected value of the preference shock conditional on the choice probability $\pi_{ij}(z,t)$. This inner term is then weighted by the number of households that receive that utility, i.e. the choice probability times the mass of households with shock $z$ at date $t$. The sum across $j$ adds up all households in country $i$ and all of this is weighted by the Pareto weight $\psi_{i}$. Then the sum across $i$ reflects that this is global welfare.
 
 One more point about the inner term in (\ref{eq:apx-social-welfare-2}), my claim is that with the Type 1 extreme value shocks:
 \begin{align}
 \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] = -\sigma_{\epsilon} \log \pi_{ij}(z,t)
 \end{align}
-where this is like the ``selection correction'' where if $\pi$ becomes smaller, then this value becomes larger meaning only those with the largest relative shocks are chosen and higher utility for those, conditional on being selected, is felt.
+where this is like the ``selection correction'' where if $\pi$ becomes smaller, the expected value of the taste shock becomes larger. So only those with the largest relative shocks are chosen and higher utility for those, conditional on being selected, is felt.
 
-Given this formulation, the planner then does the following: he chooses consumption and choice probabilities for all country pair combinations, state by state, for the infinite future. The Lagrangian associated with the Planning Problem is:
+Given this formulation, the planner does the following: he chooses consumption and choice probabilities for all country pair combinations, state by state, for the infinite future. The Lagrangian associated with the Planning Problem is:
 \begin{align}
-\mathcal{L}  = & \sum_{t=0}^{\infty}   \sum_{i} \sum_{j} \int\limits_{z}  \beta^{t} \  \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t), \\
+\mathcal{L}  = & \sum_{t=0}^{\infty}   \sum_{i} \sum_{j} \int\limits_{z}  \beta^{t} \ \psi_{i} \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t), \\
 \nonumber \\
 &+ \sum_{t=0}^{\infty} \sum_{i} \beta^{t} \chi_{i}(t) \bigg \{ Y_{it} \  - \ \sum_{j} \int\limits_{z}  d_{ji} c_{ji}(z, t) \pi_{ji}(z,t) L_{j}\lambda_{j}(z, t) \bigg \} \nonumber \\
 \nonumber \\
 &+ \sum_{t=0}^{\infty} \sum_{i} \int\limits_{z}  \beta^{t} \chi_{2i}(z,t) \bigg \{1 - \sum_{j}\pi_{ij}(z,t) \bigg \} L_{i} \lambda_{i}(z, t), \nonumber
 \label{eq:planning-problem}
 \end{align}
-where the first term is the objective function; the second line is the resource constraint saying that output from country $i$ must equal the consumption of commodity $i$ globally including the transport costs. Then the third line ensures that choice probabilities are probabilities and sum to one. The final thing I'm doing is that I'm scaling the multipliers by $\beta^t$ so that the algebra is a bit easier.
+where the first term is the objective function; the second line is the resource constraint saying that output from country $i$ must equal the consumption of commodity $i$ globally including the transport costs. Then the third line ensures that choice probabilities are probabilities and sum to one. The final thing I'm doing is that I'm scaling the multipliers by $\beta^t$ so that the algebra is easier.
 
 Associated with this problem are two first order conditions. The first one is consumption in $i$ with respect to variety $j$ so:
 \begin{align}
-\frac{\partial \mathcal{L} }{\partial c_{ij}(z, t)} &=  \beta^{t} u'(c_{ij}(z, t)) \pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) - \beta^{t} \chi_{j}(t) d_{ij} \pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) = 0 \\
+\frac{\partial \mathcal{L} }{\partial c_{ij}(z, t)} &=  \beta^{t} \psi_{i} u'(c_{ij}(z, t))  \pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) - \beta^{t} \chi_{j}(t) d_{ij} \pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) = 0 \\
 \nonumber \\
-& \Rightarrow \ \ u'(c_{ij}(z, t) ) = \chi_{j}(t) d_{ij},
+& \Rightarrow \ \ \psi_{i} u'(c_{ij}(z, t) ) = \chi_{j}(t) d_{ij}, \label{apx-eq:muc}
 \end{align}
-which says that the marginal utility of consumption of ($i$ consuming variety $j$) should equal it's costs. What is this cost, it's the $j$'s multiplier adjusted by the trade cost $d_{ij}$ which gives this ``price'' like interpretation of the multiplier, it's like the shadow value of commodity $j$ which reflects how scarce or not the commodity is then multiplied by the transport costs.
+which says that the weighted marginal utility of consumption of ($i$ consuming variety $j$) should equal it's costs. What is this cost, it's the $j$'s multiplier adjusted by the trade cost $d_{ij}$ which gives this ``price'' like interpretation of the multiplier. It's like the shadow value of commodity $j$ which reflects how scarce or not the commodity is then multiplied by the transport costs.
 
-This first order condition has several implications. First, because the right hand size is independent of $z$, then $u'(c_{ij}(z, t)) = u'(c_{ij}(z', t)) = u'(c_{ij}(t))$ for all $z, z'$ combinations. So within choice, the marginal utility of consumption is equated.
-
-Second, across variety choice, the ratio of marginal utility across variety $j$ is:
+This first order condition has several implications. First, because the right hand size is independent of $z$, then $\psi_{i} u'(c_{ij}(z, t)) = \psi_{i} u'(c_{ij}(z', t)) = \psi_{i} u'(c_{ij}(t))$ for all $z, z'$ combinations. So within choice, the marginal utility of consumption is equated. Second, across variety choice, within a country (so Pareto weights cancel), the ratio of marginal utility across variety $j$ is:
 \begin{align}
 \frac{u'(c_{ij}(t))}{u'(c_{ij'}(t))} = \frac{\chi_{j}(t) d_{ij}}{\chi_{j'}(t) d_{ij'}}
 \end{align}
@@ -782,7 +780,7 @@ which says that consumption differences relate to the ratio of the multipliers o
 
 The second first order condition is with respect to the choice probabilities. So
 \begin{align}
-\frac{\partial \mathcal{L} }{\partial \pi_{ij}(z, t)} \ = \ & \beta^{t}\bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \} L_{i} \lambda_{i}(z, t) + \beta^{t}\frac{\partial \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ]}{\partial \pi_{ij}}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) \nonumber \\
+\frac{\partial \mathcal{L} }{\partial \pi_{ij}(z, t)} \ = \ & \beta^{t} \psi_{i} \bigg \{  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] \bigg \} L_{i} \lambda_{i}(z, t) + \beta^{t}\psi_{i} \frac{\partial \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ]}{\partial \pi_{ij}}\pi_{ij}(z,t) L_{i} \lambda_{i}(z, t) \nonumber \\
 \nonumber \\
 & - \beta^{t} \chi_{j}(t) d_{ij} c_{ij}(z, t) L_{i}\lambda_{i}(z, t) - \beta^{t} \chi_{2i}(z,t) L_{i} \lambda_{i}(z, t)  = 0
 \end{align}
@@ -790,37 +788,38 @@ where the first two terms are the marginal, social benefit of changing the choic
 
 Further simplifying gives:
 \begin{align}
-\frac{\partial \mathcal{L} }{\partial \pi_{ij}(z, t)} \ = \ &  u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] + \frac{\partial \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ]}{\partial \pi_{ij}} \pi_{ij}(z, t)  - \chi_{j}(t) d_{ij} c_{ij}(z, t)  - \chi_{2i}(z,t)  = 0.
+\frac{\partial \mathcal{L} }{\partial \pi_{ij}(z, t)} \ = \ &  \psi_{i} \bigg[ u(c_{ij}(z, t) ) + \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ] + \frac{\partial \mathrm{E}[ \ \epsilon \ | \ \pi_{ij}(z,t) ]}{\partial \pi_{ij}} \pi_{ij}(z, t) \bigg] - \chi_{j}(t) d_{ij} c_{ij}(z, t)  - \chi_{2i}(z,t)  = 0.
 \end{align}
-Then inserting the observations made above about the Type 1 extreme value distribution and then connecting things with the consumption allocation one has
+Then inserting the observations made above about the Type 1 extreme value distribution and then connecting things with the consumption allocation in \ref{apx-eq:muc} one has
 \begin{align}
-u(c_{ij}(t) ) -\sigma_{\epsilon} \log \pi_{ij}(z,t) - \sigma_{\epsilon} - u'(c_{ij}(t) )c_{ij}(t)   = \chi_{2i}(z,t).
+\psi_{i} \bigg[ u(c_{ij}(t) ) -\sigma_{\epsilon} \log \pi_{ij}(z,t) - \sigma_{\epsilon} - u'(c_{ij}(t) )c_{ij}(t)\bigg]   = \chi_{2i}(z,t).
 \end{align}
 Then some algebra gets toward a closed-form expression for the choice probability
 \begin{align}
--\sigma_{\epsilon} \log \pi_{ij}(z,t) = -u(c_{ij}(t)  ) + u'(c_{ij}(t) )c_{ij}(t)  + \sigma_{\epsilon} + \chi_{2i}(z,t), \\
+-\sigma_{\epsilon} \log \pi_{ij}(z,t) = -u(c_{ij}(t)  ) + u'(c_{ij}(t) )c_{ij}(t)  + \sigma_{\epsilon} + \chi_{2i}(z,t)\psi_{i}^{-1}, \\
 \nonumber \\
-\pi_{ij}(z,t) = \exp \left( \frac{u(c_{ij}(t)  ) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} - 1 \right) \bigg / \exp \left( \chi_{2i}(z,t) / \sigma_{\epsilon} \right).
+\pi_{ij}(z,t) = \exp \left( \frac{u(c_{ij}(t)  ) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} - 1 \right) \bigg / \exp \left( \chi_{2i}(z,t)\psi_{i}^{-1} / \sigma_{\epsilon} \right).
 \end{align}
 The choice probabilities must sum to one, so we can set the multiplier so
 \begin{align}
-\exp \left( \chi_{2i}(z,t) / \sigma_{\epsilon} \right) = \sum_{j'}\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} - 1 \right),
+\exp \left( \chi_{2i}(z,t) \psi_{i}^{-1} / \sigma_{\epsilon} \right) = \sum_{j'}\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} - 1 \right),
 \end{align}
 which implies
 \begin{align}
-\chi_{2i}(z,t) = \sigma_{\epsilon}  \log \bigg \{ \sum_{j'}\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} - 1 \right) \bigg \},
+\chi_{2i}(z,t) = \sigma_{\epsilon}  \psi_{i} \log \bigg \{ \sum_{j'}\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}} - 1 \right) \bigg \}.
 \end{align}
-Notice how this multiplier is looking like the expected utility term when prior to the realization to the preference shock. Then the choice probability is
+Then the choice probability is
 \begin{align}
 \pi_{ij}(t) =\exp \left( \frac{u(c_{ij}(t)) - u'(c_{ij}(t))c_{ij}(t)}{\sigma_{\epsilon}}\right) \bigg / \sum_{j'}\exp \left( \frac{u(c_{ij'}(t)) - u'(c_{ij'}(t))c_{ij'}(t)}{\sigma_{\epsilon}} \right),
 \end{align}
-which is independent of $z$. This has the standard Type 1 shape, but the inner most term says that the choice probability should reflect the ``net'' social benefit of having someone chose that good. The net part is the utility a household receives net of the cost of providing that amount of the consumption. And the cost is, well, $c$ converted into utils which is what the marginal utility bit is doing. The formal statement is below:
+which is independent of $z$ and the Pareto weight does not appear.  This has the standard Type 1 shape, but the inner most term says that the choice probability should reflect the ``net'' social benefit of having someone chose that good. The net part is the utility a household receives net of the cost of providing that amount of the consumption. And the cost is, well, $c$ converted into utils which is what the marginal utility bit is doing. Because of that this is all net, the Pareto weight does not directly appear. Given this discussion, the multiplier $\chi_{2i}(t)$ has the interpretation as the expected, net contribution to social welfare of households in country $i$. 
 
+The formal statement is below:
 \begin{prp}[\textbf{The Efficient Allocation}]\label{apx-prp:efficient-allocation} The allocation that satisfies the Centralized Planning Problem in (\ref{eq:planner_problem}) is:
 \begin{enumerate}
 \item A consumption allocation satisfying:
 \begin{align}
-u'(c_{ij}(z,t) ) = \chi_{j}(t) d_{ij}
+\psi_{i} u'(c_{ij}(z,t) ) = \chi_{j}(t) d_{ij}
 \label{apx-eq:planner-consumption}
 \end{align}
 where $\chi_{j}(t)$ is the shadow price of variety $j$.
@@ -833,7 +832,7 @@ and are independent of $z$ because of (\ref{apx-eq:planner-consumption}).
 \end{enumerate}
 \end{prp}
 
-\textbf{The Gains from Trade.} I'm going to do is compute the social gain to a change in trade costs. I'm going to express this in the following way with social welfare depending directly upon the trade costs $d$, and then indirectly as the allocations of $c$ and $\pi$ depend upon $d$ as well.
+\textbf{The Gains from Trade.} Let's compute the social gain to a change in trade costs. First, I going to express social welfare depending directly upon the trade costs $d$, and then indirectly as the allocations of $c$ and $\pi$ depend upon $d$ as well.
 \begin{align}
 W(d, c_{ij}(d), \pi_{ij}(d))
 \end{align}
@@ -841,13 +840,13 @@ And then totally differentiate social welfare, so
 \begin{align}
 \frac{\mathrm{d} W}{\mathrm{d}d} = \frac{\partial W}{\partial d} + \frac{\partial W}{\partial c_{ij}(d)}\frac{\partial c_{ij}(d)}{\partial d} + \frac{\partial W}{\partial \pi_{ij}(d)}\frac{\partial \pi_{ij}(d)}{\partial d}
 \end{align}
-and then I invoke the Envelope Theorem. What this means here is that I evaluate this derivative at the optimal allocation. But the optimal allocation is \ldots well optimal, so on the margin any gain from changing consumption or choice probabilities is zero. So the indirect effects (at the optimal allocation) are zero. Thus only direct effects matter. Then computing the direct effect gives
+and then I invoke the Envelope Theorem. What this means here is that I evaluate this derivative at the optimal allocation. But the optimal allocation is optimal, so on the margin any gain from changing consumption or choice probabilities is zero. So indirect effects (at the optimal allocation) are zero and only direct effects matter. Then computing the direct effect gives
 \begin{align}
-\partial W = - & \sum_{t=0}^{\infty} \beta^{t} \ \chi_{j}(t) c_{ij}(t) \pi_{ij}(t) L_{i} \partial d_{ij} \\
+\partial W = - & \sum_{t=0}^{\infty} \beta^{t} \ \chi_{j}(t) c_{ij}(t) \pi_{ij}(t) L_{i} \partial d_{ij}, \\
 \nonumber \\
-=& - \sum_{t=0}^{\infty} \beta^{t} \ u'(c_{ij}(t)) c_{ij}(t) \pi_{ij}(t) L_{i} \partial d_{ij} / d_{ij}
+=& - \sum_{t=0}^{\infty} \beta^{t} \ \psi_{i} \ u'(c_{ij}(t)) c_{ij}(t) \pi_{ij}(t) L_{i} \partial d_{ij} / d_{ij},
 \end{align}
-where the last line inserts the relationship between the multiplier and the marginal utility of consumption. Now this thing says that the change in welfare equals essentially how much the resource constraint is relaxed by the change in trade costs. So it's like the $c_{ij}(t) \pi_{ij}(t) L_{i}$ is how much stuff people in $i$ get from $g$ and $\partial d_{ij} / d_{ij}$ this is perturbing it by the percent change in trade costs, then this bit $u'(c_{ij}(t))$ converts it into utils.
+where the last line inserts the relationship between the multiplier and the marginal utility of consumption in (\ref{apx-eq:planner-consumption}). This says that the change in social welfare equals essentially how much the resource constraint is relaxed by the change in trade costs. So it's like the $c_{ij}(t) \pi_{ij}(t) L_{i}$ is how much stuff people in $i$ get from $j$ and $\partial d_{ij} / d_{ij}$ perturbs it by the percent change in trade costs, then $u'(c_{ij}(t))$ converts it into utils and $\psi_{i}$ weights it appropriately. 
 
 \textbf{The Elasticity of Trade.} This is a bit non-standard from my perspective, but here is my argument. \textbf{put in notes on how to do this more directly}
 
@@ -887,7 +886,7 @@ in other words, the gains from trade are how many people are buying $i,j$ times 
 \end{align}
 And the welfare gains from a reduction in trade costs between $i,j$ are
 \begin{align}
-\frac{\mathrm{d} W}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times u'(c_{ij}) c_{ij} \pi_{ij} L_i
+\frac{\mathrm{d} W}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times \psi_{i} u'(c_{ij}) c_{ij} \pi_{ij} L_i
 \label{eq:eff-trade-gains}
 \end{align}
 which is the discounted, direct effect from relaxing the resource constraint in (\ref{eq:planner_rc}).
@@ -925,7 +924,7 @@ which means that the total change in social welfare equals
 \end{align}
 and I'm done.
 
-\textbf{Computing the Efficient Allocation.} Here I talk through an algorithm to actually compute the efficient allocation in a stationary setting. 
+\textbf{Computing the Efficient Allocation.} Here I talk through an algorithm to actually compute the efficient allocation in a stationary setting.
 \begin{enumerate}
 \item First guess a level of home consumption $c_{ii}$ for each country $i$.
 
@@ -933,15 +932,15 @@ and I'm done.
 \begin{align}
 u'(c_{ii}) = \chi_{i}
 \end{align}
-and then recover the consumption levels for every country $i$, $j$ pairs 
+and then recover the consumption levels for every country $i$, $j$ pairs
 \begin{align}
 c_{ij} = u'^{-1}(\chi_{j} d_{ij})
 \end{align}
-so what we have is now an allocation of consumption that satisfies the first part of \ref{apx-prp:efficient-allocation}. 
+so what we have is now an allocation of consumption that satisfies the first part of \ref{apx-prp:efficient-allocation}.
 
 \item Construct choice probabilities from (\ref{apx-eq:planner-choice-prob})
 
-\item Check if the resource constraint holds. Specifically 
+\item Check if the resource constraint holds. Specifically
 \begin{align}
  Y_{i} \  - \ \sum_{j} d_{ji} c_{ji} \pi_{ji} L_{j} = 0
 \end{align}
@@ -951,7 +950,7 @@ where notice that $Y_{i}$ is predetermined given that there is no labor supply o
 \begin{align}
 \frac{M_{ij}}{M_{ii}} = \frac{u'(c_{jj}) d_{ij} c_{ij} \pi_{ij} L_i}{u'(c_{ii})c_{ii}\pi_{ii}L_i}
 \end{align}
-where I'm using the observation that $u'(c_{ii}) = \chi_{i}$ and is the shadow price of variety $i$, not inclusive of the trade costs. So this is the as if value of imports in country $i$ from country $j$ relative to home trade. And then from here one can construct a ``trade wedge'' which is the ratio between the volume of trade in efficient allocation relative to the volume of trade in the decentralized allocation. 
+where I'm using the observation that $u'(c_{ii}) = \chi_{i}$ and is the shadow price of variety $i$, not inclusive of the trade costs. So this is the as if value of imports in country $i$ from country $j$ relative to home trade. And then from here one can construct a ``trade wedge'' which is the ratio between the volume of trade in efficient allocation relative to the volume of trade in the decentralized allocation.
 \end{enumerate}
 
 
