@@ -94,8 +94,8 @@ println("########### computing counter factual eq ################")
 println(" ")
 
 
-country = 8
-country_name = "-GER"
+country = 10
+country_name = "-ITA"
 
 Δ_d = 0.10
 
