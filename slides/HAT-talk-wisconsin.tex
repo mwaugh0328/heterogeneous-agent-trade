@@ -200,7 +200,7 @@ Alternative interpretation | the ``infinite shopping aisle'' we use in \citet{p-
 
 \begin{frame}[t]{Model: Households II}
 \smallskip
-A household's efficiency units $z^k_t$ evolve according to a Markov Chain. They face the wage per efficiency unit $w_{it}$.\\
+Household $k$'s efficiency units $z_t$ evolve according to a Markov Chain. They face the wage per efficiency unit $w_{it}$.\\
 \bigskip
 \medskip
 Households borrow or accumulate a non-state contingent asset, $a$, with gross return $R_{i}$. Household's face the debt limit
@@ -211,7 +211,7 @@ a_{t+1} \geq - \phi_{i}.
 \medskip
 Conditional on a variety choice, a household's budget constraint is
 \begin{align*}
-p_{ij}c_{ijt} +  a_{t+1} \leq    R_{i} a_{t} + w_{it} z^k_{t}.
+p_{ij}c_{ijt} +  a_{t+1} \leq    R_{i} a_{t} + w_{it} z_{t}.
 \end{align*}
 \end{frame}
 
@@ -242,14 +242,15 @@ v_{i}(a, z) = &  \max_{j} \big  \{ \  v_{ij}(a, z)  \ \big \}. \nonumber
 \begin{frame}[t]{What Households Do II}
 \smallskip
 Two equations characterizing the commodity choice, consumption / savings\ldots\\
-\bigskip
+\medskip
 \textbf{1.} The choice probability is:
 \begin{align*}
-\pi_{ij}(a, z) = \exp \left( \frac{ v_{ij}(a, z) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z) }{\sigma_{\epsilon}} \right).
-\end{align*}
+\pi_{ij}(a, z) = \exp \left( \frac{ v_{ij}(a, z) }{\sigma_{\epsilon}} \right) \Bigg / \Phi_{i}(a,z) \\
 \\
+\mbox{where} \ \ \Phi_{i}(a,z) := \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z) }{\sigma_{\epsilon}} \right)
+\end{align*}\\
 \bigskip
-\bigskip
+\medskip
 \textbf{2.} Away from the constraint, consumption and asset choices must respect this Euler Equation:
 \begin{align*}
 \frac{u'(c_{ij}(a, z))}{p_{ij}} = \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij'}(a', z') \frac{u'(c_{ij'}(a', z'))}{p_{ij'}} \right].
@@ -291,9 +292,12 @@ p_{i} Y_{i}  =  \underbrace{L_{i} \sum_{j} \int_{z} \int_{a}  p_{ij} c_{ij}(a, z
 \begin{align*}
 p_{i} Y_{i} - \sum_{j}^{M}  X_{ji} = 0, \ \ \forall i
 \end{align*}
-\item[v] Bond market clears with
+\item[v] Bond market clears with either
 \begin{align*}
-\mathrm{A_i'} = 0, \ \ \forall i.
+\mathrm{A_i'} = 0, \ \ \forall i \ \ \mbox{in the case of finacial autarky, or}
+\end{align*}
+\begin{align*}
+\sum_{i}\mathrm{A_i'} = 0, \mbox{in the case of finacial globalization and $R_i = R \ \forall i$}
 \end{align*}
 \end{itemize}
 \end{frame}
@@ -365,27 +369,60 @@ In the paper, I show that if relative risk aversion $ > 1$ than hh's with (i) hi
 \end{frame}
 
 
-\begin{frame}[t]{H-A Gains from Trade}
+\begin{frame}[t]{H-A Gains from Trade \only<1>{I}\only<2>{II}\only<3-4>{\ldots the algebra trick}\only<5>{III}}
 \smallskip
-\textbf{Proposition \#2: H-A Welfare Gains from Trade.} The gains from trade under a utilitarian social welfare function are
+\textbf{Proposition \#2: H-A Welfare Gains from Trade.} The gains from trade are
 \begin{align*}
 \frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} \approx \int_{z} \int_{a}  \bigg \{ \underbrace{\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}}_{\small \mbox{gains to hh}}  + \underbrace{v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}}_{\small \mbox{gains to reallocation}}   \bigg \} L_i \lambda_{i}(a,z),
 \nonumber
 \end{align*}
 where $v_i$ is value function before realization of taste shocks; $\approx$ is about abstracting from transition. \\
-\medskip
+\bigskip
 Household-level gains are
+\only<1>{
 \begin{align*}
-\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \mathbb{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a_{t},z_{t}) / \pi_{ii}(a_{t},z_{t})}{\mathrm{d}d_{ij} / d_{ij}} + u'(c_{ii}(a_{t},z_{t}))a_{t} \frac{\mathrm{d} R_{i}}{\mathrm{d} d_{ij} / d_{ij}} \bigg \}.
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \sigma_{\epsilon} \frac{\mathrm{d} \Phi_{i}(a,z) / \Phi_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}
+\end{align*}\\
+\bigskip
+\medskip
+Just like \citet{eaton2002technology}! It's all about how this price-index-like thing changes.
+}
+\only<2>{
+\begin{align*}
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \sum_{j} \pi_{ij}(a, z) \frac{\mathrm{d} v_{ij}(a,z)}{\mathrm{d} d_{ij}/d_{ij}}
+\end{align*}\\
+\bigskip
+\medskip
+The change in the $\Phi_{i}(a,z)$ thing (previous slide if you fell asleep) is share-weighted average of choice-specific value functions.\\
+\medskip
+Next step\ldots one algebra trick.
+}
+\only<3>{
+\begin{align*}
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \underbrace{\sum_{j} \pi_{ij}(a, z) \bigg \{ \frac{\mathrm{d} v_{ij}(a,z)}{\mathrm{d} d_{ij}/d_{ij}} - \frac{\mathrm{d} v_{ii}(a,z)}{\mathrm{d} d_{ij}/d_{ij}} \bigg \}}_{\ \ \mbox{\small how relative valuations change\phantom{foo}}} \ + \  \frac{\mathrm{d}v_{ii}(a,z)}{\mathrm{d} d_{ij}/d_{ij}}
+\end{align*}
+}
+\only<4>{
+\begin{align*}
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \underbrace{\sum_{j} \pi_{ij}(a, z) \bigg \{ \frac{\mathrm{d} v_{ij}(a,z)}{\mathrm{d} d_{ij}/d_{ij}} - \frac{\mathrm{d}v_{ii}(a,z)}{\mathrm{d} d_{ij}/d_{ij}} \bigg \}}_{ = \ \mbox{\small how the home choice, $\pi_{ii}$, changes} } \ + \  \frac{\mathrm{d}v_{ii}(a,z)}{\mathrm{d} d_{ij}/d_{ij}}
+\end{align*}\\
+\bigskip
+\medskip
+Now recursively iterate forward in time.
+}
+\only<5>{
+\begin{align*}
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \mathbb{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a_{t},z_{t}) / \pi_{ii}(a_{t},z_{t})}{\mathrm{d}d_{ij} / d_{ij}} + u'(c_{ii}(a_{t},z_{t}))\bigg[ \ a_{t} \ \frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \ \bigg] \bigg \}.
 \end{align*}\\
 \bigskip
 \medskip
 HH-level gains pick up two effects:
 \begin{itemize}
-\item An ACR-like term reflecting how a hh's home choice change, i.e., the gains from substitution.
+\item An ACR-like term summarizing how relative valuations across choices change.
 \smallskip
-\item How hh's wealth ($+$ or $-$) changes through GE effects on interest rates.
+\item How hh's real wealth ($+$ or $-$) change through GE effects on prices | all evaluated at the hh's marginal utility of consumption.
 \end{itemize}
+}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -447,9 +484,9 @@ where $\chi_{j}(t)$ is the multiplier on $j$ resource constraint for variety $j$
 \bigskip
 And the welfare gains from a reduction in trade costs between $i,j$ are
 \begin{align}
-\frac{\mathrm{d} W}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{1}{1-\beta} \times \psi_{i} u'(c_{ij}) c_{ij} \pi_{ij} L_i, \nonumber
+\frac{\mathrm{d} W}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{\psi_{i}}{1-\beta} \times u'(c_{ij}) c_{ij} \pi_{ij} L_i, \nonumber
 \end{align}
-which is the discounted, direct effect from relaxing the resource constraint.\\
+which is the discounted, weighted, direct effect from relaxing the resource constraint.\\
 \bigskip
 \medskip
 Mimics the results of \citet{AtkesonBurstein2010} but with household (not firm) heterogeneity. With $\log$ preferences the direct effect is equivalent to \citet{arkolakis2012new}.\\
