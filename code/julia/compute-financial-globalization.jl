@@ -20,9 +20,9 @@ dftrade = DataFrame(CSV.File("ek-trade.csv"))
 
 d = reshape(dftrade.d, Ncntry,Ncntry)
 
-df = DataFrame(CSV.File("solution.csv"))
+df = DataFrame(CSV.File("solution-fg.csv"))
 
-initial_x = [df.wage[2:end]; 1.0235]
+initial_x = [df.wage[2:end]; df.R[1]]
 
 TFP = df.TFP
 L = df.L
@@ -61,6 +61,8 @@ Rsol = ones(Ncntry)*sol.x[end]
 Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol,
     Wsol, mdl_prm, hh_solution_method = "itteration");
 
+###################################################################
+
 plot(log.(vec(tradeshare)), log.(dftrade.tradesharedata), seriestype = :scatter)
 
 dftrade_model_data = DataFrame(
@@ -68,26 +70,37 @@ dftrade_model_data = DataFrame(
     tradedata = log.(dftrade.tradesharedata)
      );
 
-CSV.write("../../notebooks/trade_model_data_fg.csv", dftrade_model_data)
+dfsolution = DataFrame(
+        wage = Wsol,
+        R = Rsol,
+        TFP = TFP,
+        L = L
+         );
+
+CSV.write("solution-fg.csv", dfsolution)
+
+rootfile = "../../notebooks/output/"
+
+CSV.write(rootfile*"trade_model_data_fg.csv", dftrade_model_data)
 
 hh_df = make_hh_dataframe(dist, hh, 19, Rsol, Wsol, mdl_prm)
 
-CSV.write("../../notebooks/household_data_pre_fg.csv", hh_df)
+CSV.write(rootfile*"household_data_pre_fg.csv", hh_df)
 
 # ####################################################################################
-# println(" ")
-# println(" ")
-# println("########### computing counter factual eq ################")
-# println(" ")
+println(" ")
+println(" ")
+println("########### computing counter factual eq ################")
+println(" ")
 
 
-country = 4
+country = 10
+country_name = "-ITA"
 
 Δ_d = 0.10
-d_prime = deepcopy(d)
-d_prime[19,country] =  (d[19,country]).*(1.0 + Δ_d)
 
-country_name = "-"*string(country)
+d_prime = deepcopy(d)
+d_prime[19,country] =  (d[19,country]).*(1.0 - Δ_d)
 
 
 Δ_mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, 
@@ -103,12 +116,14 @@ Wsol, Δ_mdl_prm, hh_solution_method = "itteration");
 
 dfwelfare = make_welfare_dataframe(∂W, ∂logW, Δ_mdl_prm)
 
-root = "../../notebooks/welfare-US"
+root = rootfile*"welfare-US"
+
 CSV.write(root*country_name*"-fix-p-fg.csv", dfwelfare)
 
 hh_df = make_hh_dataframe(Δp_dist, Δp_hh, 19, Rsol, Wsol, Δ_mdl_prm)
 
-root = "../../notebooks/household-data-US"
+root = rootfile*"household-data-US"
+
 CSV.write(root*country_name*"-fix-p-fg.csv", hh_df)
 
 
@@ -120,8 +135,6 @@ function f!(fvec, x)
     fvec .= f(x)
 
 end
-
-initial_x =[ones(Ncntry-1); 1.02]
 
 ###################################################################
 
@@ -147,13 +160,13 @@ print(Δ_sol)
 
 dfwelfare = make_welfare_dataframe(∂W, ∂logW, Δ_mdl_prm)
 
-root = "../../notebooks/welfare-US"
-CSV.write(root*country_name*"-fg.csv", dfwelfare)
+root = rootfile*"welfare-US"
+CSV.write(root*country_name*"-ge-fg.csv", dfwelfare)
 
 hh_df = make_hh_dataframe(Δ_dist, Δ_hh, 19, Δ_Rsol, Δ_Wsol, Δ_mdl_prm)
 
-root = "../../notebooks/household-data-US"
-CSV.write(root*country_name*"-fg.csv", hh_df)
+root = rootfile*"household-data-US"
+CSV.write(root*country_name*"-ge-fg.csv", hh_df)
 
 global_trade_elasticity =  (log.(Δ_tradeshare ./ diag(Δ_tradeshare)) .- 
     log.(tradeshare ./ diag(tradeshare))) ./ (log.(d_prime) .- log.(d))
