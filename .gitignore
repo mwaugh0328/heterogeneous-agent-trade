@@ -32,7 +32,7 @@ Manifest.toml
 *.out
 *.snm
 *.toc
-
+*.synctex
 
 *.ipynb_checkpoints*
 
