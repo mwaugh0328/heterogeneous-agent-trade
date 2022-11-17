@@ -70,14 +70,14 @@ dftrade_model_data = DataFrame(
     tradedata = log.(dftrade.tradesharedata)
      );
 
-dfsolution = DataFrame(
-        wage = Wsol,
-        R = Rsol,
-        TFP = TFP,
-        L = L
-         );
+# dfsolution = DataFrame(
+#         wage = Wsol,
+#         R = Rsol,
+#         TFP = TFP,
+#         L = L
+#          );
 
-CSV.write("solution-fg.csv", dfsolution)
+# CSV.write("solution-fg.csv", dfsolution)
 
 rootfile = "../../notebooks/output/"
 
@@ -94,8 +94,8 @@ println("########### computing counter factual eq ################")
 println(" ")
 
 
-country = 10
-country_name = "-ITA"
+country = 11
+country_name = "-JPN"
 
 Δ_d = 0.10
 
