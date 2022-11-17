@@ -408,7 +408,7 @@ Next step\ldots one algebra trick.
 \end{align*}\\
 \bigskip
 \medskip
-Now recursively iterate forward in time.
+Now recursively iterate forward in time given how $v_{ii}$ connects with $v_i$ next period.
 }
 \only<5>{
 \begin{align*}
@@ -430,22 +430,22 @@ HH-level gains pick up two effects:
 
 \begin{frame}[t]{H-A Gains from Trade: $\log$ Preferences $\Rightarrow$ Separation of Trade and Heterogeneity}
 \smallskip
-\textbf{Proposition \#3: Separation of Trade and Micro-Heterogeneity.} In the dynamic, heterogenous agent trade model where preferences are logarithmic over the physical commodity
+\uncover<1->{
+\textbf{Proposition \#3: Separation of Trade and Micro-Heterogeneity.} When preferences are logarithmic over the physical commodity, choice probabilities are independent of household heterogeneity
+\begin{align*}
+\pi_{ij}(a, z) = & \exp \left( \frac{  -\log p_{ij} }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ -\log p_{ij'} }{\sigma_{\epsilon}} \right), 
+\end{align*}
+and the trade elasticity is
 \begin{align}
-\tilde{u}( c_{ijt}, \epsilon_{jt} ) =  \log(c_{ijt}) + \epsilon_{jt}, \nonumber
-\end{align}
-the trade elasticity is
-\begin{align}
-\theta = -\frac{1}{\sigma_{\epsilon}}, \nonumber
-\end{align}
-and is independent of household heterogeneity. And the welfare gains from trade are
-\begin{align}
-\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = -\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}. \nonumber
-\end{align}
-and is (i) independent of the household heterogeneity and (ii) summarized by the trade elasticity and the change in the home choice probability (and home share).\\
-\bigskip
+\theta = -\frac{1}{\sigma_{\epsilon}}. \nonumber
+\end{align}}
+\uncover<2->{And hh-level gains from trade 
+\begin{align*}
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \underbrace{-\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}}_{\mbox{\small ACR}} \ \ + \  \ \mathbb{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} \bigg[ u'(c_{ii}(a_{t},z_{t})) \ a_{t} \ \frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \bigg ]. \nonumber
+\end{align*}\\}
 \medskip
-Mimics the results of \citet{anderson1987ces} and \citet{arkolakis2012new}| but stronger in the sense that this is a far more complex economy, i.e. borrowing constraints, risk, and incomplete markets.
+\only<1>{This mimics the results of \citet*{anderson1987ces}. This was not obvious to me given the environment \ldots risk, market incompleteness, borrowing constraints, etc.}
+\only<2>{Welfare separates into a ``pure'' \citet{arkolakis2012new} term + how terms of trade affect wealth.}  
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
