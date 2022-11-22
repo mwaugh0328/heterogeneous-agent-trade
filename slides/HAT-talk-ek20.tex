@@ -8,6 +8,7 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{natbib}
+\usepackage{bbm}
 
 \usecolortheme{dolphin}
 \linespread{1.3}
@@ -176,16 +177,16 @@ p_{ij} = \frac{d_{ij}w_{j}}{A_{j}}.
 \smallskip
 Continuum of households $k \in [0, \ L_i]$ in each country $i$. Household preferences:
 \begin{align*}
-\mathrm{E}\sum_{t = 0}^{\infty} \beta^{t} \ \tilde{u}^k_{ijt}
+\mathrm{E}\sum_{t = 0}^{\infty} \beta^{t} \ \sum_{j} \mathbbm{1}^{k}_{jt} \ \tilde{u}^k_{ijt}
 \end{align*}
-where conditional direct utility for good $j$ is
+where $\mathbbm{1}^{k}_{jt}$ toggles on/off depending on good chosen and conditional direct utility for good $j$ is
 \begin{align*}
 \tilde{u}^k_{ijt} =  u(c^k_{ijt}) + \epsilon^k_{jt}, \ \ \ j = 1, \ldots, M
 \end{align*}\\
 \medskip
 Assumptions:
 \begin{itemize}
-\item Two-stage budgeting as in \citet*{anderson1987ces}\ldots so first chose variety, then continuous choice over quantity.
+\item discrete-continuous choice\ldots so first chose one variety, then continuous choice over quantity.
 \smallskip
 \item $\epsilon^k_{jt}$s are iid across hh and time; distributed Type 1 Extreme Value with dispersion parameter $\sigma_{\epsilon}$.
 \smallskip
@@ -670,7 +671,7 @@ This shows up in the planners allocation. Next two slides..
 \begin{itemize}
 \item Trade in the decentralized equilibrium vs.
 \smallskip
-\item the Planner's allocation 
+\item the Planner's allocation
 \end{itemize}
 \end{frame}
 
@@ -703,17 +704,29 @@ This shows up in the planners allocation. Next two slides..
 \smallskip
 Lot's to do, but ``big picture'' this is where I'm aiming:\\
 \bigskip
-\textbf{1.} Use gravity model + indirect inference to estimate the model. And better confront micro-evidence. 
+\textbf{1.} Use gravity model + indirect inference to estimate the model. And better confront micro-evidence.
 \begin{itemize}
 \smallskip
-\item ``Gravity as a guide, not as a law'' 
+\item ``Gravity as a guide, not as a law''
 \end{itemize}
 \bigskip
 \textbf{2.} Can trade policy improve outcomes?
 \begin{itemize}
 \smallskip
-\item Put tariffs in and redistribute!
+\item Put tariffs in and redistribute
 \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\huge{Thank You Jonathan and Sam!!!!!!}
+
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
