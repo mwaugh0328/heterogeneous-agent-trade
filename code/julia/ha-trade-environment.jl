@@ -8,6 +8,7 @@ using NLsolve
 using Octavian
 using ForwardDiff
 using Interpolations
+#Pkg.pin(name = "Interpolations", version = "0.13.1")
 using LinearAlgebra
 using LoopVectorization
 
@@ -72,14 +73,13 @@ function coleman_operator(c, v, R, W, p, model_params)
 
     muc_ϵ = Array{eltype(R)}(undef, Na, Nshocks)
 
-    ã = Array{eltype(R)}(undef, Na, Nshocks)
-    gc = similar(ã )
+    ã = Array{eltype(R)}(undef, Na, Nshocks, Ncntry)
+    gc = Array{eltype(c)}(undef, Na, Nshocks)
+
     Emuc = Array{eltype(R)}(undef, Na, Nshocks)
 
     ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
     # this integrates over ϵ
-
-    #matmul!(Emuc, β*R*muc_ϵ , mc.p')
 
     Emuc .= β*R*( matmul( muc_ϵ , mc.p'))
 
@@ -88,15 +88,17 @@ function coleman_operator(c, v, R, W, p, model_params)
 
         muc_inverse!( gc, p[cntry] * Emuc, γ)
 
-        ã .= @. (p[cntry] * gc + agrid - W*shocks') / R
+        ã[:, :, cntry] .= @. (p[cntry] * gc + agrid - W*shocks') / R
         # off budget constraint a = (p_jc_j + a' - w*z ) / R
 
         # then linear interpolation to get back on grid.
         for shk = 1:Nshocks
     
-            aprime[:, shk, cntry] .= LinearInterpolation(ã[:,shk], agrid, extrapolation_bc = (Flat(), Flat()) ).(agrid)
+            foo = LinearInterpolation(ã[:, shk, cntry], agrid, extrapolation_bc = (Flat(), Flat()) )
     
-            Kg[:, shk, cntry] = @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry]
+            aprime[:, shk, cntry ] .= foo.(agrid)
+
+            Kg[:, shk, cntry] .= @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry]
             # again off budget constraint pc = -a + Ra + wz
     
         end
@@ -125,7 +127,9 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
 
     @unpack Na, Nshocks, Ncntry, mc, agrid, β, γ, σϵ = model_params
 
-    Ev = 0.0
+    Ev = Array{eltype(v)}(undef, Ncntry) 
+    # need to have it loke this to mulithread
+    fill!(Ev, 0.0)
 
     @inbounds @views for cntry = 1:Ncntry
         # fix the country
@@ -158,22 +162,22 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
                     # EV
                     prob_eprime = mc.p[shk, shkprime]
 
-                    Ev += ( p )*prob_eprime*log_sum_v( v[aprime_l, shkprime, :] , σϵ, Ncntry)
+                    Ev[cntry] += ( p )*prob_eprime*log_sum_v( v[aprime_l, shkprime, :] , σϵ, Ncntry)
                     # so Ev | states today = transition to aprime (p), transition to z',
                     # then multiplies by v tommorow. v tommorow is the log sum thing across different 
                     # options
                 
-                    Ev += ( 1.0 - p )*prob_eprime*log_sum_v( v[aprime_h, shkprime, :] , σϵ, Ncntry)
+                    Ev[cntry] += ( 1.0 - p )*prob_eprime*log_sum_v( v[aprime_h, shkprime, :] , σϵ, Ncntry)
                     # note the += here, so we are accumulting this different 
                     # posibilities
 
                 end
 
-                Tv[ast, shk, cntry] = utility(Kg[ast, shk, cntry], γ) + β*Ev
+                Tv[ast, shk, cntry] = utility(Kg[ast, shk, cntry], γ) + β*Ev[cntry]
 
                 #Then the vj = uj + βEV
 
-                Ev = 0.0
+                Ev[cntry] = 0.0
 
             end
 
