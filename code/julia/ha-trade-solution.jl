@@ -172,9 +172,9 @@ function compute_eq(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
     # (1) Sovles hh problem
     # (2) Constructs stationary distribution
 
-    hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
+    @time hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
 
-    dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
+    @time dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
     
 return hh, dist
 

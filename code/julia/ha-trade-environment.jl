@@ -15,28 +15,6 @@ include("mix-MarkovChain.jl")
 
 
 ##########################################################################
-
-# @with_kw struct world_model_params
-#     β::Float64 = 0.96
-#     γ::Float64 = 2.0
-#     ϕ::Float64 = 0.0
-#     amax::Float64 = 14.0
-#     Ncntry::Int64 = 2
-#     σϵ::Float64 = 0.25
-#     Na::Int64 = 50
-#     agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
-#     Nshocks::Int64 = 5
-#     statesize::Int64 = Int(Na*Nshocks*Ncntry)
-#     ρ::Float64 = 0.90
-#     σ::Float64 = 0.039^(0.5)
-#     mc::MarkovChain{Float64, Matrix{Float64}, 
-#     StepRangeLen{Float64, Base.TwicePrecision{Float64},
-#      Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
-#     TFP::Array{Float64, 1} = ones(Ncntry)
-#     L::Array{Float64, 1} = ones(Ncntry)
-#     d::Array{Float64, 2} = ones(Ncntry,Ncntry)
-# end
-
 @with_kw struct world_model_params
     β::Float64 = 0.95
     γ::Float64 = 2.0
@@ -60,91 +38,23 @@ include("mix-MarkovChain.jl")
 end
 
 
-# @with_kw struct model_params
-#     β::Float64 = 0.96
-#     γ::Float64 = 2.0
-#     ϕ::Float64 = 0.0
-#     amax::Float64 = 14.0
-#     Ncntry::Int64 = 2
-#     σϵ::Float64 = 0.25
-#     Na::Int64 = 50
-#     agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
-#     Nshocks::Int64 = 2
-#     statesize::Int64 = Int(Na*Nshocks*Ncntry)
-#     ρ::Float64 = 0.60
-#     σ::Float64 = 0.30
-#     mc::MarkovChain{Float64, Matrix{Float64}, 
-#     StepRangeLen{Float64, Base.TwicePrecision{Float64},
-#      Base.TwicePrecision{Float64}, Int64}} = tauchen(Nshocks, ρ, σ)
-# end
+##########################################################################
 
 function coleman_operator(policy, R, W, p, model_params)
-    # takes gc_j(a,z), v_j(a,z) -> Kgc and Tv
-    # multiple dispactch version here for use in fixed point routine
+    # multiple dispatch version that directly takes policy functions
+    # single R so this means assumption is a stationary setting
 
-    ######################################################################
-    # Organization 
-
-    @unpack agrid, mc, β, γ, σϵ, Na, Nshocks, Ncntry, statesize = model_params
+    @unpack Na = model_params
 
     c = policy[1:Na, :, :]
 
     v = policy[(Na+1):end, :, :]
 
-    aprime = similar(c)
-    Kg = similar(c)
-    shocks = exp.(mc.state_values)
-
-    # get choice probabilities
-    πprob = make_πprob(v, σϵ)
-    muc_ϵ = Array{eltype(R)}(undef, Na, Nshocks)
-
-    ã = Array{eltype(R)}(undef, Na, Nshocks)
-    gc = similar(ã )
-    Emuc = Array{eltype(R)}(undef, Na, Nshocks)
-
-    ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
-    # this integrates over ϵ
-
-    #matmul!(Emuc, β*R*muc_ϵ , mc.p')
-
-    Emuc .= β*R*( matmul( muc_ϵ , mc.p'))
-
-    #Emuc *= 
-    # this integrates over z
-
-    #Step (3) Work through each county option
-     @inbounds @views for cntry = 1:Ncntry
-
-        muc_inverse!( gc, p[cntry] * Emuc, γ)
-
-        ã .= @. (p[cntry] * gc + agrid - W*shocks') / R
-        # off budget constraint a = (p_jc_j + a' - w*z ) / R
-
-        # then linear interpolation to get back on grid.
-        for shk = 1:Nshocks
-    
-            foo = LinearInterpolation(ã[:,shk], agrid, extrapolation_bc = (Flat(), Flat()) )
-
-            aprime[:, shk, cntry] .= foo.(agrid)
-    
-            Kg[:, shk, cntry] .= @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry]
-            # again off budget constraint pc = -a + Ra + wz
-    
-        end
-
-    end
-
-    # Now I want to infer the value function given updated policy
-    Tv = copy(v)
-
-    make_Tv!(Tv, v, Kg, aprime, model_params)
-    # then Tv = u(g(a,z)) + β*EV
+    Kg, Tv = coleman_operator(c, v, R, W, p, model_params)[1:2]
 
     return vcat(Kg, Tv)
 
 end
-
 
 ##########################################################################
 ##########################################################################
@@ -159,6 +69,7 @@ function coleman_operator(c, v, R, W, p, model_params)
 
     # get choice probabilities
     πprob = make_πprob(v, σϵ)
+
     muc_ϵ = Array{eltype(R)}(undef, Na, Nshocks)
 
     ã = Array{eltype(R)}(undef, Na, Nshocks)
@@ -245,13 +156,14 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
                 for shkprime = 1:Nshocks
                     # work through each shock state tommorow to construct
                     # EV
-                    
-                    Ev += ( p )*mc.p[shk, shkprime]*log_sum_v( v[aprime_l, shkprime, :] , σϵ, Ncntry)
+                    prob_eprime = mc.p[shk, shkprime]
+
+                    Ev += ( p )*prob_eprime*log_sum_v( v[aprime_l, shkprime, :] , σϵ, Ncntry)
                     # so Ev | states today = transition to aprime (p), transition to z',
                     # then multiplies by v tommorow. v tommorow is the log sum thing across different 
                     # options
                 
-                    Ev += ( 1.0 - p )*mc.p[shk, shkprime]*log_sum_v( v[aprime_h, shkprime, :] , σϵ, Ncntry)
+                    Ev += ( 1.0 - p )*prob_eprime*log_sum_v( v[aprime_h, shkprime, :] , σϵ, Ncntry)
                     # note the += here, so we are accumulting this different 
                     # posibilities
 
@@ -271,72 +183,6 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
 
 end
 
-
-##########################################################################
-##########################################################################
-
-function make_Tv_upwind!(Tv, Kg, asset_policy, model_params)
-    # upwind method that continously updates v as 
-    # EV is evaluated....
-
-    @unpack Na, Nshocks, Ncntry, mc, agrid, β, γ, σϵ = model_params
-
-    Ev = 0.0
-
-    @inbounds @views for cntry = 1:Ncntry
-        # fix the country
-
-        for shk = 1:Nshocks
-
-            for ast = 1:Na
-            
-            # here, given aprime, figure out the position
-            # appears to by 2x faster not too use function
-
-                aprime_h = searchsortedfirst(agrid, asset_policy[ast, shk, cntry])
-                #searchsortedfirst.(Ref(agrid), asset_policy[:,shk, cntry])
-                # broadcaseted version
-            
-                aprime_l = max(aprime_h - 1, 1)
-            
-                p = 1.0 - (asset_policy[ast, shk, cntry] - agrid[aprime_l]) / (agrid[aprime_h] - agrid[aprime_l])
-        
-                if isnan(p)
-                    p = 1.0
-                end
-
-            # now work out what happens tomorrow,
-            # no need to loop through aprime (we know the position)
-            # or country as Ev over variety is the log sum thing
-
-                for shkprime = 1:Nshocks
-                    # work through each shock state tommorow to construct
-                    # EV
-                    
-                    Ev += ( p )*mc.p[shk, shkprime]*log_sum_v( Tv[aprime_l, shkprime, :] , σϵ, Ncntry)
-                    # so Ev | states today = transition to aprime (p), transition to z',
-                    # then multiplies by v tommorow. v tommorow is the log sum thing across different 
-                    # options
-                
-                    Ev += ( 1.0 - p )*mc.p[shk, shkprime]*log_sum_v( Tv[aprime_h, shkprime, :] , σϵ, Ncntry)
-                    # note the += here, so we are accumulting this different 
-                    # posibilities
-
-                end
-
-                Tv[ast, shk, cntry] = utility(Kg[ast, shk, cntry], γ) + β*Ev
-
-                #Then the vj = uj + βEV
-
-                Ev = 0.0
-
-            end
-
-        end
-
-    end
-
-end
 
 ##########################################################################
 ##########################################################################
@@ -373,20 +219,24 @@ function make_Q!(Q, household, model_params)
                     p = 1.0
                 end
 
+                π_a_z_j = πprob[ast, shk, cntry]
+
                 for shkprime = 1:Nshocks
-                        # then work through tomorrow 
+                        # then work through tomorrow
+                        
+                    prob_zprime_j = mc.p[shk, shkprime]*π_a_z_j   
 
                     shk_counter_prime = Int((shkprime - 1)*Na)
 
                     tommorow = aprime_l + shk_counter_prime
 
-                    Q[today, tommorow] += ( p )*mc.p[shk, shkprime]*πprob[ast, shk, cntry]
+                    Q[today, tommorow] += ( p )*prob_zprime_j 
                         # given today (a,z,j) = asset choice(a,z,j) * prob end up with z' * prob choose varity j
                         # given today (a,z), then the += accumulation here picks up as we work through cntry
 
                     tommorow = aprime_h + shk_counter_prime
 
-                    Q[today, tommorow] += ( 1.0 - p )*mc.p[shk, shkprime]*πprob[ast, shk, cntry]
+                    Q[today, tommorow] += ( 1.0 - p )*prob_zprime_j 
 
 
                 end
@@ -432,7 +282,7 @@ function log_sum_v(vj, σϵ, Ncntry)
 
     vj_max = maximum(vj)
 
-    @inbounds for xxx = 1:Ncntry
+    @inbounds @turbo for xxx = 1:Ncntry
 
         foo += exp( ( vj[xxx] - vj_max ) / σϵ )
 
