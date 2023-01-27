@@ -173,9 +173,9 @@ function compute_eq(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
     # (1) Sovles hh problem
     # (2) Constructs stationary distribution
 
-    @time hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
+    hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
 
-    @time dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
+    dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
     
 return hh, dist
 
@@ -296,24 +296,24 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
     # fastest is using nlsove fixed point to find situation where
     # v = bellman_operator(v)
     
-    @unpack Na, Nshocks, Ncntry, statesize, β, σϵ = model_params
+    @unpack Na, Nshocks, Ncntry, β, σϵ = model_params
 
     gc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
     v = -ones(Na, Nshocks, Ncntry)/(1-β)
 
     Kgc = similar(gc)
+    Kga = similar(gc)
     Tv = similar(v)
-
 
     for iter in 1:Niter
         
-        Kgc, Tv = coleman_operator(gc, v, R, W, p, model_params)[1:2]
+        Kgc, Tv, Kga  = coleman_operator(gc, v, R, W, p, model_params)
 
         err = vec_max(Kgc, gc)
 
         if err < tol
 
-            println(iter)
+            #println(iter)
 
             break
         end
@@ -341,6 +341,7 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 end
 
 function vec_max(x,y)
+    
     s = 0.0
 
     @inbounds @turbo for i ∈ eachindex(x)

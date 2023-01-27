@@ -45,11 +45,9 @@ function coleman_operator(policy, R, W, p, model_params)
     # multiple dispatch version that directly takes policy functions
     # single R so this means assumption is a stationary setting
 
-    @unpack Na = model_params
+    c = policy[1:model_params.Na, :, :]
 
-    c = policy[1:Na, :, :]
-
-    v = policy[(Na+1):end, :, :]
+    v = policy[(model_params.Na+1):end, :, :]
 
     Kg, Tv = coleman_operator(c, v, R, W, p, model_params)[1:2]
 
@@ -62,14 +60,11 @@ end
 
 function coleman_operator(c, v, R, W, p, model_params)
     # Organization 
-    @unpack agrid, mc, β, γ, σϵ, Na, Nshocks, Ncntry, statesize = model_params
+    @unpack agrid, mc, β, γ, σϵ, Na, Nshocks, Ncntry = model_params
 
     aprime = similar(c)
     Kg = similar(c)
     shocks = exp.(mc.state_values)
-
-    # get choice probabilities
-    πprob = make_πprob(v, σϵ)
 
     muc_ϵ = Array{eltype(R)}(undef, Na, Nshocks)
 
@@ -77,6 +72,14 @@ function coleman_operator(c, v, R, W, p, model_params)
     gc = Array{eltype(c)}(undef, Na, Nshocks)
 
     Emuc = Array{eltype(R)}(undef, Na, Nshocks)
+
+    # get choice probabilities
+
+    # if sum(isnan.(v)) != 0
+    #     println(v)
+    # end
+
+    πprob = make_πprob(v, σϵ)
 
     ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
     # this integrates over ϵ
@@ -93,12 +96,21 @@ function coleman_operator(c, v, R, W, p, model_params)
 
         # then linear interpolation to get back on grid.
         for shk = 1:Nshocks
-    
+
+            # if issorted(ã[:, shk, cntry]) == false
+            #     println(c[1,1,1])
+            #     println(πprob[1,1,1])
+            #     println(v[1,1,1])
+            # end
+
+
             foo = LinearInterpolation(ã[:, shk, cntry], agrid, extrapolation_bc = (Flat(), Flat()) )
+
+            #foo = Spline1D(ã[:, shk, cntry], agrid; w=ones(Na), k=1, bc="nearest")
     
             aprime[:, shk, cntry ] .= foo.(agrid)
 
-            Kg[:, shk, cntry] .= @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry]
+            Kg[:, shk, cntry] .= @. max( ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry], 10^-13)
             # again off budget constraint pc = -a + Ra + wz
     
         end
@@ -106,7 +118,7 @@ function coleman_operator(c, v, R, W, p, model_params)
     end
 
     # Now I want to infer the value function given updated policy
-    Tv = copy(v)
+    Tv = similar(v)
 
     make_Tv!(Tv, v, Kg, aprime, model_params)
     # then Tv = u(g(a,z)) + β*EV
@@ -128,7 +140,7 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
     @unpack Na, Nshocks, Ncntry, mc, agrid, β, γ, σϵ = model_params
 
     Ev = Array{eltype(v)}(undef, Ncntry) 
-    # need to have it loke this to mulithread
+    # need to have it like this to mulithread
     fill!(Ev, 0.0)
 
     Φ = reshape(log_sum_v(v, σϵ), Na, Nshocks)
@@ -214,10 +226,10 @@ end
 
 function log_sum_v(vj, σϵ)
 
-    foo = @. exp( ( vj ) / σϵ )
+    #foo = @. exp( ( vj ) / σϵ )
     # not haveing ./ on the σϵ was a problem
 
-    return σϵ*log.( sum( foo , dims = 3)) 
+    return σϵ*log.( sum( exp.( ( vj ) / σϵ ) , dims = 3) ) 
 
 end
 
@@ -288,28 +300,31 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_πprob(vj, σ)
+function make_πprob(vj, σϵ)
 
-    foo = vj .- maximum(vj, dims = 3)
+    # if sum(isnan.(vj)) != 0
+    #     println("nan showing up in make prob")
+    # end
+
+
+    foo = vj
+    # .- maximum(vj, dims = 3)
+    # this is strange, was causing a nan to show up
+    # can't replicate this behavior in simple examples.
+
 
     #foo[isnan.(foo)] .= 0.0
 
-    @fastmath foo .= @. exp( foo / σ )
+
+    @fastmath foo .= @. exp( foo / σϵ)
+
+    # if sum(isnan.(foo)) != 0
+    #     println("nan showing up")
+    # end
 
     return foo ./ sum( foo, dims = 3) 
    
 end
-
-
-# function make_πprob(vj, σϵ)
-    
-#         foo = vj .- maximum(vj, dims = 3)
-
-#         return exp.( foo ./ σϵ ) ./ sum( exp.( foo ./ σϵ ) , dims = 3) 
-    
-# end
-
-
 
 
 ##########################################################################
