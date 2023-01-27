@@ -167,14 +167,14 @@ end
 # ##########################################################################
 
 function compute_eq(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-    hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
+    hh_solution_method = "itteration", stdist_sol_method = "itteration")
     # Does everything...
     # (1) Sovles hh problem
     # (2) Constructs stationary distribution
 
-    hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
+    @time hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
 
-    dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
+    @time dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
     
 return hh, dist
 
@@ -312,7 +312,7 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
         if err < tol
 
-            #println(err)
+            println(iter)
 
             break
         end

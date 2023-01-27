@@ -131,7 +131,7 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
     # need to have it loke this to mulithread
     fill!(Ev, 0.0)
 
-    @inbounds @views for cntry = 1:Ncntry
+    @inbounds @views Threads.@threads for cntry = 1:Ncntry
         # fix the country
 
         for shk = 1:Nshocks
