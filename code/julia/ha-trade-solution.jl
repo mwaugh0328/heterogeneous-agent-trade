@@ -1,5 +1,6 @@
 struct household{T}
     asset_policy::Array{T} # asset_policy
+    cons_policy::Array{T} # asset_policy
     πprob::Array{T} # choice probabilities
     Tv::Array{T} # value function
 end
@@ -272,15 +273,15 @@ function solve_household_problem(R, W, p, model_params; tol = 10^-6, solution_me
 
     if solution_method == "nl-fixedpoint"
 
-        Kga, πprob, Tv = policy_function_fixedpoint(R, W, p, model_params; tol = tol)
+        Kga, Kgc, πprob, Tv = policy_function_fixedpoint(R, W, p, model_params; tol = tol)
 
     elseif solution_method == "itteration"
 
-        Kga, πprob, Tv = policy_function_itteration(R, W, p, model_params; tol = tol, Niter = 500)
+        Kga, Kgc, πprob, Tv = policy_function_itteration(R, W, p, model_params; tol = tol, Niter = 500)
         
     end
     
-    return household(Kga, πprob, Tv)
+    return household(Kga, Kgc, πprob, Tv)
 
 end
 
@@ -331,11 +332,11 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
     end
 
-    Tv, Kga = coleman_operator(gc, v, R, W, p, model_params)[2:3]
+    Kgc, Tv, Kga = coleman_operator(gc, v, R, W, p, model_params)
 
     πprob = make_πprob(Tv, σϵ)
 
-    return Kga, πprob, Tv
+    return Kga, Kgc, πprob, Tv
     
 end
 
@@ -379,11 +380,11 @@ function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
     #Tv = solution.zero[(Na+1):end, :, :]
 
-    Tv, Kga = coleman_operator(solution.zero[1:Na, :, :], solution.zero[(Na+1):end, :, :], R, W, p, model_params)[2:3]
+    Kgc, Tv, Kga = coleman_operator(solution.zero[1:Na, :, :], solution.zero[(Na+1):end, :, :], R, W, p, model_params)[2:3]
 
     πprob = make_πprob(Tv, σϵ)
 
-    return Kga, πprob, Tv
+    return Kga, Kgc, πprob, Tv
 
 end
 

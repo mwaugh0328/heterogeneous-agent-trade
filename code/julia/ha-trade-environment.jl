@@ -187,6 +187,39 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
 
 end
 
+##########################################################################
+##########################################################################
+function log_sum_v(vj, σϵ, Ncntry)
+    # this just does a loop on it.
+    # faster and way more memory effecient
+
+    foo = 0.0
+
+    #vj_max = maximum(vj)
+    # this part slows down by 2X...
+    # is it necessary? one thought is make
+    # it relative to home country
+
+    @inbounds @turbo for xxx = 1:Ncntry
+
+        foo += exp( ( vj[xxx] ) / σϵ )
+
+    end
+
+    return σϵ*log( foo ) 
+
+end
+
+function log_sum_v(vj, σϵ)
+
+    vj_max = maximum(vj)
+
+    foo = @. exp( ( vj - vj_max ) / σϵ )
+    # not haveing ./ on the σϵ was a problem
+
+    return σϵ*log( sum( foo )) + vj_max
+
+end
 
 ##########################################################################
 ##########################################################################
@@ -276,36 +309,7 @@ end
     
 # end
 
-##########################################################################
-##########################################################################
-function log_sum_v(vj, σϵ, Ncntry)
-    # this just does a loop on it.
-    # amazingly faster and way more memory effecient
 
-    foo = 0.0
-
-    vj_max = maximum(vj)
-
-    @inbounds @turbo for xxx = 1:Ncntry
-
-        foo += exp( ( vj[xxx] - vj_max ) / σϵ )
-
-    end
-
-    return σϵ*log( foo ) + vj_max
-
-end
-
-function log_sum_v(vj, σϵ)
-
-    vj_max = maximum(vj)
-
-    foo = @. exp( ( vj - vj_max ) / σϵ )
-    # not haveing ./ on the σϵ was a problem
-
-    return σϵ*log( sum( foo )) + vj_max
-
-end
 
 
 ##########################################################################
