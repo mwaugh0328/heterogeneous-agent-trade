@@ -131,7 +131,9 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
     # need to have it loke this to mulithread
     fill!(Ev, 0.0)
 
-    @inbounds @views Threads.@threads for cntry = 1:Ncntry
+    Φ = reshape(log_sum_v(v, σϵ), Na, Nshocks)
+
+    @inbounds @views for cntry = 1:Ncntry
         # fix the country
 
         for shk = 1:Nshocks
@@ -162,12 +164,12 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
                     # EV
                     prob_eprime = mc.p[shk, shkprime]
 
-                    Ev[cntry] += ( p )*prob_eprime*log_sum_v( v[aprime_l, shkprime, :] , σϵ, Ncntry)
+                    Ev[cntry] += ( p )*prob_eprime*Φ[aprime_l, shkprime]
                     # so Ev | states today = transition to aprime (p), transition to z',
                     # then multiplies by v tommorow. v tommorow is the log sum thing across different 
                     # options
                 
-                    Ev[cntry] += ( 1.0 - p )*prob_eprime*log_sum_v( v[aprime_h, shkprime, :] , σϵ, Ncntry)
+                    Ev[cntry] += ( 1.0 - p )*prob_eprime*Φ[aprime_h, shkprime]
                     # note the += here, so we are accumulting this different 
                     # posibilities
 
@@ -212,12 +214,10 @@ end
 
 function log_sum_v(vj, σϵ)
 
-    vj_max = maximum(vj)
-
-    foo = @. exp( ( vj - vj_max ) / σϵ )
+    foo = @. exp( ( vj ) / σϵ )
     # not haveing ./ on the σϵ was a problem
 
-    return σϵ*log( sum( foo )) + vj_max
+    return σϵ*log.( sum( foo , dims = 3)) 
 
 end
 
