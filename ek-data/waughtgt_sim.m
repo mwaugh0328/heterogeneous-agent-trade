@@ -80,7 +80,8 @@ tb = talkblock;
 % b = border(qq);
 % tb = talkblock;
 
-[bsd,bintsd,rsd,rintsd,statssd] = regress((trdata),[dummy asym d b]);
+[bsd,bintsd,rsd,rintsd,statssd] = regress((trdata),[dummy asym d b tb]);
+disp(bsd)
 % disp('R-squared')
 % disp(statssd(1))
 
