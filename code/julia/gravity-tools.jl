@@ -13,7 +13,7 @@ function gravity!(tradedata, d, T, W, θ)
 
         foo = tradedata[tradedata.importer .== importer, :]
 
-        T[importer] = exp( S[importer] + θ*log(W[importer]) )
+        T[importer] = exp( (S[importer] + θ*log(W[importer])) )
         #equation (27) from EK, but with β = 1 (no round about)
 
         for exporter = 1:19
