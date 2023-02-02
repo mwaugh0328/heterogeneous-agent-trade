@@ -1,20 +1,58 @@
 using FixedEffectModels
+using Parameters
+
+struct gravity_results{T}
+    dist_coef::Array{T} # asset_policy
+    lang_coef::Array{T} # asset_policy
+    S::Array{T} # choice probabilities
+    θm::Array{T} # value function
+end
 
 
 function gravity!(tradedata, d, T, W, θ)
     #mulitple dispatch version, runs gravity regression
     # then fills matrix d with trade costs
 
-    dist_coef, lang_coef, S, θm = gravity(tradedata)
+    grv  = gravity(tradedata)
+
+    make_trade_costs!(tradedata, grv, d, θ)
+
+    make_technology!(tradedata, grv, d, θ)
+
+end
+
+##########################################################################
+##########################################################################
+
+function make_technology!(gravity_results, T, W, θ)
+
+    @unpack S = gravity_results
+
+    for importer = 1:19
+
+        T[importer] = exp( (S[importer] + θ*log(W[importer])) )
+        #equation (27) from EK, but with β = 1 (no round about)
+
+    end
+
+end
+
+
+
+##########################################################################
+##########################################################################
+
+function make_trade_costs!(dffix, gravity_results, d, θ)
+    # makes the trade costs given fixed country characteristics
+    # this it he dffix
+
+    @unpack dist_coef, lang_coef, θm  = gravity_results
 
     inv_θ = (1.0 / θ)
 
     for importer = 1:19
 
-        foo = tradedata[tradedata.importer .== importer, :]
-
-        T[importer] = exp( (S[importer] + θ*log(W[importer])) )
-        #equation (27) from EK, but with β = 1 (no round about)
+        foo = dffix[dffix.importer .== importer, :]
 
         for exporter = 1:19
 
@@ -24,17 +62,17 @@ function gravity!(tradedata, d, T, W, θ)
 
                 distance_effect = exp(-inv_θ * dist_coef[Int(foo[get_exporter, :].distbin[1])]) 
 
-                border_effect = exp(-inv_θ * lang_coef[1] * foo[get_exporter, :].border[1]) 
+                border_effect = exp(-inv_θ * lang_coef[1] * (foo[get_exporter, :].border[1])) 
 
                 language_effect = exp(-inv_θ * lang_coef[2] * foo[get_exporter, :].sharedlanguage[1]) 
 
-                europeancom_effect = exp(-inv_θ * lang_coef[3] * foo[get_exporter, :].europeancom[1]) 
+                europeancom_effect = exp(-inv_θ * lang_coef[2] * foo[get_exporter, :].europeancom[1]) 
 
                 efta_effect = exp(-inv_θ * lang_coef[3] * foo[get_exporter, :].efta[1])
 
                 asym_effect = exp( -inv_θ * θm[importer] )           
 
-                d[importer, exporter] =(distance_effect * border_effect * language_effect 
+                d[importer, exporter] =(distance_effect * border_effect  * language_effect
                                          * europeancom_effect * efta_effect * asym_effect)
                                          # equation (29) exponentiated
 
@@ -50,6 +88,7 @@ function gravity!(tradedata, d, T, W, θ)
 
 end
 
+
 ##########################################################################
 ##########################################################################
 
@@ -58,8 +97,8 @@ function gravity(tradedata; display = false)
     #assumes tradedata is a DataFrame, takes on the structure of EK dataset
 
     outreg = reg(tradedata, @formula(trade ~ fe(importer) + fe(exporter) +
-         bin375 + bin750 + bin1500 + bin3000 + bin6000 + binmax  + border + 
-                sharedlanguage + europeancom + efta + 0), save = true)
+         bin375 + bin750 + bin1500 + bin3000 + bin6000 + binmax  + border + sharedlanguage +
+                europeancom + efta), save = true, tol = 1e-10)
 
     lang_coef = outreg.coef[7:end]
 
@@ -81,6 +120,9 @@ function gravity(tradedata; display = false)
 
     if display == true
 
+        println(outreg)
+        println(" ")
+
         println("Compare to Table III (1762)")
         println(" ")
         println("Distance Effects")
@@ -96,22 +138,24 @@ function gravity(tradedata; display = false)
         println(dffoo)
     end
 
-    return dist_bins, lang_coef, S, θm
+    return gravity_results(dist_bins, lang_coef, S, θm)
 
 end
 
 ##########################################################################
 ##########################################################################
 
-function normalize_by_home_trade(df)
+function normalize_by_home_trade(πshares)
+
+    norm_πshares = similar(πshares)
+
+    for importer = 1:19
+
+        norm_πshares[importer, :] .= πshares[importer, : ] / πshares[importer, importer]
+
+    end
     
-    home_trade = df[df.importer .== df.exporter,:].trade
-    # grabs the home trade share by finding where importer = exporter
-    
-    df.trade .= df.trade / home_trade
-    # normalize things
-    
-    return df
+    return norm_πshares
     
 end 
 
