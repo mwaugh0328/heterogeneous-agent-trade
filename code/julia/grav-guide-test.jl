@@ -37,18 +37,6 @@ trc = trade_costs(grvdata.dist_coef, grvdata.lang_coef, grvdata.θm)
 
 θ = 4.0
 
-d = zeros(19,19)
-T = zeros(19)
-W = ones(19)
-
-# make_trade_costs!(dfcntryfix, trc, d, θ)
-
- make_technology!(grvdata, T, W, θ)
-
-# W = solve_trade_balance(dflabor.L, d, T, θ)
-
-# # πshares, Φ = eaton_kortum(W, d, T, θ)
-
 initial_x = vec([-1.0*ones(18); zeros(18) ; -ones(6); trc.lang_coef])
 
 gravity_as_guide(initial_x, dfcntryfix, dflabor.L, grvdata)
@@ -73,36 +61,18 @@ sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
 
 print(sol)
 
+# ################################################################
+# reconstruct the output 
+
+T = [exp.(sol.x[1:18]); 1] 
+θm = [sol.x[19:(36)]; -sum(sol.x[19:(36)])] 
+dist_coef = sol.x[37:37+5]
+lang_coef = sol.x[43:end]
+
+trc = trade_costs(dist_coef, lang_coef, θm)
+
+grv, W, πshares = gravity_as_guide(trc, T, dfcntryfix, dflabor.L, 4.0, solver = false)
+
 # # ################################################################
-# # ################################################################
 
-# test = gravity_as_guide(trc, W, T, dfcntryfix, dflabor.L)
 
-# W = zeros(18)
-# T = log.(T)
-
-# initial_x = vec([T; W; trc.θm; trc.dist_coef; trc.lang_coef])
-
-# foo = gravity_as_guide(initial_x, dfcntryfix, dflabor.L, grvdata)
-
-# f(x) = gravity_as_guide(x, dfcntryfix, dflabor.L, grvdata);
-
-# function f!(fvec, x)
-
-#     fvec .= f(x)
-
-# end
-
-# ###################################################################
-
-# n = length(initial_x)
-# diag_adjust = n - 1
-
-# sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
-#       ml=diag_adjust, mu=diag_adjust,
-#       diag=ones(n),
-#       mode= 1,
-#       tol=1e-5,
-#        )
-
-# print(sol)

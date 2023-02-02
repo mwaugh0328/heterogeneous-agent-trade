@@ -186,7 +186,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function gravity_as_guide(trade_costs, T, dfcntryfix, L, θ)
+function gravity_as_guide(trade_costs, T, dfcntryfix, L, θ; solver = true)
 
     # construct trade costs
     d = zeros(19,19)
@@ -211,7 +211,16 @@ function gravity_as_guide(trade_costs, T, dfcntryfix, L, θ)
 
     # run the gavity regression and return 
     # the gravity structure
-    return gravity(dfmodel)
+
+    if solver == true
+
+        return gravity(dfmodel)
+
+    else
+
+        return gravity(dfmodel), W, πshares
+
+    end
 
 end
 
