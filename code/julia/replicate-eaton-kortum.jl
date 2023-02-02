@@ -51,6 +51,9 @@ make_technology!(grvdata, T, W, θ)
 
 @time πshares, Φ = eaton_kortum(W, d, T, θ)
 
+# Now re-run the gravity regression on the model to 
+# see if we recover the proper coeffecients
+
 trademodel = log.(vec(normalize_by_home_trade(πshares)'))
 
 dfmodel = DataFrame(trade = trademodel)
@@ -63,11 +66,9 @@ dfmodel = hcat(dfmodel, dfcntryfix)
 
 grv = gravity(dfmodel, display = true);
 
-
+plot(dfmodel.trade, dftrade.trade, seriestype = :scatter)
 
 ################################################################
 # Feed into the model and then compare with data
 
-# πdata =  make_trade_shares(dftrade)
 
-plot(dfmodel.trade, dftrade.trade, seriestype = :scatter)
