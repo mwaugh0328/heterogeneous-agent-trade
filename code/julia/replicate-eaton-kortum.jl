@@ -54,13 +54,15 @@ make_technology!(grvdata, T, W, θ)
 # Now re-run the gravity regression on the model to 
 # see if we recover the proper coeffecients
 
-trademodel = log.(vec(normalize_by_home_trade(πshares)'))
+trademodel = log.(normalize_by_home_trade(πshares)')
+
+trademodel = vec(drop_diagonal(trademodel))
 
 dfmodel = DataFrame(trade = trademodel)
 
-filter!(row -> ~(row.trade ≈ 1.0), dfmodel);
+# filter!(row -> ~(row.trade ≈ 1.0), dfmodel);
 
-filter!(row -> ~(row.trade ≈ 0.0), dfmodel);
+# filter!(row -> ~(row.trade ≈ 0.0), dfmodel);
 
 dfmodel = hcat(dfmodel, dfcntryfix)
 

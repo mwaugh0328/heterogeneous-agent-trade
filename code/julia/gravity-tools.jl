@@ -2,12 +2,23 @@ using FixedEffectModels
 using Parameters
 
 struct gravity_results{T}
-    dist_coef::Array{T} # asset_policy
-    lang_coef::Array{T} # asset_policy
-    S::Array{T} # choice probabilities
-    θm::Array{T} # value function
+    dist_coef::Array{T} # distance bins
+    lang_coef::Array{T} # border, language, ec, efta
+    S::Array{T} # source technology part
+    θm::Array{T} # asymetric part
 end
 
+##########################################################################
+##########################################################################
+
+struct trade_costs{T}
+    dist_coef::Array{T} # distance bins
+    lang_coef::Array{T} # border, language, ec, efta
+    θm::Array{T} # asymetric part
+end
+
+##########################################################################
+##########################################################################
 
 function gravity!(tradedata, d, T, W, θ)
     #mulitple dispatch version, runs gravity regression
@@ -66,15 +77,17 @@ function make_trade_costs!(dffix, gravity_results, d, θ)
 
                 language_effect = exp(-inv_θ * lang_coef[2] * foo[get_exporter, :].sharedlanguage[1]) 
 
-                europeancom_effect = exp(-inv_θ * lang_coef[2] * foo[get_exporter, :].europeancom[1]) 
+                europeancom_effect = exp(-inv_θ * lang_coef[3] * foo[get_exporter, :].europeancom[1]) 
 
-                efta_effect = exp(-inv_θ * lang_coef[3] * foo[get_exporter, :].efta[1])
+                efta_effect = exp(-inv_θ * lang_coef[4] * foo[get_exporter, :].efta[1])
 
                 asym_effect = exp( -inv_θ * θm[importer] )           
 
                 d[importer, exporter] =(distance_effect * border_effect  * language_effect
                                          * europeancom_effect * efta_effect * asym_effect)
                                          # equation (29) exponentiated
+
+                d[importer, exporter] = max(d[importer, exporter], 1.0)
 
             elseif exporter == importer
 
@@ -145,6 +158,106 @@ end
 ##########################################################################
 ##########################################################################
 
+function gravity_as_guide(xxx, dfcntryfix, L, grv_data)
+    # mulitple dispatch version to use in solver
+
+    T = [exp.(xxx[1:18]); 1] # so S's are normalized -> only have 18 degrees here
+    θm = [xxx[19:(36)]; -sum(xxx[19:(36)])] # same with this, they sum zero
+
+    dist_coef = xxx[37:37+5]
+    
+    lang_coef = xxx[43:end]
+
+    # build the trade cost structure 
+    trc = trade_costs(dist_coef, lang_coef, θm)
+
+    grv = gravity_as_guide(trc, T, dfcntryfix, L, 4.0)
+    # multiple dispacth calls the base file
+
+    outvec = [grv.S[1:end-1] .- grv_data.S[1:end-1] ; 
+                grv.θm[1:end-1] .- grv_data.θm[1:end-1] ;
+                grv.dist_coef .- grv_data.dist_coef;
+                grv.lang_coef .- grv_data.lang_coef]
+
+    return outvec
+
+end
+
+##########################################################################
+##########################################################################
+
+function gravity_as_guide(trade_costs, T, dfcntryfix, L, θ)
+
+    # construct trade costs
+    d = zeros(19,19)
+
+    make_trade_costs!(dfcntryfix, trade_costs, d, θ)
+
+    # then given T's, d's, θ...we can make trade flows
+    # and solver for balanced trade
+
+    W = solve_trade_balance(L, d, T, θ)
+
+    # recover the trade flows to run gravity eq on.
+    πshares = eaton_kortum(W, d, T, θ)[1]
+
+    # Organize "model" dataset
+
+    trademodel = log.(normalize_by_home_trade(πshares)')
+
+    dfmodel = DataFrame(trade = vec(drop_diagonal(trademodel)))
+
+    dfmodel = hcat(dfmodel, dfcntryfix)
+
+    # run the gavity regression and return 
+    # the gravity structure
+    return gravity(dfmodel)
+
+end
+
+##########################################################################
+##########################################################################
+
+function solve_trade_balance(xxx, L, d, T, θ)
+
+    W = [ exp.(xxx) ; 1.0]
+    # build the wage vector
+
+    πshares = eaton_kortum(W, d, T, θ)[1]
+    # make the trade flows
+
+    return trade_balance(W, L, πshares)
+
+end
+
+function solve_trade_balance(L, d, T, θ)
+    # muliple dispatch version to find zero
+
+    f(x) = solve_trade_balance(x, L, d, T, θ);
+
+    function f!(fvec, x)
+
+        fvec .= f(x)
+
+    end
+
+    initial_x = zeros(18)
+    n = length(initial_x)
+
+    sol = fsolve(f!, initial_x, method = :hybr;
+        ml= (n - 1), mu= (n - 1),
+        diag=ones(n),
+        mode= 1,
+        tol=1e-15,
+        )
+
+    return [exp.(sol.x); 1.0]
+
+end
+
+##########################################################################
+##########################################################################
+
 function normalize_by_home_trade(πshares)
 
     norm_πshares = similar(πshares)
@@ -158,6 +271,20 @@ function normalize_by_home_trade(πshares)
     return norm_πshares
     
 end 
+
+function drop_diagonal(πshares)
+
+    nodiag = Array{Float64}(undef, 18, 19)
+
+    for exporter = 1:19
+
+            nodiag[:, exporter] .= deleteat!(πshares[:, exporter], exporter)
+
+    end
+
+    return nodiag
+
+end
 
 ##########################################################################
 ##########################################################################

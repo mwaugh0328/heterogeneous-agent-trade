@@ -47,7 +47,7 @@ function trade_balance(W, L, πshares; method = "solver")
 
     if method == "solver"
 
-        return trade_balance
+        return trade_balance[1:end-1]
 
     else
 
