@@ -1,7 +1,6 @@
 include("gravity-tools.jl")
 include("trade-environment.jl")
 using CSV
-using DataFrames
 using Plots
 using MINPACK
 
@@ -25,23 +24,23 @@ dfcntryfix = DataFrame(CSV.File("../../ek-data/ek-cntryfix.csv"))
 # these are the fixed characteristics of each country...
 # not trade flows
 
+
+grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix)
+
 ################################################################
 # Run the Gravity regression
 
 grvdata = gravity(dftrade, display = true);
 
-trc = trade_costs(grvdata.dist_coef, grvdata.lang_coef, grvdata.θm) 
+trc = trade_costs(grvdata.dist_coef, grvdata.lang_coef, grvdata.θm)
 
-# ################################################################
-# # Recover the trade costs and technology parameters
-
-θ = 4.0
+################################################################
 
 initial_x = vec([-1.0*ones(18); zeros(18) ; -ones(6); trc.lang_coef])
 
-gravity_as_guide(initial_x, dfcntryfix, dflabor.L, grvdata)
+gravity_as_guide(initial_x, grvdata, grv_params)
 
-f(x) = gravity_as_guide(x, dfcntryfix, dflabor.L, grvdata);
+f(x) = gravity_as_guide(x, grvdata, grv_params);
 
 function f!(fvec, x)
 
@@ -61,18 +60,27 @@ sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
 
 print(sol)
 
-# ################################################################
-# reconstruct the output 
+################################################################
+Ncntry = 19
 
-T = [exp.(sol.x[1:18]); 1] 
-θm = [sol.x[19:(36)]; -sum(sol.x[19:(36)])] 
-dist_coef = sol.x[37:37+5]
-lang_coef = sol.x[43:end]
+T = [exp.(sol.x[1:(Ncntry - 1)]); 1] # S's are normalized -> only have 18 degrees of freedom on Ts
+    
+θm = [sol.x[Ncntry:((Ncntry - 1)*2)]; -sum(sol.x[Ncntry:((Ncntry - 1)*2)])] # same with this, they sum zero
+
+dist_coef = sol.x[((Ncntry - 1)*2 + 1):((Ncntry - 1)*2 + 6)] # six distance bins
+
+lang_coef = sol.x[((Ncntry - 1)*2 + 7):end] # the language stuff
+
 
 trc = trade_costs(dist_coef, lang_coef, θm)
 
-grv, W, πshares = gravity_as_guide(trc, T, dfcntryfix, dflabor.L, 4.0, solver = false)
+grv, W, πshares, dfmodel = gravity_as_guide(trc, T, grv_params.dfcntryfix, grv_params, solver = false)
 
-# # ################################################################
+################################################################
 
+
+plot(dfmodel.trade, dftrade.trade, seriestype = :scatter, alpha = 0.75,
+    xlabel = "model",
+    ylabel = "data",
+    legend = false)
 
