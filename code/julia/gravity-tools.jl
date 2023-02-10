@@ -65,7 +65,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_trade_costs!(gravity_results, d, gravity_params)
+function make_trade_costs!(gravity_results, d, gravity_params; trade_cost_type = "ek")
     # makes the trade costs given fixed country characteristics
     # this it he dffix
     @unpack θ, Ncntry, dfcntryfix = gravity_params
@@ -93,7 +93,15 @@ function make_trade_costs!(gravity_results, d, gravity_params)
 
                 efta_effect = exp(-inv_θ * lang_coef[4] * foo[get_exporter, :].efta[1])
 
-                asym_effect = exp( -inv_θ * θm[importer] )           
+                if trade_cost_type == "ek"
+
+                    asym_effect = exp( -inv_θ * θm[importer] )   
+                    
+                elseif trade_cost_type == "waugh"
+
+                    asym_effect = exp( -inv_θ * θm[exporter] )
+
+                end  
 
                 d[importer, exporter] =(distance_effect * border_effect  * language_effect
                                          * europeancom_effect * efta_effect * asym_effect)
@@ -114,10 +122,11 @@ function make_trade_costs!(gravity_results, d, gravity_params)
 end
 
 
+
 ##########################################################################
 ##########################################################################
 
-function gravity(tradedata; display = false)
+function gravity(tradedata; trade_cost_type = "ek", display = false)
     #function to perform basic gravity regression
     #assumes tradedata is a DataFrame, takes on the structure of EK dataset
 
@@ -127,40 +136,55 @@ function gravity(tradedata; display = false)
 
     lang_coef = outreg.coef[7:end]
 
-    grp = groupby(outreg.fe, "exporter");
+    if trade_cost_type == "ek"
 
-    S = get_first(grp, "fe_exporter")
+        S, θm, dist_bins = eaton_kortum_trade_costs(outreg)
 
-    grp = groupby(outreg.fe, "importer");
+        if display == true
 
-    θm = get_first(grp, "fe_importer")
-    
-    θm = θm .+ S 
+            println(outreg)
+            println(" ")
 
-    norm_fe = sum(θm) / length(θm)
-    
-    θm = θm .- norm_fe
+            println("Compare to Table III (1762)")
+            println(" ")
+            println("Distance Effects")
+            dffoo = DataFrame(distance_effects = dist_bins);
+            println(dffoo)
+            println(" ")
+            println("Border, language, Eupope, etc. Effects")
+            dffoo = DataFrame(boder_lang_effects = lang_coef);
+            println(dffoo)
+            println(" ")
+            println("Source and Destination Effects (The S's and θm's)")
+            dffoo = DataFrame(source_effects = S, destination_effects = θm);
+            println(dffoo)
 
-    dist_bins = outreg.coef[1:6] .+ norm_fe
+        end
 
-    if display == true
+    elseif trade_cost_type == "waugh"
 
-        println(outreg)
-        println(" ")
+        S, θm, dist_bins = waugh_trade_costs(outreg)
 
-        println("Compare to Table III (1762)")
-        println(" ")
-        println("Distance Effects")
-        dffoo = DataFrame(distance_effects = dist_bins);
-        println(dffoo)
-        println(" ")
-        println("Border, language, Eupope, etc. Effects")
-        dffoo = DataFrame(boder_lang_effects = lang_coef);
-        println(dffoo)
-        println(" ")
-        println("Source and Destination Effects (The S's and θm's)")
-        dffoo = DataFrame(source_effects = S, destination_effects = θm);
-        println(dffoo)
+        if display == true
+
+            println(outreg)
+            println(" ")
+
+            println("Waugh (2010) Formulation")
+            println(" ")
+            println("Distance Effects")
+            dffoo = DataFrame(distance_effects = dist_bins);
+            println(dffoo)
+            println(" ")
+            println("Border, language, Eupope, etc. Effects")
+            dffoo = DataFrame(boder_lang_effects = lang_coef);
+            println(dffoo)
+            println(" ")
+            println("Source and Exporter Effects (The S's and θex's)")
+            dffoo = DataFrame(source_effects = S, exporter_effects = θm);
+            println(dffoo)
+
+        end
     end
 
     return gravity_results(dist_bins, lang_coef, S, θm)
@@ -170,7 +194,54 @@ end
 ##########################################################################
 ##########################################################################
 
-function gravity_as_guide(xxx, grv_data, gravity_params)
+function eaton_kortum_trade_costs(outreg)
+
+    grp = groupby(outreg.fe, "exporter")
+
+    S = get_first(grp, "fe_exporter")
+
+    grp = groupby(outreg.fe, "importer")
+
+    θm = get_first(grp, "fe_importer")
+
+    θm = θm .+ S 
+
+    norm_fe = sum(θm) / length(θm)
+
+    θm = θm .- norm_fe
+
+    dist_bins = outreg.coef[1:6] .+ norm_fe
+
+    return S, θm, dist_bins
+
+end
+
+function waugh_trade_costs(outreg)
+
+    grp = groupby(outreg.fe, "importer")
+
+    S = get_first(grp, "fe_importer")
+
+    norm_fe = sum(S) / length(S)
+
+    S = -(S .- norm_fe)
+
+    grp = groupby(outreg.fe, "exporter")
+
+    θm = get_first(grp, "fe_exporter")
+
+    θm = θm .- S
+    
+    dist_bins = outreg.coef[1:6] .+ norm_fe
+
+    return S, θm, dist_bins
+
+end
+
+##########################################################################
+##########################################################################
+
+function gravity_as_guide(xxx, grv_data, gravity_params; trade_cost_type = "ek")
     # mulitple dispatch version to use in solver
 
     @unpack Ncntry, θ, dfcntryfix = gravity_params 
@@ -186,7 +257,7 @@ function gravity_as_guide(xxx, grv_data, gravity_params)
     # build the trade cost structure 
     trc = trade_costs(dist_coef, lang_coef, θm)
 
-    grv = gravity_as_guide(trc, T, dfcntryfix, gravity_params)
+    grv = gravity_as_guide(trc, T, dfcntryfix, gravity_params, trade_cost_type = trade_cost_type)
     # multiple dispacth calls the base file
 
     outvec = [grv.S[1:end-1] .- grv_data.S[1:end-1] ; 
@@ -201,14 +272,15 @@ end
 ##########################################################################
 ##########################################################################
 
-function gravity_as_guide(trade_costs, T, dfcntryfix, gravity_params; solver = true)
+function gravity_as_guide(trade_costs, T, dfcntryfix, gravity_params; 
+                            solver = true, trade_cost_type = "ek")
 
     @unpack Ncntry, θ = gravity_params 
 
     # construct trade costs
     d = zeros(Ncntry,Ncntry)
 
-    make_trade_costs!(trade_costs, d, gravity_params)
+    make_trade_costs!(trade_costs, d, gravity_params, trade_cost_type = trade_cost_type)
 
     # then given T's, d's, θ...we can make trade flows
     # and solver for balanced trade
@@ -231,11 +303,11 @@ function gravity_as_guide(trade_costs, T, dfcntryfix, gravity_params; solver = t
 
     if solver == true
 
-        return gravity(dfmodel)
+        return gravity(dfmodel, trade_cost_type = trade_cost_type)
 
     else
 
-        return gravity(dfmodel), W, πshares, dfmodel
+        return gravity(dfmodel, trade_cost_type = trade_cost_type), W, πshares, dfmodel
 
     end
 

@@ -30,17 +30,17 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix)
 ################################################################
 # Run the Gravity regression
 
-grvdata = gravity(dftrade, display = true);
+trade_cost_type = "waugh"
+
+grvdata = gravity(dftrade, trade_cost_type = trade_cost_type, display = true);
 
 trc = trade_costs(grvdata.dist_coef, grvdata.lang_coef, grvdata.θm)
 
-################################################################
+# ################################################################
 
 initial_x = vec([-1.0*ones(18); zeros(18) ; -ones(6); trc.lang_coef])
 
-gravity_as_guide(initial_x, grvdata, grv_params)
-
-f(x) = gravity_as_guide(x, grvdata, grv_params);
+f(x) = gravity_as_guide(x, grvdata, grv_params, trade_cost_type = trade_cost_type);
 
 function f!(fvec, x)
 
@@ -60,7 +60,7 @@ sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
 
 print(sol)
 
-################################################################
+# ################################################################
 Ncntry = 19
 
 T = [exp.(sol.x[1:(Ncntry - 1)]); 1] # S's are normalized -> only have 18 degrees of freedom on Ts
@@ -74,13 +74,14 @@ lang_coef = sol.x[((Ncntry - 1)*2 + 7):end] # the language stuff
 
 trc = trade_costs(dist_coef, lang_coef, θm)
 
-grv, W, πshares, dfmodel = gravity_as_guide(trc, T, grv_params.dfcntryfix, grv_params, solver = false)
+grv, W, πshares, dfmodel = gravity_as_guide(trc, T, grv_params.dfcntryfix, 
+                grv_params, solver = false, trade_cost_type = trade_cost_type)
 
 ################################################################
-
 
 plot(dfmodel.trade, dftrade.trade, seriestype = :scatter, alpha = 0.75,
     xlabel = "model",
     ylabel = "data",
     legend = false)
+
 
