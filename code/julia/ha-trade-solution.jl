@@ -13,47 +13,23 @@ end
 
 # # ##########################################################################
 
-function calibrate_world_equillibrium(x, moments, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-    hh_solution_method = "itteration", stdist_sol_method = "itteration")
 
-    W = [1.0; x[1:Ncntry-1]]
-
-    R = x[Ncntry:2*Ncntry-1]
-
-    TFP = exp.(x[2*Ncntry:end])
-
-    cal_params = world_model_params(model_params, TFP = TFP)
-
-    Y, tradeflows, A_demand, tradeshare = world_equillibrium(R, W, cal_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
-    hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
-
-    goods_market = Y .- vec(sum(tradeflows, dims = 1))
-# so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
-# per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
-
-    asset_market = A_demand
-
-    model_data = log.(diag(tradeshare)) .- log.(moments)
-
-    return [asset_market; goods_market[2:end]; model_data]
-
-end
 
 
 # # ##########################################################################
 # # # functions used to find a solution
 
-function world_equillibrium(x, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-    hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
+function world_equillibrium(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration")
 
-    @unpack Ncntry, TFP, d = model_params
+    @unpack Ncntry, TFP, d = cntry_params
 
     @assert length(x) ≈ ( Ncntry + (Ncntry - one(Ncntry)) )
 
     W = [1.0; x[1:(Ncntry - one(Ncntry))]]
     R = x[Ncntry:end]
 
-    Y, tradeflows, A_demand = world_equillibrium(R, W, model_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+    Y, tradeflows, A_demand = world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
 
     goods_market = Y .- vec(sum(tradeflows, dims = 1))
@@ -69,10 +45,10 @@ end
 # ##########################################################################
 # ##########################################################################
 
-function world_equillibrium_FG(x, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-    hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
+function world_equillibrium_FG(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration")
 
-    @unpack Ncntry = model_params
+    @unpack Ncntry = cntry_params
 
     @assert length(x) ≈ Ncntry
 
@@ -80,7 +56,7 @@ function world_equillibrium_FG(x, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
 
     R = ones(Ncntry)*x[end]
 
-    Y, tradeflows, A_demand = world_equillibrium(R, W, model_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+    Y, tradeflows, A_demand = world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
 
     goods_market = Y .- vec(sum(tradeflows, dims = 1))
@@ -97,12 +73,13 @@ end
 # ##########################################################################
 
 
-function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-    hh_solution_method = "nl-fixedpoint", stdist_sol_method = "nl-fixedpoint")
+function world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration")
 
-@assert model_params.ϕ > 0.0
+    @assert hh_params.ϕ > 0.0
 
-@unpack Ncntry, TFP, d = model_params
+    @unpack Ncntry, TFP, d, L = cntry_params
+    @unpack ϕ, Na, amax = hh_params
 
     Y = similar(W)
     A_demand = similar(R)
@@ -116,7 +93,12 @@ function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
 
         p = (W ./ TFP) .* d[cntry, :]
 
-        hh[cntry], dist[cntry] = compute_eq(R[cntry], W[cntry], p, model_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
+        agrid = make_agrid(hh_params, TFP[cntry])
+        # this creates teh asset grid so it's alwasy a fraction of home labor income
+
+        foo_hh_params = household_params(hh_params, agrid = agrid, TFP = TFP[cntry], L = L[cntry])
+
+        hh[cntry], dist[cntry] = compute_eq(R[cntry], W[cntry], p, foo_hh_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
             hh_solution_method = hh_solution_method, stdist_sol_method = stdist_sol_method)
 
     end
@@ -125,7 +107,11 @@ function world_equillibrium(R, W, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
 
         p = (W ./ TFP) .* d[cntry, :]
 
-        output, tradestats = aggregate(R[cntry], W[cntry], p, cntry, hh[cntry], dist[cntry], model_params)
+        agrid = make_agrid(hh_params, TFP[cntry])
+
+        foo_hh_params = household_params(hh_params, agrid = agrid, TFP = TFP[cntry], L = L[cntry])
+
+        output, tradestats = aggregate(R[cntry], W[cntry], p, cntry, hh[cntry], dist[cntry], foo_hh_params)
 
         Y[cntry] = output.production
 
@@ -145,8 +131,15 @@ end
 
 # ##########################################################################
 # ##########################################################################
+function make_agrid(hh_params, TFP)
 
-function micro_trade_elasticity(R, W, p, home, source, model_params; tol_vfi = 1e-6, hh_solution_method = "nl-fixedpoint")
+    return convert(Array{Float64, 1}, range(-hh_params.ϕ*TFP, hh_params.amax*TFP, length = hh_params.Na))
+
+end
+
+
+
+function micro_trade_elasticity(R, W, p, home, source, model_params; tol_vfi = 1e-6, hh_solution_method = "itteration")
 
     hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
 
@@ -184,7 +177,7 @@ end
 # ##########################################################################
 # ##########################################################################
 
-function make_stationary_distribution(household, model_params; tol = 1e-10, solution_method = "nl-fixedpoint") 
+function make_stationary_distribution(household, model_params; tol = 1e-10, solution_method = "itteration") 
 
 @unpack Na, Nshocks = model_params
 
@@ -269,7 +262,7 @@ end
 
 # ##########################################################################
 
-function solve_household_problem(R, W, p, model_params; tol = 10^-6, solution_method = "nl-fixedpoint")
+function solve_household_problem(R, W, p, model_params; tol = 10^-6, solution_method = "itteration")
 
     if solution_method == "nl-fixedpoint"
 
@@ -423,6 +416,32 @@ end
 
 ##########################################################################
 ##########################################################################
+
+function calibrate_world_equillibrium(x, moments, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration")
+
+    W = [1.0; x[1:Ncntry-1]]
+
+    R = x[Ncntry:2*Ncntry-1]
+
+    TFP = exp.(x[2*Ncntry:end])
+
+    cal_params = world_model_params(model_params, TFP = TFP)
+
+    Y, tradeflows, A_demand, tradeshare = world_equillibrium(R, W, cal_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+    hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
+
+    goods_market = Y .- vec(sum(tradeflows, dims = 1))
+# so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
+# per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
+
+    asset_market = A_demand
+
+    model_data = log.(diag(tradeshare)) .- log.(moments)
+
+    return [asset_market; goods_market[2:end]; model_data]
+
+end
 
 
 

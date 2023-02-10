@@ -14,9 +14,10 @@ using LoopVectorization
 
 include("mix-MarkovChain.jl")
 
-
 ##########################################################################
-@with_kw struct world_model_params
+@with_kw struct household_params
+    TFP::Float64 = 1.0
+    L::Float64 = 1.0
     β::Float64 = 0.95
     γ::Float64 = 2.0
     ϕ::Float64 = 0.0
@@ -24,7 +25,7 @@ include("mix-MarkovChain.jl")
     Ncntry::Int64 = 2
     σϵ::Float64 = 0.25
     Na::Int64 = 50
-    agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
+    agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ*TFP, amax*TFP, length = Na))
     Nar::Int64 = 5
     Nma::Int64 = 2
     Nshocks::Int64 = Nar*Nma
@@ -33,10 +34,38 @@ include("mix-MarkovChain.jl")
     σar::Float64 = 0.039^(0.5)
     σma::Float64 = 0.0522^(0.5)
     mc::MarkovChain{Float64, Matrix{Float64}, Vector{Float64}} = mMarkovChain(Nar,Nma,ρ,σar,σma)
+
+end
+
+@with_kw struct country_params
+    Ncntry::Int64 = 2
     TFP::Array{Float64, 1} = ones(Ncntry)
     L::Array{Float64, 1} = ones(Ncntry)
     d::Array{Float64, 2} = ones(Ncntry,Ncntry)
-end
+ end
+
+##########################################################################
+# @with_kw struct world_model_params
+#     β::Float64 = 0.95
+#     γ::Float64 = 2.0
+#     ϕ::Float64 = 0.0
+#     amax::Float64 = 8.0
+#     Ncntry::Int64 = 2
+#     σϵ::Float64 = 0.25
+#     Na::Int64 = 50
+#     agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
+#     Nar::Int64 = 5
+#     Nma::Int64 = 2
+#     Nshocks::Int64 = Nar*Nma
+#     statesize::Int64 = Int(Na*Nshocks*Ncntry)
+#     ρ::Float64 = 0.90
+#     σar::Float64 = 0.039^(0.5)
+#     σma::Float64 = 0.0522^(0.5)
+#     mc::MarkovChain{Float64, Matrix{Float64}, Vector{Float64}} = mMarkovChain(Nar,Nma,ρ,σar,σma)
+#     TFP::Array{Float64, 1} = ones(Ncntry)
+#     L::Array{Float64, 1} = ones(Ncntry)
+#     d::Array{Float64, 2} = ones(Ncntry,Ncntry)
+# end
 
 
 ##########################################################################

@@ -30,12 +30,12 @@ L = df.L
 
 Ncntry = size(d)[1]
 
-mdl_prm = world_model_params(Ncntry = Ncntry, Na = 50, 
-γ = 1.5, ϕ = 2.0, amax = 5.0, σϵ = 0.25, d = d, TFP = TFP, L = L)
+hh_prm = household_params(Ncntry = Ncntry, Na = 100, 
+γ = 1.5, ϕ = 0.5, amax = 5.0, σϵ = 0.25, TFP = df.TFP[1])
 
-p = (df.wage[1:end] ./ mdl_prm.TFP).*d[1,:]
+p = (df.wage[1:end] ./ df.TFP).*d[1,:]
 
-compute_eq(1.02, df.wage[1], p, mdl_prm)
+compute_eq(1.02, df.wage[1], p, hh_prm)
 
 # trade with interpolations at .13.1
 # not multi-threaded on policy function, only value fun

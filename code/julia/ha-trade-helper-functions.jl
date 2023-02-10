@@ -164,43 +164,43 @@ end
 
 ##############################################################################
 
-function aggregate(R, W, p, country, household, distribution, model_params; display = false)
+function aggregate(R, W, p, country, household, distribution, hh_params; display = false)
 
     # organization...
 
     @unpack state_index, λ = distribution
     @unpack πprob, asset_policy = household
-    @unpack TFP, L = model_params
+    @unpack TFP, L = hh_params
 
     #####
-    wz, ef_units = get_laborincome(W, state_index, model_params)
+    wz, ef_units = get_laborincome(W, state_index, hh_params)
 
-    N = L[country] .* dot(ef_units, λ) #number of effeciency units (16)
+    N = L* dot(ef_units, λ) #number of effeciency units (16)
 
     #####
     # Get stuff from hh side
 
-    a = get_astate(state_index, model_params)
+    a = get_astate(state_index, hh_params)
     # assets today
 
-    aprime = get_aprime(asset_policy, πprob, state_index, model_params)
+    aprime = get_aprime(asset_policy, πprob, state_index, hh_params)
     # # assets tomorrow Noption * statesize as assets are contingent on car choice
 
-    pc = get_consumption(R, W, asset_policy, πprob, state_index, model_params)
+    pc = get_consumption(R, W, asset_policy, πprob, state_index, hh_params)
 
-    pcπ_by_state, π_by_state = get_trade(R, W, asset_policy, πprob, state_index, model_params)[1:2]
+    pcπ_by_state, π_by_state = get_trade(R, W, asset_policy, πprob, state_index, hh_params)[1:2]
 
-    Aprime = L[country] .* dot(aprime, λ) 
+    Aprime = L .* dot(aprime, λ) 
     # asset holdings next period (17)
 
     # aggregate asset demand 
 
-    A = L[country] .* dot(a , λ)
+    A = L * dot(a , λ)
     # aggregate asset positoin entering the period
 
     NetA = -(R * A) + Aprime
 
-    PC = L[country] .* dot(pc , λ)
+    PC = L * dot(pc , λ)
     #aggregate consumption
 
     ##############
@@ -209,23 +209,23 @@ function aggregate(R, W, p, country, household, distribution, model_params; disp
     imports = sum(pcπ_by_state[:, 1:end .!= country], dims = 2)
     # exclude home country imports
 
-    M = L[country] .* dot(imports , λ)
+    M = L * dot(imports , λ)
     # aggregate imports by value
 
-    bilateral_imports = sum( L[country] .* pcπ_by_state.* λ, dims = 1)
+    bilateral_imports = sum( L * pcπ_by_state.* λ, dims = 1)
 
     bilateral_πprob = sum( π_by_state.* λ, dims = 1)
 
-    production = p[country] * TFP[country]* N 
+    production = p[country] * TFP* N 
 
     home_consumption = sum(pcπ_by_state[:, 1:end .== country], dims = 2)
 
-    X = production - L[country] .* dot(home_consumption , λ)
+    X = production - L * dot(home_consumption , λ)
 
     #############
     # then compute GDP like measure
 
-    income = L[country] .* dot(wz, λ)
+    income = L * dot(wz, λ)
 
     expenditure = PC + X - M
     # aggregate labor income 

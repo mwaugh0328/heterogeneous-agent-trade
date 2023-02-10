@@ -22,17 +22,22 @@ d = reshape(dftrade.d, Ncntry,Ncntry)
 
 df = DataFrame(CSV.File("solution-fg.csv"))
 
-initial_x = [df.wage[2:end]; 1.035]
+initial_x = [df.wage[2:end]; 1.02]
 
 TFP = df.TFP
 L = df.L
 
 Ncntry = size(d)[1]
 
-mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, 
-γ = 1.01, ϕ = 2.0, amax = 8.0, σϵ = 0.25, d = d, TFP = TFP, L = L)
+# mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, 
+# γ = 1.01, ϕ = 2.0, amax = 8.0, σϵ = 0.25, d = d, TFP = TFP, L = L)
 
-f(x) = world_equillibrium_FG(x, mdl_prm, hh_solution_method = "itteration", stdist_sol_method = "itteration");
+hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.95,
+γ = 1.5, ϕ = 1.0, amax = 5.0, σϵ = 0.25)
+
+cntry_prm = country_params(Ncntry = Ncntry, d = d, TFP = TFP, L = L)
+
+f(x) = world_equillibrium_FG(x, hh_prm, cntry_prm);
 
 function f!(fvec, x)
 
@@ -59,7 +64,7 @@ Wsol = [1.0; sol.x[1:(Ncntry - 1)]]
 Rsol = ones(Ncntry)*sol.x[end]
 
 Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol,
-    Wsol, mdl_prm, hh_solution_method = "itteration");
+    Wsol, hh_prm, cntry_prm);
 
 ###################################################################
 
