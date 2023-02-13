@@ -51,7 +51,7 @@ function world_equillibrium_FG(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
 
     @assert length(x) ≈ Ncntry
 
-    W = [1.0; x[1:(Ncntry - one(Ncntry))]]
+    W = [x[1:(Ncntry - one(Ncntry))]; 1.0 ]
 
     R = ones(Ncntry)*x[end]
 
@@ -413,6 +413,70 @@ function value_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 end
 
 
+function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
+
+    @unpack Ncntry = cntry_params
+
+    ## A bunch of organization here ####################
+
+    @assert length(xxx) == 2*(Ncntry - 1) + 4 + 6  
+
+    TFP, d = make_country_params(xxx, cntry_params, grvparams, trade_cost_type = trade_cost_type)
+
+    ##################################################################
+
+    calibrate_cntry_params = country_params(TFP = TFP, d = d, 
+                            Ncntry = Ncntry, L = cntry_params.L)
+
+    f(x) = world_equillibrium_FG(x, hh_params, calibrate_cntry_params);
+
+    function f!(fvec, x)
+    
+        fvec .= f(x)
+    
+    end
+    
+    initial_x = [ones(18); 1.00]
+    
+    n = length(initial_x)
+    diag_adjust = n - 1
+    
+    sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
+          ml=diag_adjust, mu=diag_adjust,
+          diag=ones(n),
+          mode= 1,
+          tol=1e-5,
+           )
+    
+    #print(sol)
+    
+    Wsol = [sol.x[1:(Ncntry - 1)]; 1.0]
+    
+    Rsol = ones(Ncntry)*sol.x[end]
+    
+    πshare = world_equillibrium(Rsol, Wsol, hh_params, calibrate_cntry_params)[4];
+
+    ##################################################################
+    # Run gravity regression on model "data"
+
+    trademodel = log.(normalize_by_home_trade(πshare, Ncntry)')
+
+    dfmodel = hcat(DataFrame(trade = vec(drop_diagonal(trademodel, Ncntry))), grvparams.dfcntryfix)
+
+    grvmodel = gravity(dfmodel, trade_cost_type =  trade_cost_type)
+
+    out_moment_vec = [grvmodel.S[1:end-1] .- grvdata.S[1:end-1] ; 
+        grvmodel.θm[1:end-1] .- grvdata.θm[1:end-1] ;
+        grvmodel.dist_coef .- grvdata.dist_coef;
+        grvmodel.lang_coef .- grvdata.lang_coef]
+
+    ##################################################################
+
+    return out_moment_vec
+
+end
+
 ##########################################################################
 ##########################################################################
 
@@ -489,32 +553,6 @@ function make_country_params(xxx, cntry_params, gravity_params; trade_cost_type 
     return TFP, d
 
 end
-
-# function calibrate_world_equillibrium(x, moments, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-#     hh_solution_method = "itteration", stdist_sol_method = "itteration")
-
-#     W = [1.0; x[1:Ncntry-1]]
-
-#     R = x[Ncntry:2*Ncntry-1]
-
-#     TFP = exp.(x[2*Ncntry:end])
-
-#     cal_params = world_model_params(model_params, TFP = TFP)
-
-#     Y, tradeflows, A_demand, tradeshare = world_equillibrium(R, W, cal_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
-#     hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
-
-#     goods_market = Y .- vec(sum(tradeflows, dims = 1))
-# # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
-# # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
-
-#     asset_market = A_demand
-
-#     model_data = log.(diag(tradeshare)) .- log.(moments)
-
-#     return [asset_market; goods_market[2:end]; model_data]
-
-# end
 
 
 

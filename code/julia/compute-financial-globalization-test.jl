@@ -55,12 +55,12 @@ sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
       ml=diag_adjust, mu=diag_adjust,
       diag=ones(n),
       mode= 1,
-      tol=1e-5,
+      tol=1e-5
        )
 
 print(sol)
 
-Wsol = [1.0; sol.x[1:(Ncntry - 1)]]
+Wsol = [sol.x[1:(Ncntry - 1)], 1.0]
 
 Rsol = ones(Ncntry)*sol.x[end]
 

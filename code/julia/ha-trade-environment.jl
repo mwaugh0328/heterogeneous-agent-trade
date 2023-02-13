@@ -243,7 +243,7 @@ function log_sum_v(vj, σϵ, Ncntry)
     # is it necessary? one thought is make
     # it relative to home country
 
-    @inbounds for xxx = 1:Ncntry
+    @inbounds @turbo for xxx = 1:Ncntry
 
         foo += exp( ( vj[xxx] ) / σϵ )
 
