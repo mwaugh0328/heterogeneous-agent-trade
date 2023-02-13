@@ -11,8 +11,7 @@ struct distribution{T}
     state_index::Array{Tuple{Int64, Int64}} # index of states, lines up with λ
 end
 
-# # ##########################################################################
-
+##########################################################################
 
 
 
@@ -22,7 +21,7 @@ end
 function world_equillibrium(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration")
 
-    @unpack Ncntry, TFP, d = cntry_params
+    @unpack Ncntry = cntry_params
 
     @assert length(x) ≈ ( Ncntry + (Ncntry - one(Ncntry)) )
 
@@ -417,31 +416,105 @@ end
 ##########################################################################
 ##########################################################################
 
-function calibrate_world_equillibrium(x, moments, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-    hh_solution_method = "itteration", stdist_sol_method = "itteration")
+function calibrate_world_equillibrium(x, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
 
-    W = [1.0; x[1:Ncntry-1]]
+    @unpack Ncntry = cntry_params
 
-    R = x[Ncntry:2*Ncntry-1]
+    ## A bunch of organization here ####################
 
-    TFP = exp.(x[2*Ncntry:end])
+    prices = exp.(x[1:Ncntry])
 
-    cal_params = world_model_params(model_params, TFP = TFP)
+    W = [prices[1:(Ncntry - one(Ncntry))]; 1.0]
 
-    Y, tradeflows, A_demand, tradeshare = world_equillibrium(R, W, cal_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
-    hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
+    R = ones(Ncntry)*prices[Ncntry]
+
+    TFP_grav_params = x[Ncntry+1:end]
+
+    @assert length(TFP_grav_params) == 2*(Ncntry - 1) + 4 + 6  
+
+    TFP, d = make_country_params(TFP_grav_params, cntry_params, grv_params, trade_cost_type = trade_cost_type)
+
+    ##################################################################
+
+    calibrate_cntry_params = country_params(TFP = TFP, d = d, Ncntry = Ncntry, L = cntry_params.L)
+
+    Y, tradeflows, A_demand, πshare = world_equillibrium(R, W, hh_params, calibrate_cntry_params, tol_vfi = tol_vfi, tol_dis = tol_dis, 
+        hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
 
     goods_market = Y .- vec(sum(tradeflows, dims = 1))
-# so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
-# per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
+    # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
+    # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
 
     asset_market = A_demand
 
-    model_data = log.(diag(tradeshare)) .- log.(moments)
+    ##################################################################
+    # Run gravity regression on model "data"
 
-    return [asset_market; goods_market[2:end]; model_data]
+    trademodel = log.(normalize_by_home_trade(πshare, Ncntry)')
+
+    dfmodel = hcat(DataFrame(trade = vec(drop_diagonal(trademodel, Ncntry))), grv_params.dfcntryfix)
+
+    grvmodel = gravity(dfmodel, trade_cost_type =  trade_cost_type)
+
+    out_moment_vec = [grvmodel.S[1:end-1] .- grvdata.S[1:end-1] ; 
+        grvmodel.θm[1:end-1] .- grvdata.θm[1:end-1] ;
+        grvmodel.dist_coef .- grvdata.dist_coef;
+        grvmodel.lang_coef .- grvdata.lang_coef]
+
+    ##################################################################
+
+    return [sum(asset_market); goods_market[2:end]; out_moment_vec]
 
 end
+
+##################################################################
+
+function make_country_params(xxx, cntry_params, gravity_params; trade_cost_type = "ek")
+
+    @unpack Ncntry = cntry_params
+
+    TFP = [exp.(xxx[1:(Ncntry - 1)]); 1] # S's are normalized -> only have 18 degrees of freedom on Ts
+    
+    θm = [xxx[Ncntry:((Ncntry - 1)*2)]; -sum(xxx[Ncntry:((Ncntry - 1)*2)])] # same with this, they sum zero
+
+    dist_coef = xxx[((Ncntry - 1)*2 + 1):((Ncntry - 1)*2 + 6)] # six distance bins
+    
+    lang_coef = xxx[((Ncntry - 1)*2 + 7):end] # the language stuff
+
+    d = zeros(Ncntry,Ncntry)
+
+    make_trade_costs!(trade_costs(dist_coef, lang_coef, θm), d, gravity_params, trade_cost_type = trade_cost_type)
+
+    return TFP, d
+
+end
+
+# function calibrate_world_equillibrium(x, moments, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+#     hh_solution_method = "itteration", stdist_sol_method = "itteration")
+
+#     W = [1.0; x[1:Ncntry-1]]
+
+#     R = x[Ncntry:2*Ncntry-1]
+
+#     TFP = exp.(x[2*Ncntry:end])
+
+#     cal_params = world_model_params(model_params, TFP = TFP)
+
+#     Y, tradeflows, A_demand, tradeshare = world_equillibrium(R, W, cal_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+#     hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
+
+#     goods_market = Y .- vec(sum(tradeflows, dims = 1))
+# # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
+# # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
+
+#     asset_market = A_demand
+
+#     model_data = log.(diag(tradeshare)) .- log.(moments)
+
+#     return [asset_market; goods_market[2:end]; model_data]
+
+# end
 
 
 

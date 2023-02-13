@@ -2,6 +2,7 @@ include("ha-trade-environment.jl")
 include("ha-trade-solution.jl")
 include("ha-trade-helper-functions.jl")
 include("static-trade-environment.jl")
+include("gravity-tools.jl")
 using MINPACK
 using Plots
 using CSV
@@ -22,7 +23,7 @@ d = reshape(dftrade.d, Ncntry,Ncntry)
 
 df = DataFrame(CSV.File("solution-fg.csv"))
 
-initial_x = [df.wage[2:end]; 1.02]
+initial_x = [df.wage[2:end]; 1.00]
 
 TFP = df.TFP
 L = df.L
@@ -32,7 +33,7 @@ Ncntry = size(d)[1]
 # mdl_prm = world_model_params(Ncntry = Ncntry, Na = 100, 
 # γ = 1.01, ϕ = 2.0, amax = 8.0, σϵ = 0.25, d = d, TFP = TFP, L = L)
 
-hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.95,
+hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = 1.5, ϕ = 1.0, amax = 5.0, σϵ = 0.25)
 
 cntry_prm = country_params(Ncntry = Ncntry, d = d, TFP = TFP, L = L)
@@ -65,6 +66,41 @@ Rsol = ones(Ncntry)*sol.x[end]
 
 Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol,
     Wsol, hh_prm, cntry_prm);
+
+
+# ###################################################################
+# dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
+
+# dftrade.trade = parse.(Float64, dftrade.trade)
+#     # forsome reason, now it reads in as a "String7"
+    
+# dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
+    
+# dflabor = DataFrame(CSV.File("../../ek-data/ek-labor.csv"))
+    
+# filter!(row -> ~(row.trade ≈ 1.0), dftrade);
+    
+# filter!(row -> ~(row.trade ≈ 0.0), dftrade);
+    
+# dftrade = hcat(dftrade, dflang);
+    
+#     #dfcntryfix = select(dftrade,Not("trade"))
+# dfcntryfix = DataFrame(CSV.File("../../ek-data/ek-cntryfix.csv"))
+#     # these are the fixed characteristics of each country...
+
+
+# trademodel = log.(normalize_by_home_trade(tradeshare, Ncntry)')
+
+# dfmodel = DataFrame(trade = vec(drop_diagonal(trademodel, Ncntry)))
+
+# dfmodel = hcat(dfmodel, dfcntryfix)
+
+# plot(dfmodel.trade, dftrade.trade, seriestype = :scatter, alpha = 0.75,
+#     xlabel = "model",
+#     ylabel = "data",
+#     legend = false)
+
+# gravity(dfmodel, trade_cost_type =  "ek")
 
 ###################################################################
 
