@@ -10,47 +10,42 @@ using DataFrames
 
 ####################################################################################
 ####################################################################################
-println(" ")
-println(" ")
-println("########### computing initial eq ################")
-println(" ")
+# Ncntry = 19
 
-Ncntry = 19
+# dftrade = DataFrame(CSV.File("ek-trade.csv"))
 
-dftrade = DataFrame(CSV.File("ek-trade.csv"))
+# d = reshape(dftrade.d, Ncntry,Ncntry)
 
-d = reshape(dftrade.d, Ncntry,Ncntry)
+# df = DataFrame(CSV.File("solution-fg.csv"))
 
-df = DataFrame(CSV.File("solution-fg.csv"))
+# initial_x = [df.wage[2:end]; 1.035]
 
-initial_x = [df.wage[2:end]; 1.035]
+TFP = [0.005; 1.0]
+wage = [0.5; 1.0]
 
-TFP = df.TFP
-L = df.L
+d_ij = 15.5
+d = [1.0 d_ij; d_ij 1.0]
 
 Ncntry = size(d)[1]
 
-hh_prm = household_params(Ncntry = Ncntry, Na = 100, 
-γ = 1.5, ϕ = 0.5, amax = 5.0, σϵ = 0.25, TFP = df.TFP[1])
+hh_prm = household_params(Ncntry = 2, Na = 100, 
+γ = 1.5, ϕ = 0.5, amax = 10.0, σϵ = 0.25, β = 0.85)
 
-p = (df.wage[1:end] ./ df.TFP).*d[1,:]
+agrid = make_agrid(hh_prm, TFP[1])
 
-compute_eq(1.02, df.wage[1], p, hh_prm)
+foo = household_params(hh_prm, agrid = agrid, TFP = TFP[1])
 
-# trade with interpolations at .13.1
-# not multi-threaded on policy function, only value fun
-# @time compute_eq(1.02, df.wage[1], p, mdl_prm);
-# 76
-#   0.776629 seconds (35.50 k allocations: 44.101 MiB)
-#   0.005110 seconds (28.68 k allocations: 3.060 MiB)
-#   0.782261 seconds (64.23 k allocations: 47.165 MiB)
+#the way this grid is setup seems to work
 
+p = (wage[1:end] ./ TFP).*d[1,:]
 
-# this is ha-mc with interpolations lastest version
-# # @time hh_end, dist_end = compute_eq(R, W, πrft, p, mdl_prm,
-# hh_solution_method = "itteration", stdist_sol_method = "itteration");
-# 61
-#   0.725138 seconds (183.59 k allocations: 79.649 MiB, 2.20% gc time)
+hh, dist = compute_eq(1.0, wage[1], p, foo )
+
+adist = get_distribution(dist.state_index, dist.λ);
+
+plot(foo.agrid ./ wage[1], adist, alpha = 0.5, lw = 4,
+    color = "dark blue", ylabel = "Probability Mass", 
+    xlabel = "Asset Holdings / Avg. Income", label = false)
 
 
 

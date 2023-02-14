@@ -437,7 +437,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
     
     end
     
-    initial_x = [ones(18); 1.00]
+    initial_x = [TFP[1:18]; 1.00]
     
     n = length(initial_x)
     diag_adjust = n - 1
@@ -538,7 +538,7 @@ function make_country_params(xxx, cntry_params, gravity_params; trade_cost_type 
 
     @unpack Ncntry = cntry_params
 
-    TFP = [exp.(xxx[1:(Ncntry - 1)]); 1] # S's are normalized -> only have 18 degrees of freedom on Ts
+    TFP = [exp.(xxx[1:(Ncntry - 1)]); 1.0] # S's are normalized -> only have 18 degrees of freedom on Ts
     
     θm = [xxx[Ncntry:((Ncntry - 1)*2)]; -sum(xxx[Ncntry:((Ncntry - 1)*2)])] # same with this, they sum zero
 
