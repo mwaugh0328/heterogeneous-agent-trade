@@ -438,6 +438,9 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
     end
     
     initial_x = [TFP[1:18]; 1.00]
+    # one of the issues with the crash
+    # was the initial wage was way larger than than
+    # TFP... then people get jammed up (?) at uper bound? 
     
     n = length(initial_x)
     diag_adjust = n - 1
