@@ -464,10 +464,10 @@ function utility(c, γ)
 
     if γ ≈ 1.0
         
-        (c < 1e-10 ? -Inf : log(c) )
+        (c ≤ 0.0 ? -Inf : log(c) )
 
     else
-        (c < 1e-10 ? -Inf : c^( one(γ) - γ)  / (one(γ) - γ))
+        (c ≤ 0.0 ? -Inf : c^( one(γ) - γ)  / (one(γ) - γ))
 
     end
 

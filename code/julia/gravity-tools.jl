@@ -132,7 +132,7 @@ function gravity(tradedata; trade_cost_type = "ek", display = false)
 
     outreg = reg(tradedata, @formula(trade ~ fe(importer) + fe(exporter) +
          bin375 + bin750 + bin1500 + bin3000 + bin6000 + binmax  + border + sharedlanguage +
-                europeancom + efta), save = true, tol = 1e-10)
+                europeancom + efta), save = true, tol = 1e-15)
 
     lang_coef = outreg.coef[7:end]
 

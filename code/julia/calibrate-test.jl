@@ -14,7 +14,7 @@ using DataFrames
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-#dftrade.trade = parse.(Float64, dftrade.trade)
+dftrade.trade = parse.(Float64, dftrade.trade)
     # forsome reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -58,25 +58,25 @@ cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
 f(x) = calibrate(x, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)
 
-# function f!(fvec, x)
+function f!(fvec, x)
 
-#     fvec .= f(x)
+    fvec .= f(x)
 
-# end
+end
 
 initial_x = [vec(log.(df.TFP[1:18])); trc.θm[1:18] ; trc.dist_coef; trc.lang_coef]
 
-foo1, foo2, foo3 = f(initial_x)
+foo1 = f(initial_x)
 
-# n = length(initial_x)
-# diag_adjust = n - 1
+n = length(initial_x)
+diag_adjust = n - 1
 
-# sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
-#       ml=diag_adjust, mu=diag_adjust,
-#       diag=ones(n),
-#       mode= 1,
-#       tol=1e-3,
-#        )
+sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
+      ml=diag_adjust, mu=diag_adjust,
+      diag=ones(n),
+      mode= 1,
+      tol=1e-3,
+       )
 
 
 

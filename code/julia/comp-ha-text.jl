@@ -21,7 +21,7 @@ using DataFrames
 # initial_x = [df.wage[2:end]; 1.035]
 
 TFP = [0.005; 1.0]
-wage = [0.5; 1.0]
+wage = [0.005; 1.0]
 
 d_ij = 15.5
 d = [1.0 d_ij; d_ij 1.0]
@@ -29,7 +29,7 @@ d = [1.0 d_ij; d_ij 1.0]
 Ncntry = size(d)[1]
 
 hh_prm = household_params(Ncntry = 2, Na = 100, 
-γ = 1.5, ϕ = 0.5, amax = 10.0, σϵ = 0.25, β = 0.85)
+γ = 1.5, ϕ = 0.5, amax = 10.0, σϵ = 0.25, β = 0.92)
 
 agrid = make_agrid(hh_prm, TFP[1])
 
@@ -49,4 +49,6 @@ plot(foo.agrid ./ wage[1], adist, alpha = 0.5, lw = 4,
 
 
 
+# @unpack Na, Nshocks, Ncntry, β, σϵ, TFP = foo
 
+# gc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)

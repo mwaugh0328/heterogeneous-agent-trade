@@ -92,10 +92,10 @@ function world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
 
         p = (W ./ TFP) .* d[cntry, :]
 
-        agrid = make_agrid(hh_params, TFP[cntry])
+        agrid = make_agrid(hh_params, (W[cntry] / p[cntry]))
         # this creates teh asset grid so it's alwasy a fraction of home labor income
 
-        foo_hh_params = household_params(hh_params, agrid = agrid, TFP = TFP[cntry], L = L[cntry])
+        foo_hh_params = household_params(hh_params, agrid = agrid, TFP = (W[cntry] / p[cntry]), L = L[cntry])
 
         hh[cntry], dist[cntry] = compute_eq(R[cntry], W[cntry], p, foo_hh_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
             hh_solution_method = hh_solution_method, stdist_sol_method = stdist_sol_method)
@@ -106,9 +106,9 @@ function world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
 
         p = (W ./ TFP) .* d[cntry, :]
 
-        agrid = make_agrid(hh_params, TFP[cntry])
+        agrid = make_agrid(hh_params, (W[cntry] / p[cntry]))
 
-        foo_hh_params = household_params(hh_params, agrid = agrid, TFP = TFP[cntry], L = L[cntry])
+        foo_hh_params = household_params(hh_params, agrid = agrid, TFP = (W[cntry] / p[cntry]), L = L[cntry])
 
         output, tradestats = aggregate(R[cntry], W[cntry], p, cntry, hh[cntry], dist[cntry], foo_hh_params)
 
@@ -288,9 +288,11 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
     # fastest is using nlsove fixed point to find situation where
     # v = bellman_operator(v)
     
-    @unpack Na, Nshocks, Ncntry, β, σϵ = model_params
+    @unpack Na, Nshocks, Ncntry, β, σϵ, TFP = model_params
 
     gc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
+    #println(gc)
+
     v = -ones(Na, Nshocks, Ncntry)/(1-β)
 
     Kgc = similar(gc)
@@ -349,12 +351,15 @@ end
 
 function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
-    @unpack Na, Nshocks, Ncntry, statesize, β, σϵ = model_params
+    @unpack Na, Nshocks, Ncntry, statesize, β, σϵ, TFP = model_params
 
     #foo, foobar = policy_function_itteration(R, W, p, model_params, Niter = 2)
     #policy_o = vcat(foo, foobar)
 
-    Kgc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
+    Kgc = repeat(range(0.1,3,Na)*TFP,1,Nshocks,Ncntry)
+
+    println(Kgc)
+
     Tv = -ones(Na, Nshocks, Ncntry)/(1-β)
 
     policy_o = vcat(Kgc, Tv)
@@ -418,6 +423,10 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
 
     @unpack Ncntry = cntry_params
 
+    dfguess = DataFrame(guess = xxx);
+
+    CSV.write("current-guess.csv", dfguess)
+
     ## A bunch of organization here ####################
 
     @assert length(xxx) == 2*(Ncntry - 1) + 4 + 6  
@@ -449,7 +458,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
           ml=diag_adjust, mu=diag_adjust,
           diag=ones(n),
           mode= 1,
-          tol=1e-5,
+          tol=1e-10,
            )
     
     #print(sol)
