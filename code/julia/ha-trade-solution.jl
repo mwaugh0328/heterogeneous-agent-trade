@@ -55,6 +55,10 @@ function world_equillibrium_FG(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
 
     R = ones(Ncntry)*x[end]
 
+    dfguess = DataFrame(W = W, R = R);
+
+    CSV.write("current-price.csv", dfguess)
+
     Y, tradeflows, A_demand = world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
 
@@ -167,7 +171,11 @@ function compute_eq(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10,
 
     hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
 
+    #println("hh problem solved")
+
     dist = make_stationary_distribution(hh, model_params, tol = tol_dis, solution_method = stdist_sol_method)
+
+    #println("stationatry distribution found")
     
 return hh, dist
 
@@ -305,9 +313,9 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
         err = vec_max(Kgc, gc)
 
-        if err < tol
+        #println(iter)
 
-            #println(iter)
+        if err < tol
 
             break
         end
@@ -326,7 +334,7 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
     end
 
-    Kgc, Tv, Kga = coleman_operator(gc, v, R, W, p, model_params)
+    Kgc, Tv, Kga = coleman_operator(gc, Tv, R, W, p, model_params)
 
     πprob = make_πprob(Tv, σϵ)
 
@@ -438,7 +446,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
     calibrate_cntry_params = country_params(TFP = TFP, d = d, 
                             Ncntry = Ncntry, L = cntry_params.L)
 
-    f(x) = world_equillibrium_FG(x, hh_params, calibrate_cntry_params);
+    f(x) = world_equillibrium_FG((x), hh_params, calibrate_cntry_params);
 
     function f!(fvec, x)
     
@@ -446,7 +454,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
     
     end
     
-    initial_x = [TFP[1:18]; 1.00]
+    initial_x = ([TFP[1:18]; 1.00])
     # one of the issues with the crash
     # was the initial wage was way larger than than
     # TFP... then people get jammed up (?) at uper bound? 
@@ -463,9 +471,9 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
     
     #print(sol)
     
-    Wsol = [sol.x[1:(Ncntry - 1)]; 1.0]
+    Wsol = [(sol.x[1:(Ncntry - 1)]); 1.0]
     
-    Rsol = ones(Ncntry)*sol.x[end]
+    Rsol = ones(Ncntry)*(sol.x[end])
     
     πshare = world_equillibrium(Rsol, Wsol, hh_params, calibrate_cntry_params)[4];
 
@@ -486,7 +494,6 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
     ##################################################################
 
     return out_moment_vec
-
 end
 
 ##########################################################################

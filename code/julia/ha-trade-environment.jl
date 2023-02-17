@@ -126,11 +126,11 @@ function coleman_operator(c, v, R, W, p, model_params)
         # then linear interpolation to get back on grid.
         for shk = 1:Nshocks
 
-            # if issorted(ã[:, shk, cntry]) == false
-            #     println(c[1,1,1])
-            #     println(πprob[1,1,1])
-            #     println(v[1,1,1])
-            # end
+            if issorted(ã[:, shk, cntry]) == false
+                println(c[1,1,1])
+                println(πprob[1,1,1])
+                println(v[1,1,1])
+            end
 
 
             foo = LinearInterpolation(ã[:, shk, cntry], agrid, extrapolation_bc = (Flat(), Flat()) )
@@ -238,14 +238,14 @@ function log_sum_v(vj, σϵ, Ncntry)
 
     foo = 0.0
 
-    #vj_max = maximum(vj)
+    vj_max = maximum(vj)
     # this part slows down by 2X...
     # is it necessary? one thought is make
     # it relative to home country
 
     @inbounds @turbo for xxx = 1:Ncntry
 
-        foo += exp( ( vj[xxx] ) / σϵ )
+        foo += exp( ( vj[xxx] - vj_max ) / σϵ )
 
     end
 
@@ -258,7 +258,9 @@ function log_sum_v(vj, σϵ)
     #foo = @. exp( ( vj ) / σϵ )
     # not haveing ./ on the σϵ was a problem
 
-    return σϵ*log.( sum( exp.( ( vj ) / σϵ ) , dims = 3) ) 
+    foo = vj .- maximum(vj, dims = 3)
+
+    return σϵ*log.( sum( exp.( ( foo ) / σϵ ) , dims = 3) ) 
 
 end
 
@@ -329,32 +331,71 @@ end
 ##########################################################################
 ##########################################################################
 
+
+
+# function make_πprob(vj, σϵ)
+
+#     # if sum(isnan.(vj)) != 0
+#     #     println("nan showing up in make prob")
+#     # end
+
+#     # .- maximum(vj, dims = 3)
+#     # this is strange, was causing a nan to show up
+#     # can't replicate this behavior in simple examples.
+
+#     foo = exp.( vj / σϵ)
+
+#     if sum(isnan.(foo)) != 0
+#         println("nan showing up")
+#     end
+
+#     goof = sum( foo, dims = 3)
+
+#     foobar = foo ./ goof
+
+#     if sum(isnan.(foobar)) != 0
+#         println(vj[1,1,:])
+#         println(foo[1,1,:])
+#         println("nan in denomenator showing up")
+#     end
+
+#     return foobar
+   
+# end
+
 function make_πprob(vj, σϵ)
 
     # if sum(isnan.(vj)) != 0
     #     println("nan showing up in make prob")
     # end
 
-
-    foo = vj
     # .- maximum(vj, dims = 3)
     # this is strange, was causing a nan to show up
     # can't replicate this behavior in simple examples.
 
+    foo = vj .- maximum(vj, dims = 3)
 
-    #foo[isnan.(foo)] .= 0.0
+    foo .= exp.( foo / σϵ)
 
+    if sum(isnan.(foo)) != 0
+        println(vj[1,1,:])
+        println(foo[1,1,:])
+        println("nan showing up")
+    end
 
-    @fastmath foo .= @. exp( foo / σϵ)
+    goof = sum( foo, dims = 3)
 
-    # if sum(isnan.(foo)) != 0
-    #     println("nan showing up")
-    # end
+    foobar = foo ./ goof
 
-    return foo ./ sum( foo, dims = 3) 
+    if sum(isnan.(foobar)) != 0
+        println(vj[1,1,:])
+        println(foo[1,1,:])
+        println("nan in denomenator showing up")
+    end
+
+    return foobar
    
 end
-
 
 ##########################################################################
 ##########################################################################

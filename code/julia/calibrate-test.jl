@@ -32,7 +32,7 @@ dfcntryfix = DataFrame(CSV.File("../../ek-data/ek-cntryfix.csv"))
     # these are the fixed characteristics of each country...
 
 
-trade_cost_type = "waugh"
+trade_cost_type = "ek"
 
 grvdata = gravity(dftrade, display = true, trade_cost_type = trade_cost_type );
 
@@ -64,11 +64,14 @@ function f!(fvec, x)
 
 end
 
+#initial_x = [vec(log.(df.TFP[1:18])); zeros(size(trc.θm[1:18])) ; trc.dist_coef; trc.lang_coef]
+
 initial_x = [vec(log.(df.TFP[1:18])); trc.θm[1:18] ; trc.dist_coef; trc.lang_coef]
 
-foo1 = f(initial_x)
+# foo1, foo2 = f(initial_x)
 
 n = length(initial_x)
+
 diag_adjust = n - 1
 
 sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
