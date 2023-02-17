@@ -446,7 +446,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
     calibrate_cntry_params = country_params(TFP = TFP, d = d, 
                             Ncntry = Ncntry, L = cntry_params.L)
 
-    f(x) = world_equillibrium_FG((x), hh_params, calibrate_cntry_params);
+    f(x) = world_equillibrium_FG(exp.(x), hh_params, calibrate_cntry_params);
 
     function f!(fvec, x)
     
@@ -454,7 +454,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
     
     end
     
-    initial_x = ([TFP[1:18]; 1.00])
+    initial_x = log.([TFP[1:18]; 1.02])
     # one of the issues with the crash
     # was the initial wage was way larger than than
     # TFP... then people get jammed up (?) at uper bound? 
@@ -471,9 +471,9 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
     
     #print(sol)
     
-    Wsol = [(sol.x[1:(Ncntry - 1)]); 1.0]
+    Wsol = [exp.(sol.x[1:(Ncntry - 1)]); 1.0]
     
-    Rsol = ones(Ncntry)*(sol.x[end])
+    Rsol = ones(Ncntry)*exp(sol.x[end])
     
     πshare = world_equillibrium(Rsol, Wsol, hh_params, calibrate_cntry_params)[4];
 
@@ -484,7 +484,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
 
     dfmodel = hcat(DataFrame(trade = vec(drop_diagonal(trademodel, Ncntry))), grvparams.dfcntryfix)
 
-    grvmodel = gravity(dfmodel, trade_cost_type =  trade_cost_type)
+    grvmodel = gravity(dfmodel, trade_cost_type =  trade_cost_type, display = true)
 
     out_moment_vec = [grvmodel.S[1:end-1] .- grvdata.S[1:end-1] ; 
         grvmodel.θm[1:end-1] .- grvdata.θm[1:end-1] ;
@@ -493,7 +493,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
 
     ##################################################################
 
-    return out_moment_vec
+    return out_moment_vec, πshare, Rsol
 end
 
 ##########################################################################

@@ -34,7 +34,7 @@ Ncntry = size(d)[1]
 # γ = 1.01, ϕ = 2.0, amax = 8.0, σϵ = 0.25, d = d, TFP = TFP, L = L)
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
-γ = 1.5, ϕ = 1.0, amax = 5.0, σϵ = 0.25)
+γ = 1.5, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
 
 cntry_prm = country_params(Ncntry = Ncntry, d = d, TFP = TFP, L = L)
 
@@ -60,7 +60,7 @@ sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
 
 print(sol)
 
-Wsol = [sol.x[1:(Ncntry - 1)], 1.0]
+Wsol = [sol.x[1:(Ncntry - 1)]; 1.0]
 
 Rsol = ones(Ncntry)*sol.x[end]
 

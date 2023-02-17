@@ -52,7 +52,7 @@ L = df.L
 Ncntry = size(L)[1]
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
-γ = 1.5, ϕ = 1.0, amax = 8.0, σϵ = 0.25)
+γ = 1.5, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
@@ -70,16 +70,16 @@ initial_x = [vec(log.(df.TFP[1:18])); trc.θm[1:18] ; trc.dist_coef; trc.lang_co
 
 # foo1, foo2 = f(initial_x)
 
-n = length(initial_x)
+# n = length(initial_x)
 
-diag_adjust = n - 1
+# diag_adjust = n - 1
 
-sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
-      ml=diag_adjust, mu=diag_adjust,
-      diag=ones(n),
-      mode= 1,
-      tol=1e-3,
-       )
+# sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
+#       ml=diag_adjust, mu=diag_adjust,
+#       diag=ones(n),
+#       mode= 1,
+#       tol=1e-3,
+#        )
 
 
 
