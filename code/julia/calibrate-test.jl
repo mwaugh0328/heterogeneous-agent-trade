@@ -68,18 +68,16 @@ end
 
 initial_x = [vec(log.(df.TFP[1:18])); trc.θm[1:18] ; trc.dist_coef; trc.lang_coef]
 
-# foo1, foo2 = f(initial_x)
+n = length(initial_x)
 
-# n = length(initial_x)
+diag_adjust = n - 1
 
-# diag_adjust = n - 1
-
-# sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
-#       ml=diag_adjust, mu=diag_adjust,
-#       diag=ones(n),
-#       mode= 1,
-#       tol=1e-3,
-#        )
+sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
+      ml=diag_adjust, mu=diag_adjust,
+      diag=ones(n),
+      mode= 1,
+      tol=1e-3,
+       )
 
 
 
