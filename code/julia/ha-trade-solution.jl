@@ -484,7 +484,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
 
     dfmodel = hcat(DataFrame(trade = vec(drop_diagonal(trademodel, Ncntry))), grvparams.dfcntryfix)
 
-    grvmodel = gravity(dfmodel, trade_cost_type =  trade_cost_type)
+    grvmodel = gravity(dfmodel, trade_cost_type =  trade_cost_type, display = true)
 
     out_moment_vec = [grvmodel.S[1:end-1] .- grvdata.S[1:end-1] ; 
         grvmodel.θm[1:end-1] .- grvdata.θm[1:end-1] ;
@@ -493,7 +493,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
 
     ##################################################################
 
-    return out_moment_vec
+    return out_moment_vec, Rsol, πshare
 end
 
 ##########################################################################
