@@ -296,9 +296,26 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
     # fastest is using nlsove fixed point to find situation where
     # v = bellman_operator(v)
     
-    @unpack Na, Nshocks, Ncntry, β, σϵ, TFP = model_params
+    @unpack Na, Nshocks, Ncntry, β, σϵ, TFP, mc, agrid = model_params
 
-    gc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
+
+    # this is the guess... always start at borrowing cosntraint
+    gc = Array{Float64}(undef, Na, Nshocks, Ncntry)
+    
+    shocks = exp.(mc.state_values)
+    
+    for cntry = 1:Ncntry
+
+        for shk = 1:Nshocks
+
+            gc[:, shk, cntry] .= (-agrid[1]  + R*(agrid[1]) + W*shocks[shk] ) / p[cntry]
+       
+        end
+
+    end
+    
+
+    #gc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
     #println(gc)
 
     v = -ones(Na, Nshocks, Ncntry)/(1-β)
@@ -316,6 +333,8 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
         #println(iter)
 
         if err < tol
+
+            #println(iter)
 
             break
         end
@@ -474,6 +493,7 @@ end
 
 function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
+    # this takes primitives (i) solves for an eq. and then (ii) runs gravity regression
 
     @unpack Ncntry = cntry_params
 
@@ -545,20 +565,20 @@ end
 ##########################################################################
 ##########################################################################
 
-function calibrate_world_equillibrium(x, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+function calibrate_world_equillibrium(xxx, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
 
     @unpack Ncntry = cntry_params
 
     ## A bunch of organization here ####################
 
-    prices = exp.(x[1:Ncntry])
+    prices = exp.(xxx[1:Ncntry])
 
     W = [prices[1:(Ncntry - one(Ncntry))]; 1.0]
 
     R = ones(Ncntry)*prices[Ncntry]
 
-    TFP_grav_params = x[Ncntry+1:end]
+    TFP_grav_params = xxx[Ncntry+1:end]
 
     @assert length(TFP_grav_params) == 2*(Ncntry - 1) + 4 + 6  
 

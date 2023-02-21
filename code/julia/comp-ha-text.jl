@@ -21,7 +21,7 @@ using Plots
 TFP = [10.0; 1.0]
 wage = [10.0; 1.0]
 
-d_ij = 2.5
+d_ij = 10.5
 d = [1.0 d_ij; d_ij 1.0]
 
 Ncntry = size(d)[1]
@@ -46,7 +46,7 @@ dist = make_stationary_distribution(hh, foo)
 
 ϵ = similar(hh.πprob)
 
-@time make_ϵ!(ϵ, hh.cons_policy, hh.Tv, 1.00, wage[1], p, 1, foo; points = 3, order = 1)
+@time make_ϵ!(ϵ, hh.cons_policy, hh.Tv, 1.00, wage[1], p, 1, foo; points = 3, order = 1);
 
 
 # adist = get_distribution(dist.state_index, dist.λ);
