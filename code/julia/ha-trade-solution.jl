@@ -397,6 +397,50 @@ end
 ##########################################################################
 ##########################################################################
 
+function make_ϵ!(ϵ, gc, v, R, W, p, cntry, model_params; points = 3, order = 1)
+
+    @inbounds Threads.@threads for idxj = 1:model_params.Ncntry
+
+        h(x) = make_ϵ(x, idxj, p, gc, v, R, W, cntry, model_params)
+        
+        ϵ[:,:,idxj] .= central_fdm(points, order, adapt = 0)(h, log.(p[idxj]))
+        # adapt = 1, the grid is dynamically adjusted...
+        # but can cause problems when shares = 0, not feasible (not sure why)
+
+    end 
+
+    replace!(ϵ, NaN => 1.0^10) # might return a nan if good is not feasible
+    # so make elasticity a big number, so when share*elasticity = 0, Inf
+end
+
+function make_ϵ(logp, idxj, pvec, gc, v, R, W, cntry, model_params)
+    # function to compute elasticities numerically
+
+    Tv = similar(v)
+    
+    foo = copy(pvec)
+    
+    foo[idxj] = exp.(logp) #p is assumed to be in log, convert to levels
+    
+    Tv .= coleman_operator(gc, v, R, W, foo, model_params)[2]
+    # find how value function changes. Note that the way this is computed
+    # shares are at old ones, so this is as if only change is 
+    # (i) current utitlity
+    # (ii) and ∂V/∂a (which should be zero via envelope theorem)
+    # no change from future shift in shares
+
+    #∂shares then computes **only** numerator of share, so the assumption
+    #here is denominator is fixed, this is mc assumption
+
+    πprob = make_πprob(Tv, model_params.σϵ)
+    
+    return -log.(πprob[:,:,idxj] ./ πprob[:,:, cntry])
+    
+end
+
+##########################################################################
+##########################################################################
+
 function value_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
     @unpack Ncntry, Na, Nshocks, β, mc, σϵ = model_params
@@ -425,6 +469,8 @@ function value_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
 end
 
+##########################################################################
+##########################################################################
 
 function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")

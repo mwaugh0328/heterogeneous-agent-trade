@@ -11,6 +11,7 @@ using Interpolations
 #Pkg.pin(name = "Interpolations", version = "0.13.1")
 using LinearAlgebra
 using LoopVectorization
+using FiniteDifferences
 
 include("mix-MarkovChain.jl")
 
