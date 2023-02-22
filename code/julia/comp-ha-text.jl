@@ -49,11 +49,11 @@ dist = make_stationary_distribution(hh, foo)
 @time make_ϵ!(ϵ, hh.cons_policy, hh.Tv, 1.00, wage[1], p, 1, foo; points = 3, order = 1);
 
 
-# adist = get_distribution(dist.state_index, dist.λ);
+adist = get_distribution(dist.state_index, dist.λ);
 
-# plot(foo.agrid , adist, alpha = 0.5, lw = 4,
-#     color = "dark blue", ylabel = "Probability Mass", 
-#     xlabel = "Asset Holdings / Avg. Income", label = false)
+plot(foo.agrid , adist, alpha = 0.5, lw = 4,
+    color = "dark blue", ylabel = "Probability Mass", 
+    xlabel = "Asset Holdings / Avg. Income", label = false)
 
 
 

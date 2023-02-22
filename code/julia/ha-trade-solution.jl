@@ -82,7 +82,7 @@ function world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
     @assert hh_params.ϕ > 0.0
 
     @unpack Ncntry, TFP, d, L = cntry_params
-    @unpack ϕ, Na, amax = hh_params
+    @unpack γ, σϵ = hh_params
 
     Y = similar(W)
     A_demand = similar(R)
@@ -96,10 +96,11 @@ function world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
 
         p = (W ./ TFP) .* d[cntry, :]
 
-        agrid = make_agrid(hh_params, (W[cntry] / p[cntry]))
+        agrid = make_agrid(hh_params, TFP[cntry])
         # this creates teh asset grid so it's alwasy a fraction of home labor income
 
-        foo_hh_params = household_params(hh_params, agrid = agrid, TFP = (W[cntry] / p[cntry]), L = L[cntry])
+        foo_hh_params = household_params(hh_params, agrid = agrid, 
+                TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)))
 
         hh[cntry], dist[cntry] = compute_eq(R[cntry], W[cntry], p, foo_hh_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
             hh_solution_method = hh_solution_method, stdist_sol_method = stdist_sol_method)
@@ -110,9 +111,10 @@ function world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
 
         p = (W ./ TFP) .* d[cntry, :]
 
-        agrid = make_agrid(hh_params, (W[cntry] / p[cntry]))
+        agrid = make_agrid(hh_params, TFP[cntry])
 
-        foo_hh_params = household_params(hh_params, agrid = agrid, TFP = (W[cntry] / p[cntry]), L = L[cntry])
+        foo_hh_params = household_params(hh_params, agrid = agrid, 
+                TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)))
 
         output, tradestats = aggregate(R[cntry], W[cntry], p, cntry, hh[cntry], dist[cntry], foo_hh_params)
 
@@ -139,7 +141,6 @@ function make_agrid(hh_params, TFP)
     return convert(Array{Float64, 1}, range(-hh_params.ϕ*TFP, hh_params.amax*TFP, length = hh_params.Na))
 
 end
-
 
 
 function micro_trade_elasticity(R, W, p, home, source, model_params; tol_vfi = 1e-6, hh_solution_method = "itteration")
@@ -289,32 +290,14 @@ end
 ##########################################################################
 
 function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 500)
-    # this is the boiler plate vfi routine (1) make grid (2) itterate on 
-    # bellman operator untill convergence. 
-    #
-    # as Fast/ ~faster than Matlab (but nothing is multithreaded here)
-    # fastest is using nlsove fixed point to find situation where
-    # v = bellman_operator(v)
     
-    @unpack Na, Nshocks, Ncntry, β, σϵ, TFP, mc, agrid = model_params
-
+    @unpack Na, Nshocks, Ncntry, β, σϵ = model_params
 
     # this is the guess... always start at borrowing cosntraint
     gc = Array{Float64}(undef, Na, Nshocks, Ncntry)
     
-    shocks = exp.(mc.state_values)
+    make_gc_guess!(gc, R, W, p, model_params)
     
-    for cntry = 1:Ncntry
-
-        for shk = 1:Nshocks
-
-            gc[:, shk, cntry] .= (-agrid[1]  + R*(agrid[1]) + W*shocks[shk] ) / p[cntry]
-       
-        end
-
-    end
-    
-
     #gc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
     #println(gc)
 
@@ -458,6 +441,26 @@ function make_ϵ(logp, idxj, pvec, gc, v, R, W, cntry, model_params)
 end
 
 ##########################################################################
+
+function make_gc_guess!(gc, R, W, p, model_params)
+
+    @unpack mc, Ncntry, Nshocks, agrid = model_params
+
+    shocks = exp.(mc.state_values)
+    
+    for cntry = 1:Ncntry
+
+        for shk = 1:Nshocks
+
+            gc[:, shk, cntry] .= (-agrid[1]  + R*(agrid[1]) + W*shocks[shk] ) / p[cntry]
+       
+        end
+
+    end
+
+end
+
+##########################################################################
 ##########################################################################
 
 function value_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
@@ -493,6 +496,30 @@ end
 
 function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
+    # multiple dispatch version that creates own initial guess
+
+    @unpack Ncntry = cntry_params
+
+    dfguess = DataFrame(guess = xxx);
+
+    CSV.write("current-guess.csv", dfguess)
+
+    ## A bunch of organization here ####################
+
+    @assert length(xxx) == 2*(Ncntry - 1) + 4 + 6  
+
+    TFP, d = make_country_params(xxx, cntry_params, grvparams, trade_cost_type = trade_cost_type)
+
+    initial_x = log.([TFP[1:18]; 1.02])
+
+    return calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+            hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
+
+end
+
+
+function calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
     # this takes primitives (i) solves for an eq. and then (ii) runs gravity regression
 
     @unpack Ncntry = cntry_params
@@ -519,12 +546,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
         fvec .= f(x)
     
     end
-    
-    initial_x = log.([TFP[1:18]; 1.02])
-    # one of the issues with the crash
-    # was the initial wage was way larger than than
-    # TFP... then people get jammed up (?) at uper bound? 
-    
+        
     n = length(initial_x)
     diag_adjust = n - 1
     
@@ -559,7 +581,7 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
 
     ##################################################################
 
-    return out_moment_vec, Rsol, πshare
+    return out_moment_vec, Wsol, Rsol, πshare
 end
 
 ##########################################################################
