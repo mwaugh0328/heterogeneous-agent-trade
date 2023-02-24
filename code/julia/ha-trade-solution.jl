@@ -295,6 +295,7 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
     # this is the guess... always start at borrowing cosntraint
     gc = Array{Float64}(undef, Na, Nshocks, Ncntry)
+    Kgc = similar(gc)
     
     make_gc_guess!(gc, R, W, p, model_params)
     
@@ -302,14 +303,11 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
     #println(gc)
 
     v = -ones(Na, Nshocks, Ncntry)/(1-β)
-
-    Kgc = similar(gc)
-    Kga = similar(gc)
     Tv = similar(v)
 
     for iter in 1:Niter
         
-        Kgc, Tv, Kga  = coleman_operator(gc, v, R, W, p, model_params)
+        Kgc, Tv = coleman_operator(gc, v, R, W, p, model_params)[1:2]
 
         err = vec_max(Kgc, gc)
 
@@ -322,7 +320,6 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
             break
         end
 
- 
         copy!(gc, Kgc)
 
         copy!(v,Tv)

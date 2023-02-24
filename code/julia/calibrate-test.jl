@@ -32,7 +32,7 @@ dfcntryfix = DataFrame(CSV.File("../../ek-data/ek-cntryfix.csv"))
     # these are the fixed characteristics of each country...
 
 
-trade_cost_type = "waugh"
+trade_cost_type = "ek"
 
 grvdata = gravity(dftrade, display = true, trade_cost_type = trade_cost_type );
 
@@ -49,8 +49,8 @@ L = df.L
 
 Ncntry = size(L)[1]
 
-hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
-γ = 1.5, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
+hh_prm = household_params(Ncntry = Ncntry, Na = 50, β = 0.92,
+γ = 1.5, ϕ = 0.5, amax = 5.0, σϵ = 0.25)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
