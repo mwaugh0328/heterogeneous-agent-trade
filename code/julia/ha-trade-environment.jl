@@ -98,7 +98,7 @@ function coleman_operator(c, v, R, W, p, model_params)
 
     muc_ϵ = Array{eltype(R)}(undef, Na, Nshocks)
 
-    ã = Array{eltype(R)}(undef, Na, Nshocks, Ncntry)
+    ã = Array{eltype(R)}(undef, Na, Nshocks)
     gc = Array{eltype(c)}(undef, Na, Nshocks)
 
     Emuc = Array{eltype(R)}(undef, Na, Nshocks)
@@ -121,26 +121,23 @@ function coleman_operator(c, v, R, W, p, model_params)
 
         muc_inverse!( gc, p[cntry] * Emuc, γ)
 
-        ã[:, :, cntry] .= @. (p[cntry] * gc + agrid - W*shocks') / R
+        ã .= @. (p[cntry] * gc + agrid - W*shocks') / R
         # off budget constraint a = (p_jc_j + a' - w*z ) / R
 
         # then linear interpolation to get back on grid.
         for shk = 1:Nshocks
 
-            if issorted(ã[:, shk, cntry]) == false
-                println(c[1,1,1])
-                println(πprob[1,1,1])
-                println(v[1,1,1])
-            end
+            # if issorted(ã[:, shk, cntry]) == false
+            #     println(c[1,1,1])
+            #     println(πprob[1,1,1])
+            #     println(v[1,1,1])
+            # end
 
-
-            foo = LinearInterpolation(ã[:, shk, cntry], agrid, extrapolation_bc = (Flat(), Flat()) )
-
-            #foo = Spline1D(ã[:, shk, cntry], agrid; w=ones(Na), k=1, bc="nearest")
+            foo = LinearInterpolation(ã[:, shk], agrid, extrapolation_bc = (Flat(), Flat()) )
     
             aprime[:, shk, cntry ] .= foo.(agrid)
 
-            Kg[:, shk, cntry] .= @. max( ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry], 10^-13)
+            Kg[:, shk, cntry] .= @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry]
             # again off budget constraint pc = -a + Ra + wz
     
         end
@@ -332,38 +329,6 @@ end
 ##########################################################################
 ##########################################################################
 
-
-
-# function make_πprob(vj, σϵ)
-
-#     # if sum(isnan.(vj)) != 0
-#     #     println("nan showing up in make prob")
-#     # end
-
-#     # .- maximum(vj, dims = 3)
-#     # this is strange, was causing a nan to show up
-#     # can't replicate this behavior in simple examples.
-
-#     foo = exp.( vj / σϵ)
-
-#     if sum(isnan.(foo)) != 0
-#         println("nan showing up")
-#     end
-
-#     goof = sum( foo, dims = 3)
-
-#     foobar = foo ./ goof
-
-#     if sum(isnan.(foobar)) != 0
-#         println(vj[1,1,:])
-#         println(foo[1,1,:])
-#         println("nan in denomenator showing up")
-#     end
-
-#     return foobar
-   
-# end
-
 function make_πprob(vj, σϵ)
 
     # if sum(isnan.(vj)) != 0
@@ -378,23 +343,23 @@ function make_πprob(vj, σϵ)
 
     foo .= exp.( foo / σϵ)
 
-    if sum(isnan.(foo)) != 0
-        println(vj[1,1,:])
-        println(foo[1,1,:])
-        println("nan showing up")
-    end
+    # if sum(isnan.(foo)) != 0
+    #     println(vj[1,1,:])
+    #     println(foo[1,1,:])
+    #     println("nan showing up")
+    # end
 
-    goof = sum( foo, dims = 3)
+    # goof = sum( foo, dims = 3)
 
-    foobar = foo ./ goof
+    # foobar = foo ./ goof
 
-    if sum(isnan.(foobar)) != 0
-        println(vj[1,1,:])
-        println(foo[1,1,:])
-        println("nan in denomenator showing up")
-    end
+    # if sum(isnan.(foobar)) != 0
+    #     println(vj[1,1,:])
+    #     println(foo[1,1,:])
+    #     println("nan in denomenator showing up")
+    # end
 
-    return foobar
+    return foo ./ sum( foo, dims = 3)
    
 end
 

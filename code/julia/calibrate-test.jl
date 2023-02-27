@@ -45,28 +45,29 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 
 df = DataFrame(CSV.File("solution-fg.csv"))
 
-initial_prices = [df.wage[1:end-1]; 1.00]
-
 L = df.L
 
 Ncntry = size(L)[1]
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
-γ = 1.5, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
+γ = 1.0, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-f(x) = calibrate(x, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)
+initial_x = [vec(log.(df.TFP[1:18])); trc.θm[1:18] ; trc.dist_coef; trc.lang_coef]
+
+out, Wsol, Rsol, πshare = calibrate(initial_x, grvdata, grv_params, hh_prm, 
+                                cntry_prm, trade_cost_type = trade_cost_type) 
+
+price_guess = log.([Wsol[1:18]; Rsol[1]])
+
+f(x) = calibrate(x, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)[1]
 
 function f!(fvec, x)
 
     fvec .= f(x)
 
 end
-
-#initial_x = [vec(log.(df.TFP[1:18])); zeros(size(trc.θm[1:18])) ; trc.dist_coef; trc.lang_coef]
-
-initial_x = [vec(log.(df.TFP[1:18])); trc.θm[1:18] ; trc.dist_coef; trc.lang_coef]
 
 n = length(initial_x)
 
