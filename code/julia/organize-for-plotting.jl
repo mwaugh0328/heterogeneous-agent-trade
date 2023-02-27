@@ -51,8 +51,11 @@ L = df.L
 
 Ncntry = size(L)[1]
 
+γ = 1.5
+σϵ = 0.25
+
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
-γ = 1.0, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
+γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
@@ -62,6 +65,8 @@ dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 xxx = dfparams.guess
 
 out_moment_vec, Wsol, Rsol, πshare  = calibrate(xxx, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)
+
+TFP, d = make_country_params(xxx, cntry_prm, grv_params, trade_cost_type = trade_cost_type)
 
 ####################################################################################
 ####################################################################################
@@ -83,4 +88,28 @@ plot(dftrade.trademodel, dftrade.trade, seriestype = :scatter, alpha = 0.75,
     xlabel = "model",
     ylabel = "data",
     legend = false)
-     
+
+####################################################################################
+####################################################################################
+# this sets things up to look at elasticities
+
+
+cntry = 19
+
+agrid = make_agrid(hh_prm, TFP[cntry])
+
+foo = household_params(hh_prm, agrid = agrid, TFP = TFP[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)))
+
+#the way this grid is setup seems to work
+
+p = (Wsol[1:end] ./ TFP).*d[cntry,:]
+
+hh = solve_household_problem(Rsol[cntry], Wsol[cntry], p, foo)
+
+dist = make_stationary_distribution(hh, foo)
+
+ϵπ = similar(hh.πprob)
+
+ϵc = similar(hh.πprob)
+
+@time make_ϵ!(ϵπ, ϵc, hh.cons_policy, hh.Tv, Rsol[cntry], Wsol[cntry], p, foo; points = 3, order = 1);

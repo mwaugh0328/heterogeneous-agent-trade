@@ -396,24 +396,35 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_ϵ!(ϵ, gc, v, R, W, p, cntry, model_params; points = 3, order = 1)
+function make_ϵ!(ϵπ, ϵc,  gc, v, R, W, p, model_params; points = 3, order = 1)
 
     @inbounds Threads.@threads for idxj = 1:model_params.Ncntry
 
-        h(x) = make_ϵ(x, idxj, p, gc, v, R, W, cntry, model_params)
+        # first construct the intensive margin elascitity
+
+        h(x) = make_ϵπ(x, idxj, p, gc, v, R, W, model_params)
         
-        ϵ[:,:,idxj] .= central_fdm(points, order, adapt = 0)(h, log.(p[idxj]))
+        ϵπ[:,:,idxj] .= central_fdm(points, order, adapt = 0)(h, log.(p[idxj]))
+
+    end
+
+    @inbounds Threads.@threads for idxj = 1:model_params.Ncntry
+
+        ### then the extensive margin
+
+        h(x) = make_ϵc(x, idxj, p, gc, v, R, W, model_params)
+        
+        ϵc[:,:,idxj] .= central_fdm(points, order, adapt = 0)(h, log.(p[idxj]))
         # adapt = 1, the grid is dynamically adjusted...
         # but can cause problems when shares = 0, not feasible (not sure why)
 
     end 
 
-    replace!(ϵ, NaN => 1.0^10) # might return a nan if good is not feasible
-    # so make elasticity a big number, so when share*elasticity = 0, Inf
 end
 
-function make_ϵ(logp, idxj, pvec, gc, v, R, W, cntry, model_params)
-    # function to compute elasticities numerically
+
+function make_ϵπ(logp, idxj, pvec, gc, v, R, W, model_params)
+    # function to compute extensive margin elasticities 
 
     Tv = similar(v)
     
@@ -433,7 +444,22 @@ function make_ϵ(logp, idxj, pvec, gc, v, R, W, cntry, model_params)
 
     πprob = make_πprob(Tv, model_params.σϵ)
     
-    return -log.(πprob[:,:,idxj] ./ πprob[:,:, cntry])
+    return -log.( πprob[:,:,idxj] )
+    
+end
+
+function make_ϵc(logp, idxj, pvec, gc, v, R, W, model_params)
+    # function to compute intensive margin elasticities numerically
+
+    Kgc = similar(gc)
+    
+    foo = copy(pvec)
+    
+    foo[idxj] = exp.(logp) #p is assumed to be in log, convert to levels
+    
+    Kgc .= coleman_operator(gc, v, R, W, foo, model_params)[1]
+    
+    return -log.( Kgc[:,:,idxj] )
     
 end
 
