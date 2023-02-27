@@ -52,11 +52,12 @@ L = df.L
 Ncntry = size(L)[1]
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
-γ = 1.5, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
+γ = 1.0, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
+#dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
+dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 
 xxx = dfparams.guess
 
@@ -75,7 +76,8 @@ filter!(row -> ~(row.trademodel ≈ 0.0), dfmodel);
 
 dftrade = hcat(dftrade, dfmodel);
 
-CSV.write("model-data-trade.csv", dfguess)
+#CSV.write("model-data-trade.csv", dftrade)
+CSV.write("log-model-data-trade.csv", dftrade)
 
 plot(dftrade.trademodel, dftrade.trade, seriestype = :scatter, alpha = 0.75,
     xlabel = "model",

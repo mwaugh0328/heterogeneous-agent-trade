@@ -584,7 +584,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function calibrate_world_equillibrium(xxx, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+function calibrate_world_equillibrium(xxx, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-10, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
 
     @unpack Ncntry = cntry_params

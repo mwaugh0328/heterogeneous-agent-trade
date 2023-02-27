@@ -56,7 +56,7 @@ hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-initial_x = [vec(log.(df.TFP[1:18])); log.(1.0); vec(log.(df.TFP[1:18])); trc.θm[1:18] ; trc.dist_coef; trc.lang_coef]
+initial_x = [vec(log.(df.TFP[1:18])); log.(1.014); vec(log.(df.TFP[1:18])); trc.θm[1:18] ; trc.dist_coef; trc.lang_coef]
 
 
 f(x) = calibrate_world_equillibrium(x, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)
