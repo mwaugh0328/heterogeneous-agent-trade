@@ -133,7 +133,7 @@ I further characterize the gains from trade in this economy and show how they re
 
 A second force at the household-level is how a liberalization changes a household's valuation of its net asset position. The issue is that a trade liberalization will change interest rates and lead to winners and losers depending upon a households' net asset position. For example, if a trade liberalization leads to an increase in interest rates, net debtors suffer since their terms to borrow deteriorated, while net savers benefit. Why might a trade liberalization change interest rates? It's because the liberalization has heterogenous effects on expenditure patterns and savings. And because the distribution of savings changes, to clear the asset market interest rates must adjust. The novelty here is how the goods trade and the financial market are interlinked|not separate as they are typically treated.
 
-Before moving on to the quantitative work, I explore two special cases. The first case is the efficient allocation where a planner can reallocate resources and overcome market incompleteness. In this case, I recover ``first-best intuition'' in that the gains from trade only reflect the direct savings associated with a reduction in trade costs. In this allocation, changes in expenditure patterns are not relevant via an envelope theorem argument|the planner already sources goods from the correct places so there are no gains from expenditure switching. While my economy is all about heterogeneity on the household side, this result is very reminiscent of \citeapos{AtkesonBurstein2010} result on the irrelevance of firm heterogeneity in an economy where the allocation is efficient. Thus, the core issues at play in my model are not household heterogeneity per se, but inefficiencies induces by market incompleteness. 
+Before moving on to the quantitative work, I explore two special cases. The first case is the efficient allocation where a planner can reallocate resources and overcome market incompleteness. In this case, I recover ``first-best intuition'' in that the gains from trade only reflect the direct savings associated with a reduction in trade costs. In this allocation, changes in expenditure patterns are not relevant via an envelope theorem argument|the planner already sources goods from the correct places so there are no gains from expenditure switching. While my economy is all about heterogeneity on the household side, this result is very reminiscent of \citeapos{AtkesonBurstein2010} result on the irrelevance of firm heterogeneity in an economy where the allocation is efficient. Thus, the core issues at play in my model are not household heterogeneity per se, but inefficiencies induces by market incompleteness.
 
 The second special case that I consider is when the utility function over the physical commodity is $\log$. With $\log$ utility, I obtain a separation result where aggregate trade outcomes ``separate'' from household heterogeneity. Trade takes a constant elasticity form with the trade elasticity pinned down by the dispersion parameter on the taste shocks similar to \citet{eaton2002technology}. And the trade elasticity and the share of home purchases summarize the gains from trade like in \citet{arkolakis2012new}. This case is also interesting because \citet*{anderson1987ces} showed that in a model with log utility and additive logit shocks, the economy behaves \emph{as if} there were a representative agent CES consumer. In my economy, my suspicion was that market incompleteness and household intertermporal behavior would nullify the \citeapos{anderson1987ces} result|it does not.
 
@@ -190,7 +190,7 @@ Households' period utility function is of the random utility class and each peri
 \tilde{u}( c_{ijt} ) =  u(c_{i,t}) + \epsilon_{jt}. \label{eq:utility}
 \end{align}
 where the $\epsilon_{jt}$ are iid random variables across time, households, and countries. For the analysis, I assume that these shocks are distributed Type 1 Extreme Value with CDF
-\begin{align} 
+\begin{align}
 F(\epsilon) &= \exp(-\exp(-\sigma_{\epsilon}^{-1}\epsilon))
 \end{align}
 where $\sigma_{\epsilon}$ is the dispersion parameter. A useful generalization of this setting to a multi-sector model is the ``infinite shopping isle'' approach of \citet{p-iq} where these shocks take on a Generalized Extreme Value representation and then households choose the sector and then the variety each period.
@@ -271,7 +271,7 @@ Given this distribution, everything else follows. First focusing on trade, aggre
 M_{ij} = L_i \int_{z} \int_{a}  p_{ij} c_{i}(a, z, j) \pi_{ij}(a, z) \lambda_i(a, z) \ da \ dz.
 \label{eq:imports}
 \end{align}
-Here imports take on a mixed logit formulation that very much mimics that used in the industrial organization literature, e.g, \citet*{berry1995automobile}.  
+Here imports take on a mixed logit formulation that very much mimics that used in the industrial organization literature, e.g, \citet*{berry1995automobile}.
 
 There are, however, several interesting differences in that there is an active intensive margin (not unit demand) and inside the choice probability $\pi_{ij}(a, z)$ is the non-linear value function from (\ref{eq:valuefun}). These features are interesting because they're determined by the dynamic features of the household problem. The household's inter-temporal choice to save determines the quantity choice. And because the choice probability reflects the value function, it embeds forward looking behavior of the household.
 
@@ -647,17 +647,65 @@ Essentially, this result takes on the same form as \citet{arkolakis2012new}. Tra
 
 With all that said, relative to say \citet{arkolakis2012new} or \citet{anderson1992discrete}, I must emphasize the complexity of the economy at the micro-level for which this result stands. Households are froward looking, face productivity and taste shocks in the presence of incomplete markets and borrowing constraints. Yet, these details don't matter when the magic of $\log$ kicks in.
 
-\section{Quantitative Analysis}
+\section{Calibration}
 
-Like a lot of this paper, it's still work in progress. But here is how I'm approaching the problem. At a high-level, I want to put some numbers on things and see how stuff works on. In this sense, the work here is more ``quantitative theory'' with the goal to deliver a sense of magnitudes.
+This section focuses on my approach to calibrating the model. 
 
-\subsection{Calibration Strategy}
+At a high-level, I follow \citet{eaton2002technology} by picking country specific parameters to match bilateral trade flows. How I do this is the novelty|using gravity as a guide|which I describe below. The remaining parameters are non-country specific and are chosen following the literature.
 
-I calibrate the model essentially grabbing trade costs and productivity parameters from \citet{eaton2002technology} for their 19 country data set which is from the 1990s and is comprised of mostly developed countries essentially North America, Western Europe, and Japan. Longer-run the plan is to essentially perform indirect inference where I use the gravity equation as a guide. That is I pick trade costs and productivity parameters so that the gravity regression run on model generated data matches the same moments/coeffecients implied by the bilateral trade data.
+\subsection{Using Gravity as a Guide}
 
-I focus on the \citet{eaton2002technology} for data set several reasons. The number of countries of 19 is about the right size (still easy to do on modern desktop) to illustrate how a very rich model like this can work in a multi-country setting. The \citet{eaton2002technology} data set provides a well defined benchmark disciplined by bilateral trade flows and gravity variables, so it's a nice laboratory to explore new issues within.
+My calibration strategy is to use the gravity regression and use as a guide in an indirect inference procedure where I estimate parameters of the model so that the regression coefficients from a standard gravity regression run on my model's data match that seen in the data
 
-The final reason is that Armington structure is probably OK when thinking about older trade patterns where products are highly identified with the nation of origin, like in this data set. When thinking about more recent patterns of trade, and China specifically, this might not be right. Put another way, I'm struggling with how to think about China.
+Here are the details. In the model I have 19 country-specific TFP parameters $A_i$ and then $(19-1) \times (19-1)$ trade costs (with the minus one since the own trade costs is normalized to one) to infer from the bilateral trade data. The number of moments that I'm targeting are $(19-1) \times (19-1)$ bilateral trade shares.
+
+\textbf{Step 0.} I'm going reduce the number of parameters to estimate by placing a restriction on the trade cost function. Specifically, I'll assume that trade costs take the form as in \citet{eaton2002technology} with
+\begin{align}
+\log d_{ij} = d_{k} + b + l + e_{h} + m_{i},
+\label{eq:trade-cost-function}
+\end{align}
+where trade costs are a logarithmic function of distance, where $d_k$ with $k = 1,2,...,6$, is the effect of distance between country $i$ and $j$ lying in the $k$-th distance interval.\footnote{Intervals are in miles: $[0,375)$; $[375,750)$; $[750,1500)$; $[1500,3000)$; $[3000,6000)$; and $[6000,\mbox{maximum}]$. } $b$ is the effect of a shared border in which $b =1$ if country $i$ and $j$ share a border and zero otherwise. Similarly $l$ is a dummy variable if country's $i$ and $j$ share a language, and $e_{h}$ is a dummy variable for different indicators of European integration. The final part is an importer fixed effect which shifts trade costs up and down depending upon the identity of the importer. 
+
+At this point, I've reduced the parameter space to the 19 TFP terms, and the $29$ (or if your not following $6 + 1 + 1 + 2 + 19$) coefficients on the trade cost function rather than the complete matrix of trade costs.
+
+\textbf{Step 1.} Then I'm going to run the following gravity regression on the data
+\begin{align}
+\log \left( \tilde{\frac{X_{ij}}{X_{ii}}} \right) = \tilde{M_{i}} + \tilde{Ex_{j}} + \tilde{d_{k}} + \tilde{b} + \tilde{l} + \tilde{e_{h}} + \delta_{ij}
+\label{eq:gravity-data}
+\end{align}
+which projects normalized imports between country $i$ and $j$ on an importer effect, exporter effect and then the gravity variables relating to distance, border, language, etc. and finally there is an error term $\delta_{ij}$ that reflects other factors not in this specification. Here the $\tilde{M_{i}}$ and on variables indicates that they derived from purely data or data themselves as in the case of the trade data. 
+
+Again, this is very much a standard kind of specification in the trade literature. In a standard Armington-CES, \citet{eaton2002technology}, or \citet{melitz2003impact} style model, the importer effects and exporter effects have specific interpretations. And given the point estimates from (\ref{eq:gravity-data}, productivity and the importer fixed effects on the trade cost function are easily recovered. 
+
+In my model, this is not the case. However, what I can do construct moments from the point estimates from (\ref{eq:gravity-data})) for my model to match. Abstracting from normalizations, I now have $19 + 29$ point estimates to match up with the $19 + 29$ parameters I need to estimate.
+
+\textbf{Step 2.} The next step constructs model analogs to (\ref{eq:gravity-data}).
+
+To do so, I guess a set of TFP parameters and coefficients on the trade cost function in (\ref{eq:trade-cost-function}). Define this parameter vector as $\Theta$. Given $\Theta$ (and the other non-country specific parameters discussed below), I compute an equilibrium of the world economy. This amounts to the following routine: (i) solving for households dynamic problems|in each country (ii) constructing the stationary distribution of expenditure patterns and wealth|in each country (iii) aggregating and then (iv) finding a vector of prices so goods markets and financial markets clear world wide.
+
+Once I find an equilibrium, I then run the same regression as in (\ref{eq:gravity-data}) on the model generated data. As some notation, the model constructed moments are defined as, e.g., $M_{i}(\Theta)$ which is the importer fixed effect estimated on model generated data under the parameter vector $\Theta$.
+
+\textbf{Step 3.} The final step constructs moment conditions which provide the foundation for estimation. Define $\mathbf{y}(\Theta)$ as a set of moments conditions that directly compare, e.g., $\tilde{M_{i}} - M_{i}(\Theta)$ or $\tilde{d_k} - d_k(\Theta)$, etc. 
+
+Then my estimation procedure is based on the moment condition
+\begin{align}
+E\left[\mathbf{y}(\Theta)\right] = 0,
+\end{align}
+where $\Theta_o$ is the true value of $\Theta$. Thus, my method of moments estimator is:
+\begin{align}
+\hat{\Theta} = \arg\min_{\Theta} \left[\mathbf{y}(\Theta)'\ \mathbf{y}(\Theta)\right], \label{eq:smm-condition}
+\end{align}
+At a mechanical level, finding the minimum to (\ref{eq:smm-condition}) amounts to returning to \textbf{Step 2.} each time and smartly updating parameter guess for $\Theta$. One of the nice features of this set-up and the dimensionality reduction that I did, is that now this is an exactly identified problem and standard root-finding techniques can be applied to update $\Theta$ and a minimum found. 
+
+
+
+
+%The term $m_i$ is an exporter fixed effect which allows the trade-cost level to vary depending upon the exporter. This object can be separately identified from $\hat S_i$. The key observation is that the $\hat S$'s are a common component to a country that appears in the estimating equation both when the country is exporting \emph{and} importing. The exporter fixed effect appears only when that country is on the exporting side. This distinction then identifies the difference between a high exporting cost versus the $\hat S$.
+
+
+
+
+\subsection{Remaining Parameter Values}
 
 The final parameters to calibrate are relatively straight froward. Taste shock parameter is set so that $1 / \sigma_{\epsilon} = 4.0$. Utility over the physical commodity is CRRA with relative risk aversion $1.5$, so just a bit above $\log$ and per the discussion above will lead to a pattern (at least qualitatively) or elasticities of substitution across rich and poor households that are consistent with \citet*{auer2022unequal}.
 
