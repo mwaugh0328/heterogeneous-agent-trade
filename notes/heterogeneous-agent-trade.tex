@@ -460,16 +460,13 @@ the trade elasticity is \textit{not} $i,j$ specific and it exactly mimics \citet
 Proposition \ref{prp:gains-efficient-allocation} is useful because it sets a benchmark for thinking about the role that incomplete markets is playing. It also highlights an interesting observation, that outside of $\log$ preferences, the random utility model naturally introduces a form of non-homotheticity. And, even in the efficient allocation, this is shaping how aggregate trade is responding to changes in trade costs.
 
 
-
-%At this point, an informed reader might be thinking these are the same results as in Thieess. Yes, but not quite. If I impose log preferences, then things go through
-
 \section{Trade Elasticities and the Gains from Trade}
 
 This section focuses on the decentralized equilibrium and works towards understanding outcomes like trade elasticities and gains from trade (as in Proposition \ref{prp:gains-efficient-allocation}). I show how micro-level decisions shape the aggregate trade elasticity and then the gains from trade and the sources of those gains.
 
 \subsection{Trade Elasticities}
 
-My definition of the trade elasticity is the partial equilibrium response of imports from $j$ relative to domestic consumption due to a permanent . By partial equilibrium, I mean that wages, interest rates, and the distribution of agents are fixed at their initial equilibrium values. This is consistent with the definition of the trade elasticity in say, \citet{arkolakis2012new} or \citet{simonovska2014elasticity}. In a sense, the elasticities that I derive are like ``short-run'' elasticities before aggregates adjust and households respond in-kind. By permanent, I mean that the change in trade costs is for the indefinite future and that households correctly understand this.
+My definition of the trade elasticity is the partial equilibrium response of imports from $j$ relative to domestic consumption due to a permanent change in trade costs.\footnote{Because the aggregate distribution of households will adjust|even with prices fixed|the elasticities that I derive are in a sense ``short-run'' elasticities.} By partial equilibrium, I mean that wages, interest rates, and the distribution of agents are fixed at their initial equilibrium values. This is consistent with the definition of the trade elasticity in say, \citet{arkolakis2012new} or \citet{simonovska2014elasticity}. By permanent, I mean that the change in trade costs is for the indefinite future and that households correctly understand this.
 
 Working off of the definition of imports in (\ref{eq:imports}), Proposition \ref{prp:GET} defines the aggregate trade elasticity.
 \begin{prp}[\textbf{The H-A Trade Elasticity}] \label{prp:GET} The trade elasticity between country $i$ and country $j$ is:
@@ -504,7 +501,7 @@ Proposition \ref{prp:GET} is derived only off the aggregation of imports at the 
 \end{align}
 where $g_{ij}(a,z)$ is the policy function mapping states into asset holdings next period $a'$. Equation (\ref{eq:intensive-margin}) connects the intensive margin trade elasticity with how a household adjusts its wealth relative to expenditure, given change in the price $p_{ij}$. So, the way this works is that a reduction in trade costs lowers prices and relaxes the household's budget constraint and then the division of new resources between assets and expenditure determines the intensive margin elasticity.
 
-The feature that's shaping micro responses at the intensive margin is market incompleteness and a households ability to partially insure. In the efficient allocation discussed above, the intensive margin elasticity is minus one as any change in trade costs translates one-for-one into consumption. In the decentralized allocation, the household faces a trade-off about how to reallocate the gains from a reduction in prices between current consumption versus the future. And heterogeneity matters because the trade-off current consumption versus the future is not invariant to a household's state $a, z$.
+The feature that's shaping micro responses at the intensive margin is market incompleteness and a households ability to partially insure. In the efficient allocation discussed above, the intensive margin elasticity is $-1$ as any change in trade costs translates one-for-one into consumption. In the decentralized allocation, the household faces a trade-off about how to reallocate the gains from a reduction in prices between current consumption versus the future. And heterogeneity matters because the trade-off of current consumption versus the future is not invariant to a household's state $a, z$.
 
 \textbf{The Extensive Margin Trade Elasticity.} The Type 1 extreme value distributional assumption connects choice probabilities and a household's problem. As a first step, define the denominator of the choice probability in (\ref{eq:choice-prob}) as:
 \begin{align}
@@ -649,7 +646,7 @@ With all that said, relative to say \citet{arkolakis2012new} or \citet{anderson1
 
 \section{Calibration}
 
-This section focuses on my approach to calibrating the model. 
+This section focuses on my approach to calibrating the model.
 
 At a high-level, I follow \citet{eaton2002technology} by picking country specific parameters to match bilateral trade flows. How I do this is the novelty|using gravity as a guide|which I describe below. The remaining parameters are non-country specific and are chosen following the literature.
 
@@ -664,7 +661,7 @@ Here are the details. In the model I have 19 country-specific TFP parameters $A_
 \log d_{ij} = d_{k} + b + l + e_{h} + m_{i},
 \label{eq:trade-cost-function}
 \end{align}
-where trade costs are a logarithmic function of distance, where $d_k$ with $k = 1,2,...,6$, is the effect of distance between country $i$ and $j$ lying in the $k$-th distance interval.\footnote{Intervals are in miles: $[0,375)$; $[375,750)$; $[750,1500)$; $[1500,3000)$; $[3000,6000)$; and $[6000,\mbox{maximum}]$. } $b$ is the effect of a shared border in which $b =1$ if country $i$ and $j$ share a border and zero otherwise. Similarly $l$ is a dummy variable if country's $i$ and $j$ share a language, and $e_{h}$ is a dummy variable for different indicators of European integration. The final part is an importer fixed effect which shifts trade costs up and down depending upon the identity of the importer. 
+where trade costs are a logarithmic function of distance, where $d_k$ with $k = 1,2,...,6$, is the effect of distance between country $i$ and $j$ lying in the $k$-th distance interval.\footnote{Intervals are in miles: $[0,375)$; $[375,750)$; $[750,1500)$; $[1500,3000)$; $[3000,6000)$; and $[6000,\mbox{maximum}]$. } $b$ is the effect of a shared border in which $b =1$ if country $i$ and $j$ share a border and zero otherwise. Similarly $l$ is a dummy variable if country's $i$ and $j$ share a language, and $e_{h}$ is a dummy variable for different indicators of European integration. The final part is an importer fixed effect which shifts trade costs up and down depending upon the identity of the importer.
 
 At this point, I've reduced the parameter space to the 19 TFP terms, and the $29$ (or if your not following $6 + 1 + 1 + 2 + 19$) coefficients on the trade cost function rather than the complete matrix of trade costs.
 
@@ -673,9 +670,9 @@ At this point, I've reduced the parameter space to the 19 TFP terms, and the $29
 \log \left( \tilde{\frac{X_{ij}}{X_{ii}}} \right) = \tilde{M_{i}} + \tilde{Ex_{j}} + \tilde{d_{k}} + \tilde{b} + \tilde{l} + \tilde{e_{h}} + \delta_{ij}
 \label{eq:gravity-data}
 \end{align}
-which projects normalized imports between country $i$ and $j$ on an importer effect, exporter effect and then the gravity variables relating to distance, border, language, etc. and finally there is an error term $\delta_{ij}$ that reflects other factors not in this specification. Here the $\tilde{M_{i}}$ and on variables indicates that they derived from purely data or data themselves as in the case of the trade data. 
+which projects normalized imports between country $i$ and $j$ on an importer effect, exporter effect and then the gravity variables relating to distance, border, language, etc. and finally there is an error term $\delta_{ij}$ that reflects other factors not in this specification. Here the $\tilde{M_{i}}$ and on variables indicates that they derived from purely data or data themselves as in the case of the trade data.
 
-Again, this is very much a standard kind of specification in the trade literature. In a standard Armington-CES, \citet{eaton2002technology}, or \citet{melitz2003impact} style model, the importer effects and exporter effects have specific interpretations. And given the point estimates from (\ref{eq:gravity-data}, productivity and the importer fixed effects on the trade cost function are easily recovered. 
+Again, this is very much a standard kind of specification in the trade literature. In a standard Armington-CES, \citet{eaton2002technology}, or \citet{melitz2003impact} style model, the importer effects and exporter effects have specific interpretations. And given the point estimates from (\ref{eq:gravity-data}, productivity and the importer fixed effects on the trade cost function are easily recovered.
 
 In my model, this is not the case. However, what I can do construct moments from the point estimates from (\ref{eq:gravity-data})) for my model to match. Abstracting from normalizations, I now have $19 + 29$ point estimates to match up with the $19 + 29$ parameters I need to estimate.
 
@@ -685,7 +682,7 @@ To do so, I guess a set of TFP parameters and coefficients on the trade cost fun
 
 Once I find an equilibrium, I then run the same regression as in (\ref{eq:gravity-data}) on the model generated data. As some notation, the model constructed moments are defined as, e.g., $M_{i}(\Theta)$ which is the importer fixed effect estimated on model generated data under the parameter vector $\Theta$.
 
-\textbf{Step 3.} The final step constructs moment conditions which provide the foundation for estimation. Define $\mathbf{y}(\Theta)$ as a set of moments conditions that directly compare, e.g., $\tilde{M_{i}} - M_{i}(\Theta)$ or $\tilde{d_k} - d_k(\Theta)$, etc. 
+\textbf{Step 3.} The final step constructs moment conditions which provide the foundation for estimation. Define $\mathbf{y}(\Theta)$ as a set of moments conditions that directly compare, e.g., $\tilde{M_{i}} - M_{i}(\Theta)$ or $\tilde{d_k} - d_k(\Theta)$, etc.
 
 Then my estimation procedure is based on the moment condition
 \begin{align}
@@ -695,7 +692,7 @@ where $\Theta_o$ is the true value of $\Theta$. Thus, my method of moments estim
 \begin{align}
 \hat{\Theta} = \arg\min_{\Theta} \left[\mathbf{y}(\Theta)'\ \mathbf{y}(\Theta)\right], \label{eq:smm-condition}
 \end{align}
-At a mechanical level, finding the minimum to (\ref{eq:smm-condition}) amounts to returning to \textbf{Step 2.} each time and smartly updating parameter guess for $\Theta$. One of the nice features of this set-up and the dimensionality reduction that I did, is that now this is an exactly identified problem and standard root-finding techniques can be applied to update $\Theta$ and a minimum found. 
+At a mechanical level, finding the minimum to (\ref{eq:smm-condition}) amounts to returning to \textbf{Step 2.} each time and smartly updating parameter guess for $\Theta$. One of the nice features of this set-up and the dimensionality reduction that I did, is that now this is an exactly identified problem and standard root-finding techniques can be applied to update $\Theta$ and a minimum found.
 
 
 
