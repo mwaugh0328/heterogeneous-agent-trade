@@ -396,72 +396,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_ϵ!(ϵπ, ϵc,  gc, v, R, W, p, model_params; points = 3, order = 1)
 
-    @inbounds Threads.@threads for idxj = 1:model_params.Ncntry
-
-        # first construct the intensive margin elascitity
-
-        h(x) = make_ϵπ(x, idxj, p, gc, v, R, W, model_params)
-        
-        ϵπ[:,:,idxj] .= central_fdm(points, order, adapt = 0)(h, log.(p[idxj]))
-
-    end
-
-    @inbounds Threads.@threads for idxj = 1:model_params.Ncntry
-
-        ### then the extensive margin
-
-        h(x) = make_ϵc(x, idxj, p, gc, v, R, W, model_params)
-        
-        ϵc[:,:,idxj] .= central_fdm(points, order, adapt = 0)(h, log.(p[idxj]))
-        # adapt = 1, the grid is dynamically adjusted...
-        # but can cause problems when shares = 0, not feasible (not sure why)
-
-    end 
-
-end
-
-
-function make_ϵπ(logp, idxj, pvec, gc, v, R, W, model_params)
-    # function to compute extensive margin elasticities 
-
-    Tv = similar(v)
-    
-    foo = copy(pvec)
-    
-    foo[idxj] = exp.(logp) #p is assumed to be in log, convert to levels
-    
-    Tv .= coleman_operator(gc, v, R, W, foo, model_params)[2]
-    # find how value function changes. Note that the way this is computed
-    # shares are at old ones, so this is as if only change is 
-    # (i) current utitlity
-    # (ii) and ∂V/∂a (which should be zero via envelope theorem)
-    # no change from future shift in shares
-
-    #∂shares then computes **only** numerator of share, so the assumption
-    #here is denominator is fixed, this is mc assumption
-
-    πprob = make_πprob(Tv, model_params.σϵ)
-    
-    return -log.( πprob[:,:,idxj] )
-    
-end
-
-function make_ϵc(logp, idxj, pvec, gc, v, R, W, model_params)
-    # function to compute intensive margin elasticities numerically
-
-    Kgc = similar(gc)
-    
-    foo = copy(pvec)
-    
-    foo[idxj] = exp.(logp) #p is assumed to be in log, convert to levels
-    
-    Kgc .= coleman_operator(gc, v, R, W, foo, model_params)[1]
-    
-    return -log.( Kgc[:,:,idxj] )
-    
-end
 
 ##########################################################################
 

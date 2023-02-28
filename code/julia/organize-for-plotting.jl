@@ -1,6 +1,7 @@
 include("ha-trade-environment.jl")
 include("ha-trade-solution.jl")
 include("ha-trade-helper-functions.jl")
+include("ha-trade-elasticity.jl")
 include("static-trade-environment.jl")
 include("gravity-tools.jl")
 using MINPACK
@@ -45,8 +46,6 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 
 df = DataFrame(CSV.File("solution-fg.csv"))
 
-initial_prices = [df.wage[1:end-1]; 1.00]
-
 L = df.L
 
 Ncntry = size(L)[1]
@@ -59,8 +58,8 @@ hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-#dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
-dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
+dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
+#dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 
 xxx = dfparams.guess
 
@@ -81,18 +80,12 @@ filter!(row -> ~(row.trademodel ≈ 0.0), dfmodel);
 
 dftrade = hcat(dftrade, dfmodel);
 
-#CSV.write("model-data-trade.csv", dftrade)
-CSV.write("log-model-data-trade.csv", dftrade)
-
-plot(dftrade.trademodel, dftrade.trade, seriestype = :scatter, alpha = 0.75,
-    xlabel = "model",
-    ylabel = "data",
-    legend = false)
+CSV.write("model-data-trade.csv", dftrade)
+#CSV.write("log-model-data-trade.csv", dftrade)
 
 ####################################################################################
 ####################################################################################
 # this sets things up to look at elasticities
-
 
 cntry = 19
 
@@ -108,8 +101,27 @@ hh = solve_household_problem(Rsol[cntry], Wsol[cntry], p, foo)
 
 dist = make_stationary_distribution(hh, foo)
 
-ϵπ = similar(hh.πprob)
+θijs = make_θ(hh, cntry, Rsol[cntry], Wsol[cntry], p, foo)
 
-ϵc = similar(hh.πprob)
+ω = make_ω(hh, dist, L[cntry], p, foo)
 
-@time make_ϵ!(ϵπ, ϵc, hh.cons_policy, hh.Tv, Rsol[cntry], Wsol[cntry], p, foo; points = 3, order = 1);
+agθ = aggregate_θ(θijs, ω, cntry, foo)
+
+dfθ = DataFrame(θ = agθ,
+                p = p,
+                trade = πshare[cntry,:])
+
+CSV.write("elasticity-by-partner.csv", dfθ )
+
+####################################################################################
+####################################################################################
+
+plot(dftrade.trademodel, dftrade.trade, seriestype = :scatter, alpha = 0.75,
+    xlabel = "model",
+    ylabel = "data",
+    legend = false)
+
+plot(p[1:18], -agθ[1:18], seriestype = :scatter, alpha = 0.75,
+    xlabel = "model",
+    ylabel = "data",
+    legend = false)
