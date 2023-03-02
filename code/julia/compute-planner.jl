@@ -105,12 +105,20 @@ social = compute_efficient(exp.(sol.x), ψ , hh_prm, cntry_prm)
 ####################################################################################
 ####################################################################################
 
+trademodel = log.(vec(normalize_by_home_trade(social.πprob, grv_params.Ncntry)'))
+
+dfmodel = DataFrame(trademodel = trademodel)
+
+filter!(row -> ~(row.trademodel ≈ 1.0), dfmodel);
+
+filter!(row -> ~(row.trademodel ≈ 0.0), dfmodel);
+
+dftrade = hcat(dftrade, dfmodel);
+
 plot(dftrade.trademodel, dftrade.trade, seriestype = :scatter, alpha = 0.75,
     xlabel = "model",
     ylabel = "data",
     legend = false)
-
-
 
 ####################################################################################
 ####################################################################################

@@ -10,10 +10,10 @@ end
 
 ##########################################################################
 
-function efficient_equillibrium(x, model_params)
+function efficient_equillibrium(x, ψ, household_params, country_params)
     # just a wraper to put stuff into solver
 
-    social_planner =  compute_efficient(x, model_params)
+    social_planner =  compute_efficient(x, ψ, household_params, country_params)
 
     return social_planner.rc
 
@@ -21,9 +21,10 @@ end
 
 ##########################################################################
 
-function compute_efficient(cii, model_params)
+function compute_efficient(cii, ψ, household_params, country_params)
 
-    @unpack mc, Ncntry, Nshocks, TFP, d, γ, σϵ = model_params
+    @unpack mc, Ncntry, Nshocks, γ, σϵ = household_params
+    @unpack TFP, L, d = country_params
 
     χ = similar(cii)
     Y = similar(cii)
@@ -40,11 +41,11 @@ function compute_efficient(cii, model_params)
     ### first grab the country specific multipliers 
     # from first order condition
 
-    N = mean_z(model_params) # number of effecieny units
+    N = mean_z(household_params) # number of effecieny units
 
     for cntry = 1:Ncntry
 
-        χ[cntry] = muc(cii[cntry], γ) #multiplier
+        χ[cntry] = ψ[cntry]*muc(cii[cntry], γ) #multiplier = weight * muc
 
         Y[cntry] = TFP[cntry] * L[cntry] * N #production
 
@@ -56,11 +57,12 @@ function compute_efficient(cii, model_params)
 
         for expr = 1:Ncntry
 
-            c[impr, expr] = muc_inverse( χ[expr] * d[impr, expr] , γ)
+            c[impr, expr] = muc_inverse( ( χ[expr] * d[impr, expr] ) / ψ[impr] , γ)
 
         end
 
-            πprob[impr, :]  = make_πprob_efficient( c[impr, : ] , σϵ, γ)
+            πprob[impr, :]  = make_πprob_efficient( c[impr, : ] , σϵ*(TFP[impr]^(1.0 - γ)), γ)
+            # here we are scaling like it should be by the country
     
     end
 
