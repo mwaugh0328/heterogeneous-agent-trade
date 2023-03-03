@@ -131,7 +131,7 @@ The key force through which heterogeneity matters are trade (price) elasticities
 
 These issues around heterogenous household-level trade elasticities manifest themselves in welfare gains from trade calculations in several ways. I illustrate this by characterizing the gains from trade in this economy and show how they reflect several new forces. First, I show how one aspect of the household level gains from trade reflect the expected, discounted stream of changes in an individual's ``home choice probability,''  similar in spirit to the result of \citet*{arkolakis2012new}. The key difference is that these gains are heterogenous across households.
 
-A second force is how a liberalization changes a household's valuation of its net asset position. The issue is that a trade liberalization will change interest rates and lead to winners and losers depending upon a households' net asset position. For example, if a trade liberalization leads to an increase in interest rates, net debtors suffer since their terms to borrow deteriorated, while net savers benefit. 
+A second force is how a liberalization changes a household's valuation of its net asset position. The issue is that a trade liberalization will change interest rates and lead to winners and losers depending upon a households' net asset position. For example, if a trade liberalization leads to an increase in interest rates, net debtors suffer since their terms to borrow deteriorated, while net savers benefit.
 
 Why might a trade liberalization change interest rates? It's because of heterogenous effects on expenditure patterns and savings. For example, if the liberalization disproportionately benefits rich /savers in the economy, they shed assets to consume a bit more and interest rates must increase to clear financial markets impacting the poor / debtors in the economy. The novelty here is how heterogeneity on the trade side links up with the financial market|not separate as they are typically treated or would occur in the knife-edge case discussed below.
 
@@ -650,7 +650,7 @@ Proposition \ref{prp:seperation} is also interesting because it generalizes the 
 
 This section focuses on my approach to calibrating the model.
 
-At a high-level, I follow the gravity literature by picking country specific parameters to match bilateral trade flows. How I do this is a novelty of my paper|I use ``gravity as a guide'' to overcome the fact that my model does not admit a closed form map from trade flows to primitives as static, gravity models do. I describe this approach below and then discuss how the remaining non-country specific parameters are chosen.
+At a high-level, I follow the gravity literature by picking country specific parameters to match bilateral trade flows. How I do this is a novelty of my paper|I use ``gravity as a guide'' to overcome the fact that my model does not admit a closed form map from trade flows to parameters as static, gravity models do. I describe this approach below and then discuss how the remaining non-country specific parameters are chosen.
 
 \subsection{Using Gravity as a Guide}
 
@@ -658,9 +658,9 @@ My calibration strategy is to use the gravity regression as a guide in an indire
 
 Here are the details. The bilateral trade flows that I use are from \citet{eaton2002technology}. The 19 countries in this data set is about the right size to do what I want to do below in about an afternoon. Moreover, the \citet{eaton2002technology} data set provides a well defined benchmark disciplined by bilateral trade flows and gravity variables|so it's a nice laboratory to explore new issues within.
 
-In the 19 country model, the parameters I need to choose are 19 country-specific TFP parameters (the $A_i$s) and then $(19-1) \times (19-1)$ trade costs (with the minus one since the $ii$ trade costs is normalized to one) to infer from the bilateral trade data. The number of moments that I'm targeting are $(19-1) \times (19-1)$ bilateral trade shares.
+In the 19 country model, the parameters I need to choose are 19 country-specific TFP parameters (the $A_i$s) and then $(19-1) \times (19-1)$ trade costs (with the minus one since the $ii$ trade costs is normalized to one) to infer from the bilateral trade data. This leaves me under-identified with  $(19-1) \times (19-1)$ bilateral trade shares.
 
-\textbf{Step 0.} Like most of the literature, I'll reduce the number of parameters to estimate by placing a restriction on trade costs and assume they are some function of observable.  Specifically, I assume that trade costs take the form as in \citet{eaton2002technology} with
+\textbf{Step 0.} Like most of the literature, I'll reduce the number of parameters to estimate by placing a restriction on trade costs and assume they are some function of observable data.  Specifically, I assume that trade costs take the form as in \citet{eaton2002technology} with
 \begin{align}
 \log d_{ij} = d_{k} + b + l + e_{h} + m_{i},
 \label{eq:trade-cost-function}
@@ -671,24 +671,24 @@ At this point, I've reduced the parameter space to the $29$ (or if your not foll
 
 \textbf{Step 1.} Then I'm going to run the following gravity regression on the data
 \begin{align}
-\log \left( {\frac{X_{ij}}{X_{ii}}} \right) = {M_{i}} + {Ex_{j}} + {d_{k}} + {b} + {l} + {e_{h}} + \delta_{ij}
+\log \left( {\frac{X_{ij}}{X_{ii}}} \right) = {M_{i}} + {Ex_{j}} + {d_{k}} + {b} + {l} + {e_{h}} + \delta_{ij},
 \label{eq:gravity-data}
 \end{align}
 which projects normalized imports between country $i$ and $j$ on an importer effect, exporter effect and then the gravity variables relating to distance, border, language, etc. and finally there is an error term $\delta_{ij}$ that reflects other factors not in this specification.
 
-Again, this is very much a standard kind of specification in the trade literature. In a standard Armington-CES, \citet{eaton2002technology}, or \citet{melitz2003impact} style model, the importer effects and exporter effects have specific interpretations. And given the point estimates from (\ref{eq:gravity-data}), productivity and the importer fixed effects on the trade cost function are easily recovered.
+This is the canonical representation of trade flows|the gravity model.In a standard Armington-CES, \citet{eaton2002technology}, or \citet{melitz2003impact} style model, the importer effects and exporter effects have specific interpretations. And given the point estimates from (\ref{eq:gravity-data}), productivity and the importer fixed effects on the trade cost function are easily recovered.
 
 In my model, this is not the case. However, what I can do is use the point estimates from (\ref{eq:gravity-data})) as moments for my model to match. Abstracting from normalizations, I now have $19 + 29$ point estimates to match up with the $19 + 29$ parameters I need to estimate.\footnote{To be clear about normalizations: I really only have 18 TFP parameters to match and then a normalization on the importer fixed effects is that they sum to zero as in \citet{eaton2002technology}. The fixed effects in \ref{eq:gravity-data} satisfy the normalization that each of their sum is zero. Thus I have $18 + 28$ parameters to match $18 + 28$ moments}
 
-\textbf{Step 2.} The next step constructs model analogs to (\ref{eq:gravity-data}).
+The next step constructs model analogs to (\ref{eq:gravity-data}).
 
-To do so, I guess a set of TFP parameters and coefficients on the trade cost function in (\ref{eq:trade-cost-function}). Define this parameter vector as $\Theta$.
+\textbf{Step 2.} To construct model analogs to (\ref{eq:gravity-data}), I guess a set of $19 + 29$ TFP parameters and coefficients on the trade cost function in (\ref{eq:trade-cost-function}). Define this parameter vector as $\Theta$.
 
-Given $\Theta$, I compute an equilibrium of the world economy. This amounts to: (i) solving for households dynamic problems|in each country (ii) constructing the stationary distribution of wealth and expenditure patterns|in each country (iii) aggregating and then (iv) finding a vector of prices so goods markets and financial markets clear world wide.
+Given $\Theta$, I compute an equilibrium of the world economy. This amounts to: (i) solving for households' dynamic problems|in each country (ii) constructing the stationary distribution of wealth and expenditure patterns|in each country (iii) aggregating and then (iv) finding a vector of prices so goods markets and financial markets clear world wide.
 
-Once I find an equilibrium, I run the same regression as in (\ref{eq:gravity-data}) on the model generated data. As some notation, the model constructed moments are defined as, e.g., $M_{i}(\Theta)$ which is the importer fixed effect estimated on model generated data under the parameter vector $\Theta$.
+Once I find an equilibrium, I run the same regression as in (\ref{eq:gravity-data}) on the model generated data. As some notation, the model constructed moments are defined as, e.g., $M_{i}(\Theta)$ which is the importer effect estimated on model generated data under the parameter vector $\Theta$.
 
-\textbf{Step 3.} The final step constructs moment conditions which provide the foundation for estimation. Define $\mathbf{y}(\Theta)$ as a set of moments conditions that directly compare the point estimates from the data with the point estimates from the model under the parameter vector $\Theta$. For example, ${M_{i}} - M_{i}(\Theta)$ or $d_k - d_k(\Theta)$, etc.
+\textbf{Step 3.} The final step constructs moment conditions which provide the foundation for estimation. Define $\mathbf{y}(\Theta)$ as a set of moments conditions comparing the point estimates from the data with the point estimates from the model under the parameter vector $\Theta$. For example, ${M_{i}} - M_{i}(\Theta)$ or $d_k - d_k(\Theta)$, etc.
 
 My estimation procedure is based on the moment condition
 \begin{align}
@@ -700,85 +700,62 @@ where $\Theta_o$ is the true value of $\Theta$. Thus, my method of moments estim
 \end{align}
 At a mechanical level, finding the minimum to (\ref{eq:smm-condition}) amounts to returning to \textbf{Step 2.} each time and smartly updating parameter guess for $\Theta$. One of the nice features of this set-up and the dimensionality reduction that I did, is that now this is an exactly identified problem and standard root-finding techniques can be applied to update $\Theta$ and a minimum found.
 
-
-
-
-%The term $m_i$ is an exporter fixed effect which allows the trade-cost level to vary depending upon the exporter. This object can be separately identified from $\hat S_i$. The key observation is that the $\hat S$'s are a common component to a country that appears in the estimating equation both when the country is exporting \emph{and} importing. The exporter fixed effect appears only when that country is on the exporting side. This distinction then identifies the difference between a high exporting cost versus the $\hat S$.
-
-
-
-
 \subsection{Remaining Parameter Values}
 
-The final parameters to calibrate are relatively straight froward. Taste shock parameter is set so that $1 / \sigma_{\epsilon} = 4.0$. Utility over the physical commodity is CRRA with relative risk aversion $1.5$, so just a bit above $\log$ and per the discussion above will lead to a pattern (at least qualitatively) or elasticities of substitution across rich and poor households that are consistent with \citet*{auer2022unequal}.
+The final parameters to calibrated in the following way. First, utility over the physical commodity is CRRA with relative risk aversion $\gamma =  1.5$, so just a bit above $\log$ and per the discussion above will lead to a pattern (at least qualitatively) or elasticities of substitution across rich and poor households that are consistent with \citet*{auer2022unequal}.
 
-The final two things to calibrate are the income shock process, borrowing constraint and the discount factor. The shock process is set up to be a mixture of a persistent and transitory component and calibrated as in \citet*{krueger2016macroeconomics}. I use their exact parameter values. Finally the borrowing constraint and discount factor are jiggled around so that in the US, the borrowing constraint is about two times median earnings and the equilibrium interest rate in the US is about 2 percent. Because other countries are different in productivity and openness, these values are not the same, but in the same ballpark as the US.
+The income shock process is set up to be a mixture of a persistent and transitory component and calibrated as in \citet*{krueger2016macroeconomics}. I use their exact parameter values. And it is assumed to be the same across countries.
 
-\subsection{Preliminary Quantitative Results}
+The borrowing constraint is set in the following way. First, I scale it by a countries autarky level of average real labor income. Then it is set so that a household can borrow up to fifty percent of it's autarky level of income. The scaling here is done to deliver a ``balanced-growth-like'' property of the model so a households debt capacity is invariant to a country's level of income. Since the level of income is endogenous, a solution to this is to pin things down my connecting it with the autarky labor income. 
 
-Figure \ref{fig:model-fit} provides a sense of model fit with log bilateral trade shares in the model compared to the data.  Model fit here means, if you took the parameters from the gravity regression in \citet{eaton2002technology}, what would you get. Here for the most part, things all line up around the 45 degree line. It's not perfect (as would essentially occur in \citet{eaton2002technology}), but it's pretty good.
+The discount factor is jiggled around so the equilibrium world interest rate is about 1.5 percent.
+
+Taste shock parameter is set in the following way. First, I set it so that $1 / \sigma_{\epsilon} = 4.0$. Second, because of the non-homotheticity introduced by preferences, I don't want a rich country to have a fundamentally different elasticity than a poor country. To prevent this outcome, each country will have it's own parameter and it is scaled so that $\sigma_{\epsilon,i} = \sigma_{\epsilon} A_i^{1-\gamma}$. Again, this scaling is done to deliver a ``balanced-growth-like'' property of the model, so if there were two countries one with high TFP and one with low TFP, this scaling will insure that trade elasticities in the two countries are the same, but on is just richer than the other.
+
+
+\subsection{Calibration Results}
+
+Figure \ref{fig:model-fit} provides a sense of model fit with log bilateral trade shares in the model compared to the data after running my ``gravity as guide procedure.'' The y-axis reports bilateral trade data and the x-axis reports the outcome from my model. The fit is very high, and nearly indistinguishable from say, how a standard trade model perform would perform or the $\log$ preference model which per Proposition \ref{prp:seperation} should (and it does) operate just like a standard trade model.
 
 \begin{figure}[!t]
 \centering{\includegraphics[scale = .45]{./figures/trade-fit.pdf}}
 \caption{Bilateral Trade: Model vs. Data}\label{fig:model-fit}
 \end{figure}
 
-
-The first quantitative experiment I explore are the gains from trade in response to small change in trade costs. Here gains from trade are measured across steady states, transition paths are not taken into account (this is totally feasible, still fixing the code todo so). Small means a global one percent reduction in trade costs. And one reason for the initial focus on a small change regards the first comment| that transitions are not taken into account, but for a small change this should not be a large concern.
-
-Gains from trade here are measured in percent change in welfare, so how many utils changed. A subtle detail is that standard, consumption equivalent unit type measures are more subtle here because they lead to questions about which consumption units (home, foreign), etc. I don't have this sorted out, so this is what I got.
-
-Focusing on what happens with those in the US, Figure \ref{fig:welfare-elasticity} plots the welfare gains (vertical axis) versus a households states (productivity $z$ and assets $a$). So the way to read this is focusing on the upper right-hand corner of Figure \ref{fig:welfare-elasticity} say those with the highest assets and income gain in welfare about 0.035 percent given a one percent reduction in trade costs. Next turn your attention in Figure \ref{fig:welfare-elasticity} towards the lower left-hand corner. These are those with the lowest assets and income and they \textbf{loose} 0.005 percent. Zooming out and looking at how the gains vary with income and assets a message of Figure \ref{fig:welfare-elasticity} is that trade is pro-rich.
-
-\begin{figure}[!t]
-\centering{\includegraphics[scale = .65]{./figures/welfare-elasticity.pdf}}
-\caption{Welfare: U.S. Households, 1\% Global Reduction in Trade Costs}\label{fig:welfare-elasticity}
-\end{figure}
-
-Where do the losses from trade come from. This is about household net-asset position. Returning to Proposition \ref{prp:gains-trade}, the gains from trade partially depend upon the term:
-\begin{align}
-u'(c_{ii}(a_{t},z_{t}))a_{t} \times \frac{\mathrm{d} R_{i}}{\mathrm{d} d_{ij} / d_{ij}}
-\end{align}
-with the important observation being that the sign of this term depends directly upon asset holdings. So if assets are negative and if interest rates increase in response to a reduction in trade costs, this is a force working against any gains from lower prices that net-debtor households might reap.\footnote{The interesting observation is that while assets help households self-insure and inter-temporally transfer resources, there is a sense in that their presence is diminishing the gains from trade for some. That is, if all households were in financial autarky, these issues would not be present.} Moreover, this force is further amplified because low asset households are likely high marginal utility of consumption households. Finally, if the poor do not gain much from reductions in prices (the first term in Proposition \ref{prp:gains-trade}) then these asset revaluation effects will dominate. Returning to those in the lower left-hand corner of Figure \ref{fig:welfare-elasticity}, thats why one sees negative gains from trade.
+Table \ref{tb-grav-est} reports another measure of fit and some of the resulting parameter values. The first column are the distance, border, etc. moments from the gravity regression in (\ref{eq:gravity-data}) (and note they exactly correspond with those in Table 3 of \citet{eaton2002technology}). The second column reports the moments from the model when the same regression is run on model generated data. Here they exactly line up and consistent with the argument in Figure \ref{fig:model-fit}, the fit is good and the model is replicating geographic pattern of activity seen in the data. 
 
 \begin{table}[t]
-\footnotesize
-\setlength {\tabcolsep}{15.15mm}
-\renewcommand{\arraystretch}{1.9}
+\small
 \begin{center}
-\begin{tabular}{l c c}
-\multicolumn{3}{c}{\small  \textbf{Table 1: Welfare Gains to Reduction in Trade Costs}}\\
-\hline
-\hline
-& \multicolumn{2}{c}{\small \textbf{A Global 1\% Reduction}} \\
-\footnotesize   & \footnotesize  Baseline Model &  \footnotesize  Rep. Agent Model\\
-\hline
-\footnotesize  USA  & $\begin{array}{c}0.0075 \vspace{-.45cm}\\ \scriptstyle [ \ 83 \ ]\end{array}$   & $\begin{array}{c}0.025 \vspace{-.45cm}\\ \scriptstyle [ \ -- \ ]\end{array}$\\
-\footnotesize  Germany  & $\begin{array}{c}0.14 \vspace{-.45cm}\\ \scriptstyle [ \ 100 \ ]\end{array}$   & $\begin{array}{c}0.31 \vspace{-.45cm}\\ \scriptstyle [ \ -- \ ]\end{array}$\\
-\footnotesize  Japan  & $\begin{array}{c}0.004 \vspace{-.45cm}\\ \scriptstyle [ \ 80 \ ]\end{array}$   & $\begin{array}{c}0.014 \vspace{-.45cm}\\ \scriptstyle [ \ -- \ ]\end{array}$\\
-\footnotesize  Canada  & $\begin{array}{c}0.09 \vspace{-.45cm}\\ \scriptstyle [ \ 100 \ ]\end{array}$   & $\begin{array}{c}0.18 \vspace{-.45cm}\\ \scriptstyle [ \ -- \ ]\end{array}$\\
-\hline
-& \multicolumn{2}{c}{\small \textbf{A Global 10\% Reduction}} \\
-\footnotesize  USA  & $\begin{array}{c}0.21 \vspace{-.45cm}\\ \scriptstyle [ \ 100 \ ]\end{array}$   & $\begin{array}{c}0.28 \vspace{-.45cm}\\ \scriptstyle [ \ -- \ ]\end{array}$\\
-\footnotesize  Germany  & $\begin{array}{c}1.6 \vspace{-.45cm}\\ \scriptstyle [ \ 100 \ ]\end{array}$   & $\begin{array}{c}3.5 \vspace{-.45cm}\\ \scriptstyle [ \ -- \ ]\end{array}$\\
-\footnotesize  Japan  & $\begin{array}{c}0.14 \vspace{-.45cm}\\ \scriptstyle [ \ 100 \ ]\end{array}$   & $\begin{array}{c}0.21 \vspace{-.45cm}\\ \scriptstyle [ \ -- \ ]\end{array}$\\
-\footnotesize  Canada  & $\begin{array}{c}1.13 \vspace{-.45cm}\\ \scriptstyle [ \ 100 \ ]\end{array}$   & $\begin{array}{c}1.9 \vspace{-.45cm}\\ \scriptstyle [ \ -- \ ]\end{array}$\\
+\refstepcounter{table}
+\setlength {\tabcolsep}{5.5mm}
+\renewcommand{\arraystretch}{1.50}\label{tb-grav-est}
+\begin{tabular}[t]{l c c c}
+\multicolumn{4}{c}{{\normalsize\textbf{Table \ref{tb-grav-est}: Estimation Results}} }
+\\\hline \hline
+& & \multicolumn{2}{c}{\textbf{HAT-Model}}  \\
+\cmidrule(lr){3-4}
+Barrier& Moment & Model Fit & Parameter \\
+\hline $[0,375)$                &$-3.10 $           & $-3.10 $              & $2.35$           \\
+$[375,750)$                     &$-3.67 $           & $-3.67 $              & $2.81$           \\
+$[750,1500)$                    &$-4.03 $           & $-4.03 $              & $3.09$           \\
+$[1500,3000)$                   &$-4.22 $           & $-4.22 $              & $3.23$           \\
+$[3000,6000)$                   &$-6.06 $           & $-6.06 $              & $4.88$           \\
+$[6000,\mbox{maximum}]$         &$-6.56 $           & $-6.56 $              & $5.69$           \\
+Shared border                   &$\phantom{-}0.30$  & $\phantom{-}0.30$     & $0.91$  \\
+Language                        &$\phantom{-}0.51$  & $\phantom{-}0.51$     & $0.87$  \\
+EFTA                            &$\phantom{-}0.04$  & $\phantom{-}0.04$     & $0.98$  \\
+European Community              &$\phantom{-}0.54$  & $\phantom{-}0.54$     & $0.89$  \\
 \hline
 \end{tabular}
-\parbox[c]{6.0in}{\vspace{.1cm}
-{\footnotesize \textbf{Note:} Numbers in brackets are \% of population who gain. Rep. Agent Model uses ACR calculation with trade elasticity $=$ 4.0}}
+\\[0.5ex]
+\parbox{5.0in}{\footnotesize \textbf{Note:} The first column reports data moments the HAT-model targets. The second reports the model moments. The third column reports the estimated parameter values.}
 \end{center}
 \end{table}
 
-The top panel of Table 1 provides a sense of how this all plays out across countries for the small, 1 \% reduction in trade costs. Of the 19, I chose two relatively large countries (US and Japan) and then two relatively small countries (Canada and Germany). The main number is the average welfare gains and the number in brackets is the percent of the population that gains in each country. Two observations, the large countries on average gain relatively less to the small countries|this is as one should expect. But it's also the large countries that have approximately 20 percent of the population that do not gain from the reduction in trade costs. Per the discussion above, it's the large countries where the real interest rate increased and, hence, their are poor households that start to loose out.
+The final column reports the primitive values on the trade costs the estimation routine delivers. The way to interpret this is that each value reports the level effect of being in a distance bin or sharing a border etc.  So if a two countries are near by and measured to be in the smallest bin, and share a border, the trade costs faced between these two countries is $2.35 \times 0.91$ (first row times seventh row). Or if a country is in the furthest distance bin, it's trade costs is 5.69.
 
-The final column in Table 1 presents the implied gains from an ACR type calculation. These are generally larger, but I suspect that the trade elasticity here is not a fair comparison. When the elasticity is set to $1 \ \sigma_{\epsilon}$, this is like setting the elasticity towards the rich guy's trade elasticity. Where as the true trade elasticity is something that is less than this. Need to fix.
-
-
-The bottom panel of Table 1 illustrates this effect for a larger reduction, a 10 \% reduction in trade costs. Again, here I'm going to caveat this as this being a place where transition paths would mater, and they are not here.
-
-Two observations stand out. For the larger change in trade costs, everyone in all countries now gains. Interest rates are still rising in the large countries, but this channel is not muted as the gains from lower prices overwhelm these effects for everybody. Second, there are important non-linearities here. In the ACR/Representative Agent benchmark, all numbers essentially increased by a factor of 10. In contrast, in the benchmark economy, large change is just not a scaled up version of the small change with the US and Japan's gains increasing by factors of around 30 relative to the one percent reduction.
-
+How would this compare to a standard model? It's a bit hard since one needs to take a stand on the trade elasticity on the standard model. But one approach is the following: Pick a trade elasticity so the cost of the nearest distance bin is the same as in my model and then look at how things relate in other bins. In an \citet{eaton2002technology} world, this would correspond with an trade elasticity of about 3.6. And then one takes the moment in the first column and, for example, compares $\exp( - 1 / 3.6 \times  -6.56)$ vs. 5.69.  What comes out of is that stuff closer is a bit more expensive and the furthest destinations are meaningfully less expensive (seven and ten percent for the last two distance bins). 
 
 \section{Conclusion}
 
