@@ -70,8 +70,8 @@ function compute_efficient(cii, ψ, household_params, country_params)
 
     for expr = 1:Ncntry
 
-        sales[expr] = sum( c[ :, expr].*πprob[ :, expr].*d[ :, expr].*L[expr] ) 
-        # across all importing countries, compute how much they are eating, this is c*pi*d*L
+        sales[expr] = sum( L.*c[ :, expr].*πprob[ :, expr].*d[ :, expr] ) 
+        # across all importing countries, compute how much they are eating, this is L*c*pi*d
         # need to include trade costs as that's how much it takes to deliver c
 
         rc[expr] = Y[expr] - sales[expr] 
