@@ -652,6 +652,8 @@ This section focuses on my approach to calibrating the model.
 
 At a high-level, I follow the gravity literature by picking country specific parameters to match bilateral trade flows. How I do this is a novelty of my paper|I use ``gravity as a guide'' to overcome the fact that my model does not admit a closed form map from trade flows to parameters as static, gravity models do. I describe this approach below and then discuss how the remaining non-country specific parameters are chosen.
 
+In the quantitative work below, I always focus on the case of Financial Globalization where there is a international bond market and a global interest rate. 
+
 \subsection{Using Gravity as a Guide}
 
 My calibration strategy is to use the gravity regression as a guide in an indirect inference procedure where I estimate parameters of the model so that the regression coefficients from a standard gravity regression run on my model's data match that seen in the data
@@ -712,15 +714,15 @@ The discount factor is jiggled around so the equilibrium world interest rate is 
 
 Taste shock parameter is set in the following way. First, I set it so that $1 / \sigma_{\epsilon} = 4.0$. Second, because of the non-homotheticity introduced by preferences, I don't want a rich country to have a fundamentally different elasticity than a poor country. To prevent this outcome, each country will have it's own parameter and it is scaled so that $\sigma_{\epsilon,i} = \sigma_{\epsilon} A_i^{1-\gamma}$. Again, this scaling is done to deliver a ``balanced-growth-like'' property of the model, so if there were two countries one with high TFP and one with low TFP, this scaling will insure that trade elasticities in the two countries are the same, but on is just richer than the other.
 
-
-\subsection{Calibration Results}
-
-Figure \ref{fig:model-fit} provides a sense of model fit with log bilateral trade shares in the model compared to the data after running my ``gravity as guide procedure.'' The y-axis reports bilateral trade data and the x-axis reports the outcome from my model. The fit is very high, and nearly indistinguishable from say, how a standard trade model perform would perform or the $\log$ preference model which per Proposition \ref{prp:seperation} should (and it does) operate just like a standard trade model.
-
 \begin{figure}[!t]
 \centering{\includegraphics[scale = .45]{./figures/trade-fit.pdf}}
 \caption{Bilateral Trade: Model vs. Data}\label{fig:model-fit}
 \end{figure}
+
+
+\subsection{Calibration Results}
+
+Figure \ref{fig:model-fit} provides a sense of model fit with log bilateral trade shares in the model compared to the data after running my ``gravity as guide procedure.'' The y-axis reports bilateral trade data and the x-axis reports the outcome from my model. The fit is very high, and nearly indistinguishable from say, how a standard trade model perform would perform or the $\log$ preference model which per Proposition \ref{prp:seperation} should (and it does) operate just like a standard trade model.
 
 Table \ref{tb-grav-est} reports another measure of fit and some of the resulting parameter values. The first column are the distance, border, etc. moments from the gravity regression in (\ref{eq:gravity-data}) (and note they exactly correspond with those in Table 3 of \citet{eaton2002technology}). The second column reports the moments from the model when the same regression is run on model generated data. Here they exactly line up and consistent with the argument in Figure \ref{fig:model-fit}, the fit is good and the model is replicating geographic pattern of activity seen in the data. 
 
@@ -756,6 +758,23 @@ European Community              &$\phantom{-}0.54$  & $\phantom{-}0.54$     & $0
 The final column reports the primitive values on the trade costs the estimation routine delivers. The way to interpret this is that each value reports the level effect of being in a distance bin or sharing a border etc.  So if a two countries are near by and measured to be in the smallest bin, and share a border, the trade costs faced between these two countries is $2.35 \times 0.91$ (first row times seventh row). Or if a country is in the furthest distance bin, it's trade costs is 5.69.
 
 How would this compare to a standard model? It's a bit hard since one needs to take a stand on the trade elasticity on the standard model. But one approach is the following: Pick a trade elasticity so the cost of the nearest distance bin is the same as in my model and then look at how things relate in other bins. In an \citet{eaton2002technology} world, this would correspond with an trade elasticity of about 3.6. And then one takes the moment in the first column and, for example, compares $\exp( - 1 / 3.6 \times  -6.56)$ vs. 5.69.  What comes out of is that stuff closer is a bit more expensive and the furthest destinations are meaningfully less expensive (seven and ten percent for the last two distance bins). 
+
+
+\begin{figure}[!t]
+\centering{\includegraphics[scale = .45]{./figures/us-elasticity.pdf}}
+\caption{Trade Elasticities $-\theta_{us,j}$}\label{fig:bilateral-elasticities}
+\end{figure}
+
+Figure \ref{fig:bilateral-elasticities} provides an example of what trade elasticities coming out of the model look like. In this figure, I focus on the US and plot each bilateral trade elasticity vs. that countries price in the US. The balls represent the relative size of US imports from that destination. And these elasticities are constructed from the bottom up via the formula in (\ref{eq:trade-elasticity}). The feature that stands out very clearly is that trade elasticities systematically increase with price and decrease with trade.
+
+At the micro-level, there are two opposing forces giving rise to this aggregate relationship. Per the arguments discussed above around Proposition \ref{prp:GET}, the aggregate bilateral trade elasticity reflects both household level elasticities $\theta(a,z)$s and composition through the expenditure weights $\omega(a,z)$s. When prices decline as one moves from one source to another, there are thus two forces at play (i) how do micro-level elasticities change and (ii) how does composition change? One would expect that as prices decline more poor households purchase the commodity|and this is a force to increase the aggregate elasticity. But as prices decline \emph{both} rich and poor households' elasticities decline. So which one wins? What Figure \ref{fig:bilateral-elasticities} suggests is that the latter force is dominant and that as one moves from
+
+Behind Figure \ref{fig:bilateral-elasticities} is that there is an active ``super-elasticity'' of trade with the model \emph{endogenously} delivering the result that elasticities increases with price.\footnote{I emphasize the endogenous part as it's not parameterized as in, say, Kimball Demand which has become a popular tool to allow for non-constant elasticities.} Did the model have to deliver this? Per the arguments above, it's not obvious as composition effects could have overwhelmed the micro-elasticity effects. With that said, it does deliver a pattern that seems to conform with ``Marshall's Second Law of Demand.''  This something that I'm actively exploring using some of the results from \citet{p-iq} and representations of demand as in \citet{mrazova2017not}.
+
+
+
+
+
 
 \section{Conclusion}
 
