@@ -74,12 +74,12 @@ cntry_prm = country_params(Ncntry = Ncntry, L = L, d = d, TFP = TFP)
 ####################################################################################
 println(" ")
 println(" ")
-println("########### computing initial eq ################")
+println("########### computing planner problem ################")
 println(" ")
 
 initial_x = 0.65*log.(TFP)
 
-ψ = exp.(0.95*log.(TFP))
+ψ = exp.(1.0*log.(TFP))
 
 f(x) = efficient_equillibrium(exp.(x), ψ , hh_prm, cntry_prm)
 
@@ -107,29 +107,36 @@ social = compute_efficient(exp.(sol.x), ψ , hh_prm, cntry_prm)
 
 trademodel = log.(vec(normalize_by_home_trade(social.πprob, grv_params.Ncntry)'))
 
-dfmodel = DataFrame(trademodel = trademodel)
+dfplot = DataFrame(trademodel = trademodel)
 
-filter!(row -> ~(row.trademodel ≈ 1.0), dfmodel);
 
-filter!(row -> ~(row.trademodel ≈ 0.0), dfmodel);
 
-dftrade = hcat(dftrade, dfmodel);
+####################################################################################
+####################################################################################
 
-plot(dftrade.trademodel, dftrade.trade, seriestype = :scatter, alpha = 0.75,
+dfout = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
+
+dftrade_model_data = DataFrame(
+    trademodel = vec(πshare'),
+    tradedata = dfout.trade,
+    trade_efficient = vec(social.πprob'),
+    norm_trade_efficient = dfplot.trademodel,
+    importer_index = dfout.importer,
+    exporter_index = dfout.exporter
+     );
+
+CSV.write("../../notebooks/trade_model_efficient_data.csv", dftrade_model_data)
+
+filter!(row -> ~(row.trademodel ≈ 1.0), dfplot);
+
+filter!(row -> ~(row.trademodel ≈ 0.0), dfplot);
+
+dfplot = hcat(dftrade, dfplot);
+
+plot(dfplot.trademodel, dfplot.trade, seriestype = :scatter, alpha = 0.75,
     xlabel = "model",
     ylabel = "data",
     legend = false)
-
-####################################################################################
-####################################################################################
-
-
-
-
-
-
-
-
 
 
 
