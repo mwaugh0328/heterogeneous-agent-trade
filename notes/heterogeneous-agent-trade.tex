@@ -652,7 +652,7 @@ This section focuses on my approach to calibrating the model.
 
 At a high-level, I follow the gravity literature by picking country specific parameters to match bilateral trade flows. How I do this is a novelty of my paper|I use ``gravity as a guide'' to overcome the fact that my model does not admit a closed form map from trade flows to parameters as static, gravity models do. I describe this approach below and then discuss how the remaining non-country specific parameters are chosen.
 
-In the quantitative work below, I always focus on the case of Financial Globalization where there is a international bond market and a global interest rate. 
+In the quantitative work below, I always focus on the case of Financial Globalization where there is a international bond market and a global interest rate.
 
 \subsection{Using Gravity as a Guide}
 
@@ -708,7 +708,7 @@ The final parameters to calibrated in the following way. First, utility over the
 
 The income shock process is set up to be a mixture of a persistent and transitory component and calibrated as in \citet*{krueger2016macroeconomics}. I use their exact parameter values. And it is assumed to be the same across countries.
 
-The borrowing constraint is set in the following way. First, I scale it by a countries autarky level of average real labor income. Then it is set so that a household can borrow up to fifty percent of it's autarky level of income. The scaling here is done to deliver a ``balanced-growth-like'' property of the model so a households debt capacity is invariant to a country's level of income. Since the level of income is endogenous, a solution to this is to pin things down my connecting it with the autarky labor income. 
+The borrowing constraint is set in the following way. First, I scale it by a countries autarky level of average real labor income. Then it is set so that a household can borrow up to fifty percent of it's autarky level of income. The scaling here is done to deliver a ``balanced-growth-like'' property of the model so a households debt capacity is invariant to a country's level of income. Since the level of income is endogenous, a solution to this is to pin things down my connecting it with the autarky labor income.
 
 The discount factor is jiggled around so the equilibrium world interest rate is about 1.5 percent.
 
@@ -722,9 +722,9 @@ Taste shock parameter is set in the following way. First, I set it so that $1 / 
 
 \subsection{Calibration Results}
 
-Figure \ref{fig:model-fit} provides a sense of model fit with log bilateral trade shares in the model compared to the data after running my ``gravity as guide procedure.'' The y-axis reports bilateral trade data and the x-axis reports the outcome from my model. The fit is very high, and nearly indistinguishable from say, how a standard trade model perform would perform or the $\log$ preference model which per Proposition \ref{prp:seperation} should (and it does) operate just like a standard trade model.
+Figure \ref{fig:model-fit} provides a sense of model fit after running my ``gravity as guide procedure.'' The y-axis reports bilateral trade data and the x-axis reports the outcome from my model. The fit is very high, and nearly indistinguishable from, for example, how a standard trade model perform would perform. Or the $\log$ preference model which per Proposition \ref{prp:seperation} should (and it does) operate just like a standard trade model.
 
-Table \ref{tb-grav-est} reports another measure of fit and some of the resulting parameter values. The first column are the distance, border, etc. moments from the gravity regression in (\ref{eq:gravity-data}) (and note they exactly correspond with those in Table 3 of \citet{eaton2002technology}). The second column reports the moments from the model when the same regression is run on model generated data. Here they exactly line up and consistent with the argument in Figure \ref{fig:model-fit}, the fit is good and the model is replicating geographic pattern of activity seen in the data. 
+Table \ref{tb-grav-est} reports another measure of fit and some of the resulting parameter values. The first column are the distance, border, etc. moments from the gravity regression in (\ref{eq:gravity-data}) (and note they exactly correspond with those in the top panel of Table 3 of \citet{eaton2002technology}). The second column reports the moments from the model. Here they exactly line up and are consistent with the argument in Figure \ref{fig:model-fit}, the fit is good and the model is replicating geographic pattern of activity seen in the data.
 
 \begin{table}[t]
 \small
@@ -755,9 +755,9 @@ European Community              &$\phantom{-}0.54$  & $\phantom{-}0.54$     & $0
 \end{center}
 \end{table}
 
-The final column reports the primitive values on the trade costs the estimation routine delivers. The way to interpret this is that each value reports the level effect of being in a distance bin or sharing a border etc.  So if a two countries are near by and measured to be in the smallest bin, and share a border, the trade costs faced between these two countries is $2.35 \times 0.91$ (first row times seventh row). Or if a country is in the furthest distance bin, it's trade costs is 5.69.
+The final column reports the primitive estimates on the trade cost function. Each value reports the level effect of being in a distance bin or sharing a border etc.  So if a two countries are measured to be in the smallest distance bin and share a border, the trade cost between these two countries is $2.35 \times 0.91$ (first row times seventh row). Or if a country is in the furthest distance bin, its trade costs is 5.69.
 
-How would this compare to a standard model? It's a bit hard since one needs to take a stand on the trade elasticity on the standard model. But one approach is the following: Pick a trade elasticity so the cost of the nearest distance bin is the same as in my model and then look at how things relate in other bins. In an \citet{eaton2002technology} world, this would correspond with an trade elasticity of about 3.6. And then one takes the moment in the first column and, for example, compares $\exp( - 1 / 3.6 \times  -6.56)$ vs. 5.69.  What comes out of is that stuff closer is a bit more expensive and the furthest destinations are meaningfully less expensive (seven and ten percent for the last two distance bins). 
+How would this compare to a standard model? It's a bit hard since one needs to take a stand on the trade elasticity in the standard model to translate estimates in column one into levels of the trade costs. But an approach is the following: Pick a trade elasticity so the cost of the nearest distance bin is the same as in my model and then look at how things relate in other bins. In an \citet{eaton2002technology} world, this would correspond with an trade elasticity of about 3.6. And then one takes the moment in the first column and, for example, compares $\exp( - 1 / 3.6 \times  -6.56)$ vs. 5.69.  What comes out of is that closer relationship are a bit more expensive and the furthest destinations are meaningfully less expensive|seven and ten percent less expensive for the last two distance bins.
 
 
 \begin{figure}[!t]
@@ -765,16 +765,59 @@ How would this compare to a standard model? It's a bit hard since one needs to t
 \caption{Trade Elasticities $-\theta_{us,j}$}\label{fig:bilateral-elasticities}
 \end{figure}
 
-Figure \ref{fig:bilateral-elasticities} provides an example of what trade elasticities coming out of the model look like. In this figure, I focus on the US and plot each bilateral trade elasticity vs. that countries price in the US. The balls represent the relative size of US imports from that destination. And these elasticities are constructed from the bottom up via the formula in (\ref{eq:trade-elasticity}). The feature that stands out very clearly is that trade elasticities systematically increase with price and decrease with trade.
+Figure \ref{fig:bilateral-elasticities} provides an example of the very rich pattern of trade elasticities that come of this model. In this figure, I focus on the US and plot each bilateral trade elasticity vs. that countries price in the US. The balls represent the relative size of US imports from that destination. And these elasticities are constructed from the bottom up via the formula in (\ref{eq:trade-elasticity}). The feature that stands out very clearly is that trade elasticities systematically increase with price and decrease with trade.
 
-At the micro-level, there are two opposing forces giving rise to this aggregate relationship. Per the arguments discussed above around Proposition \ref{prp:GET}, the aggregate bilateral trade elasticity reflects both household level elasticities $\theta(a,z)$s and composition through the expenditure weights $\omega(a,z)$s. When prices decline as one moves from one source to another, there are thus two forces at play (i) how do micro-level elasticities change and (ii) how does composition change? One would expect that as prices decline more poor households purchase the commodity|and this is a force to increase the aggregate elasticity. But as prices decline \emph{both} rich and poor households' elasticities decline. So which one wins? What Figure \ref{fig:bilateral-elasticities} suggests is that the latter force is dominant and that as one moves from
+At the micro-level, there are two opposing forces giving rise to this aggregate relationship. Per the arguments discussed above around Proposition \ref{prp:GET}, the aggregate bilateral trade elasticity reflects both household level elasticities $\theta(a,z)$s and composition through the expenditure weights $\omega(a,z)$s. Thus, when prices decline as one moves from one source to another, there are two forces at play (i) how do micro-level elasticities change and (ii) how does composition change? The first force is that as prices decline \emph{both} rich and poor households' elasticities decline. However, the composition effect is a force to increase the aggregate elasticity as more poor, price sensitive households sort into that variety. Which one wins? Figure \ref{fig:bilateral-elasticities} shows is that the elasticity effect dominant composition effects.
 
-Behind Figure \ref{fig:bilateral-elasticities} is that there is an active ``super-elasticity'' of trade with the model \emph{endogenously} delivering the result that elasticities increases with price.\footnote{I emphasize the endogenous part as it's not parameterized as in, say, Kimball Demand which has become a popular tool to allow for non-constant elasticities.} Did the model have to deliver this? Per the arguments above, it's not obvious as composition effects could have overwhelmed the micro-elasticity effects. With that said, it does deliver a pattern that seems to conform with ``Marshall's Second Law of Demand.''  This something that I'm actively exploring using some of the results from \citet{p-iq} and representations of demand as in \citet{mrazova2017not}.
-
-
+Behind Figure \ref{fig:bilateral-elasticities} is what some might call a  ``super-elasticity'' of trade within the model \emph{endogenously} delivering the result that elasticities increases with price. I emphasize the endogenous part as it's not parameterized as in, say, Kimball Demand which has become a popular tool to allow for non-constant elasticities. Did the model have to deliver this? Per the arguments above, it's not obvious as composition effects could have overwhelmed the elasticity effects. With that said, it does deliver a pattern that seems to conform with ``Marshall's Second Law of Demand.''  This something that I'm actively exploring using some of the results from \citet{p-iq} and representations of demand as in \citet{mrazova2017not}.
 
 
 
+
+
+\section{Trade in the Efficient Allocation}
+
+This final section performs computes what the patter of trade \emph{should} look like were we living in a first best world. 
+
+\begin{figure}[!t]
+\centering{\includegraphics[scale = .45]{./figures/decentralized-trade-all.pdf}}
+\caption{}\label{fig:planner-trade}
+\end{figure}
+
+\subsection{Pareto Weights}
+
+An preliminary step to computing the allocation in Proposition \ref{prp:efficient-allocation} is to take a stand on Pareto weights.
+
+My desire here is to choose weights so the planner is not drastically shifting consumption across countries to equate margins and the key margin is equating margins within the country. To that end, I set the Pareto weight on the population in Country $i$ to be proportional to it's level of TFP. This specification limits the planners desire to redistribute consumption from say, the US (a rich country) to Greece (a poor country in the data set).
+
+\subsection{Efficient Trade}
+
+Figure \ref{fig:planner-trade} provides a first look as to what the efficient pattern of trade would look like.
+
+On the x-axis of Figure \ref{fig:planner-trade} is log bilateral trade flows in the model (and data) in the decentralized equilibrium. So the same thing as in Figure \ref{fig:model-fit}. The y-axis reports the trade flows for each bilateral pair in the efficient allocation. Then the 45-degree line goes a long diagonal. If the red-dots lie on this line, this would mean that trade in the efficient allocation lines up with the decentralized allocation. 
+
+Generally they do not line up on the 45-degree line. Two aspects of this stand out. First, smaller trade flows tends to be, to small. From the planners perspective these are not efficient trading relationships. In contrast, relatively large trading relationships are generally too small, this is the set of dots lying from about -5 to 0. So is a real sense that the planer would want to reallocate how households source goods. 
+
+\begin{figure}[!t]
+\begin{subfigure}{0.55\textwidth}
+    \includegraphics[scale = 0.36]{./figures/decentralized-trade-us.pdf}
+    \caption{{Trade in the Decentralized Allocation}}\label{fig:us-data-trade}
+\end{subfigure}
+\hspace{0.01cm}
+\begin{subfigure}{0.55\textwidth}
+    \includegraphics[scale = 0.36]{./figures/planner-trade-us.pdf}
+    \caption{{Trade in the Efficient Allocation}}\label{fig:us-planner-trade}
+\end{subfigure}
+\caption{US imports: Decentralized vs. Centralized Pattern of Trade}\label{fig:planner-vs-data}
+\end{figure}
+
+Figure \ref{fig:us-data-trade} takes a deep dive to illustrate this reallocation by focusing on how US imports change. The left panel reports import shares in the model (and data). Here you can see that the aggregate import share is about 7 percent with Canada, Japan, and some other European countries contributing to the US's sourcing pattern. 
+
+In the efficient allocation the planner simultaneously wants the US to trade \emph{more}, but (ii) concentrate US imports on it's most productive (and large) partner which is Japan, a bit more from Germany, and less from Canada. And small trade flows with the potpourri of the remaining countries are made much smaller consistent with Figure \ref{fig:planner-trade}.
+
+The issue is this: far away, unproductive source countries are ``luxuries'' from the planners perspective. In the decentralized equilibrium, the varieties from these countries are only purchased from rich households (and have the appearance of being luxuries as they are also high elasticity goods). Then, when the planner equalizes consumption within a country, the demand for these goods is eliminated.
+
+Why does trade expand in certain directions? This is not obvious to me either, but I think there is an optimistic message here: the US is under-utilizing other productive countries via trade as a means to increase consumption for the masses. This is why trade expands with Japan which in the calibrated economy is very productive with a large labor force.
 
 \section{Conclusion}
 
