@@ -110,10 +110,6 @@ trademodel = log.(vec(normalize_by_home_trade(social.πprob, grv_params.Ncntry)'
 dfplot = DataFrame(trademodel = trademodel)
 
 
-
-####################################################################################
-####################################################################################
-
 dfout = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
 dftrade_model_data = DataFrame(
