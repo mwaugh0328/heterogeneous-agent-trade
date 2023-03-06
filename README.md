@@ -26,7 +26,7 @@ I view HAT (and related models) as providing a foundation to systematically thin
 
 The goal here is to provide code and informative notebooks to illustrate how things work. 
 
-The base code is in [julia](https://github.com/JuliaLang) and python (needs to be updated) with the goal of implementing things **fast** using transparent and well developed methods. Most the notation in the code tries to closely follow the paper. 
+The base code is in [julia](https://github.com/JuliaLang) (there is a python version but it needs to be updated) with the goal of implementing things using transparent and well developed methods. Most the notation in the code tries to closely follow the paper. 
 
 This is still preliminary but below are core elements of the code:
 
