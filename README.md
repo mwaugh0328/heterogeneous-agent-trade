@@ -24,6 +24,13 @@ HAT models provide a foundation to systematically think about the distributional
 
 The goal here is to provide code and informative notebooks to illustrate how things work. Code is in [julia](https://github.com/JuliaLang) and python (needs to be updated) with the goal of implementing things **fast** using transparent and well developed methods. Most the notation in the code tries to closely follow the paper. 
 
+This is still preliminary but below are core elements of the code:
+
+- [ha-trade-environment.jl](./code/julia/ha-trade-environment.jl) is behind the household problem and the environment it faces. 
+
+- [ha-trade-solution.jl](./code/julia/ha-trade-solution.jl) provides method to solve the household problem in one country, find the stationary distributio within a country, find a world equillibrium.
+
+
 ---
 
 ### Want to know more?
