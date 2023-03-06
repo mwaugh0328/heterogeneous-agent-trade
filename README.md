@@ -12,7 +12,7 @@ This repository contain code associated with the paper [Heterogenous Agent Trade
 
 ### What is HAT?
 
-HAT is a model where aggregete trade arises from the explicit aggregation accross households. 
+HAT is a model where aggregate trade arises from the explicit aggregation demands for goods across households.
 
 Households live lives similar to the "standard incomplete markets model" where agents face to idiosyncratic productivity and taste shocks (a new part) and have access to a risk free asset. Trade in goods follows the Armington tradition  with producers in each country producing a national variety. A Ricardian version is in progress.
 
@@ -32,7 +32,7 @@ This is still preliminary but below are core elements of the code:
 
 - [ha-trade-environment.jl](./code/julia/ha-trade-environment.jl) is behind the household problem and the environment it faces. 
 
-- [ha-trade-solution.jl](./code/julia/ha-trade-solution.jl) provides method to solve the household problem in one country, find the stationary distributio within a country, find a world equillibrium.
+- [ha-trade-solution.jl](./code/julia/ha-trade-solution.jl) provides method to solve the household problem in one country, find the stationary distribution within a country, find a world equilibrium.
 
 
 ---
