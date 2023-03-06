@@ -1,18 +1,22 @@
-# HAT: Heterogenous Agent Trade Models
+# HAT: Heterogenous Agent Trade
 
-This repository contain codes code to teach and compute HAT-models.
+<p align="center">
+<img src="./notes/figures/micro-elasticity.png">
+</p>
+
+This repository contain codes code associated with the paper Heterogenous Agent Trade.
+
+**This is a work in progress. Please let me know of any problems. Functionality may change rapidly.**
+
+---
 
 ### What is HAT?
 
-HAT models are comprised of a heterogenous agent block within each country and a neoclassical trade block where demand and supply of goods across countries must equilibrate.
+The HAT model is a model where aggregete trade arises from the explicit aggregation accross households. 
 
-- The heterogenous agent block is characterized by variants on the "standard incomplete markets model" where agents face to idiosyncratic productivity shocks and have access to a risk free asset and the ability vary labor supply to smooth these fluctuations. Aggregate demand and supply in this economy are endogenous (i.e. not pinned down by the production function) and are determined by the micro-level responses of these agents.
+Households are characterized by the "standard incomplete markets model" where agents face to idiosyncratic productivity and taste shocks and have access to a risk free asset. It the model's current formulation, trade in goods follows the Armington tradition (a Ricardian version is in progress) with producers in each country producing a national variety. The twist is that households have random utility over these varieties and they make a discrete choice over the varieties to consume in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade.
 
-- The supply block is characterized by variants on neoclassical trade models like Armington or Eaton and Korum (2002). In general, these models take demand and supply of goods in each country and determine the pattern of trade. In standard trade models, however, both domestic demand and domestic supply are technologically determined unlike in the HA block.
-
-- HAT combines the two with the HA block and the trade block interacting.
-
-- HAT models provide a foundation to systematically think about the distributional affects of trade reforms, their dynamics, and complementary policies to mitigate the downsides of globalization.  
+HAT models provide a foundation to systematically think about the distributional affects of trade reforms, their dynamics, and complementary policies to mitigate the downsides of globalization.  
 
 ---
 
@@ -24,8 +28,8 @@ The goal here is to provide code and informative notebooks to illustrate how thi
 
 ### Want to know more?
 
-- Star and keep watching this repository.
+Much of this is a continuation of my thinking across several papers:
 
 - [Lyon and Waugh (2019)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/lw_quant_losses.pdf) and [Lyon and Waugh (2018) JIE](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/lw_tax.pdf) are precursors to this work.
 
-- Waugh (2022) (an evolution of [Waugh (2019)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/waugh_consumption.pdf)) is an example as well.
+- Waugh (2023) (an evolution of [Waugh (2019)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/waugh_consumption.pdf)) is an example as well.

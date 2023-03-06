@@ -4,19 +4,8 @@ include("ha-trade-helper-functions.jl")
 include("static-trade-environment.jl")
 using Plots
 
-
-
 ####################################################################################
 ####################################################################################
-# Ncntry = 19
-
-# dftrade = DataFrame(CSV.File("ek-trade.csv"))
-
-# d = reshape(dftrade.d, Ncntry,Ncntry)
-
-# df = DataFrame(CSV.File("solution-fg.csv"))
-
-# initial_x = [df.wage[2:end]; 1.035]
 
 TFP = [10.0; 1.0]
 wage = [10.0; 1.0]

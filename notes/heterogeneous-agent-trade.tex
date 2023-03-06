@@ -23,7 +23,7 @@ pdfstartview={XYZ null null 0.65},
 pdftitle={Heterogeneous Agent Trade},
 pdfauthor={ Michael E. Waugh},
 pdfkeywords={economics, trade, dynamics, quant econ, consumption, data science,
-waugh, incomplete markets, inequality, Ricardo, julia, Armington, China, trade war, tariffs, python, matplotlib},
+waugh, incomplete markets, inequality, julia, Armington, Minneapolis Fed, price elasticity, distance, python, matplotlib},
 colorlinks=true,linkcolor=darkgray,citecolor=darkgray,urlcolor=darkgray,
 breaklinks]{hyperref}
 
@@ -81,7 +81,7 @@ breaklinks]{hyperref}
 
 \begin{onehalfspacing}
 
-{\large \textbf{Heterogeneous Agent Trade}}
+{\large \textbf{\href{http://www.waugheconomics.com/}{Heterogeneous Agent Trade}}}
 
 \vspace{0.5cm}
 
@@ -98,7 +98,7 @@ March 2023
 
 ABSTRACT ------------------------------------------------------------------------------------------------------------
 
-This paper develops a model of heterogenous agents and international trade. Heterogenous agents are modeled as in the standard incomplete markets tradition with households facing incomplete insurance against idiosyncratic productivity and taste shocks. Trade in goods follows the Armington tradition but is derived from the ``bottom up'' with micro-level heterogeneity shaping aggregate trade. I show how micro-level trade elasticities, trade, and the gains from trade vary with a household's wealth and how self-insurance motives shape these outcomes. In aggregate, the pattern of trade is distorted relative to the efficient allocation and the gains from trade deviate from standard benchmarks. Quantitatively, I compute the multi-country, asymmetric global economy and calibrate it to match bilateral trade flows for 19 countries. I use the model to measure the gains from trade and the ability of trade policy to improve outcomes.
+This paper develops a model of heterogenous agents and international trade. Heterogenous agents are modeled as in the standard incomplete markets tradition with households facing incomplete insurance against idiosyncratic productivity and taste shocks. Trade in goods follows the Armington tradition but is derived from the ``bottom up'' with micro-level heterogeneity shaping aggregate trade. I show how micro-level trade elasticities, trade, and the gains from trade vary with a household's wealth and how self-insurance motives shape these outcomes. In aggregate, the pattern of trade is distorted relative to the efficient allocation and the gains from trade deviate from standard benchmarks. Quantitatively, I compute the multi-country, asymmetric global economy and calibrate it to match bilateral trade flows for 19 countries. I use the model to measure the gains from trade and the first-best pattern of trade.
 
 ------------------------------------------------------------------------------------------------------------------------------
 %%\vspace{0.25cm}
@@ -108,10 +108,9 @@ This paper develops a model of heterogenous agents and international trade. Hete
 %%
 %%Keywords:
 
-\vspace{6.25cm}
+\vspace{6.0cm}
 
-\footnotesize Email: michael.e.waugh@gmail.com. The views expressed herein are those of the author and not necessarily those of the Federal
-Reserve Bank of Minneapolis or the Federal Reserve System. This project was developed with research support from the National Science Foundation (NSF Award number 1948800).
+\footnotesize Email: michael.e.waugh@gmail.com. The views expressed herein are those of the author and not necessarily those of the Federal Reserve Bank of Minneapolis or the Federal Reserve System. This project was developed with research support from the National Science Foundation (NSF Award number 1948800). Thomas Hasenzagl provided excellent research assistance. My github repository provides the code and supplementary work behind this paper at \url{https://github.com/mwaugh0328/heterogeneous-agent-trade}.
 
 \hspace{-0.05cm}
 
@@ -123,7 +122,7 @@ Reserve Bank of Minneapolis or the Federal Reserve System. This project was deve
 
 This paper develops a model of heterogenous households and international trade. From the perspective of trade, household heterogeneity is interesting because of the notion that some benefit from trade and others don't. An aspect of these unequal gains relates to the idea is that rich and poor consumers have different price elasticities and, thus, they shape the expenditure patterns and the gains from trade at the micro and macro level. I run with this idea and develop a model with heterogenous price elasticities featuring prominently and I explore the positive and normative implications of the model for trade.
 
-The building blocks to my model are well known: household heterogeneity is induced via the standard incomplete markets model (\citet{bewley1979optimum}, \citet{huggett1993risk}, \citet{aiyagari1994uninsured}) with households facing incomplete insurance against idiosyncratic productivity and taste shocks. Trade in goods follows the Armington tradition with producers in each country producing a national variety. The twist is that households have random utility over these varieties and they make a discrete choice over the varieties to consume in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade
+The building blocks to my model are well known: household heterogeneity is induced via the standard incomplete markets model (\citet{bewley1979optimum}, \citet{huggett1993risk}, \citet{aiyagari1994uninsured}) with households facing incomplete insurance against idiosyncratic productivity and taste shocks. Trade in goods follows the Armington tradition with producers in each country producing a national variety. The twist is that households have random utility over these varieties and they make a discrete choice over the varieties to consume (\citet{mcfadden1974frontiers}) in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade
 
 %The first part of the paper works out how household behavior translates into aggregates. Aggregate trade takes on a mixed-logit form similar to \citet*{berry1995automobile} with two interesting differences. First,  a household's choice of the variety and quantity is a dynamic decision and is intertwined with a household's inter-temporal savings choice. Second, the mixing distribution|over which demands are aggregated|is endogenous and depends upon household behavior as it determines the distribution of wealth in equilibrium. Outside of a knife-edge case that I discuss below, this is a model where households' savings motives at the micro-level determine trade at the aggregate level.
 
@@ -143,7 +142,14 @@ Quantitatively, I make a contribution by computing and estimating the model at a
 
 The calibration challenge is the following.\footnote{Separate from this is computational challenge. Finding an equilibrium requires (i) solving for households dynamic problems|in each country (ii) constructing the stationary distribution of expenditure patterns and wealth|in each country (iii) aggregating and then (iv) finding a vector of prices so goods markets and financial markets clear world wide. Plot twist: It's doable. My github repository and the Appendix provides a complete description of my approach and methods.} The model does not admit a ``gravity'' representation that allows researchers to invert trade frictions and productivity levels from trade flows as done, e.g., in \citet{eaton2002technology} and many subsequent papers. Similarly, the model does not admit the use of ``exact-hat algebra'' which allows the research to construct counterfactuals without knowledge to primitives like trade frictions or productivity (see, e.g., the approach articulated in \citet{costinot2014trade}).
 
-My solution is to use the insight that the regressions employed in gravity frameworks provide very accurate descriptions of the data generating process. Rather than treating the gravity regression as a structural relationship, I use it as a ``guide'' and use an indirect inference procedure where I estimate parameters of the model so that the regression coefficients from a standard gravity regression run on my model's data match that seen in the data.
+My solution is to use the insight that the regressions employed in gravity frameworks provide very accurate descriptions of the data generating process. Rather than treating the gravity regression as a structural relationship, I use it as a ``guide'' and use an indirect inference procedure where I estimate parameters of the model so that the regression coefficients from a standard gravity regression run on my model's data match that seen in the data. This procedure works well and, thus, the model is able to match spatial distribution of economic activity in the data|just as well as standard constant elasticity gravity models.
+
+An outcome of the calibration is that trade elasticities decrease with the competentness of a source country product in a destination. In other words, expensive products are more elastic relative to cheaper products. Behind this is what some might call a  super-elasticity of trade within the model \emph{endogenously} delivering the result that elasticities increases with price and delivering a pattern conforming with ``Marshall's Second Law of Demand.''
+
+The final part of the quantitative analysis explores how trade behaves in the efficient allocation relative to that seen in the baseline model and data. Two interesting things happen. Generally, the planner reduces trade in trading relationships that were already small. These are trading relationships that have the feature of being a luxury in the sense that it's most rich people engage in them. So when the planner redistributes within the country, trade ``catering to the rich'' is reduced.
+
+In contrast, the planner increases trade within already competitive relationships. An example of this is US imports with Japan, where the planner increases trade by nearly 5 percentage points. So here, the planner is using trade to ``service the masses'' as it redistributes. In the US case (and generally), the most prominent feature of the first-best allocation is a reallocation of trade that leans into certain relationships, not a per-se increase or decrease in general.
+
 
 
 %This pattern of elasticities is consistent with recent evidence focusing on expenditure switching at the household level. \citet*{auer2022unequal} explore the heterogenous impact of the 2015 Swiss Franc appreciation and find that the exchange rate shock lead to larger changes in expenditure shares for poor households relative to the rich. In other words, poor households are more sensitive to price than rich households. Outside of the trade literature, there is broader set of evidence in support of the idea that price sensitivity declines with income; e.g. \citet{sangani2022markups} provides evidence in support of this fact using Nielsen Homescan data.
@@ -777,7 +783,7 @@ Behind Figure \ref{fig:bilateral-elasticities} is what some might call a  ``supe
 
 \section{Trade in the Efficient Allocation}
 
-This final section performs computes what the patter of trade \emph{should} look like were we living in a first best world. 
+This final section performs computes what the patter of trade \emph{should} look like were we living in a first best world.
 
 \begin{figure}[!t]
 \centering{\includegraphics[scale = .45]{./figures/decentralized-trade-all.pdf}}
@@ -794,9 +800,9 @@ My desire here is to choose weights so the planner is not drastically shifting c
 
 Figure \ref{fig:planner-trade} provides a first look as to what the efficient pattern of trade would look like.
 
-On the x-axis of Figure \ref{fig:planner-trade} is log bilateral trade flows in the model (and data) in the decentralized equilibrium. So the same thing as in Figure \ref{fig:model-fit}. The y-axis reports the trade flows for each bilateral pair in the efficient allocation. Then the 45-degree line goes a long diagonal. If the red-dots lie on this line, this would mean that trade in the efficient allocation lines up with the decentralized allocation. 
+On the x-axis of Figure \ref{fig:planner-trade} is log bilateral trade flows in the model (and data) in the decentralized equilibrium. So the same thing as in Figure \ref{fig:model-fit}. The y-axis reports the trade flows for each bilateral pair in the efficient allocation. Then the 45-degree line goes a long diagonal. If the red-dots lie on this line, this would mean that trade in the efficient allocation lines up with the decentralized allocation.
 
-Generally they do not line up on the 45-degree line. Two aspects of this stand out. First, smaller trade flows tends to be, to small. From the planners perspective these are not efficient trading relationships. In contrast, relatively large trading relationships are generally too small, this is the set of dots lying from about -5 to 0. So is a real sense that the planer would want to reallocate how households source goods. 
+Generally they do not line up on the 45-degree line. Two aspects of this stand out. First, smaller trade flows tends to be, to small. From the planners perspective these are not efficient trading relationships. In contrast, relatively large trading relationships are generally too small, this is the set of dots lying from about -5 to 0. So is a real sense that the planer would want to reallocate how households source goods.
 
 \begin{figure}[!t]
 \begin{subfigure}{0.55\textwidth}
@@ -811,7 +817,7 @@ Generally they do not line up on the 45-degree line. Two aspects of this stand o
 \caption{US imports: Decentralized vs. Centralized Pattern of Trade}\label{fig:planner-vs-data}
 \end{figure}
 
-Figure \ref{fig:us-data-trade} takes a deep dive to illustrate this reallocation by focusing on how US imports change. The left panel reports import shares in the model (and data). Here you can see that the aggregate import share is about 7 percent with Canada, Japan, and some other European countries contributing to the US's sourcing pattern. 
+Figure \ref{fig:us-data-trade} takes a deep dive to illustrate this reallocation by focusing on how US imports change. The left panel reports import shares in the model (and data). Here you can see that the aggregate import share is about 7 percent with Canada, Japan, and some other European countries contributing to the US's sourcing pattern.
 
 In the efficient allocation the planner simultaneously wants the US to trade \emph{more}, but (ii) concentrate US imports on it's most productive (and large) partner which is Japan, a bit more from Germany, and less from Canada. And small trade flows with the potpourri of the remaining countries are made much smaller consistent with Figure \ref{fig:planner-trade}.
 
