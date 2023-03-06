@@ -103,13 +103,14 @@ hh_df = make_hh_dataframe(dist, hh, home_country, Rsol, Wsol, hh_prm)
 
 CSV.write(rootfile*"household_data_pre_fg"*day, hh_df)
 
-# # ####################################################################################
+####################################################################################
+####################################################################################
 println(" ")
 println(" ")
 println("########### computing counter factual eq ################")
 println(" ")
 
-country = 8
+country = 11
 country_name = "-JPN"
 
 Δ_d = 0.10
@@ -120,6 +121,7 @@ d_prime[home_country, country] =  (d[home_country, country]).*(1.0 - Δ_d)
 
 Δ_cntry_prm = country_params(Ncntry = Ncntry, L = L, d = d_prime, TFP = TFP)
 
+####################################################################################
 ###################################################################################
 # Fix prices, change d, see what happens...
 
@@ -130,18 +132,21 @@ d_prime[home_country, country] =  (d[home_country, country]).*(1.0 - Δ_d)
 
 dfwelfare = make_welfare_dataframe(∂W, ∂logW, hh_prm)
 
-# root = rootfile*"welfare-US"
+# ouptut the stuff to plot 
 
-# CSV.write(root*country_name*"-fix-p-fg"*day, dfwelfare)
+hh_df = make_hh_dataframe(Δp_dist, Δp_hh, home_country, Rsol, Wsol, hh_prm)
 
-# hh_df = make_hh_dataframe(Δp_dist, Δp_hh, home_country, Rsol, Wsol, hh_prm)
+root = rootfile*"welfare-US"
 
-# root = rootfile*"household-data-US"
+CSV.write(root*country_name*"-fix-p-fg"*day, dfwelfare)
 
-# CSV.write(root*country_name*"-fix-p-fg"*day, hh_df)
+root = rootfile*"household-data-US"
 
+CSV.write(root*country_name*"-fix-p-fg"*day, hh_df)
 
-# # ###################################################################################
+####################################################################################
+###################################################################################
+# Now let prices adjust 
 
 f(x) = world_equillibrium_FG(exp.(x), hh_prm, Δ_cntry_prm)
 
@@ -151,14 +156,13 @@ function f!(fvec, x)
 
 end
 
-# ###################################################################
 
 xguess = [Wsol[1:18]; Rsol[1]]
 
 n = length(xguess)
 diag_adjust = n - 1
 
-Δ_sol = fsolve(f!, log.(initial_x), show_trace = true, method = :hybr;
+Δ_sol = fsolve(f!, log.(xguess), show_trace = true, method = :hybr;
       ml=diag_adjust, mu=diag_adjust,
       diag=ones(n),
       mode= 1,
@@ -177,14 +181,13 @@ print(Δ_sol)
 
 dfwelfare = make_welfare_dataframe(∂W, ∂logW, hh_prm)
 
-# root = rootfile*"welfare-US"
-# CSV.write(root*country_name*"-ge-fg-log.csv", dfwelfare)
+hh_df = make_hh_dataframe(Δ_dist, Δ_hh, 19, Δ_Rsol, Δ_Wsol, Δ_mdl_prm)
 
-# hh_df = make_hh_dataframe(Δ_dist, Δ_hh, 19, Δ_Rsol, Δ_Wsol, Δ_mdl_prm)
+# ouptut the stuff to plot
 
-# root = rootfile*"household-data-US"
-# CSV.write(root*country_name*"-ge-fg-log.csv", hh_df)
+root = rootfile*"welfare-US"
+CSV.write(root*country_name*"-ge-fg"*day, dfwelfare)
 
-# global_trade_elasticity =  (log.(Δ_tradeshare ./ diag(Δ_tradeshare)) .- 
-#     log.(tradeshare ./ diag(tradeshare))) ./ (log.(d_prime) .- log.(d))
+root = rootfile*"household-data-US"
+CSV.write(root*country_name*"-ge-fg"*day, hh_df)
 

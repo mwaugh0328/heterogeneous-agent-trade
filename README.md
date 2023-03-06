@@ -12,7 +12,7 @@ This repository contain code associated with the paper [Heterogenous Agent Trade
 
 ### What is HAT?
 
-HAT is a model where aggregate trade arises from the explicit aggregation demands for goods across households.
+HAT is a model where aggregate trade arises from the explicit aggregation of household-level decisions.
 
 Households live lives similar to the "standard incomplete markets model" where agents face to idiosyncratic productivity and taste shocks (a new part) and have access to a risk free asset. Trade in goods follows the Armington tradition  with producers in each country producing a national variety. A Ricardian version is in progress.
 
@@ -44,3 +44,5 @@ Much of this is a continuation of my thinking across several papers:
 - [Lyon and Waugh (2019)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/lw_quant_losses.pdf) and [Lyon and Waugh (2018) JIE](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/lw_tax.pdf) are precursors to this work.
 
 - Waugh (2023) (an evolution of [Waugh (2019)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/waugh_consumption.pdf)) is an example as well.
+
+- And it connects, and in someways is a companion paper to, my paper [Pricing Inequality](http://www.simonmongey.com/uploads/6/5/6/6/65665741/mw_2022_11_16_minneapolis_fed_online.pdf) with Mongey. 
