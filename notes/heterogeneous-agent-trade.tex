@@ -122,7 +122,7 @@ This paper develops a model of heterogenous agents and international trade. Hete
 
 This paper develops a model of heterogenous households and international trade. From the perspective of trade, household heterogeneity is interesting because of the notion that some benefit from trade and others don't. An aspect of these unequal gains relates to the idea is that rich and poor consumers have different price elasticities and, thus, they shape the expenditure patterns and the gains from trade at the micro and macro level. I run with this idea and develop a model with heterogenous price elasticities featuring prominently and I explore the positive and normative implications of the model for trade.
 
-The building blocks to my model are well known: household heterogeneity is induced via the standard incomplete markets model (\citet{bewley1979optimum}, \citet{huggett1993risk}, \citet{aiyagari1994uninsured}) with households facing incomplete insurance against idiosyncratic productivity and taste shocks. Trade in goods follows the Armington tradition with producers in each country producing a national variety. The twist is that households have random utility over these varieties and they make a discrete choice over the varieties to consume (\citet{mcfadden1974frontiers}) in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade
+The building blocks to my model are well known: household heterogeneity is induced via the standard incomplete markets model (\citet{bewley1979optimum}, \citet{huggett1993risk}, \citet{aiyagari1994uninsured}) with households facing incomplete insurance against idiosyncratic productivity and taste shocks. Trade in goods follows the Armington tradition with producers in each country producing a national variety. The twist is that households have random utility over these varieties and they make a discrete choice over the varieties to consume (\citet{mcfadden1974frontiers}) in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade.
 
 %The first part of the paper works out how household behavior translates into aggregates. Aggregate trade takes on a mixed-logit form similar to \citet*{berry1995automobile} with two interesting differences. First,  a household's choice of the variety and quantity is a dynamic decision and is intertwined with a household's inter-temporal savings choice. Second, the mixing distribution|over which demands are aggregated|is endogenous and depends upon household behavior as it determines the distribution of wealth in equilibrium. Outside of a knife-edge case that I discuss below, this is a model where households' savings motives at the micro-level determine trade at the aggregate level.
 
@@ -380,7 +380,7 @@ This model above has households making individual choices over national varietie
 \item \textbf{What are the quantitative implications of this model?} In this section, I calibrate the model essentially replicating the analysis of \citet{eaton2002technology} by selecting trade costs and productivity parameters so that bilateral trade flows in the model line up in the data. I then perform several counterfactuals to illustrate the mechanics of the model and make comparisons to the model of \citet{eaton2002technology} and the response of the centralized allocation.
 \end{enumerate}
 
-\section{The Centralized Allocation}
+\section{The Centralized Allocation}\label{sec:planner}
 
 This section describes the Centralized (Efficient) Allocation. The starting point is a stance on the social welfare function. I focus on a additive social welfare:
 \begin{align}
@@ -708,9 +708,16 @@ where $\Theta_o$ is the true value of $\Theta$. Thus, my method of moments estim
 \end{align}
 At a mechanical level, finding the minimum to (\ref{eq:smm-condition}) amounts to returning to \textbf{Step 2.} each time and smartly updating parameter guess for $\Theta$. One of the nice features of this set-up and the dimensionality reduction that I did, is that now this is an exactly identified problem and standard root-finding techniques can be applied to update $\Theta$ and a minimum found.
 
+\begin{figure}[!t]
+\centering{\includegraphics[scale = .45]{./figures/trade-fit.pdf}}
+\caption{Bilateral Trade: Model vs. Data}\label{fig:model-fit}
+\end{figure}
+
 \subsection{Remaining Parameter Values}
 
 The final parameters to calibrated in the following way. First, utility over the physical commodity is CRRA with relative risk aversion $\gamma =  1.5$, so just a bit above $\log$ and per the discussion above will lead to a pattern (at least qualitatively) or elasticities of substitution across rich and poor households that are consistent with \citet*{auer2022unequal}.
+
+
 
 The income shock process is set up to be a mixture of a persistent and transitory component and calibrated as in \citet*{krueger2016macroeconomics}. I use their exact parameter values. And it is assumed to be the same across countries.
 
@@ -718,13 +725,7 @@ The borrowing constraint is set in the following way. First, I scale it by a cou
 
 The discount factor is jiggled around so the equilibrium world interest rate is about 1.5 percent.
 
-Taste shock parameter is set in the following way. First, I set it so that $1 / \sigma_{\epsilon} = 4.0$. Second, because of the non-homotheticity introduced by preferences, I don't want a rich country to have a fundamentally different elasticity than a poor country. To prevent this outcome, each country will have it's own parameter and it is scaled so that $\sigma_{\epsilon,i} = \sigma_{\epsilon} A_i^{1-\gamma}$. Again, this scaling is done to deliver a ``balanced-growth-like'' property of the model, so if there were two countries one with high TFP and one with low TFP, this scaling will insure that trade elasticities in the two countries are the same, but on is just richer than the other.
-
-\begin{figure}[!t]
-\centering{\includegraphics[scale = .45]{./figures/trade-fit.pdf}}
-\caption{Bilateral Trade: Model vs. Data}\label{fig:model-fit}
-\end{figure}
-
+The taste shock parameter is set in the following way. First, I set it so that $1 / \sigma_{\epsilon} = 4.0$. Second, I then scale this parameter country by country to deliver a ``balanced-growth-like'' property of the model. Specifically, each country will have it's own parameter and it is scaled so that $\sigma_{\epsilon,i} = \sigma_{\epsilon} A_i^{1-\gamma}$. What this implies is that if there were two countries  one with high TFP and one with low TFP in a closed economy, this scaling ensures that trade elasticities in the two countries are the same, but one is just richer than the other.
 
 \subsection{Calibration Results}
 
@@ -761,69 +762,66 @@ European Community              &$\phantom{-}0.54$  & $\phantom{-}0.54$     & $0
 \end{center}
 \end{table}
 
-The final column reports the primitive estimates on the trade cost function. Each value reports the level effect of being in a distance bin or sharing a border etc.  So if a two countries are measured to be in the smallest distance bin and share a border, the trade cost between these two countries is $2.35 \times 0.91$ (first row times seventh row). Or if a country is in the furthest distance bin, its trade costs is 5.69.
+The final column reports the primitive estimates on the trade cost function. Each value reports the level effect of being in a distance bin or sharing a border etc.  So if two countries are measured to be in the smallest distance bin and share a border, the trade cost between these two countries is $2.35 \times 0.91$ (first row times seventh row). Or if a country is in the furthest distance bin, its trade costs is 5.69.
 
 How would this compare to a standard model? It's a bit hard since one needs to take a stand on the trade elasticity in the standard model to translate estimates in column one into levels of the trade costs. But an approach is the following: Pick a trade elasticity so the cost of the nearest distance bin is the same as in my model and then look at how things relate in other bins. In an \citet{eaton2002technology} world, this would correspond with an trade elasticity of about 3.6. And then one takes the moment in the first column and, for example, compares $\exp( - 1 / 3.6 \times  -6.56)$ vs. 5.69.  What comes out of is that closer relationship are a bit more expensive and the furthest destinations are meaningfully less expensive|seven and ten percent less expensive for the last two distance bins.
 
+Figure \ref{fig:bilateral-elasticities} provides an example of the very rich pattern of trade elasticities that come of this model. In this figure, I focus on the US and plot each bilateral trade elasticity vs. that countries price in the US. The balls represent the relative size of US imports from that destination. And these elasticities are constructed from the bottom up via the formula in (\ref{eq:trade-elasticity}). The feature that stands out very clearly is that trade elasticities systematically increase with price and decrease with trade.
 
 \begin{figure}[!t]
 \centering{\includegraphics[scale = .45]{./figures/us-elasticity.pdf}}
 \caption{Trade Elasticities $-\theta_{us,j}$}\label{fig:bilateral-elasticities}
 \end{figure}
 
-Figure \ref{fig:bilateral-elasticities} provides an example of the very rich pattern of trade elasticities that come of this model. In this figure, I focus on the US and plot each bilateral trade elasticity vs. that countries price in the US. The balls represent the relative size of US imports from that destination. And these elasticities are constructed from the bottom up via the formula in (\ref{eq:trade-elasticity}). The feature that stands out very clearly is that trade elasticities systematically increase with price and decrease with trade.
 
 At the micro-level, there are two opposing forces giving rise to this aggregate relationship. Per the arguments discussed above around Proposition \ref{prp:GET}, the aggregate bilateral trade elasticity reflects both household level elasticities $\theta(a,z)$s and composition through the expenditure weights $\omega(a,z)$s. Thus, when prices decline as one moves from one source to another, there are two forces at play (i) how do micro-level elasticities change and (ii) how does composition change? The first force is that as prices decline \emph{both} rich and poor households' elasticities decline. However, the composition effect is a force to increase the aggregate elasticity as more poor, price sensitive households sort into that variety. Which one wins? Figure \ref{fig:bilateral-elasticities} shows is that the elasticity effect dominant composition effects.
 
 Behind Figure \ref{fig:bilateral-elasticities} is what some might call a  ``super-elasticity'' of trade within the model \emph{endogenously} delivering the result that elasticities increases with price. I emphasize the endogenous part as it's not parameterized as in, say, Kimball Demand which has become a popular tool to allow for non-constant elasticities. Did the model have to deliver this? Per the arguments above, it's not obvious as composition effects could have overwhelmed the elasticity effects. With that said, it does deliver a pattern that seems to conform with ``Marshall's Second Law of Demand.''  This something that I'm actively exploring using some of the results from \citet{p-iq} and representations of demand as in \citet{mrazova2017not}.
 
+\section{Gains From Trade}
 
-
-
+Sorry, I'm still filling this in. 
 
 \section{Trade in the Efficient Allocation}
 
-This final section performs computes what the patter of trade \emph{should} look like were we living in a first best world.
+This section computes what the patter of trade \emph{should} look like were we living in a first-best world.
 
 \begin{figure}[!t]
 \centering{\includegraphics[scale = .45]{./figures/decentralized-trade-all.pdf}}
 \caption{}\label{fig:planner-trade}
 \end{figure}
 
-\subsection{Pareto Weights}
-
-An preliminary step to computing the allocation in Proposition \ref{prp:efficient-allocation} is to take a stand on Pareto weights.
-
-My desire here is to choose weights so the planner is not drastically shifting consumption across countries to equate margins and the key margin is equating margins within the country. To that end, I set the Pareto weight on the population in Country $i$ to be proportional to it's level of TFP. This specification limits the planners desire to redistribute consumption from say, the US (a rich country) to Greece (a poor country in the data set).
+An important first step to computing the allocation in Proposition \ref{prp:efficient-allocation} is to take a stand on Pareto weights. I set the Pareto weight on the population in Country $i$ to be proportional to it's level of TFP. My rationale behind this choice of weights is so the planner is not drastically shifting consumption across countries vs. margins within the country. This specification limits the planners desire to redistribute consumption from say, the US (a rich country) to Greece (a poor country in the data set).
 
 \subsection{Efficient Trade}
 
-Figure \ref{fig:planner-trade} provides a first look as to what the efficient pattern of trade would look like.
+Figure \ref{fig:planner-trade} illustrates what the pattern of trade should look like from the planners perspective. Specifically, I take the parameters of the model and then compute consumption allocations and trade flows that satisfy planning problem described in Section \ref{sec:planner}. To be clear, there is no change in trade costs | all the planner is doing is redistributing and overcoming market incompleteness that is present in the decentralized allocation. 
 
-On the x-axis of Figure \ref{fig:planner-trade} is log bilateral trade flows in the model (and data) in the decentralized equilibrium. So the same thing as in Figure \ref{fig:model-fit}. The y-axis reports the trade flows for each bilateral pair in the efficient allocation. Then the 45-degree line goes a long diagonal. If the red-dots lie on this line, this would mean that trade in the efficient allocation lines up with the decentralized allocation.
+The x-axis of Figure \ref{fig:planner-trade} plots log bilateral trade flows in the model (and data) in the decentralized equilibrium. So the same thing as in Figure \ref{fig:model-fit}. The y-axis reports the trade flows in the efficient allocation. The 45-degree line is drawn so if the red-dots lie on this line, this means that trade in the efficient allocation lines up with the decentralized allocation.
 
-Generally they do not line up on the 45-degree line. Two aspects of this stand out. First, smaller trade flows tends to be, to small. From the planners perspective these are not efficient trading relationships. In contrast, relatively large trading relationships are generally too small, this is the set of dots lying from about -5 to 0. So is a real sense that the planer would want to reallocate how households source goods.
+Generally they do not line up on the 45-degree line. Two types of deviations stand out. First, small trade flows tends to be made smaller. From the planners perspective these are not efficient trading relationships. In contrast, large trading relationships are generally not large enough, this is the set of dots lying from about -5 to 0. So there is a substantive sense that the Planner want to reallocate how households source goods.
+
+Figure \ref{fig:us-data-trade} further illustrates this reallocation by focusing on how US imports change. The left panel reports import shares in the model (and data). Here you can see that the aggregate import share is about 7 percent with Canada, Japan, and some other European countries contributing to the bulk of US imports.
+
+In the efficient allocation the planner simultaneously wants the US to trade \emph{more}, but (ii) concentrate US imports on it's most productive (and large) partner which is Japan, a bit more from Germany, and less from Canada. And small trade flows with the potpourri of the remaining countries are made much smaller consistent with Figure \ref{fig:planner-trade}.
+
+The issue is this: uncompetitive source countries are ``luxuries'' from the planners perspective. In the decentralized equilibrium, the varieties from these countries are only purchased from rich households (and have the appearance of being luxuries as they are also high elasticity goods). Then, when the planner equalizes consumption within a country, the demand for these goods is eliminated.
+
+Why does trade expand in certain directions? There is an optimistic message here: the US is under-utilizing other productive countries via trade as a means to increase consumption for the masses. This is why trade expands with Japan which in the calibrated economy is very productive with a large labor force.
 
 \begin{figure}[!t]
-\begin{subfigure}{0.55\textwidth}
+\begin{subfigure}{0.5\textwidth}
     \includegraphics[scale = 0.36]{./figures/decentralized-trade-us.pdf}
     \caption{{Trade in the Decentralized Allocation}}\label{fig:us-data-trade}
 \end{subfigure}
 \hspace{0.01cm}
-\begin{subfigure}{0.55\textwidth}
+\begin{subfigure}{0.5\textwidth}
     \includegraphics[scale = 0.36]{./figures/planner-trade-us.pdf}
     \caption{{Trade in the Efficient Allocation}}\label{fig:us-planner-trade}
 \end{subfigure}
 \caption{US imports: Decentralized vs. Centralized Pattern of Trade}\label{fig:planner-vs-data}
 \end{figure}
 
-Figure \ref{fig:us-data-trade} takes a deep dive to illustrate this reallocation by focusing on how US imports change. The left panel reports import shares in the model (and data). Here you can see that the aggregate import share is about 7 percent with Canada, Japan, and some other European countries contributing to the US's sourcing pattern.
-
-In the efficient allocation the planner simultaneously wants the US to trade \emph{more}, but (ii) concentrate US imports on it's most productive (and large) partner which is Japan, a bit more from Germany, and less from Canada. And small trade flows with the potpourri of the remaining countries are made much smaller consistent with Figure \ref{fig:planner-trade}.
-
-The issue is this: far away, unproductive source countries are ``luxuries'' from the planners perspective. In the decentralized equilibrium, the varieties from these countries are only purchased from rich households (and have the appearance of being luxuries as they are also high elasticity goods). Then, when the planner equalizes consumption within a country, the demand for these goods is eliminated.
-
-Why does trade expand in certain directions? This is not obvious to me either, but I think there is an optimistic message here: the US is under-utilizing other productive countries via trade as a means to increase consumption for the masses. This is why trade expands with Japan which in the calibrated economy is very productive with a large labor force.
 
 \section{Conclusion}
 
@@ -1223,23 +1221,23 @@ Now the strategy is to totally differentiate (\ref{eq:apx-home-valuefun}) with r
 \end{align}
 which says that the agent should be indifferent between the marginal utility of consumption forgone to hold some more assets and two components (i) the benefit from how a change in assets changes in their variety choice and (ii) the direct benefit of the returns on the assets evaluated at the marginal utility of consumption.
 
-\hrulefill
-
-Redo. Digression on chain rule. I'm going to
-\begin{align}
-v(a',z') = v(g(a,z,d), z')
-\end{align}
-where I substitute in the policy function for $a'$. Then first term inside indicates that $v$ depends upon the choice of $a'$ and this works through the policy function. And the dependence of $v$ on $d$ (and not through assets) is implicit. Then the total derivative of this is
-\begin{align}
-\frac{\mathrm{d} v(g(a,z,d), z')}{\mathrm{d} d} =& \frac{\partial v}{\partial a'}\frac{\mathrm{d}g}{\mathrm{d}d} +  \frac{\partial v(\overline{g(a,z,d)},z')}{\partial d}
-\end{align}
-So the first term is the partial change of $v$ with respect to $a'$ times how the policy function totally changes with respect to $d$. The second term is the partial change of $v$ with respect to $d$, \textbf{holding fixed assets} at their chosen level. That's why I'm emphasizing the bar on top. Now what is confusing to me is that this has partial, not total derivatives. But this term is mathematically the same as
-\begin{align}
-\frac{\partial v(\overline{g(a,z,d)},z')}{\partial d} = \frac{\mathrm{d} v(a', z')}{\mathrm{d} d }
-\end{align}
-where the RHS is the total derivative of $v$ treating $a'$ as a parameter. In other words, the LHS says, how does $v$ change (everything else) holding fixed assets. The RHS says how does everything else change holding fixed assets. There the same. And the RHS is the value function evaluated at the new states $a'$, $z'$.
-
-\hrulefill
+%\hrulefill
+%
+%Redo. Digression on chain rule. I'm going to
+%\begin{align}
+%v(a',z') = v(g(a,z,d), z')
+%\end{align}
+%where I substitute in the policy function for $a'$. Then first term inside indicates that $v$ depends upon the choice of $a'$ and this works through the policy function. And the dependence of $v$ on $d$ (and not through assets) is implicit. Then the total derivative of this is
+%\begin{align}
+%\frac{\mathrm{d} v(g(a,z,d), z')}{\mathrm{d} d} =& \frac{\partial v}{\partial a'}\frac{\mathrm{d}g}{\mathrm{d}d} +  \frac{\partial v(\overline{g(a,z,d)},z')}{\partial d}
+%\end{align}
+%So the first term is the partial change of $v$ with respect to $a'$ times how the policy function totally changes with respect to $d$. The second term is the partial change of $v$ with respect to $d$, \textbf{holding fixed assets} at their chosen level. That's why I'm emphasizing the bar on top. Now what is confusing to me is that this has partial, not total derivatives. But this term is mathematically the same as
+%\begin{align}
+%\frac{\partial v(\overline{g(a,z,d)},z')}{\partial d} = \frac{\mathrm{d} v(a', z')}{\mathrm{d} d }
+%\end{align}
+%where the RHS is the total derivative of $v$ treating $a'$ as a parameter. In other words, the LHS says, how does $v$ change (everything else) holding fixed assets. The RHS says how does everything else change holding fixed assets. There the same. And the RHS is the value function evaluated at the new states $a'$, $z'$.
+%
+%\hrulefill
 
 Totally differentiating the value function gives
 \begin{align}
