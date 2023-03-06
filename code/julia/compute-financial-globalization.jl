@@ -166,7 +166,7 @@ diag_adjust = n - 1
       ml=diag_adjust, mu=diag_adjust,
       diag=ones(n),
       mode= 1,
-      tol=1e-5,
+      tol=1e-10,
        )
 
 print(Δ_sol)
@@ -181,7 +181,7 @@ print(Δ_sol)
 
 dfwelfare = make_welfare_dataframe(∂W, ∂logW, hh_prm)
 
-hh_df = make_hh_dataframe(Δ_dist, Δ_hh, 19, Δ_Rsol, Δ_Wsol, Δ_mdl_prm)
+hh_df = make_hh_dataframe(Δ_dist, Δ_hh, home_country, Δ_Rsol, Δ_Wsol, hh_prm)
 
 # ouptut the stuff to plot
 
