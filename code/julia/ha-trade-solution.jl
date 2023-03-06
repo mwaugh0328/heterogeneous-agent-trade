@@ -5,18 +5,17 @@ struct household{T}
     Tv::Array{T} # value function
 end
 
+
 struct distribution{T}
     Q::Array{T} # transition matrix
     λ::Array{T} # λ
     state_index::Array{Tuple{Int64, Int64}} # index of states, lines up with λ
 end
 
-##########################################################################
 
-
-
-# # ##########################################################################
-# # # functions used to find a solution
+# ##########################################################################
+# functions used to find a solution
+# 
 
 function world_equillibrium(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration")
