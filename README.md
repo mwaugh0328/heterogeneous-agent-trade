@@ -4,7 +4,7 @@
 <img src="./notes/figures/micro-elasticity.png">
 </p>
 
-This repository contain code associated with the paper Heterogenous Agent Trade.
+This repository contain code associated with the paper [Heterogenous Agent Trade](./notes/heterogeneous-agent-trade.pdf).
 
 **This is a work in progress. Please let me know of any problems. Functionality may change rapidly.**
 
@@ -12,17 +12,21 @@ This repository contain code associated with the paper Heterogenous Agent Trade.
 
 ### What is HAT?
 
-The HAT model is a model where aggregete trade arises from the explicit aggregation accross households. 
+HAT is a model where aggregete trade arises from the explicit aggregation accross households. 
 
-Households are characterized by the "standard incomplete markets model" where agents face to idiosyncratic productivity and taste shocks and have access to a risk free asset. It the model's current formulation, trade in goods follows the Armington tradition (a Ricardian version is in progress) with producers in each country producing a national variety. The twist is that households have random utility over these varieties and they make a discrete choice over the varieties to consume in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade.
+Households live lives similar to the "standard incomplete markets model" where agents face to idiosyncratic productivity and taste shocks (a new part) and have access to a risk free asset. Trade in goods follows the Armington tradition  with producers in each country producing a national variety. A Ricardian version is in progress.
 
-HAT models provide a foundation to systematically think about the distributional affects of trade reforms, their dynamics, and complementary policies to mitigate the downsides of globalization.  
+The **twist** is that households have random utility over these varieties and they make a discrete choice over the varieties to consume in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade.
+
+I view HAT (and related models) as providing a foundation to systematically think about the distributional affects of trade reforms, their dynamics, and complementary policies to mitigate the downsides of globalization.  
 
 ---
 
 ### How?
 
-The goal here is to provide code and informative notebooks to illustrate how things work. Code is in [julia](https://github.com/JuliaLang) and python (needs to be updated) with the goal of implementing things **fast** using transparent and well developed methods. Most the notation in the code tries to closely follow the paper. 
+The goal here is to provide code and informative notebooks to illustrate how things work. 
+
+The base code is in [julia](https://github.com/JuliaLang) and python (needs to be updated) with the goal of implementing things **fast** using transparent and well developed methods. Most the notation in the code tries to closely follow the paper. 
 
 This is still preliminary but below are core elements of the code:
 
