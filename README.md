@@ -4,7 +4,7 @@
 <img src="./notes/figures/micro-elasticity.png">
 </p>
 
-This repository contain codes code associated with the paper Heterogenous Agent Trade.
+This repository contain code associated with the paper Heterogenous Agent Trade.
 
 **This is a work in progress. Please let me know of any problems. Functionality may change rapidly.**
 
@@ -22,7 +22,7 @@ HAT models provide a foundation to systematically think about the distributional
 
 ### How?
 
-The goal here is to provide code and informative notebooks to illustrate how things work. Code will be in [julia](https://github.com/JuliaLang) and (maybe python) with the goal of implementing things **fast** using transparent and well developed methods.
+The goal here is to provide code and informative notebooks to illustrate how things work. Code is in [julia](https://github.com/JuliaLang) and python (needs to be updated) with the goal of implementing things **fast** using transparent and well developed methods. Most the notation in the code tries to closely follow the paper. 
 
 ---
 
