@@ -60,8 +60,8 @@ hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-#dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
-dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
+dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
+#dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 
 xxx = dfparams.guess
 
@@ -75,7 +75,7 @@ cntry_prm = country_params(Ncntry = Ncntry, L = L, d = d, TFP = TFP)
 ####################################################################################
 
 
-Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, hh_prm, cntry_prm);
+Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, hh_prm, cntry_prm, tol_vfi = 1e-10);
 
 # This is a Plot test to make sure this is doing what I think it is
 
@@ -110,8 +110,8 @@ println(" ")
 println("########### computing counter factual eq ################")
 println(" ")
 
-country = 11
-country_name = "-JPN"
+country = 16
+country_name = "-ESP"
 
 Δ_d = 0.10
 
