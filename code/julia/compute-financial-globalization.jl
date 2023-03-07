@@ -60,8 +60,8 @@ hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
-#dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
+#dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
+dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 
 xxx = dfparams.guess
 
@@ -179,15 +179,15 @@ print(Δ_sol)
 
 ∂W, ∂logW = welfare_by_state(hh, Δ_hh, home_country, hh_prm.σϵ*(TFP[home_country]^(1.0 - γ)))
 
-dfwelfare = make_welfare_dataframe(∂W, ∂logW, hh_prm)
+Δ_dfwelfare = make_welfare_dataframe(∂W, ∂logW, hh_prm)
 
-hh_df = make_hh_dataframe(Δ_dist, Δ_hh, home_country, Δ_Rsol, Δ_Wsol, hh_prm)
+Δ_hh_df = make_hh_dataframe(Δ_dist, Δ_hh, home_country, Δ_Rsol, Δ_Wsol, hh_prm)
 
 # ouptut the stuff to plot
 
 root = rootfile*"welfare-US"
-CSV.write(root*country_name*"-ge-fg"*day, dfwelfare)
+CSV.write(root*country_name*"-ge-fg"*day, Δ_dfwelfare)
 
 root = rootfile*"household-data-US"
-CSV.write(root*country_name*"-ge-fg"*day, hh_df)
+CSV.write(root*country_name*"-ge-fg"*day, Δ_hh_df)
 
