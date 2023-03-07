@@ -96,25 +96,22 @@ Reserve Bank of Minneapolis or the Federal Reserve System. This project was deve
 
 \begin{frame}[t]{What am I doing?}
 \smallskip
-Big picture | these are the questions that interest me\ldots\\
-\smallskip
-\textbf{1.} What are distributional consequences of trade?\\
-\smallskip
-\textbf{2.} Is there a role for trade policy to improve outcomes?\\
+To trade economists, household heterogeneity is interesting because of the notion that some benefit from trade and others don't.\\
 \bigskip
-One mechanism behind \textbf{1.} is heterogeneity in expenditure shares on traded goods and \begin{alert}{\textbf{elasticities}}\end{alert}.
+One mechanism behind this notion is heterogeneity in \begin{alert}{\textbf{elasticities}}\end{alert}.
 \begin{itemize}
 \smallskip
 \item \citet*{auer2022unequal} is a nice example. In the context of the 2015 Swiss appreciation, they find that poor households are more price elastic.
 \end{itemize}
-\medskip
-Behind \textbf{2.} are inefficiencies arising from market incompleteness that feed into product markets\ldots so lack of insurance against life's circumstances distorts the pattern of trade.\\
 \bigskip
 \medskip
 This paper:\\
+\begin{itemize}
 \smallskip
-GE, heterogenous agent model of trade delivering ABLV-like facts. I work out the implications for
-aggregate trade, the gains from trade, and the normative implications.
+\item A model of household heterogeneity in price elasticities at the micro level \emph{and} they arise because of a market failure, i.e., the lack of insurance against life's circumstances.\\
+\medskip
+\item And I use it as a laboratory to think about aggregate trade, the gains from trade and how they are distributed, and the normative implications, e.g., what \emph{should} the pattern of trade look like.
+\end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -129,6 +126,7 @@ Two ingredients:
 \item Standard incomplete markets model with households facing incomplete insurance against idiosyncratic productivity and taste shocks | \citet{bewley1979optimum}
 \end{itemize}
 \bigskip
+\only<1>{
 Qualitatively I characterize\ldots
 \begin{itemize}
 \smallskip
@@ -137,9 +135,17 @@ Qualitatively I characterize\ldots
 \item The welfare gains from trade at the micro and macro level.
 \smallskip
 \item The efficient allocation and, thus, how market incompleteness shapes these outcomes.
-\end{itemize}
-\bigskip
-Quantitatively, I compute a 19 country model (the \citet{eaton2002technology} data) and\ldots\\ today, gains from trade and the role of the asset market, and a little bit about the planner.
+\end{itemize}}
+\only<2>{Quantitatively\ldots
+\begin{itemize}
+\smallskip
+\item I compute and calibrate a 19 country model (the \citet{eaton2002technology} data set) to match trade flow data using ``gravity as a guide.''
+\smallskip
+\item Illustrate some workings of the model through gains from trade type calculations.
+\smallskip
+\item Compare trade in the efficient allocation vs. the decentralized allocation.
+\end{itemize}}
+
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -193,7 +199,7 @@ Assumptions:
 \item For now, only that $u$ is well behaved.
 \end{itemize}
 \bigskip
-A generalization with multiple sectors is the ``infinite shopping aisle'' approach we use in\\ \citet{p-iq}.
+Multiple sectors? We do this with an ``infinite shopping aisle'' in \citet{p-iq}.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -246,9 +252,9 @@ Two equations characterizing the commodity choice, consumption / savings\ldots\\
 \medskip
 \textbf{1.} The choice probability is:
 \begin{align*}
-\pi_{ij}(a, z) = \exp \left( \frac{ v_{i}(a, z, j) }{\sigma_{\epsilon}} \right) \Bigg / \Phi_{i}(a,z) \\
+\pi_{ij}(a, z) = \exp \left( \frac{ v_{i}(a, z, j) }{\sigma_{\epsilon}} \right) \Bigg / \Phi_{i}(a,z) ,\\
 \\
-\mbox{where} \ \ \Phi_{i}(a,z) := \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j') }{\sigma_{\epsilon}} \right)
+\mbox{where} \ \ \Phi_{i}(a,z) := \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j') }{\sigma_{\epsilon}} . \right)
 \end{align*}\\
 \bigskip
 \medskip
@@ -321,7 +327,7 @@ and $\omega_{ij}(a,z)$ are the expenditure weights.\\
 \only<2>{
 \medskip
 {\small \begin{align*}
-\begin{alert}<2>{\theta_{ij}(a,z)^{I} = \bigg [-\frac{\partial g_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}}.}\end{alert}
+\begin{alert}<2>{\theta_{ij}(a,z)^{I} = \bigg [-\frac{\partial g_{i}(a,z,j)/ p_{ij}c_{i}(a,z,j)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}}.}\end{alert}
 \end{align*}}\\
 \bigskip
 The idea here is that reduction in trade costs relaxes the hh's budget constraint and then the division of new resources between assets and expenditure determines the intensive margin elasticity.}
@@ -387,11 +393,11 @@ Household-level gains are
 \end{align*}\\
 \bigskip
 \medskip
-Just like \citet{eaton2002technology}! It's all about how this price-index-like thing changes.
+Like standard trade models! It's all about how this price-index-like thing changes.
 }
 \only<2>{
 \begin{align*}
-\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \sum_{j} \pi_{ij}(a, z) \frac{\mathrm{d} v_{ij}(a,z)}{\mathrm{d} d_{ij}/d_{ij}}
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \sum_{j} \pi_{ij}(a, z) \frac{\mathrm{d} v_{i}(a,z,j)}{\mathrm{d} d_{ij}/d_{ij}}
 \end{align*}\\
 \bigskip
 \medskip
@@ -401,12 +407,12 @@ Next step\ldots one algebra trick.
 }
 \only<3>{
 \begin{align*}
-\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \underbrace{\sum_{j} \pi_{ij}(a, z) \bigg \{ \frac{\mathrm{d} v_{ij}(a,z)}{\mathrm{d} d_{ij}/d_{ij}} - \frac{\mathrm{d} v_{ii}(a,z)}{\mathrm{d} d_{ij}/d_{ij}} \bigg \}}_{\ \ \mbox{\small how relative valuations change\phantom{foo}}} \ + \  \frac{\mathrm{d}v_{ii}(a,z)}{\mathrm{d} d_{ij}/d_{ij}}
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \underbrace{\sum_{j} \pi_{ij}(a, z) \bigg \{ \frac{\mathrm{d} v_{i}(a,z,j)}{\mathrm{d} d_{ij}/d_{ij}} - \frac{\mathrm{d} v_{i}(a,z,i)}{\mathrm{d} d_{ij}/d_{ij}} \bigg \}}_{\ \ \mbox{\small how relative valuations change\phantom{foo}}} \ + \  \frac{\mathrm{d}v_{i}(a,z,i)}{\mathrm{d} d_{ij}/d_{ij}}
 \end{align*}
 }
 \only<4>{
 \begin{align*}
-\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \underbrace{\sum_{j} \pi_{ij}(a, z) \bigg \{ \frac{\mathrm{d} v_{ij}(a,z)}{\mathrm{d} d_{ij}/d_{ij}} - \frac{\mathrm{d}v_{ii}(a,z)}{\mathrm{d} d_{ij}/d_{ij}} \bigg \}}_{ = \ \mbox{\small how the home choice, $\pi_{ii}$, changes} } \ + \  \frac{\mathrm{d}v_{ii}(a,z)}{\mathrm{d} d_{ij}/d_{ij}}
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \underbrace{\sum_{j} \pi_{ij}(a, z) \bigg \{ \frac{\mathrm{d} v_{i}(a,z,j)}{\mathrm{d} d_{ij}/d_{ij}} - \frac{\mathrm{d}v_{i}(a,z,i)}{\mathrm{d} d_{ij}/d_{ij}} \bigg \}}_{ = \ \mbox{\small how the home choice, $\pi_{ii}$, changes} } \ + \  \frac{\mathrm{d}v_{i}(a,z,i)}{\mathrm{d} d_{ij}/d_{ij}}
 \end{align*}\\
 \bigskip
 \medskip
@@ -414,15 +420,15 @@ Now recursively iterate forward in time given how $v_{ii}$ connects with $v_i$ n
 }
 \only<5>{
 \begin{align*}
-\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \mathbb{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a_{t},z_{t}) / \pi_{ii}(a_{t},z_{t})}{\mathrm{d}d_{ij} / d_{ij}} + u'(c_{ii}(a_{t},z_{t}))\bigg[ \ a_{t} \ \frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \ \bigg] \bigg \}.
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \mathbb{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a_{t},z_{t}) / \pi_{ii}(a_{t},z_{t})}{\mathrm{d}d_{ij} / d_{ij}} + u'(c_{i}(a_{t},z_{t},i))\bigg[ \ a_{t} \ \frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \ \bigg] \bigg \}.
 \end{align*}\\
 \bigskip
 \medskip
 HH-level gains pick up two effects:
 \begin{itemize}
-\item An ACR-like term summarizing how relative valuations across choices change.
+\item A state contingent, ACR-like term summarizing how relative valuations across choices change.
 \smallskip
-\item How hh's real wealth ($+$ or $-$) change through GE effects on prices | all evaluated at the hh's marginal utility of consumption.
+\item How hh's real wealth ($+$ or $-$) change through GE effects on prices | all evaluated at the hh's marginal utility of home consumption.
 \end{itemize}
 }
 \end{frame}
@@ -443,7 +449,7 @@ and the trade elasticity is
 \end{align}}
 \uncover<2->{And hh-level gains from trade
 \begin{align*}
-\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \underbrace{-\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}}_{\mbox{\small ACR}} \ \ + \  \ \underbrace{\mathbb{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} \bigg[ u'(c_{ii}(a_{t},z_{t})) \ a_{t} \ \frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \bigg ]}_{\mbox{\small In financial autarky (balanced trade) this} \ = \ 0}.
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} \approx \underbrace{-\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}}_{\mbox{\small ACR}} \ \ + \  \ \underbrace{\mathbb{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} \bigg[ u'(c_{i}(a_{t},z_{t},i)) \ a_{t} \ \frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \bigg ]}_{\mbox{\small exposure to finacial market}}.
 \end{align*}\\}
 \medskip
 \only<1>{This mimics the results of \citet*{anderson1987ces}. This was not obvious to me given the environment \ldots risk, market incompleteness, borrowing constraints, etc.}
@@ -504,32 +510,37 @@ With $\log$ preferences the direct effect is equivalent to \citet{arkolakis2012n
 \begin{frame}[t]{Quantitative Analysis}
 \smallskip
 \smallskip
-This is what I'll go over the next couple of slides\ldots\\
-\medskip
+This is what I'll go over today\ldots\\
+\bigskip
 \textbf{1.} Calibrate my model using my ``gravity as a guide'' approach on the 19 country data set of \citet{eaton2002technology}. \\
 \bigskip
-\textbf{2.} Some gains from trade results.\\
+\textbf{2.} Some gains from trade type calculations.\\
 \bigskip
 \textbf{3.} Trade in the efficient allocation vs. the decentralized allocation.\\
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[t]{My Calibration Approach: Use Gravity as a Guide}
 \smallskip
 \only<1>{
-The problem: no closed form map from trade flows to parameters as in static, trade models do. But I want the model to replicate the geographic pattern of activity seen in the data.}
+The problem: no closed form map from trade flows to parameters as in standard trade models. But I want the model to replicate the geographic pattern of activity seen in the data.}
 \only<2>{The solution: use the gravity regression ``as a guide'' where I estimate parameters of the model so that the regression coefficients run on my model's data match that seen in the data.}
+\medskip
 \uncover<2->{
 \begin{itemize}
 \smallskip
 \item Step 0. Impose a trade cost function to reduce the parameter space
 \begin{align}
-\log d_{ij} = d_{k} + b + l + e_{h} + m_{i} \nonumber 
+\log d_{ij} = d_{k} + b + l + e_{h} + m_{i}. \nonumber 
 \end{align}
-\item Step 1. Run this gravity regression (same as in \citet{eaton2002technology}) on the data 
+\smallskip
+\item Step 1. Run this gravity regression on the data
 \begin{align}
-\log \left( {\frac{M_{ij}}{M_{ii}}} \right) = {Im_{i}} + {Ex_{j}} + {d_{k}} + {b} + {l} + {e_{h}} + \delta_{ij} \nonumber 
+\log \left( {\frac{M_{ij}}{M_{ii}}} \right) = {Im_{i}} + {Ex_{j}} + {d_{k}} + {b} + {l} + {e_{h}} + \delta_{ij}. \nonumber 
 \end{align}
+\smallskip
 \item Step 2. Guess TFP terms and coefficients on the trade cost function, compute an equilibrium, run the same regression from above on model generated data.
 \smallskip
 \item Step 3. Evaluate difference between model and data and update parameters until convergence.
@@ -556,7 +567,7 @@ Parameters scaled across countries to deliver ``balanced growth'' like propertie
 \begin{itemize}
 \smallskip
 \item Set $\sigma_{\epsilon,i} = \sigma_{\epsilon}\times A_i^{1-\gamma}$ and $\sigma_{\epsilon} = 0.25$.\\ In a $\log$ model corresponds with a trade elasticity of 4.
-\smallskip
+\medskip
 \item I set the borrowing constraint so $\phi_{i} = \phi \times A_i$ where $\phi = 0.50$.\\
  Interpretation is the constraint $=$ 50 \% of average, autarky labor income.
 \end{itemize}
@@ -637,7 +648,8 @@ Far distances $\approx$ 10 percent less expensive than standard models would pre
     \includegraphics[scale = 0.26]{../notes/figures/planner-trade-us.pdf}
 \end{subfigure}
 \end{figure}
-
+\bigskip
+What is going on here?
 \end{frame}
 
 
