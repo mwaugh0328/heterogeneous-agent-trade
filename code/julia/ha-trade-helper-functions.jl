@@ -399,9 +399,9 @@ end
 
 ##############################################################################
 
-function make_hh_dataframe(dist, hh, country, R, W, model_params)
+function make_hh_dataframe(dist, hh, country, R, W, hh_params)
 
-    @unpack Na, Nshocks, mc, agrid = model_params
+    @unpack Na, Nshocks, mc, agrid = hh_params
     @unpack asset_policy,  πprob = hh[country]
             
     income = Array{Float64}(undef, Na*Nshocks)
@@ -450,22 +450,24 @@ end
 
 ##############################################################################
 
-function make_welfare_dataframe(∂W, ∂logW, model_params)
+function make_welfare_dataframe(∂W, ∂logW, hh_params)
+
+    @unpack Na, Nshocks, agrid = hh_params
     
-    welfare = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
-    welfare_level = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
-    shock = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
-    asset = Array{eltype(∂W)}(undef, model_params.Na*model_params.Nshocks)
+    welfare = Array{eltype(∂W)}(undef, Na*Nshocks)
+    welfare_level = Array{eltype(∂W)}(undef, Na*Nshocks)
+    shock = Array{eltype(∂W)}(undef, Na*Nshocks)
+    asset = Array{eltype(∂W)}(undef, Na*Nshocks)
     
-    state_index = Array{Tuple{eltype(Int64), eltype(Int64)}}(undef, model_params.Na*model_params.Nshocks, 1)
+    state_index = Array{Tuple{eltype(Int64), eltype(Int64)}}(undef, Na*Nshocks, 1)
     
-    make_state_index!(state_index, model_params)
+    make_state_index!(state_index, hh_params)
     
     for (foo, xxx) in enumerate(state_index)
         
         shock[foo] = xxx[2]
         
-        asset[foo] = model_params.agrid[xxx[1]]
+        asset[foo] = agrid[xxx[1]]
 
         welfare[foo] = ∂logW[foo]
 
