@@ -127,7 +127,7 @@ Two ingredients:
 \end{itemize}
 \bigskip
 \only<1>{
-Qualitatively I characterize\ldots
+Qualitatively I characterize:
 \begin{itemize}
 \smallskip
 \item How price elasticities vary at the micro-level and when micro-heterogeneity shapes aggregates.
@@ -136,10 +136,10 @@ Qualitatively I characterize\ldots
 \smallskip
 \item The efficient allocation and, thus, how market incompleteness shapes these outcomes.
 \end{itemize}}
-\only<2>{Quantitatively\ldots
+\only<2>{Quantitatively:
 \begin{itemize}
 \smallskip
-\item I compute and calibrate a 19 country model (the \citet{eaton2002technology} data set) to match trade flow data using ``gravity as a guide.''
+\item I work at a scale typically reserved for static frameworks|I calibrate a 19 country model (the \citet{eaton2002technology} data set) to match trade flow data using ``gravity as a guide.''
 \smallskip
 \item Illustrate some workings of the model through gains from trade type calculations.
 \smallskip
@@ -183,11 +183,11 @@ p_{ij} = \frac{d_{ij}w_{j}}{A_{j}}.
 \smallskip
 Continuum of households $k \in [0, \ L_i]$ in each country $i$. Household preferences:
 \begin{align*}
-\mathrm{E}\sum_{t = 0}^{\infty} \beta^{t} \ \tilde{u}^k_{ijt}
+\mathrm{E}\sum_{t = 0}^{\infty} \beta^{t} \ \tilde{u}^k_{ijt},
 \end{align*}
 where conditional direct utility for good $j$ is
 \begin{align*}
-\tilde{u}^k_{ijt} =  u(c^k_{ijt}) + \epsilon^k_{jt}, \ \ \ j = 1, \ldots, M
+\tilde{u}^k_{ijt} =  u(c^k_{ijt}) + \epsilon^k_{jt}, \ \ \ j = 1, \ldots, M.
 \end{align*}\\
 \medskip
 Assumptions:
@@ -196,7 +196,7 @@ Assumptions:
 \smallskip
 \item $\epsilon^k_{jt}$s are iid across hh and time; distributed Type 1 Extreme Value with dispersion parameter $\sigma_{\epsilon}$.
 \smallskip
-\item For now, only that $u$ is well behaved.
+\item For now, $u$ is well behaved.
 \end{itemize}
 \bigskip
 Multiple sectors? We do this with an ``infinite shopping aisle'' in \citet{p-iq}.
@@ -231,7 +231,7 @@ Focus on a stationary setting. A hh's state are its asset holdings $a$ and shock
 \bigskip
 \textbf{1.} Condition on variety choice their problem is:
 \begin{align}
-v_{i}(a, z, j) =   \max_{\ a', \ c_{ij}  \ }\bigg  \{ u(c_{ij}) + \epsilon_{j}  + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\} \nonumber \\
+v_{i}(a, z, j) =   \max_{\ a', \ c_{ij}  \ }\bigg  \{ u(c_{ij}) + \epsilon_{j}  + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\}, \nonumber \\
 \nonumber \\
 \mbox{subject to}  \ \ \  \  p_{ij}c_{ij} +  a' \leq    R_{i} a + w_{i} z \ \ \  \mbox{and} \ \ \ \ a' \geq - \phi_{i}. \nonumber
 \end{align}\\
@@ -254,7 +254,7 @@ Two equations characterizing the commodity choice, consumption / savings\ldots\\
 \begin{align*}
 \pi_{ij}(a, z) = \exp \left( \frac{ v_{i}(a, z, j) }{\sigma_{\epsilon}} \right) \Bigg / \Phi_{i}(a,z) ,\\
 \\
-\mbox{where} \ \ \Phi_{i}(a,z) := \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j') }{\sigma_{\epsilon}} . \right)
+\mbox{where} \ \ \Phi_{i}(a,z) := \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j') }{\sigma_{\epsilon}}  \right).
 \end{align*}\\
 \bigskip
 \medskip
@@ -276,7 +276,7 @@ Aggregates arise from explicit aggregation of hh-level actions. Two examples:\\
 \begin{align*}
 M_{ij} = L_i \int_{z} \int_{a}  p_{ij} c_{i}(a, z, j) \pi_{ij}(a, z) \lambda_i(a, z), \ \ \ \ \ X_{ji} = L_j \int_{z} \int_{a}  p_{ji} c_{j}(a, z, i) \pi_{ji}(a, z) \lambda_j(a, z),
 \end{align*}
-where $\lambda_i$ is the \emph{endogenous} distribution of hhs across states. Here trade flows take on a mixed-logit form similar to \citet*{berry1995automobile}. \\
+where $\lambda_i$ is the \emph{endogenous} distribution of hhs across states. Here trade flows take on a mixed-logit form similar to \citet*{berry1995automobile}, but everything is tied down in equilibrium. \\
 \bigskip
 \bigskip
 \textbf{2.} The national income accounting identity (GDP = C + I + G + X - M) \ldots
@@ -313,10 +313,9 @@ p_{i} Y_{i} - \sum_{j}^{M}  X_{ji} = 0, \ \ \forall i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[t]{The HA Trade Elasticity}
-\smallskip
 \textbf{Proposition \#1: The HA Trade Elasticity.} The trade elasticity between country $i$ and country $j$ is:
 \begin{align}
-\theta_{ij} = 1 + \int_{a} \int_{z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z) - \bigg \{ \theta_{ii}(a,z)^{I} + \theta_{ii}(a,z)^{E} \bigg \}\omega_{ii}(a,z), \nonumber
+\theta_{ij} = 1 + \int_{a} \int_{z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z) - \bigg \{ \theta_{ii}^{j}(a,z)^{I} + \theta_{ii}^{j}(a,z)^{E} \bigg \}\omega_{ii}(a,z), \nonumber
 \end{align}
 which is the difference between $ij$ and $ii$ expenditure-weighted micro-level elasticities. The micro-level elasticities for households with states $a,z$ are an intensive and extensive elasticity
 \begin{align}
@@ -330,7 +329,10 @@ and $\omega_{ij}(a,z)$ are the expenditure weights.\\
 \begin{alert}<2>{\theta_{ij}(a,z)^{I} = \bigg [-\frac{\partial g_{i}(a,z,j)/ p_{ij}c_{i}(a,z,j)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}}.}\end{alert}
 \end{align*}}\\
 \bigskip
-The idea here is that reduction in trade costs relaxes the hh's budget constraint and then the division of new resources between assets and expenditure determines the intensive margin elasticity.}
+The idea: a $\Delta$ in trade costs relaxes the budget constraint and then the division of new resources between assets and expenditure determines the intensive margin.\\
+\smallskip
+\begin{alert}<2>{\textbf{In absolute value, this is larger for the poor, smaller for the rich.}}\end{alert}
+}
 \only<3>{
 \medskip
 {\small
@@ -441,7 +443,7 @@ HH-level gains pick up two effects:
 \uncover<1->{
 \textbf{Proposition \#3: Separation of Trade and Micro-Heterogeneity.} When preferences are logarithmic over the physical commodity, choice probabilities are independent of household heterogeneity
 \begin{align*}
-\pi_{ij}(a, z) = & \exp \left( \frac{  -\log p_{ij} }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ -\log p_{ij'} }{\sigma_{\epsilon}} \right),
+\pi_{ij}(a, z) = & \exp \left( \frac{  -\log p_{ij} }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ -\log p_{ij'} }{\sigma_{\epsilon}} \right) \ \propto \ M_{ij},
 \end{align*}
 and the trade elasticity is
 \begin{align}
@@ -496,12 +498,13 @@ And the welfare gains from a reduction in trade costs between $i,j$ are
 \end{align}
 which is the discounted, weighted, direct effect from relaxing the resource constraint.\\
 \bigskip
-\medskip
-Mimics the results of \citet{AtkesonBurstein2010} but with household (not firm) heterogeneity.\\
-\medskip
-With $\log$ preferences the direct effect is equivalent to \citet{arkolakis2012new}.\\
-\bigskip
-
+Two comments:
+\begin{itemize}
+\smallskip
+\item Mimics the results of \citet{AtkesonBurstein2010} but with household (not firm) heterogeneity.
+\smallskip
+\item With $\log$ preferences the direct effect is equivalent to \citet{arkolakis2012new}.
+\end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -510,7 +513,7 @@ With $\log$ preferences the direct effect is equivalent to \citet{arkolakis2012n
 \begin{frame}[t]{Quantitative Analysis}
 \smallskip
 \smallskip
-This is what I'll go over today\ldots\\
+This is what I'll do today\ldots\\
 \bigskip
 \textbf{1.} Calibrate my model using my ``gravity as a guide'' approach on the 19 country data set of \citet{eaton2002technology}. \\
 \bigskip
@@ -522,7 +525,32 @@ This is what I'll go over today\ldots\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[t]{My Calibration Approach: Use Gravity as a Guide}
+\begin{frame}[t]{Household Parameters}
+\smallskip
+Parameters common across countries:
+\begin{itemize}
+\smallskip
+\item CRRA for $u$ with relative risk aversion $\gamma = 1.5$.\\
+\smallskip
+\item Earnings process is a mixture of a persistent and transitory component and calibrated as in\\ \citet*{krueger2016macroeconomics}.
+\smallskip
+\item Discount factor $\beta$ jiggled to target a world interest rate of $1.5 \%$ in financial globalization case.
+\end{itemize}
+\bigskip
+Parameters scaled across countries to deliver balanced-growth-like properties.
+\begin{itemize}
+\smallskip
+\item Set $\sigma_{\epsilon,i} = \sigma_{\epsilon}\times A_i^{1-\gamma}$ and $\sigma_{\epsilon} = 0.25$.\\ In a $\log$ model corresponds with a trade elasticity of 4.
+\medskip
+\item Set the borrowing constraint so $\phi_{i} = \phi \times A_i$ where $\phi = 0.50$.\\
+ Interpretation: the constraint $=$ 50 \% of average, autarky labor income.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{County Specific Parameters | Using Gravity as a Guide}
 \smallskip
 \only<1>{
 The problem: no closed form map from trade flows to parameters as in standard trade models. But I want the model to replicate the geographic pattern of activity seen in the data.}
@@ -551,27 +579,7 @@ The problem: no closed form map from trade flows to parameters as in standard tr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[t]{Other Parameters}
-\smallskip
-Parameters common across countries:
-\begin{itemize}
-\smallskip
-\item CRRA for $u$ with relative risk aversion $= 1.5$.\\
-\smallskip
-\item Earnings process is a mixture of a persistent and transitory component and calibrated as in\\ \citet*{krueger2016macroeconomics}.
-\smallskip
-\item Discount factor $\beta$ jiggled to target a world interest rate of $1.5 \%$ in financial globalization case.
-\end{itemize}
-\bigskip
-Parameters scaled across countries to deliver ``balanced growth'' like properties.
-\begin{itemize}
-\smallskip
-\item Set $\sigma_{\epsilon,i} = \sigma_{\epsilon}\times A_i^{1-\gamma}$ and $\sigma_{\epsilon} = 0.25$.\\ In a $\log$ model corresponds with a trade elasticity of 4.
-\medskip
-\item I set the borrowing constraint so $\phi_{i} = \phi \times A_i$ where $\phi = 0.50$.\\
- Interpretation is the constraint $=$ 50 \% of average, autarky labor income.
-\end{itemize}
-\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -634,9 +642,9 @@ Far distances $\approx$ 10 percent less expensive than standard models would pre
 \smallskip
 Two ideas I want to illustrate:\\
 \medskip
-\textbf{1.} \textbf{You pick the market, you pick a person.}\\
-\bigskip
-\textbf{2.} \textbf{GE effects have distributional consequences.}\\
+\textbf{1.} You pick the market, you pick a person.\\
+\medskip
+\textbf{2.} GE effects have distributional consequences.\\
 \bigskip
 Next slides:\\
 \smallskip
@@ -659,7 +667,11 @@ Next slides:\\
 \end{subfigure}
 \end{figure}
 \bigskip
+\textbf{1.} Most gain | but trade is very pro-rich. \textbf{2.} $R$ fell $\Rightarrow$ the poor who don't benefit directly from trade with Japan gain (left vs. right panel).
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[t]{U.S. Welfare: 10\% Reduction to France }
 \begin{figure}[!t]
@@ -679,15 +691,16 @@ Relative to Japan: Gains from trade smaller, very concentrated on the rich.
 \begin{frame}[t]{Efficient Trade}
 \smallskip
 The previous slides suggest that being exposed / liberalizing with some markets is better than others.\\
-\bigskip
+\medskip
 What is the first-best pattern of trade?\\
 \bigskip
 How I answer this question:
 \begin{itemize}
 \smallskip
-\item Take a stand on country-specific Pareto weights | here I set them proportional to a country's level of TFP. \ \ \ Why? P2C2E in slide.
+\item Take a stand on country-specific Pareto weights | I set them proportional to a country's TFP.\\
+    Why? P2C2E in a slide.
 \smallskip
-\item Then given parameter values and weights, compute the efficient allocation derived Proposition \#4 
+\item Then given calibrated parameter values, compute the efficient allocation in Proposition \#4.
 \end{itemize}
 \end{frame}
 
@@ -713,20 +726,16 @@ How I answer this question:
 \end{subfigure}
 \end{figure}
 \bigskip
-Planner reallocates trade and ``leans into'' competitive sources
+For the US, the Planner reallocates trade and expands it\ldots
 \begin{itemize}
 \smallskip
-\item Squashes trade with uncompetitive sources | these varieties are like luxuries in that they only service the rich, e.g., France.
+\item Squashes trade with uncompetitive sources | these varieties are like luxuries in that they only cater to the rich like France.
 \smallskip
-\item Expands trade with sources that can ``service the masses'' like Japan (productive and large).
+\item Expands trade with sources that can ``serve the masses'' like Japan (productive and large).
 \smallskip
 \item On net, US trade expands\ldots but this does not happen everywhere.
 \end{itemize}
 \end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -734,7 +743,17 @@ Planner reallocates trade and ``leans into'' competitive sources
 \begin{frame}[t]
 \frametitle{Where I'm headed next\ldots}
 \smallskip
-Lot's to do, but ``big picture'' this is where I'm aiming:\\
+On my todo list:
+\begin{itemize}
+\smallskip
+\item Can trade policy improve outcomes? Put in tariffs and redistribute.
+\smallskip
+\item Quality or ``residual demand shifters'' and calibration to line up with the micro-evidence of papers like \citet{auer2022unequal}.
+\end{itemize}
+\medskip
+Any thing else? Email me!\\
+\bigskip
+One more thing: My github repository provides the code and supplementary work behind this paper at \url{https://github.com/mwaugh0328/heterogeneous-agent-trade}.
 
 \end{frame}
 
