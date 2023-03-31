@@ -120,7 +120,8 @@ This paper develops a model of heterogenous agents and international trade. Hete
 \newpage
 \normalsize
 
-This paper develops a model of heterogenous households and international trade. From the perspective of trade, household heterogeneity is interesting because of the notion that some benefit from trade and others don't. One aspect of these unequal gains relates to the idea that rich and poor consumers have different sensitivities to price and, thus, they shape the expenditure patterns and the gains from trade at the micro and macro level. This paper develops this idea in a model with heterogeneity in price elasticities featuring prominently and they arise because of a market failure, i.e., the lack of insurance against life's circumstances. I then study the model's positive and normative implications for trade.
+This paper develops a model of heterogenous households and international trade. From the perspective of trade, household heterogeneity is interesting because of the notion that some benefit from trade and others don't. One aspect of these unequal gains relates to the idea that rich and poor consumers have different sensitivities to price and, thus, they shape the expenditure patterns and the gains from trade at the micro and macro level. This paper develops this idea in a model with heterogeneity in price elasticities featuring prominently and they arise because of a market failure, i.e., the lack of insurance against life's circumstances. I then study the model's implications for aggregate trade, the gains from trade and how they are distributed, and the normative implications, e.g., what \emph{should} the pattern of trade look like.
+
 
 An appealing feature of the model that I develop is that the ingredients are well known and workhorse frameworks within their respective literatures. Household heterogeneity is induced via the standard incomplete markets model (\citet{bewley1979optimum}, \citet{huggett1993risk}, \citet{aiyagari1994uninsured}) with households facing incomplete insurance against idiosyncratic productivity and taste shocks. Trade in goods follows the Armington tradition with producers in each country producing a national variety. The twist is that households have random utility over these varieties and they make a discrete choice over the varieties to consume (\citet{mcfadden1974frontiers}) in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade.
 
@@ -141,7 +142,7 @@ The second special case that I consider is when the utility function over the ph
 
 Quantitatively, I make a contribution by computing and estimating the model at a scale typically reserved for static trade models. As a testing ground, I focus on the data set of \citet{eaton2002technology}. The 19 countries in this data set is about the right size to easily illustrate how a very rich model like this can work in a multi-country setting. Moreover, the \citet{eaton2002technology} data set provides a well defined benchmark disciplined by bilateral trade flows and gravity variables|so it's a nice laboratory to explore new issues in.
 
-The calibration challenge is the following.\footnote{Separate from this is computational challenge. Finding an equilibrium requires (i) solving for households dynamic problems|in each country (ii) constructing the stationary distribution of expenditure patterns and wealth|in each country (iii) aggregating and then (iv) finding a vector of prices so goods markets and financial markets clear world wide. Plot twist: It's doable. My github repository and the Appendix provides a complete description of my approach and methods.} The model does not admit a ``gravity'' representation that allows researchers to invert trade frictions and productivity levels from trade flows as done, e.g., in \citet{eaton2002technology} and many subsequent papers. Similarly, the model does not admit the use of ``exact-hat algebra'' which allows the research to construct counterfactuals without the knowledge of primitives like trade frictions or productivity (see, e.g., the approach articulated in \citet{costinot2014trade} or \citet{caliendo2015trade}).
+The calibration challenge is the following. The model does not admit a ``gravity'' representation that allows researchers to invert trade frictions and productivity levels from trade flows as done, e.g., in \citet{eaton2002technology} and many subsequent papers. Similarly, the model does not admit the use of ``exact-hat algebra'' which allows the research to construct counterfactuals without the knowledge of primitives like trade frictions or productivity (see, e.g., the approach articulated in \citet{costinot2014trade} or \citet{caliendo2015trade}).
 
 My solution is to use the insight that the regressions employed in gravity frameworks provide very accurate descriptions of the data generating process. Rather than treating the gravity regression as a structural relationship, I use it as a ``guide'' and use an indirect inference procedure where I estimate parameters of the model so that the regression coefficients from a standard gravity regression run on my model's data match that seen in the data. This procedure works well and, thus, the model is able to match spatial distribution of economic activity in the data|just as well as standard, constant elasticity gravity models.
 
@@ -149,6 +150,51 @@ An outcome of the calibration is that trade elasticities decrease with the compe
 
 The final part of the quantitative analysis explores how trade behaves in the efficient allocation relative to that seen in the baseline model and data. Two interesting things happen. Generally, the planner reduces trade in trading relationships that were already small. These are trading relationships that have the feature of being a luxury in the sense that it's most rich people engage in them. So when the planner redistributes within the country, trade ``catering to the rich'' is reduced. In contrast, the planner increases trade within already competitive relationships. An example of this is US imports with Japan, where the planner increases trade by nearly 5 percentage points. So here, the planner is using trade to ``service the masses'' as it redistributes. In the US case (and generally), the most prominent feature of the first-best allocation is a reallocation of trade that leans into certain relationships, not a per-se increase or decrease in general.
 
+Motivating my work has been a sequence of papers focusing on measuring the heterogenous impacts of trade on the consumer side. \citet{fajgelbaum2016measuring}, \citet{carroll2020heterogeneous}, \citet{borusyak2021distributional}, \citet{jaccardtoronto} are recent examples that measure heterogeneity in import exposure.\footnote{Its important for the reader to distinguish the pattern of heterogeneity across sectors vs. within a sector (\citet{cravino2017distributional} makes this distinction very clear). The evidence suggests that the patterns are in different directions with poor households consuming more traded goods, but within traded goods consume, the poor consume lower price varieties and less imported content. My model is of one sector and about expenditure and substitution within that sector.} \citet*{auer2022unequal} and \citet{colicev2022impact} goes a step further measuring heterogeneity in price sensitivity across the income distribution and this type of evidence is very much the launching point for my paper.
+
+While this work motivates my paper, I take a conceptually different approach and take a model of household heterogeneity in price elasticities and study the model's implications. In this sense, my papers approach is most similar to \citet{fajgelbaum2011income} who study how heterogeneity in income and non-homotheticities (arising from a similar preference structure as mine) shape trade in vertically differentiated products.
+
+A key feature of my work is that I start with a theory behind the distribution of income and wealth. This theory plus a demand system with heterogenous price elasticities then breaks aggregation in the goods market. And because aggregation is broken, it opens the door to new insights about trade, the interaction of trade and financial markets, and how market incompleteness shapes the aggregate pattern of trade. 
+
+% Connect with close economy stuff...evidence on prices
+
+
+%because  within their respective literatures.
+%
+%
+%
+%
+%%\footnote{Separate from this is computational challenge. Finding an equilibrium requires (i) solving for households dynamic problems|in each country (ii) constructing the stationary distribution of expenditure patterns and wealth|in each country (iii) aggregating and then (iv) finding a vector of prices so goods markets and financial markets clear world wide. Plot twist: It's doable. My github repository and the Appendix provides a complete description of my approach and methods.}
+%
+%
+%then allows me to think explicitly about normative issues
+%
+%
+%As a I show, market incompleteness is not a sufficient condition to
+
+
+
+
+%Lit review:
+%\begin{itemize}
+%  \item FK paper, about heterogeneity in shares. This is about elasticities. They say model is pro-poor, but the issue is about sector. This is a model of within catagory/sector. Relates to Cravino Levchncho.
+%
+% \item Cravino Levchenko is about have a within discussion, they just don't see shares. But what they do see (in the is that high income guys buy high priced stuff). Then when constructing the price index, they assume this in some way. Simmilar to Krill. Key is to distingusih, income on price within varity, vs. income and shares (imported or not) and where they come from. 
+
+%  \item Note my formulas have similar flavor to fixed share approach. Planner is share times change is welfare gain. Need to look at krill paper.
+%
+%\item Krill paper... they do find that within category, rich buy more imported stuff than poor. The issue is complicated as you go across categories and then you do not get much action. The KN data set goes a deep dive and finds this as well. China is strange, strong case for thinking about qualit see Page 18 second to last paragraph. There you see the Armington quirk, imported stuff is more expensive, and rich guys are buying imported stuff. Other thing about Krill paper is critique of FK paper...AIDS generates a mechanical pro-poor bias. Non-homothetic CES is flexible to generate pattern in the data, FK is not. Final point, the Krill paper derives the share approach, this turns out to be exactly the same as the gains from trade in planner allocation
+%
+%\item Torston Jaccard does something simmilar to Krill, Auer. China messe stuff up, Europe strong pro rich exposure. All personal beuty products. Simmilar stuff to Auer. Proably more relavent for work with Simon is the stuff abour urban vs. rural and how this is above and beyond income, suggests something up about retailer. Does nested logit.
+%
+%\item The hotman paper is strange. This is mostly across sectors and claim they find something like Krill. No elasticity effect. Second, the Layspayers gives a totally different estimate than the model (inflation is high for poor vs rich) Why? Not really told that. The inflation results are suggestive that rich benefited more...but not quite obvious. Also not sure what the role of the firm is.
+%
+%\item Walsh paper...looks similar to my welfare calculations. Builds on the Moll paper too. Interesting is how they compute money metric by computing change in welfare relative to change in muc. Should put in labor income channel.
+%
+%\item Moll paper is very slick. Again more related than Walsh. One thing they do is put things in a money metric units by dividing through by muc in period 0. In the efficient economy, this then is back to Krill's formula. This money metric formula is why things are discounted by $R$ in Walsh...because the euler equation implies the ratio of muc's are equal to $R$. The other trick about this is that when assets are in zero net supply, the aggregate welfare gain in money metric units is zero. Key is that it's in money metric units though, in utils space there is true redistribution (worth talking about in either finacial globalization space or finacial autarky world).
+%
+%\item Is kind of related to Auclart...this the interest rate exposure channel. Less than I thought. As the key thing is more about dc. Tobin quote is nice about heterogenaity in muc. Everything is short term assets, so like in the moll paper sales = stocks. And then some people have different unhedge exposures to changes in interest rates.
+%\end{itemize}
 
 
 %This pattern of elasticities is consistent with recent evidence focusing on expenditure switching at the household level. \citet*{auer2022unequal} explore the heterogenous impact of the 2015 Swiss Franc appreciation and find that the exchange rate shock lead to larger changes in expenditure shares for poor households relative to the rich. In other words, poor households are more sensitive to price than rich households. Outside of the trade literature, there is broader set of evidence in support of the idea that price sensitivity declines with income; e.g. \citet{sangani2022markups} provides evidence in support of this fact using Nielsen Homescan data.
@@ -573,7 +619,7 @@ where $v_{i}(a,z)$ is a households ex-ante (before preference shocks are realize
 \frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} \approx \int_{z} \int_{a} \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} L_i \lambda_{i}(a,z).
 \label{eq:social-welfare-change}
 \end{align}
-where the $\approx$ symbol reinforces my point that this is a hubristic, thinking about a small change and there is an immediate jump to the new steady state.
+where the $\approx$ symbol reinforces my point that this is a heuristic, thinking about a small change and there is an immediate jump to the new steady state.
 
 At a high-level, (\ref{eq:social-welfare-change}) illustrates that the gains from trade come through two forces. The first component reflects changes in household-level welfare. So conditional on a distribution of households across states, this computes if households are better (or worse!) off from the change. Relative to the efficient allocation this force is always present, however, the planner equalizes things across households such that individual states do not matter and, thus, distributional issues do not matter.
 
