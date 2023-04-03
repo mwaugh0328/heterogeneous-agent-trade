@@ -41,10 +41,19 @@ This is still preliminary but below are core elements of the code:
 
 ### Want to know more?
 
-Much of this is a continuation of my thinking across several papers:
+Much of this is a continuation of my thinking across several papers that connect models of household heterogeneity with trade:
 
 - [Lyon and Waugh (2019)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/lw_quant_losses.pdf) and [Lyon and Waugh (2018) JIE](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/lw_tax.pdf) are precursors to this work.
 
 - Waugh (2023) (an evolution of [Waugh (2019)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/waugh_consumption.pdf)) is an example as well.
 
-- And it connects, and in someways is a companion paper to, my paper [Pricing Inequality](http://www.simonmongey.com/uploads/6/5/6/6/65665741/mw_2022_11_16_minneapolis_fed_online.pdf) with Mongey. 
+- And it connects (and in someways is a companion paper) to my paper [Pricing Inequality](http://www.simonmongey.com/uploads/6/5/6/6/65665741/mw_2022_11_16_minneapolis_fed_online.pdf) with Simon Mongey. 
+
+---
+
+### Support and Disclaimers
+
+This project was developed with research support from the [National Science Foundation (NSF Award number 1948800)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1948800&HistoricalAwards=false). 
+
+
+The views expressed herein are those of the author and not necessarily those of the Federal Reserve Bank of Minneapolis or the Federal Reserve System. 
