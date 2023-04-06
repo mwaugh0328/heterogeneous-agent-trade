@@ -36,6 +36,8 @@ This is still preliminary but below are core elements of the code:
 
 - [ha-trade-solution.jl](./code/julia/ha-trade-solution.jl) provides method to solve the household problem in one country, find the stationary distribution within a country, find a world equilibrium.
 
+- [two-country.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook that runs through a two country example of how (some) things work. 
+
 
 ---
 

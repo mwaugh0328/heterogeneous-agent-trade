@@ -17,14 +17,19 @@ function aggregate_θ(θs, ω, homecntry, model_params)
     for cntry = 1:model_params.Ncntry
 
         homeθ = sum(( θπii[:, :, cntry] .+ θcii[:, :, cntry] ) .* ω[:, :, homecntry])
+        # this is the θii,j part in Proposition 3
 
         agθ[cntry] = 1 + sum(( θπ[:, :, cntry] .+ θc[:, :, cntry] ) .* ω[:, :, cntry]) - homeθ
+        # then 1 + θ_ij - \theta_ii,j
 
     end
 
     return agθ
 
 end
+
+##########################################################################
+##########################################################################
 
 function make_ω(household, distribution, L, p, model_params)
     #makes the weights to aggregate elasticities
@@ -55,43 +60,35 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_θ(household, homecontry, R, W, p, model_params; points = 3, order = 1)
+function make_θ(homecontry, R, W, p, model_params; points = 3, order = 1)
     # makes the micro-level elasticities
+    # using multiple-dispatch here, this is the high-level function to make 
+    # everything
 
-    @unpack cons_policy, Tv = household
-
-    θπ = similar(cons_policy)
-    θc = similar(cons_policy)
-    θπii = similar(cons_policy)
-    θcii = similar(cons_policy)
+    θπ = Array{Float64}(undef, model_params.Na, model_params.Nshocks, model_params.Ncntry)
+    θc = similar(θπ)
+    θπii = similar(θπ)
+    θcii = similar(θπ)
 
     @inbounds for idxj = 1:model_params.Ncntry
 
         # now construct the extensive margin elascitity
 
-        h(x) = make_θπ(x, homecontry, idxj, p, cons_policy, Tv, R, W, model_params)
+        h(x) = make_θ(x, homecontry, idxj, p, R, W, model_params)
+        # this is the low level function used for differentiation
         
-        foobar = central_fdm(points, order, adapt = 0)(h, log.(p[idxj]))
+        foobar = jacobian(central_fdm(points, order, adapt = 0), h, log.(p[idxj]) )
+
+        foobar = reshape(foobar[1], (model_params.Na, model_params.Nshocks, 4))
 
         # this then upacks things to grab both ∂πij / ∂dij and ∂πii / ∂dij
-        θπ[:,:,idxj] .= foobar[1:model_params.Na,:] 
+        θπ[:,:,idxj] .= foobar[:,:,1] 
 
-        θπii[:,:,idxj] .= foobar[model_params.Na+1:end,:] 
+        θπii[:,:,idxj] .= foobar[:,:,2] 
 
-    end
+        θc[:,:,idxj] .= foobar[:,:,3] 
 
-    @inbounds for idxj = 1:model_params.Ncntry
-
-        # now construct the intensive margin elascitity
-
-        h(x) = make_θc(x, homecontry, idxj, p, cons_policy, Tv, R, W, model_params)
-        
-        foobar = central_fdm(points, order, adapt = 0)(h, log.(p[idxj]))
-
-        # this then upacks things to grab both ∂cij / ∂dij and ∂cii / ∂dij
-        θc[:,:,idxj] .= foobar[1:model_params.Na,:] 
-
-        θcii[:,:,idxj] .= foobar[model_params.Na+1:end,:] 
+        θcii[:,:,idxj] .= foobar[:,:,4] 
 
     end
 
@@ -103,45 +100,23 @@ end
 ##########################################################################
 
 
-function make_θπ(logp, homecntry, idxj, pvec, gc, v, R, W, model_params)
-    # function to compute extensive margin elasticities 
-
-    Tv = similar(v)
+function make_θ(logp, homecntry, idxj, pvec, R, W, model_params)
+    # low level function to compute elasticities
+    # using multiple dispatch here (see above)
     
     foo = copy(pvec)
     
-    foo[idxj] = exp.(logp) #p is assumed to be in log, convert to levels
-    
-    Tv .= coleman_operator(gc, v, R, W, foo, model_params)[2]
-    # find how value function changes. Note that the way this is computed
-    # shares are at old ones, so this is as if only change is 
-    # (i) current utitlity
-    # (ii) and ∂V/∂a (which should be zero via envelope theorem)
-    # no change from future shift in shares
+    foo[idxj] = exp.(logp) #logp is assumed to be in log, convert to levels
 
-    πprob = make_πprob(Tv, model_params.σϵ)
+    hh = solve_household_problem(R, W, foo, model_params, tol = 1e-10)
+    # resolve the whole value function...this is unlike Mongey - Waugh, were 
+    # we need to just consider a one period deviation
     
-    return vcat(log.( πprob[:,:,idxj] ), log.( πprob[:,:,homecntry] ))
+    πprob = make_πprob(hh.Tv, model_params.σϵ)
+    
+    return log.( πprob[:,:,idxj] ), log.( πprob[:,:,homecntry] ), 
+            log.( hh.cons_policy[:,:,idxj] ), log.( hh.cons_policy[:,:,homecntry] )
     # when passed through numerical diff it returns
-    # ∂πij / ∂dij and ∂πii / ∂dij
-    
-end
-
-##########################################################################
-##########################################################################
-
-function make_θc(logp, homecntry, idxj, pvec, gc, v, R, W, model_params)
-    # function to compute intensive margin elasticities numerically
-
-    Kgc = similar(gc)
-    
-    foo = copy(pvec)
-    
-    foo[idxj] = exp.(logp) #p is assumed to be in log, convert to levels
-    
-    Kgc .= coleman_operator(gc, v, R, W, foo, model_params)[1]
-    
-    return vcat(log.( Kgc[:,:,idxj] ), log.( Kgc[:,:,homecntry] ))
-    # this then upacks things to grab both ∂cij / ∂dij and ∂cii / ∂dij
+    # ∂πij / ∂dij, ∂πii / ∂dij, ∂cij / ∂dij, ∂cii / ∂dij
     
 end
