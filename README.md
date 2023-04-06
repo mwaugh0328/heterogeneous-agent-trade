@@ -38,7 +38,7 @@ This is still preliminary but below are core elements of the code:
 
 - [two-country.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook that runs through a two country example of how (some) things work. 
 
-- [log-model.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook that runs through a two country example with log preferences and illustrating how the model collapses to a constant elasticity model.
+- [log-model.ipynb](./notebooks/log-model.ipynb) is a jupyter notebook that runs through a two country example with log preferences and illustrating how the model collapses to a constant elasticity model.
 
 
 ---
