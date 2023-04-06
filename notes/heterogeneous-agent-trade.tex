@@ -522,14 +522,19 @@ This section focuses on the decentralized equilibrium and works towards understa
 
 My definition of the trade elasticity is the partial equilibrium response of imports from $j$ relative to domestic consumption due to a permanent change in trade costs.\footnote{Because the aggregate distribution of households will adjust|even with prices fixed|the elasticities that I derive are in a sense ``short-run'' elasticities.} By partial equilibrium, I mean that wages, interest rates, and the distribution of agents are fixed at their initial equilibrium values. This is consistent with the definition of the trade elasticity in say, \citet{arkolakis2012new} or \citet{simonovska2014elasticity}. By permanent, I mean that the change in trade costs is for the indefinite future and that households correctly understand this.
 
-Working from the definition of imports in (\ref{eq:imports}), Proposition \ref{prp:GET} defines the aggregate trade elasticity.
+Given this discussion, my mathematical definition of the aggregate trade elasticity is
+\begin{align}
+\frac{\partial M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}}  - \frac{\partial M_{ii} / M_{ii}}{\partial d_{ij} / d_{ij}}.
+\label{eq:def_trade_elasticity}
+\end{align}
+Then working from the definition of imports in (\ref{eq:imports}), Proposition \ref{prp:GET} connects the aggregate trade elasticity with micro-economic behavior:
 \begin{prp}[\textbf{The H-A Trade Elasticity}] \label{prp:GET} The trade elasticity between country $i$ and country $j$ is:
 {\footnotesize
 \begin{align}
-\theta_{ij} = 1 + \int_{a} \int_{z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z) - \bigg \{ \theta_{ii,j}(a,z)^{I} + \theta_{ii,j}(a,z)^{E} \bigg \}\omega_{ii}(a,z)
+\theta_{ij} = 1 + \int_{z,a} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z)da \ dz - \int_{z,a} \bigg \{ \theta_{ii,j}(a,z)^{I} + \theta_{ii,j}(a,z)^{E} \bigg \}\omega_{ii}(a,z)da \ dz
 \label{eq:trade-elasticity}
 \end{align}
-}which is the difference between expenditure-weighted micro-level elasticities. The micro-level elasticities for households with states $a,z$ are decomposed into an intensive and extensive elasticity
+}which is an expenditure-weighted average of micro-level elasticities. The micro-level elasticities are decomposed into an intensive margin and extensive margin
 {\footnotesize
 \begin{align}
 \nonumber
@@ -553,7 +558,9 @@ Proposition \ref{prp:GET} is derived only off the aggregation of imports at the 
 \underbrace{\frac{\partial c_{i}(a,z,j)/ c_{i}(a,z,j)}{\partial d_{ij} / d_{ij}}}_{\theta_{ij}(a,z)^{I}} &= \bigg [-\frac{\partial g_{i}(a,z,j)/ p_{ij}c_{i}(a,z,j)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}} ,
 \label{eq:intensive-margin}
 \end{align}
-where $g_{i}(a,z,j)$ is the policy function mapping states into asset holdings next period $a'$. The inside bracket of Equation (\ref{eq:intensive-margin}) connects a trade elasticity with the household's savings decision, i.e., how adjusts its wealth relative to expenditure when prices change.\footnote{Outside of the bracket in (\ref{eq:intensive-margin}) is how prices change with trade costs which is also known as ``pass-through.'' In the competitive environment here, it is always one, even though there is an is an active super-elasticity in the background. In the non-competitive environment of \citet{p-iq}, the super-elasticity matters here and pass-through deviates from one.} Then the way to think about (\ref{eq:intensive-margin})  is that it answers the question: If a household were confronted with lower prices, how much would go to extra consumption, how much to savings? And this division of resources determines the intensive margin elasticity. And heterogeneity matters because this division is not invariant to a household's state $a, z$.
+where $g_{i}(a,z,j)$ is the policy function mapping states into asset holdings next period $a'$. The inside bracket of Equation (\ref{eq:intensive-margin}) connects the intensive margin elasticity with the household's savings decision, i.e., how it adjusts its wealth relative to expenditure when prices change.\footnote{Outside of the bracket in (\ref{eq:intensive-margin}) is how prices change with trade costs which is also known as ``pass-through.'' In the competitive environment here, it is always one, even though there is an is an active super-elasticity in the background. In the non-competitive environment of \citet{p-iq}, the super-elasticity matters here and pass-through deviates from one.} Then the way to think about (\ref{eq:intensive-margin}) is that it answers the question: If a household were confronted with lower prices, how much would go to extra consumption, how much to savings? And this division of resources determines the intensive margin elasticity.
+
+Heterogeneity matters here because this division is not invariant to a household's state $a, z$. For example, if a households is constrained, assets can't adjust, the intensive margin becomes $-1$ meaning a one percent decrease in trade costs leads to a one percent increase in consumption. In contrast, wealthy households save some from a reduction in prices and the intensive margin is less than one (in absolute value). These savings motives are a force for poor households to be more price sensitive than rich households|on the intensive margin.
 
 \textbf{The Extensive Margin Trade Elasticity.} The Type 1 Extreme Value distributional assumption connects choice probabilities and a household's problem. As a first step, define the denominator of the choice probability in (\ref{eq:choice-prob}) as:
 \begin{align}
@@ -820,15 +827,15 @@ Figure \ref{fig:bilateral-elasticities} provides an example of the of trade elas
 \end{figure}
 
 
-At the micro-level, there are two opposing forces giving rise to this aggregate relationship. Per the arguments discussed above around Proposition \ref{prp:GET}, the aggregate bilateral trade elasticity reflects both household level elasticities $\theta(a,z)$s and composition through the expenditure weights $\omega(a,z)$s. Thus, when prices increase as one moves from one source to a less competitive source, there are two competing forces at work: (i) how do micro-level elasticities change and (ii) how does composition change? 
+At the micro-level, there are two opposing forces giving rise to this aggregate relationship. Per the arguments discussed above around Proposition \ref{prp:GET}, the aggregate bilateral trade elasticity reflects both household level elasticities $\theta(a,z)$s and composition through the expenditure weights $\omega(a,z)$s. Thus, when prices increase as one moves from one source to a less competitive source, there are two competing forces at work: (i) how do micro-level elasticities change and (ii) how does composition change?
 
 The first force is that as prices increase \emph{both} rich and poor households' elasticities increase. In other words, everyone is more elastic when contemplating a purchase from a more expensive destination. This is a force pushing the model to have elasticities \emph{increase} with price.
 
 The second force | the composition effect| generally works in the opposite direction. As one moves from more cheaper to more expensive destinations, less price sensitive households sort into those varieties. Thus, the composition of households purchasing more expensive varieties are the rich, relatively inelastic households. This is a force pushing the model to have elasticities \emph{decrease} with price. In more standard, BLP-like settings, \citet{nakamura2010accounting} and \citet*{head2021poor} highlight this composition effect in shaping pass-through.
 
-Which one wins? Figure \ref{fig:bilateral-elasticities} shows that the first force dominates the composition effect. One way to view this result is through the lens of \citeapos{mrazova2017not} language that demand in this model endogenously turns out to be ``subconvex'' relative to CES demand and which is equivalent to ``Marshall's Second Law of Demand.'' The endogenous part is important as it's not parameterized as in, say, Kimball Demand which has become a popular tool to allow for non-constant elasticities. Did the model have to deliver this? Per the arguments above, it's not obvious as composition effects could have dominated.\footnote{\citet{head2021poor}, using \citeapos{berry1995automobile} estimated model, illustrate that composition dominates with pass-through greater than one when heterogeneity in the valuation of product characteristics are shut down.}
+Which one wins? Figure \ref{fig:bilateral-elasticities} shows that the first force dominates the composition effect. One way to view this result is through the lens of \citeapos{mrazova2017not} language that demand in this model endogenously turns out to be ``subconvex'' relative to CES demand and which is equivalent to ``Marshall's Second Law of Demand.'' The endogenous part is important as it's not parameterized as in, say, Kimball Demand which has become a popular tool to allow for non-constant elasticities. Did the model have to deliver this? Per the arguments above, it's not obvious as composition effects could have dominated.\footnote{\citet{head2021poor}, using \citeapos{berry1995automobile} estimated model, illustrate that composition does indeed dominate with pass-through greater than one when heterogeneity in the valuation of product characteristics are shut down.}
 
-In the trade literature, there is evidence suggesting that trade elasticities conform to what comes out of my model. Both \citet{novy2013international} and \citet*{carrere2020gravity} find that proxy's for the trade elasticity are larger, the less trade there is between two countries. \citet{chen2022gravity} further confirm this idea by finding that trade cost effects are strong for small bilateral relationships weak or even zero for large trading relationships. Mapping these ideas back into outcomes from my model, a currency union between the US and Canada would likely have a small effect since this is a high volume / low elasticity relationship. 
+In the trade literature, there is evidence suggesting that trade elasticities conform to what comes out of my model. Both \citet{novy2013international} and \citet*{carrere2020gravity} find that proxy's for the trade elasticity are larger, the less trade there is between two countries. \citet{chen2022gravity} further confirm this idea by finding that trade cost effects are strong for small bilateral relationships weak or even zero for large trading relationships. Mapping these ideas back into outcomes from my model, a currency union between the US and Canada would likely have a small effect since this is a high volume / low elasticity relationship.
 
 
 
@@ -844,26 +851,26 @@ Sorry, I'm still filling this in.
 
 \section{Trade in the Efficient Allocation}
 
-This section computes what the patter of trade \emph{should} look like were we living in a first-best world.
+This section computes what the pattern of trade \emph{should} look like were we living in a first-best world.
 
 \begin{figure}[!t]
 \centering{\includegraphics[scale = .45]{./figures/decentralized-trade-all.pdf}}
 \caption{}\label{fig:planner-trade}
 \end{figure}
 
-An important input into computing the allocation in Proposition \ref{prp:efficient-allocation} is a stand on Pareto weights. I set the Pareto weight for a country to be proportional to it's level of TFP. My rationale behind this choice of weights is so the planner is to eliminate the Planners incentives to  shift consumption across countries vs. margins within the country. This specification limits the planners desire to redistribute consumption from say, the US (a rich country) to Greece (a poor country in the data set).
+Before getting into the results, an important input into computing the allocation in Proposition \ref{prp:efficient-allocation} are the Pareto weights. I set the Pareto weight for a country to be proportional to it's level of TFP. My rationale behind this choice of weights is to eliminate the Planners incentives to shift consumption across countries vs. margins within the country. More specifically, this specification limits the planners desire to redistribute consumption from say, the US (a rich country) to Greece (a poor country in the data set) and focuses the exercise on within country redistribution.
+
+Given the Pareto weights, I take the parameters of the model and then compute consumption allocations and trade flows that solve planning problem described in Section \ref{sec:planner}. To be clear, there is no change in trade costs | all the planner is doing is redistributing and overcoming market incompleteness that is present in the decentralized allocation.
 
 \subsection{Efficient Trade}
 
-Figure \ref{fig:planner-trade} illustrates what the pattern of trade should look like from the planners perspective. Specifically, I take the parameters of the model and then compute consumption allocations and trade flows that satisfy planning problem described in Section \ref{sec:planner}. To be clear, there is no change in trade costs | all the planner is doing is redistributing and overcoming market incompleteness that is present in the decentralized allocation.
+Figure \ref{fig:planner-trade} illustrates what the pattern of trade should look like from the planners perspective. The x-axis of Figure \ref{fig:planner-trade} plots log bilateral trade flows in the model (and data) in the decentralized equilibrium. So the same thing as in Figure \ref{fig:model-fit}. The y-axis reports the trade flows in the efficient allocation. The 45-degree line is drawn so if the red-dots lie on this line, this means that trade in the efficient allocation lines up with the decentralized allocation.
 
-The x-axis of Figure \ref{fig:planner-trade} plots log bilateral trade flows in the model (and data) in the decentralized equilibrium. So the same thing as in Figure \ref{fig:model-fit}. The y-axis reports the trade flows in the efficient allocation. The 45-degree line is drawn so if the red-dots lie on this line, this means that trade in the efficient allocation lines up with the decentralized allocation.
+Generally they do not line up on the 45-degree line. Two types of deviations stand out. First, small trade flows tends to be made smaller. From the planners perspective these are not efficient trading relationships. In contrast, large trading relationships are generally not large enough, this is the set of dots lying from about -5 to 0. So there is a meaningful sense that the Planner wants a reallocation of how households source goods.
 
-Generally they do not line up on the 45-degree line. Two types of deviations stand out. First, small trade flows tends to be made smaller. From the planners perspective these are not efficient trading relationships. In contrast, large trading relationships are generally not large enough, this is the set of dots lying from about -5 to 0. So there is a substantive sense that the Planner want to reallocate how households source goods.
+Figure \ref{fig:planner-vs-data} further illustrates this reallocation by focusing on how US imports change. The left panel reports import shares in the model (and data). Here you can see that the aggregate import share is about 7 percent with Canada, Japan, and some other European countries contributing to the bulk of US imports.
 
-Figure \ref{fig:us-data-trade} further illustrates this reallocation by focusing on how US imports change. The left panel reports import shares in the model (and data). Here you can see that the aggregate import share is about 7 percent with Canada, Japan, and some other European countries contributing to the bulk of US imports.
-
-In the efficient allocation the planner simultaneously wants the US to trade \emph{more}, but (ii) concentrate US imports on it's most productive (and large) partner which is Japan, a bit more from Germany, and less from Canada. And small trade flows with the potpourri of the remaining countries are made much smaller consistent with Figure \ref{fig:planner-trade}.
+In the efficient allocation the planner simultaneously wants the US to trade \emph{more}, but concentrate US imports on it's most productive (and large) partner which is Japan, a bit more from Germany, and less from Canada. And small trade flows with the potpourri of the remaining countries are made much smaller consistent with Figure \ref{fig:planner-trade}.
 
 The issue is this: uncompetitive source countries are ``luxuries'' from the planners perspective. In the decentralized equilibrium, the varieties from these countries are only purchased from rich households (and have the appearance of being luxuries as they are also high elasticity goods). Then, when the planner equalizes consumption within a country, the demand for these goods is eliminated.
 
@@ -885,7 +892,7 @@ Why does trade expand in certain directions? There is an optimistic message here
 
 \section{Conclusion}
 
- What do you find interesting? Email me.
+What do you find interesting? Email me.
 
 
 
@@ -1126,62 +1133,80 @@ where I'm using the observation that $u'(c_{ii}) = \chi_{i}$ and is the shadow p
 
 \section{The H-A Trade Elasticity}
 
-My definition of the trade elasticity is the partial equilibrium response of imports from $j$ relative to domestic consumption due to a permanent change in trade costs between steady states. By partial equilibrium, I mean that wages and interest rates as fixed at their initial equilibrium values. By permanent, I work this out under the heuristic of a ``steady-state to steady-state comparison'' where I factor in how the stationary distribution changes due to changes in behavior. This definition is consistent with the broad terminology used in the trade literature, e.g. \citet{arkolakis2012new} and \citet{simonovska2014elasticity}. Consistent with this discussion and the notation below, I compute the partial derivatives (not total) of objects with respect to trade costs.
+My definition of the trade elasticity is the partial equilibrium response of imports from j relative
+to domestic consumption due to a permanent change in trade costs.6 By partial equilibrium, I
+mean that wages, interest rates, and the distribution of agents are fixed at their initial equilibrium
+values. This is consistent with the definition of the trade elasticity in say, \citet{arkolakis2012new} and \citet{simonovska2014elasticity}. By permanent, I mean that the change in trade costs
+is for the indefinite future and that households correctly understand this. Consistent with this discussion and the notation below, I compute the partial derivatives (not total) of objects with respect to trade costs.
 
 Mathematically, the trade elasticity equals the difference between the elasticities for how trade between $i$ and $j$ change minus how home trade changes:
 \begin{align}
 \frac{\partial ( M_{ij} / M_{ii} )}{\partial d_{ij}} \times \frac{d_{ij}}{( M_{ij} / M_{ii} )} =& \frac{\partial M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}}  - \frac{\partial M_{ii} / M_{ii}}{\partial d_{ij} / d_{ij}}.
-\label{eq:def_trade_elasticity}
+\label{apx-eq:def_trade_elasticity}
 \end{align}
 The change in imports between $i$ and $j$ with respect to a change in trade costs is:
 \begin{align}
-\frac{\partial  M_{ij}}{\partial d_{ij}} = \int_{a,z} \bigg \{\frac{\partial p_{ij}}{\partial d_{ij}} c_{ij}(a,z) \pi_{ij}(a,z) +  \frac{\partial c_{ij}(a,z)}{\partial d_{ij}} p_{ij} \pi_{ij}(a,z) +
- \frac{\partial \pi_{ij}(a,z)}{\partial d_{ij}} p_{ij}c_{ij}(a,z) \bigg \} L_i \lambda_{i}(a,z) .
+\frac{\partial  M_{ij}}{\partial d_{ij}} = \int_{a,z} \bigg \{\frac{\partial p_{ij}}{\partial d_{ij}} c_{i}(a,z,j) \pi_{ij}(a,z) +  \frac{\partial c_{i}(a,z,j)}{\partial d_{ij}} p_{ij} \pi_{ij}(a,z) +
+ \frac{\partial \pi_{ij}(a,z)}{\partial d_{ij}} p_{ij}c_{i}(a,z,j) \bigg \} L_i \lambda_{i}(a,z) da \ dz.
 \end{align}
-Divide the stuff on the inside of the brackets by household level imports $p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda_{i}(a,z)$ and multiply on the outside giving,
+Divide the stuff on the inside of the brackets by household level imports, $p_{ij}c_{i}(a,z,j)\pi_{ij}(a,z)$ and multiply on the outside giving,
 \begin{align}
-\frac{\partial  M_{ij}}{\partial d_{ij}} = \int_{a,z}  \bigg \{ \frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}}  + \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij}} +
- \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij}}  \bigg \} p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) L_i \lambda_{i}(a,z).
+\frac{\partial  M_{ij}}{\partial d_{ij}} = \int_{a,z}  \bigg \{ \frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}}  + \frac{\partial c_{i}(a,z,j)/ c_{i}(a,z,j)}{\partial d_{ij}} +
+ \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij}}  \bigg \} p_{ij}c_{i}(a,z,j)\pi_{ij}(a,z) L_i \lambda_{i}(a,z)da \ dz.
 \end{align}
-Define the following weight which is the share of goods that those with states $a,z$ account for in total expenditures from $j$ as
+Define the following ``weight'' which is the share of goods that those with states $a,z$ account for in total expenditures from $j$ as
 \begin{align}
-\omega_{ij}(a,z) = \frac{p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) L_i \lambda_{i}(a,z)}{M_{ij}}.
+\omega_{ij}(a,z) = \frac{p_{ij}c_{i}(a,z,j)\pi_{ij}(a,z) L_i \lambda_{i}(a,z)}{M_{ij}},
 \end{align}
 where the sum of $\omega_{ij}(a,z)$ over states $a,z$ equals one. This gives a nice expression for the import elasticity
 \begin{align}
-\frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} = 1 + \sum_{a,z} \bigg \{ \underbrace{ \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{I}}+
-\underbrace{\frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{E}} \bigg \} \omega_{ij}(a,z)
+\frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} = 1 + \int_{a,z} \bigg \{ \underbrace{ \frac{\partial c_{i}(a,z,j)/ c_{i}(a,z,j)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{I}}+
+\underbrace{\frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{E}} \bigg \} \omega_{ij}(a,z)da \ dz,
 \end{align}
 or more succinctly as
 \begin{align}
-\frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} = 1 + \sum_{a,z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z)
+\frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} = 1 + \int_{a,z} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z)da \ dz.
 \end{align}
-where the elasticity of aggregate imports into $i$ from $j$ is a weighted average of three different micro-level elasticities.
+where the elasticity of aggregate imports into $i$ from $j$ is a weighted average of several effects. The value one out in front arises from the complete pass-through of changes in trade costs to changes in prices and this is a bug of perfect competition market structure. Then the first term within the brackets represent the intensive margin $\theta_{ij}(a,z)^{I}$, so how much do quantities change conditional on choosing to consume variety $j$. The next term $\theta_{ij}(a,z)^{E}$ represents the extensive margin, so how the choice probabilities change.
 
-Note that the one out front arises from complete pass-through of changes in trade costs to changes in prices. And that this one only shows up in for the $\frac{\partial  M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}} $ elasticity as there is no direct effect on prices, $p_{ii}$.
+To complete the derivation, I'll derive the own-imports term which is similar with
+\begin{align}
+\frac{\partial  M_{ii}}{\partial d_{ij}} = \int_{a,z} \bigg \{ \underbrace{\frac{\partial p_{ii}}{\partial d_{ij}} c_{ii}(a,z) \pi_{ii}(a,z)}_{ \ = \ 0} +  \frac{\partial c_{ii}(a,z)}{\partial d_{ij}} p_{ii} \pi_{ii}(a,z) + \frac{\partial \pi_{ii}(a,z)}{\partial d_{ij}} p_{ii}c_{ii}(a,z) \bigg \} L_i \lambda_{i}(a,z)da \ dz,
+\end{align}
+where the first-term is zero because this is a partial equilibrium elasticity. Then after constructing the proper weights and converting everything to elasticity form we have
+\begin{align}
+\frac{\partial  M_{ii} / M_{ii}}{\partial d_{ij} / d_{ij}} = \int_{a,z} \bigg \{ \theta_{ii,j}(a,z)^{I} + \theta_{ii,j}(a,z)^{E} \bigg \}\omega_{ii}(a,z)da \ dz,
+\end{align}
+where the $ii, j$ notation is that $\theta_{ii,j}(a,z)^{I}$ reflects how the intensive margin adjusts, conditional on a $ii$ choice, given a change in $ij$ price. Similarly, $\theta_{ii,j}(a,z)^{E}$ represents how the $ii$ choice probability changes given the $ij$ change in price.
 
-Given the expression in (\ref{eq:def_trade_elasticity}), Proposition \ref{apx-prp:GET} follows:
-\begin{prp}[\textbf{The H-A Trade Elasticity}] \label{apx-prp:GET} The trade elasticity between country $i$ and country $j$ is:
+Proposition \ref{prp:GET} then follows:
+
+\setcounter{prp}{2}
+\begin{prp}[\textbf{The H-A Trade Elasticity}]The trade elasticity between country $i$ and country $j$ is:
 {\footnotesize
 \begin{align}
-\theta_{ij} = 1 + \int_{a}\int_{z}  \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z) - \bigg \{ \theta_{ii}(a,z)^{I} + \theta_{ii}(a,z)^{E} \bigg \}\omega_{ii}(a,z)
-\label{eq:apx-trade-elasticity}
+\theta_{ij} = 1 + \int_{z,a} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z)da \ dz - \int_{z,a} \bigg \{ \theta_{ii,j}(a,z)^{I} + \theta_{ii,j}(a,z)^{E} \bigg \}\omega_{ii}(a,z)da \ dz
+\label{eq:trade-elasticity}
 \end{align}
-}which is the difference in expenditure weighted micro-level elasticities. The micro-level elasticities for households with states $a,z$ are decomposed into an intensive and extensive margin elasticity
+}which is an expenditure-weighted average of micro-level elasticities. The micro-level elasticities are decomposed into an intensive margin and extensive margin
 {\footnotesize
 \begin{align}
 \nonumber
-\theta_{ij}(a,z)^{I} = \frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \ \ \ \theta_{ij}(a,z)^{E} = \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}},
+\theta_{ij}(a,z)^{I} = \frac{\partial c_{i}(a,z,j)/ c_{i}(a,z,j)}{\partial d_{ij} / d_{ij}}, \ \ \ \ \ \ \theta_{ij}(a,z)^{E} = \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \
 \end{align}
 }
 and the expenditure weights are defined as
 {\footnotesize
 \begin{align}
 \nonumber
-\omega_{ij}(a,z) = \frac{p_{ij}c_{ij}(a,z)\pi_{ij}(a,z) \lambda_{i}(a,z)}{M_{ij}}
+\omega_{ij}(a,z) = \frac{p_{ij}c_{i}(a,z,j)\pi_{ij}(a,z) \lambda_{i}(a,z) L_i}{M_{ij}}.
 \end{align}
 }
 \end{prp}
+
+\subsection{Connecting Household Behavior with Elasticities}
+
+
 By using the households budget constraint one can express the intensive margin elasticity as
 \begin{align}
 \underbrace{\frac{\partial c_{ij}(a,z)/ c_{ij}(a,z)}{\partial d_{ij} / d_{ij}}}_{\theta_{ij}(a,z)^{I}} &= \bigg [-\frac{\partial g_{ij}(a,z)/ p_{ij}c_{ij}(a,z)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}} ,
