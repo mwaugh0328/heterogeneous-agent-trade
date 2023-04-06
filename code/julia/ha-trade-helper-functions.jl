@@ -145,6 +145,29 @@ end
 
 ##############################################################################
 
+function get_asset_shock_state(state_index, model_params)
+
+    @unpack Na, Nshocks, agrid = model_params
+
+    asset_state = Array{Float64}(undef, Na*Nshocks)
+
+    shock_state = Array{Float64}(undef, Na*Nshocks)
+
+    for (foo, xxx) in enumerate(state_index)
+        
+        asset_state[foo] = agrid[xxx[1]]
+
+        shock_state[foo] = xxx[2]
+
+    end
+
+    return asset_state, shock_state
+
+end
+
+
+##############################################################################
+
 function get_astate(state_index, model_params)
 
     @unpack Na, Nshocks, agrid = model_params
