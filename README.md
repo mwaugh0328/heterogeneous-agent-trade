@@ -1,7 +1,7 @@
 # HAT: Heterogenous Agent Trade
 
 <p align="center">
-<img src="./notes/figures/micro-elasticity.png">
+<img src="./notes/figures/micro-elasticity.png" width=150% height=150%>
 </p>
 
 This repository contain code associated with the paper [Heterogenous Agent Trade](./notes/heterogeneous-agent-trade.pdf).
