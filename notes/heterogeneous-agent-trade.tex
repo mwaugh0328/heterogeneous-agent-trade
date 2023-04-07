@@ -284,11 +284,13 @@ where households choose asset holdings and the level of consumption is residuall
 
 The Type 1 extreme value distribution on the taste shocks give rise to the following choice probabilities for each differentiated good:
 \begin{align}
-\pi_{ij}(a, z) = \exp \left( \frac{ v_{i}(a, z, j) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j') }{\sigma_{\epsilon}} \right), \label{eq:choice-prob}
+\pi_{ij}(a, z) = \exp \left( \frac{ v_{i}(a, z, j) }{\sigma_{\epsilon}} \right) \Bigg / \Phi_{i}(a,z), \label{eq:choice-prob} \\
+\nonumber \\
+\mbox{where} \ \ \ \Phi_{i}(a,z) := \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j') }{\sigma_{\epsilon}} \right). \label{eq:big-phi}
 \end{align}
-which is the probability that a household with assets $a$ and efficiency units $z$ chooses country variety $j$. And then the expectation of (\ref{eq:valuefun}) with respect to the taste shocks takes the familiar log-sum form
+which is the probability that a household with assets $a$ and efficiency units $z$ chooses country variety $j$. The term in the denominator, $\Phi_{i}(a,z)$, has a ``price-index'' interpretation and is very similar in spirit to the same term in \citet{eaton2002technology}. And then the expectation of (\ref{eq:valuefun}) with respect to the taste shocks takes the familiar log-sum form
 \begin{align}
-v_i(a, z) = \sigma_{\epsilon} \log \left\{ \sum_{j'} \exp \left( \frac{  v_{i}(a, z, j')}{\sigma_{\epsilon}} \right) \right\}. \label{eq:log_sum}
+v_i(a, z) = \sigma_{\epsilon} \log \left\{ \Phi_{i}(a,z)  \right\}. \label{eq:log_sum}
 \end{align}
 Associated with this problem in (\ref{eq:value_fun_option}) for non-borrowing-constrained households is a Euler Equation for each variety choice $j$:
 \begin{align}
@@ -553,7 +555,7 @@ Proposition \ref{prp:GET} says that the aggregate trade elasticity is an expendi
 
 Proposition \ref{prp:GET} is derived only off the aggregation of imports at the micro level|no market clearing, functional forms, etc. However, by using the households budget constraint and the Type 1 extreme value assumption I can say more about these elasticities and how the household's consumption-savings problem influences them.
 
-\textbf{The Intensive Margin Trade Elasticity.} By using the households budget constraint in (\ref{eq:trade-budget-constraint}) the intensive margin elasticity becomes:
+\textbf{The Intensive Margin Trade Elasticity.} By using the households budget constraint in (\ref{eq:trade-budget-constraint}) I can express the intensive margin elasticity as:
 \begin{align}
 \underbrace{\frac{\partial c_{i}(a,z,j)/ c_{i}(a,z,j)}{\partial d_{ij} / d_{ij}}}_{\theta_{ij}(a,z)^{I}} &= \bigg [-\frac{\partial g_{i}(a,z,j)/ p_{ij}c_{i}(a,z,j)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}} ,
 \label{eq:intensive-margin}
@@ -562,48 +564,60 @@ where $g_{i}(a,z,j)$ is the policy function mapping states into asset holdings n
 
 Heterogeneity matters here because this division is not invariant to a household's state $a, z$. For example, if a households is constrained, assets can't adjust, and the intensive margin becomes $-1$ with a one percent decrease in trade costs leading to a one percent increase in consumption. In contrast, wealthy households save some from a reduction in prices and the intensive margin is less than one in absolute value. Poor households are more price sensitive than rich households on the intensive margin and the mechanism works through their savings motives.
 
-\textbf{The Extensive Margin Trade Elasticity.} The Type 1 Extreme Value distributional assumption connects choice probabilities and a household's problem. As a first step, define the denominator of the choice probability in (\ref{eq:choice-prob}) as:
-\begin{align}
-\Phi_{i}(a,z) := \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j') }{\sigma_{\epsilon}} \right).
-\end{align}
-The elasticity of the choice probability with respect to a change in trade costs is
+\textbf{The Extensive Margin Trade Elasticity.} The idea here is to understand how households adjust their choice of variety, in an ex-ante sense (i.e. prior to the taste shocks being realized). In other words how do choice probabilities change. The elasticity of the choice probability with respect to a change in trade costs is
 \begin{align}
 \underbrace{ \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{E}} &= - \frac{\partial \Phi_{i}(a,z) / \Phi_{i}(a,z)}{\partial d_{ij}/d_{ij}} + \frac{1}{\sigma_{\epsilon}}\frac{\partial v_{i}(a,z,j)}{\partial d_{ij}/d_{ij}} .
 \label{eq:extensive-margin}
 \end{align}
-The first term reflects the fact that the change choice $j$ depends upon a comparison relative to the overall change in the value of options across variety. This is very much similar to how CES models behave except that this term is state $a,z$ specific.
+The first term reflects the fact that the change choice $j$ depends upon a comparison relative to the overall change in the value of options across variety. This is very much similar to how CES models behave except that this term is state $a,z$ specific. Finally, if the number of countries were very large, one could set think about this term as being near zero.
 
 The second term is how the choice specific value function changes with trade costs multiplied by the taste shock parameter. In other words, how elastic or inelastic the extensive margin is depends on how much more valuable choice $j$ becomes. The choice specific value function can be expanded out as:
 \begin{align}
 \frac{1}{\sigma_{\epsilon}}\frac{\partial v_{i}(a,z,j)}{\partial d_{ij}/d_{ij}} = \underbrace{-\frac{1}{\sigma_{\epsilon}}\bigg[u'(c_{i}(a,z,j))c_{i}(a,z,j)\bigg]}_{\mbox{\small micro-analog to (\ref{eq:eff-trade-elasticity})}} \
 + \ \ \beta \mathbb{E}\frac{1}{\sigma_{\epsilon}}\frac{\partial v_{i}(a',z')}{\partial d_{ij}/ d_{ij}}. \label{eq:value-fun-dd}
 \end{align}
-The first term in (\ref{eq:value-fun-dd}) is similar to trade elasticity expression in the efficient allocation of Proposition \ref{prp:gains-efficient-allocation}.\footnote{\label{f-note:bc-elasticity}As I show in the Appendix, a term reflecting the effect of borrowing constraints would also be here, but via envelope theorem type arguments, they zero out for small changes in trade costs.} The exception is that it is household specific and depends upon their wealth and idiosyncratic productivity. The final term in (\ref{eq:value-fun-dd}) says that the extensive margin elasticity depends upon how things change as $z$ evolves and through the behavioral response of assets.
+The first term in (\ref{eq:value-fun-dd}) is similar to trade elasticity expression in the efficient allocation of Proposition \ref{prp:gains-efficient-allocation}.The exception is that it is household specific and depends upon their wealth and idiosyncratic productivity. The second term in (\ref{eq:value-fun-dd}) says that the extensive margin elasticity depends upon how things change as $z$ evolves and through the behavioral response of assets.\footnote{\label{f-note:bc-elasticity}As I show in the Appendix, a term reflecting the effect of borrowing constraints would also be here, but via envelope theorem type arguments, they zero out for small changes in trade costs.}
 
-To get a better sense of how things work just focus on the first term and differentiate it with respect to assets. The thought experiment here is if a household was a bit wealthier how much more elastic would the household be:
+To get a sense of how things work, focus on the first term and differentiate it with respect to assets. The thought experiment here is if a household was a bit wealthier how much more elastic would the household be:
 \begin{align}
-\frac{\partial (u'(c_{i}(a,z,j))c_{i}(a,z,j))}{\partial a} = u'(c_{i}(a,z,j))\times \mathbf{MPC}_{i}(a,z,j) \times \bigg[-\rho_{i}(a,z,j) + 1\bigg], \label{eq:elasticity-mpc}
+\frac{\partial (u'(c_{i}(a,z,j))c_{i}(a,z,j))}{\partial a} = u'(c_{i}(a,z,j))\times \mathbf{MPC}_{i}(a,z,j) \times \bigg[-\gamma_{i}(a,z,j) + 1\bigg], \label{eq:elasticity-mpc}
 \end{align}
-where $\mathbf{MPC}_{i}(a,z,j)$ is the household's marginal propensity to consume and $\rho_{i}(a,z,j)$ is the Arrow-Pratt measure of relative risk aversion.
+where $\mathbf{MPC}_{i}(a,z,j)$ is the household's marginal propensity to consume and $\rho_{i}(a,z,j)$ is the Arrow-Pratt measure of relative risk aversion for a household in country $i$, states $a,z$, and consuming variety $j$. Now impose a specific preference structure | Constant Relative Risk Aversion (CRRA). In this case, $\gamma_{i}(a,z,j)$ becomes a constant $\gamma$ and log preferences is when $\gamma = 1$.
 
-Constant Relative Risk Aversion (CRRA) preferences clarifies things as $\rho_{i}(a,z,j)$ becomes a constant parameter. If relative risk aversion is greater than one, then poor, high marginal utility households who are also likely high MPC households are \emph{more elastic relative} to rich households on the extensive margin.\footnote{In the $\log$ preference case (and I work through this case more in depth below), this term becomes zero and the first term in (\ref{eq:value-fun-dd}) is constant and not varying with wealth.} This is the sense in which wealthy or poor households will have systematically different extensive margin elasticities and, like the discussion around the intensive margin elasticity, the households consumption-savings motives play a role.
+Equation (\ref{eq:elasticity-mpc}) implies that if $\gamma > 1$, if relative risk aversion is greater than one, then poor, high marginal utility households who are also likely high MPC households are \emph{more elastic relative} to rich households on the extensive margin. This is the sense in which wealthy or poor households will have systematically different extensive margin elasticities and, like the discussion around the intensive margin elasticity.
 
-\afterpage{
-\clearpage
+I find this expression clarifying because it makes clear the specific role that preferences play vs. the more general environment, i.e., savings, shocks, market incompleteness. For things like savings motives to play a role, for heterogeneity to matter, a necessary condition seems to be a departure from log preferences.\footnote{I directly tackle this case in Section \ref{sec:log-preferences}. A careful reader may anticipate that while log implies no heterogeneity in the extensive margin, what about the intensive margin? Amazingly, it turns out that it is constant as well.} Then conditional on a departure from log preferences, then incomplete markets model starts to play a role. And what it is doing is providing me an equilibrium theory of how marginal utility and marginal propensities to consume vary across households.
 
+
+\begin{landscape}
 \begin{figure}[!t]
 \centering{\includegraphics[width = .62\textwidth]{./figures/micro-elasticity.pdf}}
 \caption{Elasticities, $-\theta_{ij}(a,z)$}\label{fig:elasticity}
 \end{figure}
 
-
 \begin{figure}[!t]
 \centering{\includegraphics[width = .62\textwidth]{./figures/trade-share.pdf}}
 \caption{Trade, $M_{ij}(a,z) / M_{ii}(a,z)$ }\label{fig:micro-trade}
 \end{figure}
+\end{landscape}
 
 
-}
+%\afterpage{
+%\clearpage
+%
+%\begin{figure}[!t]
+%\centering{\includegraphics[width = .62\textwidth]{./figures/micro-elasticity.pdf}}
+%\caption{Elasticities, $-\theta_{ij}(a,z)$}\label{fig:elasticity}
+%\end{figure}
+%
+%
+%\begin{figure}[!t]
+%\centering{\includegraphics[width = .62\textwidth]{./figures/trade-share.pdf}}
+%\caption{Trade, $M_{ij}(a,z) / M_{ii}(a,z)$ }\label{fig:micro-trade}
+%\end{figure}
+%
+%
+%}
 
 Figure \ref{fig:elasticity} and \ref{fig:micro-trade} illustrates how this works in a two country economy. Figure \ref{fig:elasticity} plots the absolute value of the trade elasticity (intensive and extensive margin) by household state (assets are on the x-axis, productivity state on the y-axis) and the borrowing constraint $\phi$ is in the south-west corner. This shows is how the trade elasticity systematically varies with assets and income: Poor households|especially those near the borrowing constraint|are very price elastic with a trade elasticity of around $-10$. Richer households are less price elastic with this elasticity declining below $-4.$
 
@@ -668,7 +682,7 @@ Finally, these repeat themselves into the expected future, appropriately discoun
 \end{itemize}
 \end{prp}
 
-\subsection{The Case of $\log$ preferences}
+\subsection{The Case of $\log$ preferences}\label{sec:log-preferences}
 
 There is one special case worth working through, it's with $\log$ preferences over the physical commodity. This (very common) preference structure leads to an interesting result where micro-level heterogeneity, market incompleteness completely sperate from the trade side of the economy. So in this one case, trade behaves ``as if'' there were a representative agent Armington-CES consumer and then the gains from trade take the form in \citet{arkolakis2012new}|even though individual households are facing shocks, borrowing constraints, and in general trying to deal with life's circumstances.
 
