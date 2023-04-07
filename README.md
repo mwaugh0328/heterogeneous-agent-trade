@@ -3,8 +3,8 @@
 
 
 <p float="left" align="middle">
-  <img src="./notes/figures/micro-elasticity.png" width="300" />
-  <img src="./notes/figures/trade-share.png" width="300" /> 
+  <img src="./notes/figures/micro-elasticity.png" width="350" />
+  <img src="./notes/figures/trade-share.png" width="350" /> 
 </p>
 
 This repository contain code associated with the paper [Heterogenous Agent Trade](./notes/heterogeneous-agent-trade.pdf).
