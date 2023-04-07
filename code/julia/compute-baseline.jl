@@ -108,3 +108,27 @@ TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)))
 # makes the expenditure weights
 
 agθ = aggregate_θ(θ, ω, cntry, foo_hh_prm)
+
+deleteat!(agθ, cntry)
+
+deleteat!(p, cntry)
+
+plot(p, -agθ, seriestype = :scatter, alpha = 0.75,
+    xlabel = "price",
+    ylabel = "elasticity",
+    legend = false)
+
+cntrytrade = tradeshare[cntry,:]
+
+deleteat!(cntrytrade, cntry)
+
+df = DataFrame(θij = agθ,
+               p = p,
+               trade = cntrytrade,
+               );
+
+rootfile = "../../notebooks/output/"
+
+root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
+
+CSV.write(root, df);
