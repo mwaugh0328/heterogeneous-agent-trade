@@ -582,24 +582,30 @@ To get a sense of how things work, focus on the first term and differentiate it 
 \begin{align}
 \frac{\partial (u'(c_{i}(a,z,j))c_{i}(a,z,j))}{\partial a} = u'(c_{i}(a,z,j))\times \mathbf{MPC}_{i}(a,z,j) \times \bigg[-\gamma_{i}(a,z,j) + 1\bigg], \label{eq:elasticity-mpc}
 \end{align}
-where $\mathbf{MPC}_{i}(a,z,j)$ is the household's marginal propensity to consume and $\rho_{i}(a,z,j)$ is the Arrow-Pratt measure of relative risk aversion for a household in country $i$, states $a,z$, and consuming variety $j$. Now impose a specific preference structure | Constant Relative Risk Aversion (CRRA). In this case, $\gamma_{i}(a,z,j)$ becomes a constant $\gamma$ and log preferences is when $\gamma = 1$.
+where $\mathbf{MPC}_{i}(a,z,j)$ is the household's marginal propensity to consume and $\gamma_{i}(a,z,j)$ is the Arrow-Pratt measure of relative risk aversion for a household in country $i$, states $a,z$, and consuming variety $j$. Now impose a specific preference structure, constant relative risk aversion (CRRA), and then $\gamma_{i}(a,z,j)$ becomes a constant $\gamma$ and log preferences is when $\gamma = 1$.
 
 Equation (\ref{eq:elasticity-mpc}) implies that if $\gamma > 1$, if relative risk aversion is greater than one, then poor, high marginal utility households who are also likely high MPC households are \emph{more elastic relative} to rich households on the extensive margin. This is the sense in which wealthy or poor households will have systematically different extensive margin elasticities and, like the discussion around the intensive margin elasticity.
 
 I find this expression clarifying because it makes clear the specific role that preferences play vs. the more general environment, i.e., savings, shocks, market incompleteness. For things like savings motives to play a role, for heterogeneity to matter, a necessary condition seems to be a departure from log preferences.\footnote{I directly tackle this case in Section \ref{sec:log-preferences}. A careful reader may anticipate that while log implies no heterogeneity in the extensive margin, what about the intensive margin? Amazingly, it turns out that it is constant as well.} Then conditional on a departure from log preferences, then incomplete markets model starts to play a role. And what it is doing is providing me an equilibrium theory of how marginal utility and marginal propensities to consume vary across households.
 
 
-\begin{landscape}
-\begin{figure}[!t]
-\centering{\includegraphics[width = .62\textwidth]{./figures/micro-elasticity.pdf}}
-\caption{Elasticities, $-\theta_{ij}(a,z)$}\label{fig:elasticity}
+
+
+\begin{figure}[t!]
+\centering
+\begin{subfigure}{.45\textwidth}
+\centering
+\centering{\includegraphics[scale = .37]{./figures/micro-elasticity.pdf}}
+\caption{Household-Level Elasticities, $-\theta_{ij}(a,z)$}\label{fig:elasticity}
+\end{subfigure}
+\begin{subfigure}{.45\textwidth}
+\centering
+\centering{\includegraphics[scale = .37]{./figures/trade-share.pdf}}
+\caption{Household-Level Import Shares}\label{fig:micro-trade}
+\end{subfigure}
 \end{figure}
 
-\begin{figure}[!t]
-\centering{\includegraphics[width = .62\textwidth]{./figures/trade-share.pdf}}
-\caption{Trade, $M_{ij}(a,z) / M_{ii}(a,z)$ }\label{fig:micro-trade}
-\end{figure}
-\end{landscape}
+
 
 
 %\afterpage{
