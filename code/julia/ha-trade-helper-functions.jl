@@ -506,3 +506,28 @@ function make_welfare_dataframe(∂W, ∂logW, hh_params)
     return df
     
 end  
+
+
+function unpack_xvec(xvec, Ncntry)
+
+    if length(xvec) ≈ ( (Ncntry - 1) + Ncntry + 1)
+        # this is the financial globalization case
+        
+        W = [xvec[1:(Ncntry - one(Ncntry))]; 1.0 ]
+
+        τ = xvec[Ncntry:end - 1]
+
+        R = ones(Ncntry)*xvec[end]
+
+    else
+        W = NaN
+
+        τ = NaN
+
+        R = NaN
+
+    end
+
+    return W, τ, R
+
+end

@@ -25,6 +25,7 @@ function world_equillibrium(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis 
     @assert length(x) ≈ ( Ncntry + (Ncntry - one(Ncntry)) )
 
     W = [1.0; x[1:(Ncntry - one(Ncntry))]]
+    
     R = x[Ncntry:end]
 
     Y, tradeflows, A_demand = world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
@@ -54,9 +55,11 @@ function world_equillibrium_FG(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
 
     R = ones(Ncntry)*x[end]
 
-    dfguess = DataFrame(W = W, R = R);
+    τ = zeros(Ncntry)
 
-    CSV.write("current-price.csv", dfguess)
+    # dfguess = DataFrame(W = W, R = R);
+
+    # CSV.write("current-price.csv", dfguess)
 
     Y, tradeflows, A_demand = world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
@@ -74,6 +77,37 @@ end
 # ##########################################################################
 # ##########################################################################
 
+function world_equillibrium_FG_τ(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration")
+    # for the situation in which there are rebates to households
+
+    @unpack Ncntry = cntry_params
+
+    #@assert length(x) ≈ Ncntry
+
+    W, τ, R = unpack_xvec(x, Ncntry)
+
+    #dfguess = DataFrame(W = W, R = R);
+
+    #CSV.write("current-price.csv", dfguess)
+
+    Y, tradeflows, A_demand = world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+        hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
+
+    goods_market = Y .- vec(sum(tradeflows, dims = 1))
+    # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
+    # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
+
+    asset_market = A_demand
+
+    return [sum(asset_market); goods_market[2:end]]
+
+end
+
+
+# ##########################################################################
+# ##########################################################################
+
 
 function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration")
@@ -83,8 +117,12 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
     @unpack Ncntry, TFP, d, L = cntry_params
     @unpack γ, σϵ = hh_params
 
+    @assert length(R) ≈ Ncntry
+    @assert length(W) ≈ Ncntry
+
     Y = similar(W)
     A_demand = similar(R)
+
     tradeflows = Array{Float64}(undef,Ncntry,Ncntry)
     tradeshare = Array{Float64}(undef,Ncntry,Ncntry)
 

@@ -28,17 +28,15 @@ foo = household_params(hh_prm, agrid = agrid, TFP = TFP[1], σϵ = σϵ*(TFP[1]^
 #the way this grid is setup seems to work
 
 p = (wage[1:end] ./ TFP).*d[1,:]
+R = 1.00
 
 τ = 0.0
 
-@time hh = solve_household_problem(1.00, wage[1], p, τ, foo)
+@time hh = solve_household_problem(R, wage[1], p, τ, foo)
 
 @time dist = make_stationary_distribution(hh, foo)
 
-# ϵ = similar(hh.πprob)
-
-# @time make_ϵ!(ϵ, hh.cons_policy, hh.Tv, 1.00, wage[1], p, 1, foo; points = 3, order = 1);
-
+θelas = make_θ(1, R, wage[1], p, τ, foo)
 
 adist = get_distribution(dist.state_index, dist.λ);
 

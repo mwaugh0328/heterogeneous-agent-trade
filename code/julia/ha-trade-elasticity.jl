@@ -60,7 +60,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_θ(homecontry, R, W, p, model_params; points = 3, order = 1)
+function make_θ(homecontry, R, W, p, τ, model_params; points = 3, order = 1)
     # makes the micro-level elasticities
     # using multiple-dispatch here, this is the high-level function to make 
     # everything
@@ -74,7 +74,7 @@ function make_θ(homecontry, R, W, p, model_params; points = 3, order = 1)
 
         # now construct the extensive margin elascitity
 
-        h(x) = make_θ(x, homecontry, idxj, p, R, W, model_params)
+        h(x) = make_θ(x, homecontry, idxj, p, R, W, τ, model_params)
         # this is the low level function used for differentiation
         
         foobar = jacobian(central_fdm(points, order, adapt = 0), h, log.(p[idxj]) )
@@ -100,7 +100,7 @@ end
 ##########################################################################
 
 
-function make_θ(logp, homecntry, idxj, pvec, R, W, model_params)
+function make_θ(logp, homecntry, idxj, pvec, R, W, τ, model_params)
     # low level function to compute elasticities
     # using multiple dispatch here (see above)
     
@@ -108,7 +108,7 @@ function make_θ(logp, homecntry, idxj, pvec, R, W, model_params)
     
     foo[idxj] = exp.(logp) #logp is assumed to be in log, convert to levels
 
-    hh = solve_household_problem(R, W, foo, model_params, tol = 1e-10)
+    hh = solve_household_problem(R, W, foo, τ, model_params, tol = 1e-10)
     # resolve the whole value function...this is unlike Mongey - Waugh, were 
     # we need to just consider a one period deviation
     

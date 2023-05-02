@@ -477,11 +477,11 @@ function make_utility!(utility_grid, R, W, p, τ,  model_params)
     for shockstate = 1:Nshocks
     #shock state
 
-        wz = labor_income( shock_level[shockstate] , W, τ)
+        wz = labor_income( shock_level[shockstate] , W)
 
         for cntry = 1:Ncntry
 
-            c = consumption(R.*a, a_prime, wz, p[cntry], τ)
+            c = consumption(R.*a, a_prime, wz, p[cntry])
                 # takes assets states, shock state -> consumption from
                 # budget constraint
         
@@ -496,23 +496,23 @@ end
 ##########################################################################
 ##########################################################################
 
-function consumption(Ra, ap, wz, p, τ)
+function consumption(Ra, ap, wz, p)
     # constructs consumption via the hh budget constraint
     # .- boadcasting is used to turn vectors (a,ap) into a grid
     # over c (na by na)
 
-    return @. (Ra - ap + wz + τ) / p
+    return @. (Ra - ap + wz) / p
     
 end
 
 ##########################################################################
 ##########################################################################
-function labor_income(shock, W, τ)
+function labor_income(shock, W)
     # computes labor income. it's simple now, but need so it can be 
     # more complicated later
     # W is wage per effeciency unit
 
-    return shock * W + τ
+    return shock * W
 
 end
 
