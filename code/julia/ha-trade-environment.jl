@@ -46,32 +46,8 @@ end
  end
 
 ##########################################################################
-# @with_kw struct world_model_params
-#     β::Float64 = 0.95
-#     γ::Float64 = 2.0
-#     ϕ::Float64 = 0.0
-#     amax::Float64 = 8.0
-#     Ncntry::Int64 = 2
-#     σϵ::Float64 = 0.25
-#     Na::Int64 = 50
-#     agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ, amax, length = Na))
-#     Nar::Int64 = 5
-#     Nma::Int64 = 2
-#     Nshocks::Int64 = Nar*Nma
-#     statesize::Int64 = Int(Na*Nshocks*Ncntry)
-#     ρ::Float64 = 0.90
-#     σar::Float64 = 0.039^(0.5)
-#     σma::Float64 = 0.0522^(0.5)
-#     mc::MarkovChain{Float64, Matrix{Float64}, Vector{Float64}} = mMarkovChain(Nar,Nma,ρ,σar,σma)
-#     TFP::Array{Float64, 1} = ones(Ncntry)
-#     L::Array{Float64, 1} = ones(Ncntry)
-#     d::Array{Float64, 2} = ones(Ncntry,Ncntry)
-# end
 
-
-##########################################################################
-
-function coleman_operator(policy, R, W, p, model_params)
+function coleman_operator(policy, R, W, p, τ, model_params)
     # multiple dispatch version that directly takes policy functions
     # single R so this means assumption is a stationary setting
 
@@ -79,7 +55,7 @@ function coleman_operator(policy, R, W, p, model_params)
 
     v = policy[(model_params.Na+1):end, :, :]
 
-    Kg, Tv = coleman_operator(c, v, R, W, p, model_params)[1:2]
+    Kg, Tv = coleman_operator(c, v, R, W, p, τ, model_params)[1:2]
 
     return vcat(Kg, Tv)
 
@@ -88,7 +64,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function coleman_operator(c, v, R, W, p, model_params)
+function coleman_operator(c, v, R, W, p, τ,  model_params)
     # Organization 
     @unpack agrid, mc, β, γ, σϵ, Na, Nshocks, Ncntry = model_params
 
@@ -121,8 +97,8 @@ function coleman_operator(c, v, R, W, p, model_params)
 
         muc_inverse!( gc, p[cntry] * Emuc, γ)
 
-        ã .= @. (p[cntry] * gc + agrid - W*shocks') / R
-        # off budget constraint a = (p_jc_j + a' - w*z ) / R
+        ã .= @. (p[cntry] * gc + agrid - W*shocks' - τ) / R
+        # off budget constraint a = (p_jc_j + a' - w*z - τ ) / R
 
         # then linear interpolation to get back on grid.
         for shk = 1:Nshocks
@@ -137,8 +113,8 @@ function coleman_operator(c, v, R, W, p, model_params)
     
             aprime[:, shk, cntry ] .= foo.(agrid)
 
-            Kg[:, shk, cntry] .= @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] ) / p[cntry]
-            # again off budget constraint pc = -a + Ra + wz
+            Kg[:, shk, cntry] .= @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] + τ ) / p[cntry]
+            # again off budget constraint pc = -a' + Ra + wz + τ 
     
         end
 
@@ -483,7 +459,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_utility!(utility_grid, R, W, p, model_params) 
+function make_utility!(utility_grid, R, W, p, τ,  model_params) 
     # take prices and model parameters and returns utility function
     # R is gross real interest rate ∈ (β, 1/β)
     # W is wage per effeciency unit
@@ -501,11 +477,11 @@ function make_utility!(utility_grid, R, W, p, model_params)
     for shockstate = 1:Nshocks
     #shock state
 
-        wz = labor_income( shock_level[shockstate] , W)
+        wz = labor_income( shock_level[shockstate] , W, τ)
 
         for cntry = 1:Ncntry
 
-            c = consumption(R.*a, a_prime, wz, p[cntry])
+            c = consumption(R.*a, a_prime, wz, p[cntry], τ)
                 # takes assets states, shock state -> consumption from
                 # budget constraint
         
@@ -520,23 +496,23 @@ end
 ##########################################################################
 ##########################################################################
 
-function consumption(Ra, ap, wz, p)
+function consumption(Ra, ap, wz, p, τ)
     # constructs consumption via the hh budget constraint
     # .- boadcasting is used to turn vectors (a,ap) into a grid
     # over c (na by na)
 
-    return @. (Ra - ap + wz ) / p
+    return @. (Ra - ap + wz + τ) / p
     
 end
 
 ##########################################################################
 ##########################################################################
-function labor_income(shock, W)
+function labor_income(shock, W, τ)
     # computes labor income. it's simple now, but need so it can be 
     # more complicated later
     # W is wage per effeciency unit
 
-    return shock * W
+    return shock * W + τ
 
 end
 
