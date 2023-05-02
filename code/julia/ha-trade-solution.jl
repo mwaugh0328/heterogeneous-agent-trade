@@ -557,8 +557,10 @@ function calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; 
     Wsol = [exp.(sol.x[1:(Ncntry - 1)]); 1.0]
     
     Rsol = ones(Ncntry)*exp(sol.x[end])
+
+    τsol = zeros(Ncntry)
     
-    πshare = world_equillibrium(Rsol, Wsol, hh_params, calibrate_cntry_params)[4];
+    πshare = world_equillibrium(Rsol, Wsol, τsol, hh_params, calibrate_cntry_params)[4];
 
     ##################################################################
     # Run gravity regression on model "data"
@@ -576,7 +578,7 @@ function calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; 
 
     ##################################################################
 
-    return out_moment_vec, Wsol, Rsol, πshare
+    return out_moment_vec, Wsol, Rsol, τsol, πshare
 end
 
 ##########################################################################

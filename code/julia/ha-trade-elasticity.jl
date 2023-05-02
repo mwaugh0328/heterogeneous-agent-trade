@@ -62,6 +62,7 @@ end
 
 function make_θ(homecontry, R, W, p, τ, model_params; points = 3, order = 1)
     # makes the micro-level elasticities
+    # R, W τ are scalars, p is vecotr of prices the homecountry faces
     # using multiple-dispatch here, this is the high-level function to make 
     # everything
 

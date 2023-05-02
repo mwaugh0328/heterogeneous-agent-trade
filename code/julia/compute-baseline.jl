@@ -59,7 +59,7 @@ dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
 
 xxx = dfparams.guess
 
-out_moment_vec, Wsol, Rsol, πshare  = calibrate(xxx, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)
+out_moment_vec, Wsol, Rsol, τsol, πshare  = calibrate(xxx, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)
 
 TFP, d = make_country_params(xxx, cntry_prm, grv_params, trade_cost_type = trade_cost_type)
 
@@ -69,7 +69,7 @@ cntry_prm = country_params(Ncntry = Ncntry, L = L, d = d, TFP = TFP)
 ####################################################################################
 
 
-Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, hh_prm, cntry_prm, tol_vfi = 1e-10);
+Y, tradeflows, A_demand, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, τsol, hh_prm, cntry_prm, tol_vfi = 1e-10);
 
 # This is a Plot test to make sure this is doing what I think it is
 
@@ -102,7 +102,7 @@ agrid = make_agrid(hh_prm, TFP[cntry])
 foo_hh_prm = household_params(hh_prm, agrid = agrid, 
 TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)))
 
-θ = make_θ(cntry, Rsol[cntry], Wsol[cntry], p, foo_hh_prm; points = 3, order = 1)
+θ = make_θ(cntry, Rsol[cntry], Wsol[cntry], p, τsol[cntry], foo_hh_prm; points = 3, order = 1)
 
 ω = make_ω(hh[cntry], dist[cntry], L[cntry], p, foo_hh_prm)
 # makes the expenditure weights
