@@ -127,8 +127,8 @@ df = DataFrame(θij = agθ,
                trade = cntrytrade,
                );
 
-rootfile = "../../notebooks/output/"
+# rootfile = "../../notebooks/output/"
 
-root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
+# root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
 
-CSV.write(root, df);
+# CSV.write(root, df);
