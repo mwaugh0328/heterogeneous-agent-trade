@@ -27,7 +27,7 @@ function world_equillibrium(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis 
     W = [1.0; x[1:(Ncntry - one(Ncntry))]]
     R = x[Ncntry:end]
 
-    Y, tradeflows, A_demand = world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+    Y, tradeflows, A_demand = world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
 
     goods_market = Y .- vec(sum(tradeflows, dims = 1))
@@ -58,7 +58,7 @@ function world_equillibrium_FG(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
 
     CSV.write("current-price.csv", dfguess)
 
-    Y, tradeflows, A_demand = world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+    Y, tradeflows, A_demand = world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
 
     goods_market = Y .- vec(sum(tradeflows, dims = 1))
@@ -75,7 +75,7 @@ end
 # ##########################################################################
 
 
-function world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration")
 
     @assert hh_params.ϕ > 0.0
@@ -101,7 +101,7 @@ function world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
         foo_hh_params = household_params(hh_params, agrid = agrid, 
                 TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)))
 
-        hh[cntry], dist[cntry] = compute_eq(R[cntry], W[cntry], p, foo_hh_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
+        hh[cntry], dist[cntry] = compute_eq(R[cntry], W[cntry], p, τ[cntry], foo_hh_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
             hh_solution_method = hh_solution_method, stdist_sol_method = stdist_sol_method)
 
     end
@@ -142,9 +142,9 @@ function make_agrid(hh_params, TFP)
 end
 
 
-function micro_trade_elasticity(R, W, p, home, source, model_params; tol_vfi = 1e-6, hh_solution_method = "itteration")
+function micro_trade_elasticity(R, W, p, τ, home, source, model_params; tol_vfi = 1e-6, hh_solution_method = "itteration")
 
-    hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
+    hh = solve_household_problem(R, W, p, τ, model_params, tol = tol_vfi, solution_method = hh_solution_method)
 
     return (hh.πprob[:,:,source] ./ hh.πprob[:,:,home])
 
@@ -163,13 +163,13 @@ end
 # ##########################################################################
 # ##########################################################################
 
-function compute_eq(R, W, p, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+function compute_eq(R, W, p, τ, model_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration")
     # Does everything...
     # (1) Sovles hh problem
     # (2) Constructs stationary distribution
 
-    hh = solve_household_problem(R, W, p, model_params, tol = tol_vfi, solution_method = hh_solution_method)
+    hh = solve_household_problem(R, W, p, τ, model_params, tol = tol_vfi, solution_method = hh_solution_method)
 
     #println("hh problem solved")
 
@@ -269,15 +269,15 @@ end
 
 # ##########################################################################
 
-function solve_household_problem(R, W, p, model_params; tol = 10^-6, solution_method = "itteration")
+function solve_household_problem(R, W, p, τ, model_params; tol = 10^-6, solution_method = "itteration")
 
     if solution_method == "nl-fixedpoint"
 
-        Kga, Kgc, πprob, Tv = policy_function_fixedpoint(R, W, p, model_params; tol = tol)
+        Kga, Kgc, πprob, Tv = policy_function_fixedpoint(R, W, p, τ, model_params; tol = tol)
 
     elseif solution_method == "itteration"
 
-        Kga, Kgc, πprob, Tv = policy_function_itteration(R, W, p, model_params; tol = tol, Niter = 500)
+        Kga, Kgc, πprob, Tv = policy_function_itteration(R, W, p, τ, model_params; tol = tol, Niter = 500)
         
     end
     
@@ -288,7 +288,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 500)
+function policy_function_itteration(R, W, p, τ, model_params; tol = 10^-6, Niter = 500)
     
     @unpack Na, Nshocks, Ncntry, β, σϵ = model_params
 
@@ -306,7 +306,7 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
     for iter in 1:Niter
         
-        Kgc, Tv = coleman_operator(gc, v, R, W, p, model_params)[1:2]
+        Kgc, Tv = coleman_operator(gc, v, R, W, p, τ, model_params)[1:2]
 
         err = vec_max(Kgc, gc)
 
@@ -332,7 +332,7 @@ function policy_function_itteration(R, W, p, model_params; tol = 10^-6, Niter = 
 
     end
 
-    Kgc, Tv, Kga = coleman_operator(gc, Tv, R, W, p, model_params)
+    Kgc, Tv, Kga = coleman_operator(gc, Tv, R, W, p, τ, model_params)
 
     πprob = make_πprob(Tv, σϵ)
 
@@ -355,7 +355,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
+function policy_function_fixedpoint(R, W, p, τ, model_params; tol = 10^-6)
 
     @unpack Na, Nshocks, Ncntry, statesize, β, σϵ, TFP = model_params
 
@@ -372,7 +372,7 @@ function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
     # have seen some convergence issues sometimes
 
-    K(policy) = coleman_operator(policy, R, W, p, model_params)
+    K(policy) = coleman_operator(policy, R, W, p, τ, model_params)
 
     solution = fixedpoint(K, policy_o, ftol = tol, method = :anderson);
     
@@ -384,7 +384,7 @@ function policy_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
 
     #Tv = solution.zero[(Na+1):end, :, :]
 
-    Kgc, Tv, Kga = coleman_operator(solution.zero[1:Na, :, :], solution.zero[(Na+1):end, :, :], R, W, p, model_params)[2:3]
+    Kgc, Tv, Kga = coleman_operator(solution.zero[1:Na, :, :], solution.zero[(Na+1):end, :, :], R, W, p, τ,  model_params)[2:3]
 
     πprob = make_πprob(Tv, σϵ)
 
@@ -420,13 +420,13 @@ end
 ##########################################################################
 ##########################################################################
 
-function value_function_fixedpoint(R, W, p, model_params; tol = 10^-6)
+function value_function_fixedpoint(R, W, p, τ, model_params; tol = 10^-6)
 
     @unpack Ncntry, Na, Nshocks, β, mc, σϵ = model_params
 
     u = Array{eltype(R)}(undef, Na, Na, Nshocks, Ncntry)
     
-    make_utility!(u, R, W, p, model_params)
+    make_utility!(u, R, W, p, τ, model_params)
 
 # define the inline function on the bellman operator. 
 # so the input is v (other stuff is fixed)

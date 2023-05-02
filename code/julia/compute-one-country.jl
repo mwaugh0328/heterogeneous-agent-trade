@@ -29,7 +29,9 @@ foo = household_params(hh_prm, agrid = agrid, TFP = TFP[1], σϵ = σϵ*(TFP[1]^
 
 p = (wage[1:end] ./ TFP).*d[1,:]
 
-@time hh = solve_household_problem(1.00, wage[1], p, foo)
+τ = 0.0
+
+@time hh = solve_household_problem(1.00, wage[1], p, τ, foo)
 
 @time dist = make_stationary_distribution(hh, foo)
 

@@ -64,7 +64,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function coleman_operator(c, v, R, W, p, τ,  model_params)
+function coleman_operator(c, v, R, W, p, τ, model_params)
     # Organization 
     @unpack agrid, mc, β, γ, σϵ, Na, Nshocks, Ncntry = model_params
 
