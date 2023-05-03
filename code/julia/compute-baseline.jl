@@ -49,7 +49,7 @@ Ncntry = size(L)[1]
 γ = 1.5
 σϵ = 0.25
 
-hh_prm = household_params(Ncntry = Ncntry, Na = 64, β = 0.92,
+hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)

@@ -40,22 +40,19 @@ end
 
 ##############################################################################
 
-function get_consumption(R, W, asset_policy, πprob, state_index, model_params)
+function get_consumption(p, cons_policy, πprob, state_index, model_params)
     # grabs the choice of assets given states
 
-    @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
+    @unpack Na, Nshocks, Ncntry = model_params
     
-    pconsumption = Array{eltype(asset_policy)}(undef, Na*Nshocks)
+    pconsumption = Array{eltype(cons_policy)}(undef, Na*Nshocks)
     fill!(pconsumption, 0.0) #need to fill given += operator below
-
-    shocks = exp.(mc.state_values)
 
     for (foo, xxx) in enumerate(state_index)
 
         for cntry = 1:Ncntry
 
-            pconsumption[foo] +=  ( -asset_policy[xxx[1], xxx[2], cntry] 
-                    + R*agrid[xxx[1]] + W*shocks[xxx[2]] ) * πprob[xxx[1], xxx[2], cntry]
+            pconsumption[foo] +=  p[cntry] * cons_policy[xxx[1], xxx[2], cntry] * πprob[xxx[1], xxx[2], cntry]
 
         end
         
@@ -67,27 +64,27 @@ end
 
 ##############################################################################
 
-function get_trade(R, W, asset_policy, πprob, state_index, model_params)
+function get_trade(p, cons_policy, πprob, state_index, model_params)
     # grabs the choice of assets given states
 
-    @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
+    @unpack Na, Nshocks, Ncntry = model_params
     
-    pc_by_state = Array{eltype(asset_policy)}(undef, Na*Nshocks, Ncntry)
-    pcπ_by_state = Array{eltype(asset_policy)}(undef, Na*Nshocks, Ncntry)
-    πprob_by_state = Array{eltype(asset_policy)}(undef, Na*Nshocks, Ncntry)
+    pc_by_state = Array{eltype(cons_policy)}(undef, Na*Nshocks, Ncntry)
+    pcπ_by_state = Array{eltype(cons_policy)}(undef, Na*Nshocks, Ncntry)
+    πprob_by_state = Array{eltype(cons_policy)}(undef, Na*Nshocks, Ncntry)
 
     fill!(pc_by_state , 0.0) #need to fill given += operator below
     fill!(pcπ_by_state , 0.0) #need to fill given += operator below
     fill!(πprob_by_state, 0.0) #need to fill given += operator below
 
-    shocks = exp.(mc.state_values)
-
     for (foo, xxx) in enumerate(state_index)
 
         for cntry = 1:Ncntry
 
-            pc = ( -asset_policy[xxx[1], xxx[2], cntry] + R*agrid[xxx[1]] + W*shocks[xxx[2]] )
+            #pc = ( -asset_policy[xxx[1], xxx[2], cntry] + R*agrid[xxx[1]] + W*shocks[xxx[2]] )
             #should watch this line
+
+            pc = p[cntry] * cons_policy[xxx[1], xxx[2], cntry]
 
             pc_by_state[foo, cntry] += pc
 
@@ -192,7 +189,7 @@ function aggregate(R, W, p, country, household, distribution, hh_params; display
     # organization...
 
     @unpack state_index, λ = distribution
-    @unpack πprob, asset_policy = household
+    @unpack πprob, asset_policy, cons_policy = household
     @unpack TFP, L = hh_params
 
     #####
@@ -209,9 +206,9 @@ function aggregate(R, W, p, country, household, distribution, hh_params; display
     aprime = get_aprime(asset_policy, πprob, state_index, hh_params)
     # # assets tomorrow Noption * statesize as assets are contingent on car choice
 
-    pc = get_consumption(R, W, asset_policy, πprob, state_index, hh_params)
+    pc = get_consumption(p, cons_policy, πprob, state_index, hh_params)
 
-    pcπ_by_state, π_by_state = get_trade(R, W, asset_policy, πprob, state_index, hh_params)[1:2]
+    pcπ_by_state, π_by_state = get_trade(p, cons_policy, πprob, state_index, hh_params)[1:2]
 
     Aprime = L .* dot(aprime, λ) 
     # asset holdings next period (17)
@@ -509,6 +506,7 @@ end
 
 
 function unpack_xvec(xvec, Ncntry)
+    #todo need to add other cases and incorperate
 
     if length(xvec) ≈ ( (Ncntry - 1) + Ncntry + 1)
         # this is the financial globalization case

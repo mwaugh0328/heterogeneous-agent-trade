@@ -16,7 +16,7 @@ Ncntry = size(d)[1]
 σϵ = 0.25
 
 hh_prm = household_params(Ncntry = 2, Na = 100, 
-γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, β = 0.92, ρ = 0.95)
+γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, β = 0.92, ρ = 0.90)
 
 agrid = make_agrid(hh_prm, TFP[1])
 
