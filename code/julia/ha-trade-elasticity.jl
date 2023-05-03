@@ -121,3 +121,19 @@ function make_θ(logp, homecntry, idxj, pvec, R, W, τ, model_params)
     # ∂πij / ∂dij, ∂πii / ∂dij, ∂cij / ∂dij, ∂cii / ∂dij
     
 end
+
+##########################################################################
+##########################################################################
+
+function make_mpc(household, R, W, p, τprime, model_params)
+    # this is the mpc calculation...give households one time cash transfer
+    # assumption is the baseline transfer is zero; hold fixed future values funs 
+    # so this is one time, then how does consumption respond.
+
+    Kg = coleman_operator(household.cons_policy, household.Tv, R, W, p, τprime, model_params)[1]
+
+    mpc = (Kg .- household.cons_policy) / τprime
+
+    return mpc
+
+end

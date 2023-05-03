@@ -1,7 +1,4 @@
-include("ha-trade-environment.jl")
-include("ha-trade-solution.jl")
-include("ha-trade-helper-functions.jl")
-include("static-trade-environment.jl")
+include("ha-trade.jl")
 using Plots
 
 ####################################################################################
@@ -19,7 +16,7 @@ Ncntry = size(d)[1]
 σϵ = 0.25
 
 hh_prm = household_params(Ncntry = 2, Na = 100, 
-γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, β = 0.92)
+γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, β = 0.92, ρ = 0.95)
 
 agrid = make_agrid(hh_prm, TFP[1])
 
@@ -40,9 +37,12 @@ R = 1.00
 
 adist = get_distribution(dist.state_index, dist.λ);
 
+mpc = make_mpc(hh, R, wage[1], p, τ + 0.1, foo)
+
 plot(foo.agrid , adist, alpha = 0.5, lw = 4,
     color = "dark blue", ylabel = "Probability Mass", 
     xlabel = "Asset Holdings / Avg. Income", label = false)
+
 
 
 
