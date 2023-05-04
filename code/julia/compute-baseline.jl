@@ -94,7 +94,7 @@ plot(dfplot.trademodel, dfplot.trade, seriestype = :scatter, alpha = 0.75,
 
 cntry = 19 # this is the country I'll look at
 
-p = (Wsol[1:end] ./ TFP).*d[cntry,:] 
+p = make_p(Wsol[1:end], TFP, d[cntry, :], tariff[cntry, :] )
 # prices from the perspective of those in that country
 
 agrid = make_agrid(hh_prm, TFP[cntry])

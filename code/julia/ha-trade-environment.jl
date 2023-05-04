@@ -43,6 +43,7 @@ end
     TFP::Array{Float64, 1} = ones(Ncntry)
     L::Array{Float64, 1} = ones(Ncntry)
     d::Array{Float64, 2} = ones(Ncntry,Ncntry)
+    tariff::Array{Float64, 2} = zeros(Ncntry,Ncntry)
  end
 
 ##########################################################################
@@ -630,6 +631,13 @@ function make_d!(d, dij)
     end
 
 end
+
+function make_p(W, TFP, d, tariff)
+
+    return (W ./ TFP) .* d .* (1.0 .+ tariff)
+
+end
+
 
 ##########################################################################
 

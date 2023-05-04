@@ -114,7 +114,7 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
 
     @assert hh_params.ϕ > 0.0
 
-    @unpack Ncntry, TFP, d, L = cntry_params
+    @unpack Ncntry, TFP, d, tariff, L = cntry_params
     @unpack γ, σϵ = hh_params
 
     @assert length(R) ≈ Ncntry
@@ -131,7 +131,7 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
 
     Threads.@threads for cntry = 1:Ncntry
 
-        p = (W ./ TFP) .* d[cntry, :]
+        p = make_p(W, TFP, d[cntry, :], tariff[cntry, :] )
 
         agrid = make_agrid(hh_params, TFP[cntry])
         # this creates teh asset grid so it's alwasy a fraction of home labor income
@@ -146,7 +146,7 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
 
     for cntry = 1:Ncntry
 
-        p = (W ./ TFP) .* d[cntry, :]
+        p = make_p(W, TFP, d[cntry, :], tariff[cntry, :] )
 
         agrid = make_agrid(hh_params, TFP[cntry])
 
@@ -584,57 +584,59 @@ end
 ##########################################################################
 ##########################################################################
 
-function calibrate_world_equillibrium(xxx, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-10, tol_dis = 1e-10, 
-    hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
+# function calibrate_world_equillibrium(xxx, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-10, tol_dis = 1e-10, 
+#     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
 
-    @unpack Ncntry = cntry_params
+# This is the function to try and do everything in one step, was not working...should revisit at some point
 
-    ## A bunch of organization here ####################
+#     @unpack Ncntry = cntry_params
 
-    prices = exp.(xxx[1:Ncntry])
+#     ## A bunch of organization here ####################
 
-    W = [prices[1:(Ncntry - one(Ncntry))]; 1.0]
+#     prices = exp.(xxx[1:Ncntry])
 
-    R = ones(Ncntry)*prices[Ncntry]
+#     W = [prices[1:(Ncntry - one(Ncntry))]; 1.0]
 
-    TFP_grav_params = xxx[Ncntry+1:end]
+#     R = ones(Ncntry)*prices[Ncntry]
 
-    @assert length(TFP_grav_params) == 2*(Ncntry - 1) + 4 + 6  
+#     TFP_grav_params = xxx[Ncntry+1:end]
 
-    TFP, d = make_country_params(TFP_grav_params, cntry_params, grv_params, trade_cost_type = trade_cost_type)
+#     @assert length(TFP_grav_params) == 2*(Ncntry - 1) + 4 + 6  
 
-    ##################################################################
+#     TFP, d = make_country_params(TFP_grav_params, cntry_params, grv_params, trade_cost_type = trade_cost_type)
 
-    calibrate_cntry_params = country_params(TFP = TFP, d = d, Ncntry = Ncntry, L = cntry_params.L)
+#     ##################################################################
 
-    Y, tradeflows, A_demand, πshare = world_equillibrium(R, W, hh_params, calibrate_cntry_params, tol_vfi = tol_vfi, tol_dis = tol_dis, 
-        hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
+#     calibrate_cntry_params = country_params(TFP = TFP, d = d, Ncntry = Ncntry, L = cntry_params.L)
 
-    goods_market = Y .- vec(sum(tradeflows, dims = 1))
-    # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
-    # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
+#     Y, tradeflows, A_demand, πshare = world_equillibrium(R, W, hh_params, calibrate_cntry_params, tol_vfi = tol_vfi, tol_dis = tol_dis, 
+#         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
 
-    asset_market = A_demand
+#     goods_market = Y .- vec(sum(tradeflows, dims = 1))
+#     # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
+#     # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
 
-    ##################################################################
-    # Run gravity regression on model "data"
+#     asset_market = A_demand
 
-    trademodel = log.(normalize_by_home_trade(πshare, Ncntry)')
+#     ##################################################################
+#     # Run gravity regression on model "data"
 
-    dfmodel = hcat(DataFrame(trade = vec(drop_diagonal(trademodel, Ncntry))), grv_params.dfcntryfix)
+#     trademodel = log.(normalize_by_home_trade(πshare, Ncntry)')
 
-    grvmodel = gravity(dfmodel, trade_cost_type =  trade_cost_type)
+#     dfmodel = hcat(DataFrame(trade = vec(drop_diagonal(trademodel, Ncntry))), grv_params.dfcntryfix)
 
-    out_moment_vec = [grvmodel.S[1:end-1] .- grvdata.S[1:end-1] ; 
-        grvmodel.θm[1:end-1] .- grvdata.θm[1:end-1] ;
-        grvmodel.dist_coef .- grvdata.dist_coef;
-        grvmodel.lang_coef .- grvdata.lang_coef]
+#     grvmodel = gravity(dfmodel, trade_cost_type =  trade_cost_type)
 
-    ##################################################################
+#     out_moment_vec = [grvmodel.S[1:end-1] .- grvdata.S[1:end-1] ; 
+#         grvmodel.θm[1:end-1] .- grvdata.θm[1:end-1] ;
+#         grvmodel.dist_coef .- grvdata.dist_coef;
+#         grvmodel.lang_coef .- grvdata.lang_coef]
 
-    return [sum(asset_market); goods_market[2:end]; out_moment_vec]
+#     ##################################################################
 
-end
+#     return [sum(asset_market); goods_market[2:end]; out_moment_vec]
+
+# end
 
 ##################################################################
 
