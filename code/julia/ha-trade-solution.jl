@@ -153,7 +153,7 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
         foo_hh_params = household_params(hh_params, agrid = agrid, 
                 TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)))
 
-        output, tradestats = aggregate(R[cntry], W[cntry], p, cntry, hh[cntry], dist[cntry], foo_hh_params)
+        output, tradestats = aggregate(R[cntry], W[cntry], p, τ[cntry], tariff, cntry, hh[cntry], dist[cntry], foo_hh_params)
 
         Y[cntry] = output.production
 

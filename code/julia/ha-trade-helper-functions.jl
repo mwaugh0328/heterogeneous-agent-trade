@@ -7,11 +7,13 @@ struct NIPA
     N::Float64
     Aprime::Float64
     NetA::Float64
+    G::Float64
 end
 
 struct trade
     bilateral_imports::Array{Float64} # asset_policy
     bilateral_πprob::Array{Float64} # choice probabilities
+    tariff_revenue::Float64
 end
 
 ##############################################################################
@@ -184,7 +186,7 @@ end
 
 ##############################################################################
 
-function aggregate(R, W, p, country, household, distribution, hh_params; display = false)
+function aggregate(R, W, p, τ, tariff, country, household, distribution, hh_params; display = false)
 
     # organization...
 
@@ -223,6 +225,8 @@ function aggregate(R, W, p, country, household, distribution, hh_params; display
     PC = L * dot(pc , λ)
     #aggregate consumption
 
+    G = L * τ
+
     ##############
     # the Trade Stuff
 
@@ -233,6 +237,8 @@ function aggregate(R, W, p, country, household, distribution, hh_params; display
     # aggregate imports by value
 
     bilateral_imports = sum( L * pcπ_by_state.* λ, dims = 1)
+
+    tariff_revenue  =  sum(( tariff[country, :] ./ ( 1.0 .+ tariff[country, :]) ).* bilateral_imports' )
 
     bilateral_πprob = sum( π_by_state.* λ, dims = 1)
 
@@ -278,10 +284,14 @@ function aggregate(R, W, p, country, household, distribution, hh_params; display
         println("")
         println("GDP, Produciton Side")
         println(round(production, digits = digits))
+        println("Government Spending")
+        println(round(G, digits = digits))
+        println("Tariff Revenue")
+        println(tariff_revenue)
 
     end
 
-    return NIPA(PC, M, X, income, production, N, Aprime, NetA), trade(bilateral_imports, bilateral_πprob)
+    return NIPA(PC, M, X, income, production, N, Aprime, NetA, G), trade(bilateral_imports, bilateral_πprob, tariff_revenue)
 
 end
 
