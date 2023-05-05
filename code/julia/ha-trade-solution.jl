@@ -548,7 +548,8 @@ function calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; 
     calibrate_cntry_params = country_params(TFP = TFP, d = d, 
                             Ncntry = Ncntry, L = cntry_params.L)
 
-    f(x) = world_equillibrium_FG(exp.(x), hh_params, calibrate_cntry_params);
+    f(x) = world_equillibrium_FG(exp.(x), hh_params, calibrate_cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+    hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method);
 
     function f!(fvec, x)
     
@@ -563,7 +564,7 @@ function calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; 
           ml=diag_adjust, mu=diag_adjust,
           diag=ones(n),
           mode= 1,
-          tol=1e-10,
+          tol=tol_vfi,
            )
     
     #print(sol)
