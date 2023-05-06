@@ -49,17 +49,22 @@ L = df.L
 
 Ncntry = size(L)[1]
 
+γ = 1.25
+
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
-γ = 1.0, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
+γ = γ, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-initial_x = [vec(log.(df.TFP[1:18])); trc.θm[1:18] ; trc.dist_coef; trc.lang_coef]
+dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
+#dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
+
+initial_x = dfparams.guess
 
 out, Wsol, Rsol, πshare = calibrate(initial_x, grvdata, grv_params, hh_prm, 
                                 cntry_prm, trade_cost_type = trade_cost_type) 
 
-price_guess = log.([Wsol[1:18]; Rsol[1]])
+# price_guess = log.([Wsol[1:18]; Rsol[1]])
 
 f(x) = calibrate(x, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)[1]
 
