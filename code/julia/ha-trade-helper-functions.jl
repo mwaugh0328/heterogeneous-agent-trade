@@ -16,6 +16,14 @@ struct trade
     tariff_revenue::Float64
 end
 
+struct hhXsection
+    wz::Array{Float64} #consumption
+    a::Array{Float64} #imports
+    income::Array{Float64} #exports
+    pc::Array{Float64}
+    homeshare::Array{Float64}
+end
+
 ##############################################################################
 
 function get_aprime(asset_policy, πprob, state_index, model_params)
@@ -294,6 +302,59 @@ function aggregate(R, W, p, τ, tariff, country, household, distribution, hh_par
     return NIPA(PC, M, X, income, production, N, Aprime, NetA, G), trade(bilateral_imports, bilateral_πprob, tariff_revenue)
 
 end
+
+##############################################################################
+##############################################################################
+
+function make_Xsection(R, W, p, household, distribution, home_cntry, model_params; Nsims = 100)
+    
+    @unpack mc, agrid, Ncntry = model_params
+    @unpack state_index = distribution
+    @unpack cons_policy, πprob = household
+
+    Qmc = MarkovChain(distribution.Q) 
+    # converts markov chain to a markov chain interperted by 
+    # quant econ
+
+    X = state_index[simulate(Qmc, Nsims)]
+    # this returns the states
+
+    wz = Array{eltype(W)}(undef, Nsims)
+
+    a = Array{eltype(W)}(undef, Nsims)
+
+    homeshare = Array{eltype(W)}(undef, Nsims)
+
+    income = Array{eltype(W)}(undef, Nsims)
+
+    pc = Array{eltype(W)}(undef, Nsims)
+    fill!(pc, 0.0)
+
+    for (foo, xxx) in enumerate(X)
+
+        ef_units = exp.(mc.state_values[xxx[2]])
+
+        wz[foo] = labor_income(ef_units, W)
+
+        a[foo] = agrid[xxx[1]]
+
+        income[foo] = wz[foo] + R*a[foo]
+
+        for cntry = 1:Ncntry
+
+            pc[foo] +=  p[cntry] * cons_policy[xxx[1], xxx[2], cntry] * πprob[xxx[1], xxx[2], cntry]
+
+        end
+
+        homeshare[foo] = ( p[home_cntry] * cons_policy[xxx[1], xxx[2], home_cntry] 
+                    * πprob[xxx[1], xxx[2], home_cntry] ) / pc[foo]
+
+    end
+
+    return hhXsection(wz, a, income, pc, homeshare)
+
+end
+
 
 ##############################################################################
 ##############################################################################
