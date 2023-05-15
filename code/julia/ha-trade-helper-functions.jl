@@ -356,39 +356,7 @@ function make_Xsection(R, W, p, household, distribution, home_cntry, model_param
 end
 
 
-##############################################################################
-##############################################################################
-function social_welfare(hh, Δ_hh, dist, Δ_dist, country, σϵ)
 
-    W = sum(vec(log_sum_column(hh[country].Tv,  σϵ)).*dist[country].λ)
-
-    Δ_W = sum(vec(log_sum_column(Δ_hh[country].Tv,  σϵ)).*Δ_dist[country].λ)
-
-    ∂W = 100.0 .*( W - Δ_W) ./ W  
-
-    lost = vec(log_sum_column(hh[country].Tv,  σϵ)) .> vec(log_sum_column(Δ_hh[country].Tv,  σϵ))
-
-    share_lost = sum(dist[country].λ[lost])
-    
-    return ∂W, share_lost
-
-end
-
-##############################################################################
-
-function welfare_by_state(hh, Δ_hh, country, σϵ)
-
-    v = log_sum_column(hh[country].Tv,  σϵ)
-
-    Δ_v = log_sum_column(Δ_hh[country].Tv,  σϵ)
-
-    ∂logW = 100.0 .*( v - Δ_v) ./ v  
-    
-    ∂W = ( v - Δ_v)
-
-    return ∂W, ∂logW
-
-end
 
 ##############################################################################
 
@@ -398,6 +366,9 @@ function bilateral_consumption(R, W, hh, country, model_params)
     @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
     
     pconsumption = Array{Float64}(undef, Na*Nshocks, Ncntry)
+
+    avg_expenditure = Array{Float64}(undef, Na, Nshocks)
+    fill!(avg_expenditure, 0.0)
 
     shocks = exp.(mc.state_values)
 
@@ -411,13 +382,17 @@ function bilateral_consumption(R, W, hh, country, model_params)
 
             pconsumption[foo, cntry] =  ( -hh[country].asset_policy[xxx[1], xxx[2], cntry] 
                     + R[country]*agrid[xxx[1]] + W[country]*shocks[xxx[2]] ) * hh[country].πprob[xxx[1], xxx[2], cntry]
+                    
+            avg_expenditure[xxx[1], xxx[2]] += hh[country].πprob[xxx[1], xxx[2], cntry] .* ( -hh[country].asset_policy[xxx[1], xxx[2], cntry] 
+            + R[country]*agrid[xxx[1]] + W[country]*shocks[xxx[2]] )
+            
+            # hh[country].cons_policy[xxx[1], xxx[2], cntry]
 
         end
         
     end
 
-    return pconsumption
-
+    return pconsumption, avg_expenditure
 end
 
 ##############################################################################

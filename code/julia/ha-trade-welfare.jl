@@ -55,3 +55,37 @@ function eq_variation(xxx, astate, shockstate, R, w, p, Δ_v, model_params)
     #Δ_v is new value fun
 
 end
+
+##############################################################################
+##############################################################################
+function social_welfare(hh, Δ_hh, dist, Δ_dist, country, σϵ)
+
+    W = sum(vec(log_sum_column(hh[country].Tv,  σϵ)).*dist[country].λ)
+
+    Δ_W = sum(vec(log_sum_column(Δ_hh[country].Tv,  σϵ)).*Δ_dist[country].λ)
+
+    ∂W = 100.0 .*( W - Δ_W) ./ W  
+
+    lost = vec(log_sum_column(hh[country].Tv,  σϵ)) .> vec(log_sum_column(Δ_hh[country].Tv,  σϵ))
+
+    share_lost = sum(dist[country].λ[lost])
+    
+    return ∂W, share_lost
+
+end
+
+##############################################################################
+
+function welfare_by_state(hh, Δ_hh, country, σϵ)
+
+    v = log_sum_column(hh[country].Tv,  σϵ)
+
+    Δ_v = log_sum_column(Δ_hh[country].Tv,  σϵ)
+
+    ∂logW = 100.0 .*( Δ_v - v) ./ v  
+    
+    ∂W = ( Δ_v - v)
+
+    return ∂W, ∂logW
+
+end

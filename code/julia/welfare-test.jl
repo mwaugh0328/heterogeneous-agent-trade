@@ -7,7 +7,7 @@ using CSV
 using DataFrames
 
 
-γ = 1.5 # curvatuve on CRRA utility function
+γ = 1.05 # curvatuve on CRRA utility function
 σϵ = 0.25 # logit dispersion parameter
 Ncntry = 2 # number of countries
 
@@ -73,7 +73,7 @@ Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist = world_equillibrium(Rsol
 #####################################################################################
 # now compute counterfact eq.
 
-Δd = 0.0
+Δd = 0.10
 
 d = [1.0 d_ij * (1 - Δd)  ; d_ij *(1 - Δd)  1.0]
 
@@ -129,3 +129,7 @@ cntry = 1
 p = make_p(wage, cntry_prm.TFP, cntry_prm.d[cntry, :], cntry_prm.tariff[cntry, :] )
 
 τeqv =  eq_variation(Rsol[cntry], wage[cntry], p, Δhh[cntry], dist[cntry].state_index, hh_prm)
+
+pcons, xpcons = bilateral_consumption(Rsol[cntry], wage[cntry], hh, cntry, hh_prm)
+
+∂W, ∂logW = welfare_by_state(hh, Δhh, cntry, hh_prm.σϵ)
