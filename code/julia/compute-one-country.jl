@@ -1,4 +1,5 @@
 include("ha-trade.jl")
+include("ha-trade-welfare.jl")
 using Plots
 
 ####################################################################################
@@ -33,15 +34,17 @@ R = 1.00
 
 @time dist = make_stationary_distribution(hh, foo)
 
-θelas = make_θ(1, R, wage[1], p, τ, foo)
+ΔW = eq_variation(R, wage[1], p, hh, foo)
 
-adist = get_distribution(dist.state_index, dist.λ);
+# θelas = make_θ(1, R, wage[1], p, τ, foo)
 
-mpc = make_mpc(hh, R, wage[1], p, τ + 0.1, foo)
+# adist = get_distribution(dist.state_index, dist.λ);
 
-plot(foo.agrid , adist, alpha = 0.5, lw = 4,
-    color = "dark blue", ylabel = "Probability Mass", 
-    xlabel = "Asset Holdings / Avg. Income", label = false)
+# mpc = make_mpc(hh, R, wage[1], p, τ + 0.1, foo)
+
+# plot(foo.agrid , adist, alpha = 0.5, lw = 4,
+#     color = "dark blue", ylabel = "Probability Mass", 
+#     xlabel = "Asset Holdings / Avg. Income", label = false)
 
 
 

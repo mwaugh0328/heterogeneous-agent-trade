@@ -224,7 +224,7 @@ function log_sum_v(vj, σϵ, Ncntry)
 
     end
 
-    return σϵ*log( foo ) 
+    return σϵ*log( foo ) + vj_max
 
 end
 
