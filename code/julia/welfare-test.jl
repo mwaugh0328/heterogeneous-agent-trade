@@ -1,4 +1,5 @@
 include("ha-trade.jl")
+include("ha-trade-welfare.jl")
 
 using MINPACK
 using Plots
@@ -72,7 +73,7 @@ Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist = world_equillibrium(Rsol
 #####################################################################################
 # now compute counterfact eq.
 
-Δd = 0.10
+Δd = 0.0
 
 d = [1.0 d_ij * (1 - Δd)  ; d_ij *(1 - Δd)  1.0]
 
@@ -81,7 +82,7 @@ d = [1.0 d_ij * (1 - Δd)  ; d_ij *(1 - Δd)  1.0]
 
 #####################################################################################
 #####################################################################################
-# now compute initial eq.
+# now new eq.
 
 f(x) = world_equillibrium_FG(exp.(x), hh_prm, Δd_cntry_prm)
 # this world... function is used to construct zero conditions for
@@ -119,3 +120,12 @@ print(sol)
 
 ΔY, Δtradeflows, ΔA_demand, ΔGbudget, Δtradeshare, Δhh, Δdist = world_equillibrium(ΔRsol, Δwage, τ, hh_prm, 
                                                 Δd_cntry_prm, tol_vfi = 1e-10);
+
+#####################################################################################
+#####################################################################################
+
+cntry = 1
+
+p = make_p(wage, cntry_prm.TFP, cntry_prm.d[cntry, :], cntry_prm.tariff[cntry, :] )
+
+τeqv =  eq_variation(Rsol[cntry], wage[cntry], p, Δhh[cntry], dist[cntry].state_index, hh_prm)
