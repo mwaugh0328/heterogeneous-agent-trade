@@ -49,7 +49,7 @@ L = df.L
 
 Ncntry = size(L)[1]
 
-γ = 1.10
+γ = 1.5
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = 0.25)
