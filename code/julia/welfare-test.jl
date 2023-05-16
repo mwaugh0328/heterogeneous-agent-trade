@@ -7,7 +7,7 @@ using CSV
 using DataFrames
 
 
-γ = 1.05 # curvatuve on CRRA utility function
+γ = 1.0 # curvatuve on CRRA utility function
 σϵ = 0.25 # logit dispersion parameter
 Ncntry = 2 # number of countries
 
@@ -75,7 +75,7 @@ Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist = world_equillibrium(Rsol
 
 Δd = 0.10
 
-d = [1.0 d_ij * (1 - Δd)  ; d_ij *(1 - Δd)  1.0]
+d = [1.0 d_ij * (1 - Δd)  ; d_ij   1.0]
 
 # this sets up the country specific paramters
 Δd_cntry_prm = country_params(Ncntry = Ncntry, L = L, d = d, TFP = TFP);
@@ -122,14 +122,14 @@ print(sol)
                                                 Δd_cntry_prm, tol_vfi = 1e-10);
 
 #####################################################################################
-#####################################################################################
+# #####################################################################################
 
 cntry = 1
 
-p = make_p(wage, cntry_prm.TFP, cntry_prm.d[cntry, :], cntry_prm.tariff[cntry, :] )
+λeqv = lucas_eq_variation(hh[cntry], Δhh[cntry], dist[cntry].state_index, hh_prm)
 
-τeqv =  eq_variation(Rsol[cntry], wage[cntry], p, Δhh[cntry], dist[cntry].state_index, hh_prm)
 
-pcons, xpcons = bilateral_consumption(Rsol[cntry], wage[cntry], hh, cntry, hh_prm)
 
-∂W, ∂logW = welfare_by_state(hh, Δhh, cntry, hh_prm.σϵ)
+# pcons, xpcons = bilateral_consumption(Rsol[cntry], wage[cntry], hh, cntry, hh_prm)
+
+# ∂W, ∂logW = welfare_by_state(hh, Δhh, cntry, hh_prm.σϵ)

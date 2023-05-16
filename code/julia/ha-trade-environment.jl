@@ -136,8 +136,14 @@ end
 ##########################################################################
 ##########################################################################
 
-
 function make_Tv!(Tv, v, Kg, asset_policy, model_params)
+
+    make_Tv!(Tv, v, Kg, asset_policy, 1.0, model_params)
+
+end
+
+
+function make_Tv!(Tv, v, Kg, asset_policy, λ, model_params)
     # upwind method that continously updates v as 
     # EV is evaluated....
 
@@ -191,7 +197,7 @@ function make_Tv!(Tv, v, Kg, asset_policy, model_params)
 
                 end
 
-                Tv[ast, shk, cntry] = utility(Kg[ast, shk, cntry], γ) + β*Ev[cntry]
+                Tv[ast, shk, cntry] = utility(λ*Kg[ast, shk, cntry], γ) + β*Ev[cntry]
 
                 #Then the vj = uj + βEV
 
