@@ -7,7 +7,7 @@ using CSV
 using DataFrames
 
 
-γ = 1.0 # curvatuve on CRRA utility function
+γ = 1.5 # curvatuve on CRRA utility function
 σϵ = 0.25 # logit dispersion parameter
 Ncntry = 2 # number of countries
 
@@ -75,7 +75,7 @@ Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist = world_equillibrium(Rsol
 
 Δd = 0.10
 
-d = [1.0 d_ij * (1 - Δd)  ; d_ij   1.0]
+d = [1.0 d_ij * (1 - Δd)  ; d_ij* (1 - Δd)   1.0]
 
 # this sets up the country specific paramters
 Δd_cntry_prm = country_params(Ncntry = Ncntry, L = L, d = d, TFP = TFP);
@@ -124,9 +124,9 @@ print(sol)
 #####################################################################################
 # #####################################################################################
 
-cntry = 1
+# cntry = 1
 
-λeqv = lucas_eq_variation(hh[cntry], Δhh[cntry], dist[cntry].state_index, hh_prm)
+# λeqv = lucas_eq_variation(hh[cntry], Δhh[cntry], dist[cntry].state_index, hh_prm)
 
 
 

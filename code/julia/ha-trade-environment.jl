@@ -124,7 +124,7 @@ function coleman_operator(c, v, R, W, p, τ, model_params)
     # Now I want to infer the value function given updated policy
     Tv = similar(v)
 
-    make_Tv!(Tv, v, Kg, aprime, model_params)
+    make_Tv!(Tv, v, Kg, aprime, πprob, model_params)
     # then Tv = u(g(a,z)) + β*EV
     # this function is the bottle neck...worth investing here.
     # why so much memory? 
@@ -136,14 +136,14 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_Tv!(Tv, v, Kg, asset_policy, model_params)
+function make_Tv!(Tv, v, Kg, asset_policy, πprob, model_params)
 
-    make_Tv!(Tv, v, Kg, asset_policy, 1.0, model_params)
+    make_Tv!(Tv, v, Kg, asset_policy, πprob, 1.0, model_params)
 
 end
 
 
-function make_Tv!(Tv, v, Kg, asset_policy, λ, model_params)
+function make_Tv!(Tv, v, Kg, asset_policy, πprob, λ, model_params)
     # upwind method that continously updates v as 
     # EV is evaluated....
 
@@ -153,7 +153,7 @@ function make_Tv!(Tv, v, Kg, asset_policy, λ, model_params)
     # need to have it like this to mulithread
     fill!(Ev, 0.0)
 
-    Φ = reshape(log_sum_v(v, σϵ), Na, Nshocks)
+    Φ = reshape(alt_log_sum(πprob, v, σϵ), Na, Nshocks)
 
     @inbounds @views for cntry = 1:Ncntry
         # fix the country
@@ -239,11 +239,32 @@ function log_sum_v(vj, σϵ)
     #foo = @. exp( ( vj ) / σϵ )
     # not haveing ./ on the σϵ was a problem
 
-    foo = vj .- maximum(vj, dims = 3)
+    vj_max = maximum(vj, dims = 3)
 
-    return σϵ*log.( sum( exp.( ( foo ) / σϵ ) , dims = 3) ) 
+    foo = vj .- vj_max
+
+    return σϵ*log.( sum( exp.( ( foo ) / σϵ ) , dims = 3) )
 
 end
+
+function alt_log_sum(household, σϵ)
+
+    @unpack πprob, Tv = household
+
+    foo = πprob .* ( Tv .- σϵ.*log.(πprob))
+
+    return sum(foo, dims = 3)
+
+end
+
+function alt_log_sum(πprob, Tv, σϵ)
+
+    foo = πprob .* ( Tv .- σϵ.*log.(πprob))
+
+    return sum(foo, dims = 3)
+
+end
+
 
 ##########################################################################
 ##########################################################################
