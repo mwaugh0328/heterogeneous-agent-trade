@@ -46,7 +46,7 @@ L = df.L
 
 Ncntry = size(L)[1]
 
-γ = 1.25
+γ = 1.5
 σϵ = 0.25
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
@@ -54,8 +54,8 @@ hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-#dfparams = DataFrame(CSV.File("current-guess-ek-scale.csv"))
-dfparams = DataFrame(CSV.File("current-guess-ek-gamma125.csv"))
+dfparams = DataFrame(CSV.File("current-guess-ek-new.csv"))
+#dfparams = DataFrame(CSV.File("current-guess-ek-gamma125.csv"))
 #dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 
 
