@@ -66,18 +66,18 @@ function lucas_eq_variation(xxx, astate, shockstate, hh, Δhh, model_params)
     # core function that computes difference between 
     # value fun at old prices + transfer (xxx) and new value fun
 
-    Tv = similar(hh.Tv)
+    Tv = value_function_fixedpolicy(hh, xxx[1], model_params)    
 
-    make_Tv!(Tv, hh.Tv, hh.cons_policy, hh.asset_policy, xxx[1], model_params)
+    v = log_sum_v(Tv[astate, shockstate, : ], model_params.σϵ, model_params.Ncntry)
 
-    v = log_sum_v(Tv[astate, shockstate,:], model_params.σϵ, model_params.Ncntry)
-
-    Δ_v = log_sum_v(Δhh.Tv[astate, shockstate,:], model_params.σϵ, model_params.Ncntry)
+    Δ_v = log_sum_v(Δhh.Tv[astate, shockstate, : ], model_params.σϵ, model_params.Ncntry)
 
     return Δ_v - v
     #Δ_v is new value fun
 
 end
+
+##############################################################################
 
 function lucas_eq_variation(hh, Δhh, state_index, model_params)
     # these should be the old prices
@@ -155,4 +155,47 @@ function welfare_by_state(hh, Δ_hh, country, σϵ)
 
     return ∂W, ∂logW
 
+end
+
+##############################################################################
+
+function value_function_fixedpolicy(household, λ, model_params; tol = 10^-10, Niter = 500)
+    # If you give me policy functions, 
+    # I construct the value function
+    
+    @unpack Na, Nshocks, Ncntry, β, σϵ = model_params
+    @unpack cons_policy, asset_policy, πprob = household
+
+    # this is the guess... always start at borrowing cosntraint
+    v = -ones(Na, Nshocks, Ncntry)/(1-β)
+    Tv = similar(v)
+
+    for iter in 1:Niter
+        
+        make_Tv!(Tv, v, cons_policy, asset_policy, πprob, λ, model_params)
+
+        err = vec_max(Tv, v)
+
+        #println(iter)
+
+        if err < tol
+
+            #println(iter)
+
+            break
+        end
+
+        copy!(v,Tv)
+
+        if iter == Niter
+
+          println("value function may not have converged")
+          println("check the situation")
+          
+        end
+
+    end
+
+    return Tv
+    
 end
