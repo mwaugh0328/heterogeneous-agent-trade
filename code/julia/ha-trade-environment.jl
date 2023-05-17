@@ -243,7 +243,7 @@ function log_sum_v(vj, σϵ)
 
     foo = vj .- vj_max
 
-    return σϵ*log.( sum( exp.( ( foo ) / σϵ ) , dims = 3) )
+    return σϵ*log.( sum( exp.( ( foo ) / σϵ ) , dims = 3) ) .+ vj_max
     # this is the prolem code...use alt_log_sum below
 end
 

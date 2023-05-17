@@ -90,6 +90,12 @@ plot(dfplot.trademodel, dfplot.trade, seriestype = :scatter, alpha = 0.75,
     ylabel = "data",
     legend = false)
 
+rootfile = "../../notebooks/output/"
+
+root = rootfile*"model-data-trade.csv"
+
+# CSV.write(root, dfplot)
+
 ####################################################################################
 ####################################################################################
 # Let's construct bilateral trade elasticities
@@ -131,8 +137,8 @@ df = DataFrame(θij = agθ,
                trade = cntrytrade,
                );
 
-# rootfile = "../../notebooks/output/"
 
-# root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
+
+root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
 
 # CSV.write(root, df);
