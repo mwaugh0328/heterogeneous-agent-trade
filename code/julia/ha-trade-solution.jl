@@ -598,13 +598,14 @@ end
 # function calibrate_world_equillibrium(xxx, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-10, tol_dis = 1e-10, 
 #     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
 
-# This is the function to try and do everything in one step, was not working...should revisit at some point
+# # This is the function to try and do everything in one step, 
+# # still not working...
 
 #     @unpack Ncntry = cntry_params
 
 #     ## A bunch of organization here ####################
 
-#     prices = exp.(xxx[1:Ncntry])
+#     prices = xxx[1:Ncntry]
 
 #     W = [prices[1:(Ncntry - one(Ncntry))]; 1.0]
 
@@ -620,8 +621,8 @@ end
 
 #     calibrate_cntry_params = country_params(TFP = TFP, d = d, Ncntry = Ncntry, L = cntry_params.L)
 
-#     Y, tradeflows, A_demand, πshare = world_equillibrium(R, W, hh_params, calibrate_cntry_params, tol_vfi = tol_vfi, tol_dis = tol_dis, 
-#         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
+#     Y, tradeflows, A_demand, Gbudget, πshare = world_equillibrium(R, W, hh_params, calibrate_cntry_params, tol_vfi = tol_vfi, tol_dis = tol_dis, 
+#         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:5]
 
 #     goods_market = Y .- vec(sum(tradeflows, dims = 1))
 #     # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)

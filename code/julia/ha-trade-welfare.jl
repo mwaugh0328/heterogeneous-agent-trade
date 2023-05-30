@@ -80,7 +80,7 @@ end
 ##############################################################################
 
 function lucas_eq_variation(hh, Δhh, state_index, model_params)
-    # these should be the old prices
+    # hh should be the old prices
     # Δ_hh is the value function at the new prices
     # this works through everything state by state
 
@@ -108,7 +108,7 @@ function lucas_eq_variation(hh, Δhh, state_index, model_params)
         end
 
         # find the transfer to make a guy indifferent
-        sol = fsolve(f!, xguess, show_trace = true, method = :hybr;
+        sol = fsolve(f!, xguess, show_trace = false, method = :hybr;
             ml=diag_adjust, mu=diag_adjust,
             diag=ones(n),
             mode= 1,
