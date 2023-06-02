@@ -342,7 +342,7 @@ end
 
 function policy_function_itteration(R, W, p, τ, model_params; tol = 10^-6, Niter = 500)
     
-    @unpack Na, Nshocks, Ncntry, β, σϵ = model_params
+    @unpack Na, Nshocks, Ncntry, β, σϵ, ψ = model_params
 
     # this is the guess... always start at borrowing cosntraint
     gc = Array{Float64}(undef, Na, Nshocks, Ncntry)
@@ -386,7 +386,7 @@ function policy_function_itteration(R, W, p, τ, model_params; tol = 10^-6, Nite
 
     Kgc, Tv, Kga = coleman_operator(gc, Tv, R, W, p, τ, model_params)
 
-    πprob = make_πprob(Tv, σϵ)
+    πprob = make_πprob(Tv, σϵ, ψ)
 
     return Kga, Kgc, πprob, Tv
     
@@ -409,7 +409,7 @@ end
 
 function policy_function_fixedpoint(R, W, p, τ, model_params; tol = 10^-6)
 
-    @unpack Na, Nshocks, Ncntry, statesize, β, σϵ, TFP = model_params
+    @unpack Na, Nshocks, Ncntry, statesize, β, σϵ, ψ, TFP = model_params
 
     #foo, foobar = policy_function_itteration(R, W, p, model_params, Niter = 2)
     #policy_o = vcat(foo, foobar)
@@ -438,7 +438,7 @@ function policy_function_fixedpoint(R, W, p, τ, model_params; tol = 10^-6)
 
     Kgc, Tv, Kga = coleman_operator(solution.zero[1:Na, :, :], solution.zero[(Na+1):end, :, :], R, W, p, τ,  model_params)[2:3]
 
-    πprob = make_πprob(Tv, σϵ)
+    πprob = make_πprob(Tv, σϵ, ψ)
 
     return Kga, Kgc, πprob, Tv
 

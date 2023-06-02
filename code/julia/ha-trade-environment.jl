@@ -35,7 +35,7 @@ include("mix-MarkovChain.jl")
     σar::Float64 = 0.039^(0.5)
     σma::Float64 = 0.0522^(0.5)
     mc::MarkovChain{Float64, Matrix{Float64}, Vector{Float64}} = mMarkovChain(Nar,Nma,ρ,σar,σma)
-
+    ψ::Array{Float64, 3} = zeros(Na,Nshocks,Ncntry)
 end
 
 @with_kw struct country_params
@@ -67,7 +67,7 @@ end
 
 function coleman_operator(c, v, R, W, p, τ, model_params)
     # Organization 
-    @unpack agrid, mc, β, γ, σϵ, Na, Nshocks, Ncntry = model_params
+    @unpack agrid, mc, β, γ, σϵ, ψ, Na, Nshocks, Ncntry = model_params
 
     aprime = similar(c)
     Kg = similar(c)
@@ -86,7 +86,7 @@ function coleman_operator(c, v, R, W, p, τ, model_params)
     #     println(v)
     # end
 
-    πprob = make_πprob(v, σϵ)
+    πprob = make_πprob(v, σϵ, ψ)
 
     ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
     # this integrates over ϵ
@@ -124,7 +124,7 @@ function coleman_operator(c, v, R, W, p, τ, model_params)
     # Now I want to infer the value function given updated policy
     Tv = similar(v)
 
-    make_Tv!(Tv, v, Kg, aprime, πprob, model_params)
+    make_Tv!(Tv, v, Kg, aprime, πprob, 1.0, ψ, model_params)
     # then Tv = u(g(a,z)) + β*EV
     # this function is the bottle neck...worth investing here.
     # why so much memory? 
@@ -137,15 +137,14 @@ end
 ##########################################################################
 
 function make_Tv!(Tv, v, Kg, asset_policy, πprob, model_params)
+    # multiple dispatch for no quality case
 
-    make_Tv!(Tv, v, Kg, asset_policy, πprob, 1.0, model_params)
+    make_Tv!(Tv, v, Kg, asset_policy, πprob, 1.0, 0.0, model_params)
 
 end
 
-
-function make_Tv!(Tv, v, Kg, asset_policy, πprob, λ, model_params)
-    # upwind method that continously updates v as 
-    # EV is evaluated....
+function make_Tv!(Tv, v, Kg, asset_policy, πprob, λ, ψ, model_params)
+    # constructs the choice specific value functions
 
     @unpack Na, Nshocks, Ncntry, mc, agrid, β, γ, σϵ = model_params
 
@@ -153,7 +152,7 @@ function make_Tv!(Tv, v, Kg, asset_policy, πprob, λ, model_params)
     # need to have it like this to mulithread
     fill!(Ev, 0.0)
 
-    Φ = reshape(alt_log_sum(πprob, v, σϵ), Na, Nshocks)
+    Φ = reshape(alt_log_sum(πprob, v, σϵ, ψ), Na, Nshocks)
 
     @inbounds @views for cntry = 1:Ncntry
         # fix the country
@@ -259,7 +258,13 @@ end
 
 function alt_log_sum(πprob, Tv, σϵ)
 
-    foo = πprob .* ( Tv .- σϵ.*log.(πprob))
+    return alt_log_sum(πprob, Tv, σϵ, 0.0)
+
+end
+
+function alt_log_sum(πprob, Tv, σϵ, ψ)
+
+    foo = πprob .* ( ( ψ .+ Tv ) .- σϵ.*log.(πprob))
 
     return sum(foo, dims = 3)
 
@@ -333,38 +338,82 @@ end
 ##########################################################################
 ##########################################################################
 
+# function make_πprob(vj, σϵ)
+
+#     # if sum(isnan.(vj)) != 0
+#     #     println("nan showing up in make prob")
+#     # end
+
+#     # .- maximum(vj, dims = 3)
+#     # this is strange, was causing a nan to show up
+#     # can't replicate this behavior in simple examples.
+
+#     foo = vj .- maximum(vj, dims = 3)
+
+#     foo .= exp.( foo / σϵ)
+
+#     # if sum(isnan.(foo)) != 0
+#     #     println(vj[1,1,:])
+#     #     println(foo[1,1,:])
+#     #     println("nan showing up")
+#     # end
+
+#     # goof = sum( foo, dims = 3)
+
+#     # foobar = foo ./ goof
+
+#     # if sum(isnan.(foobar)) != 0
+#     #     println(vj[1,1,:])
+#     #     println(foo[1,1,:])
+#     #     println("nan in denomenator showing up")
+#     # end
+
+#     return foo ./ sum( foo, dims = 3)
+   
+# end
+
 function make_πprob(vj, σϵ)
 
-    # if sum(isnan.(vj)) != 0
-    #     println("nan showing up in make prob")
-    # end
+    return make_πprob(vj, σϵ, 0.0)
 
-    # .- maximum(vj, dims = 3)
-    # this is strange, was causing a nan to show up
-    # can't replicate this behavior in simple examples.
+end
 
-    foo = vj .- maximum(vj, dims = 3)
+function make_πprob(vj, σϵ, ψ)
+    # constructs πs with quality shifter
+    # exp ( (ψ + v(a,z,j) ) / σϵ) / Φ(a,z)
+
+    foo = (ψ .+ vj) .- maximum( (ψ .+ vj) , dims = 3)
 
     foo .= exp.( foo / σϵ)
 
-    # if sum(isnan.(foo)) != 0
-    #     println(vj[1,1,:])
-    #     println(foo[1,1,:])
-    #     println("nan showing up")
-    # end
-
-    # goof = sum( foo, dims = 3)
-
-    # foobar = foo ./ goof
-
-    # if sum(isnan.(foobar)) != 0
-    #     println(vj[1,1,:])
-    #     println(foo[1,1,:])
-    #     println("nan in denomenator showing up")
-    # end
-
     return foo ./ sum( foo, dims = 3)
    
+end
+
+##########################################################################
+##########################################################################
+
+function make_ψ!(ψ, home, model_params)
+
+    @unpack Na, Nshocks, Ncntry, mc = model_params
+
+    slope = 0.0.*mc.state_values
+    
+    for cntry = 1:Ncntry
+
+        if home == cntry
+        
+            for ast = 1:Na
+
+                for shk = 1:Nshocks
+
+                    ψ[ast, shk, cntry] = -0.1 + slope[shk]
+
+                end
+            end
+        end
+    end
+
 end
 
 ##########################################################################
