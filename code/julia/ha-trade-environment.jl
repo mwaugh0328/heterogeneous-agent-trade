@@ -36,6 +36,7 @@ include("mix-MarkovChain.jl")
     σma::Float64 = 0.0522^(0.5)
     mc::MarkovChain{Float64, Matrix{Float64}, Vector{Float64}} = mMarkovChain(Nar,Nma,ρ,σar,σma)
     ψ::Array{Float64, 3} = zeros(Na,Nshocks,Ncntry)
+    ψslope::Float64 = 0.0
 end
 
 @with_kw struct country_params
@@ -393,11 +394,14 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_ψ!(ψ, home, model_params)
+function make_ψ(home, model_params)
 
-    @unpack Na, Nshocks, Ncntry, mc = model_params
+    @unpack Na, Nshocks, Ncntry, mc, ψslope = model_params
 
-    slope = 0.0.*mc.state_values
+    ψ = similar(model_params.ψ)
+    fill!(ψ, 0.0)
+
+    slope = ψslope.*mc.state_values
     
     for cntry = 1:Ncntry
 
@@ -407,12 +411,14 @@ function make_ψ!(ψ, home, model_params)
 
                 for shk = 1:Nshocks
 
-                    ψ[ast, shk, cntry] = -0.1 + slope[shk]
+                    ψ[ast, shk, cntry] = -0.0 + slope[shk]
 
                 end
             end
         end
     end
+
+    return ψ
 
 end
 

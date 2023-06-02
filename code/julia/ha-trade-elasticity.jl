@@ -113,7 +113,7 @@ function make_θ(logp, homecntry, idxj, pvec, R, W, τ, model_params)
     # resolve the whole value function...this is unlike Mongey - Waugh, were 
     # we need to just consider a one period deviation
     
-    πprob = make_πprob(hh.Tv, model_params.σϵ)
+    πprob = make_πprob(hh.Tv, model_params.σϵ, model_params.ψ)
     
     return log.( πprob[:,:,idxj] ), log.( πprob[:,:,homecntry] ), 
             log.( hh.cons_policy[:,:,idxj] ), log.( hh.cons_policy[:,:,homecntry] )

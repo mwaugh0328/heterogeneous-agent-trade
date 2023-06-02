@@ -145,11 +145,13 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
 
         p = make_p(W, TFP, d[cntry, :], tariff[cntry, :] )
 
+        ψ = make_ψ(cntry, hh_params)
+
         agrid = make_agrid(hh_params, TFP[cntry])
         # this creates teh asset grid so it's alwasy a fraction of home labor income
 
         foo_hh_params = household_params(hh_params, agrid = agrid, 
-                TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)))
+                TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
 
         hh[cntry], dist[cntry] = compute_eq(R[cntry], W[cntry], p, τ[cntry], foo_hh_params, tol_vfi = tol_vfi, tol_dis = tol_dis,
             hh_solution_method = hh_solution_method, stdist_sol_method = stdist_sol_method)
@@ -160,10 +162,12 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
 
         p = make_p(W, TFP, d[cntry, :], tariff[cntry, :] )
 
+        ψ = make_ψ(cntry, hh_params)
+
         agrid = make_agrid(hh_params, TFP[cntry])
 
         foo_hh_params = household_params(hh_params, agrid = agrid, 
-                TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)))
+                TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
 
         output, tradestats = aggregate(R[cntry], W[cntry], p, τ[cntry], tariff, cntry, hh[cntry], dist[cntry], foo_hh_params)
 
