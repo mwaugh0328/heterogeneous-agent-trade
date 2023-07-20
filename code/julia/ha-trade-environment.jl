@@ -35,7 +35,7 @@ include("mix-MarkovChain.jl")
     σar::Float64 = 0.039^(0.5)
     σma::Float64 = 0.0522^(0.5)
     mc::MarkovChain{Float64, Matrix{Float64}, Vector{Float64}} = mMarkovChain(Nar,Nma,ρ,σar,σma)
-    ψ::Array{Float64, 3} = zeros(Na,Nshocks,Ncntry)
+    ψ::Array{Float64, 3} = zeros(Na, Nshocks, Ncntry)
     ψslope::Float64 = 0.0
 end
 
@@ -200,6 +200,7 @@ function make_Tv!(Tv, v, Kg, asset_policy, πprob, λ, ψ, model_params)
                 Tv[ast, shk, cntry] = utility(λ*Kg[ast, shk, cntry], γ) + β*Ev[cntry]
 
                 #Then the vj = uj + βEV
+                #This does not include quality ψ
 
                 Ev[cntry] = 0.0
 

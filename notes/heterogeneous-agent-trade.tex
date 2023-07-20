@@ -1741,6 +1741,50 @@ Tv_{ij}(a, z) = u(g_{c,ij}(a,z)) + \beta \mathrm{E}\left[ v(g_{a,ij}(a,z), z') \
 %\item[\textbf{6.}] Given $v_{ij}(a,z)$ computed from (\ref{eq:v_inversion}), now compute choice probabilities using (\ref{eq:choice-prob}) for each $(a,z)$ combination.
 \end{itemize}
 
+\newpage
+
+\section{Quality Version of the Model}
+
+The utility associated with the choice of variety $j$ is
+\begin{align}
+u(c_{ijt}) + \psi_{j} + \epsilon_{jt}, \label{apx-eq:utility-quality}
+\end{align}
+now there is a shifter $\psi_{j}$ in utility that depends upon the commodity $j$ chosen. Now I'm going to make the assumption that the quality valuation of a household varies with it's assets and efficiency units. In particular, the assumption will be something along the lines that
+\begin{align}
+\psi(a, z, j)
+\end{align}
+So what this means is that a household, depending upon its situation, may have different valuations for a particular commodity. Then, given this assumption on quality, now we are back to the case where the state variables of a individual household are its asset holdings and efficiency units.
+
+Then I'm going to write the value function of a household in country $i$, after the variety shocks are realized, as
+\begin{align}
+v_{i}(a, z) = &  \max_{j} \big  \{ \  v_{i}(a, z, j) + \psi(a, z, j) + \epsilon_{j} \ \big \}
+\end{align}
+And here, I've pulled out the quality term and the shock term to be more consistent with the code. Specifically, solution methods will work on the $v_{i}(a, z, j)$s and then reconstruct $v_{i}(a, z)$ given the shocks and quality specification. The value function conditional on a choice of variety is
+\begin{align}
+v_{i}(a, z, j) = &  \max_{\ a' \ }\bigg  \{ u(c_{ij}) + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\}\\
+\nonumber \\
+\mbox{subject to}  \ & (\ref{eq:borrowing-constraint}) \  \mathrm{and} \ (\ref{eq:trade-budget-constraint}) \nonumber
+\end{align}
+Associated with this are the following choice probabilities for each differentiated good:
+\begin{align}
+\pi_{ij}(a, z) = \exp \left( \frac{ v_{i}(a, z, j) + \psi(a, z, j) }{\sigma_{\epsilon}} \right) \Bigg / \Phi_{i}(a,z), \label{eq:choice-prob} \\
+\nonumber \\
+\mbox{where} \ \ \ \Phi_{i}(a,z) := \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j') + \psi(a, z, j') }{\sigma_{\epsilon}} \right). \label{eq:big-phi}
+\end{align}
+And then the expectation of (\ref{eq:valuefun}) with respect to the taste shocks takes the familiar log-sum form
+\begin{align}
+v_i(a, z) = \sigma_{\epsilon} \log \left\{ \Phi_{i}(a,z)  \right\}.
+\end{align}
+Or the equivalent representation of this which I'm now using in the code is
+\begin{align}
+v_i(a, z) = \sum_{j'} \pi_{ij'}(a, z) \bigg[ v_{i}(a, z, j') + \psi(a, z, j') - \sigma_{\epsilon} \log (\pi_{ij'}(a, z))  \bigg]
+\end{align}
+how is the true again? Then there is an Euler Equation for each variety choice $j$. This (I believe) takes a different form so
+\begin{align}
+\frac{u'(c_{i}(a, z, j))}{p_{ij}} = \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij'}(a', z') \bigg( \ \frac{u'(c_{i}(a', z', j'))}{p_{ij'}} + \frac{\partial \psi(a',z',j')}{\partial a'} \bigg) \right].
+\end{align}
+where now the household needs to take into account how its quality valuation of the different commodities change. Now in my current code, this term is not there. I don't, however, have quality be a function of assets, it is only a function of the shock $z$ and, hence, the agent does not think about this.
+
 
 
 \newpage
