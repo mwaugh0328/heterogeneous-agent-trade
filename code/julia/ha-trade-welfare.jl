@@ -66,11 +66,13 @@ function lucas_eq_variation(xxx, astate, shockstate, hh, Δhh, model_params)
     # core function that computes difference between 
     # value fun at old prices + transfer (xxx) and new value fun
 
+    @unpack ψ , σϵ , Ncntry = model_params
+
     Tv = value_function_fixedpolicy(hh, xxx[1], model_params)    
 
-    v = log_sum_v(Tv[astate, shockstate, : ], model_params.σϵ, model_params.Ncntry)
+    v = log_sum_v(ψ[astate, shockstate, :] .+ Tv[astate, shockstate, : ], σϵ, Ncntry)
 
-    Δ_v = log_sum_v(Δhh.Tv[astate, shockstate, : ], model_params.σϵ, model_params.Ncntry)
+    Δ_v = log_sum_v(ψ[astate, shockstate, :] .+ Δhh.Tv[astate, shockstate, : ], σϵ, Ncntry)
 
     return Δ_v - v
     #Δ_v is new value fun
@@ -163,7 +165,7 @@ function value_function_fixedpolicy(household, λ, model_params; tol = 10^-10, N
     # If you give me policy functions, 
     # I construct the value function
     
-    @unpack Na, Nshocks, Ncntry, β, σϵ = model_params
+    @unpack Na, Nshocks, Ncntry, β, σϵ, ψ = model_params
     @unpack cons_policy, asset_policy, πprob = household
 
     # this is the guess... always start at borrowing cosntraint
@@ -172,7 +174,7 @@ function value_function_fixedpolicy(household, λ, model_params; tol = 10^-10, N
 
     for iter in 1:Niter
         
-        make_Tv!(Tv, v, cons_policy, asset_policy, πprob, λ, model_params)
+        make_Tv!(Tv, v, cons_policy, asset_policy, πprob, λ, ψ, model_params)
 
         err = vec_max(Tv, v)
 
