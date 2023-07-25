@@ -5,11 +5,11 @@ from hat_support import *
 
 class HATmodel:
 
-    def __init__(self, β, γ, φ, σ_ε, N, P, L, TFP, τ, d, agrid, zgrid):
+    def __init__(self, β, γ, φ, σ_ε, N, P, L, TFP, τ, d, agrid, zgrid, ψ):
         self.β, self.γ, self.φ = β, γ, φ
         self.σ_ε, self.N, self.P = σ_ε, N, P
         self.L, self.TFP, self.τ, self.d = L, TFP, τ, d 
-        self.agrid, self.zgrid = agrid, zgrid
+        self.agrid, self.zgrid, self.ψ = agrid, zgrid, ψ
 
     def utility(self, c):
         γ = self.γ
@@ -85,7 +85,7 @@ class HATmodel:
         find_log_sum, utility = self.find_log_sum, self.utility
         P, N = self.P, self.N
         agrid, zgrid = self.agrid, self.zgrid
-        β = self.β
+        β, ψ = self.β, self.ψ
 
         for N_i in range(N):
             for z_i, z in enumerate(zgrid):
@@ -94,15 +94,15 @@ class HATmodel:
                     # Compute Expectations 
                     Ev = 0
                     if ga[a_i, z_i, N_i] <= agrid[0]:
-                        Ev += P[z_i, :] @ find_log_sum(v[0, :, :], zgrid)
+                        Ev += P[z_i, :] @ find_log_sum(v[0, :, :], ψ[0, :, :], zgrid)
                     elif ga[a_i, z_i, N_i] >= agrid[-1]:
-                        Ev += P[z_i, :] @ find_log_sum(v[agrid.shape[0]-1, :, :], zgrid)
+                        Ev += P[z_i, :] @ find_log_sum(v[agrid.shape[0]-1, :, :], ψ[agrid.shape[0]-1, :, :], zgrid)
                     else: 
                         
                         idx = np.where(ga[a_i, z_i, N_i]>=agrid)[0][-1]
                         q = ((ga[a_i, z_i, N_i] - agrid[idx]) / (agrid[idx+1] - agrid[idx]))
-                        Ev += (1-q) * P[z_i, :] @ find_log_sum(v[idx, :, :], zgrid)
-                        Ev += q * P[z_i, :] @ find_log_sum(v[idx+1, :, :], zgrid)
+                        Ev += (1-q) * P[z_i, :] @ find_log_sum(v[idx, :, :], ψ[idx, :, :], zgrid)
+                        Ev += q * P[z_i, :] @ find_log_sum(v[idx+1, :, :], ψ[idx+1, :, :], zgrid)
 
                     v[a_i, z_i, N_i] = utility(gc[a_i, z_i, N_i]) + β*Ev
 
@@ -139,7 +139,7 @@ class HATmodel:
         # Find probabilities
         π = find_probabilities(v)
 
-        return gc, ga, π
+        return gc, ga, π, v
 
     def fixed_point_iteration(self, fun, x0, agrid, max_iter = 1000, error=1e-8):
 
@@ -159,15 +159,16 @@ class HATmodel:
 
     def find_probabilities(self, v):
         σ_ε = self.σ_ε
+        ψ = self.ψ
 
-        v_temp = (v.T - np.max(v, axis=2).T).T
+        v_temp = ((v + ψ).T - np.max(v + ψ, axis=2).T).T
         return (np.exp(v_temp/σ_ε).T/np.exp(v_temp/σ_ε).sum(2).T).T
 
-    def find_log_sum(self, vj, zgrid):
+    def find_log_sum(self, vj, ψ_j, zgrid):
         σ_ε = self.σ_ε
 
-        vj_max = np.max(vj, axis=1)
-        log_sum = np.array([σ_ε*np.log(np.sum(np.exp((vj[z_i, :]-vj_max[z_i])/σ_ε)))+vj_max[z_i] for z_i in range(len(zgrid))])
+        vj_max = np.max(vj + ψ_j, axis=1)
+        log_sum = np.array([σ_ε*np.log(np.sum(np.exp((vj[z_i, :] + ψ_j[z_i, :] - vj_max[z_i])/σ_ε)))+vj_max[z_i] for z_i in range(len(zgrid))])
 
         return log_sum
 
@@ -221,14 +222,13 @@ class HATmodel:
         find_policies = self.find_policies
         find_transition_matrix = self.find_transition_matrix
         find_stationary_distribution = self.find_stationary_distribution
-        agrid, zgrid = self.agrid, self.zgrid
         find_p, find_aggregates = self.find_p, self.find_aggregates
 
         # Find places
         p = find_p(w)
 
         # Find policies
-        gc, ga, π = find_policies(R, w)
+        gc, ga, π, v = find_policies(R, w)
 
         # Find transition matrix
         T = find_transition_matrix(π, ga)
@@ -239,7 +239,7 @@ class HATmodel:
         # Find aggregate quantities
         A_i, Y_i, C_i, C_ij, G_i = find_aggregates(gc, ga, π, p, λ, cntry_idx)
 
-        return A_i, Y_i, C_i, C_ij, G_i
+        return A_i, Y_i, C_i, C_ij, G_i, gc, ga, π, v, T, λ 
 
     def find_aggregates(self, gc, ga, π, p, λ, cntry_idx):
         agrid, zgrid = self.agrid, self.zgrid
@@ -266,12 +266,13 @@ class HATmodel:
 
 class MulticountryHATmodel:
 
-    def __init__(self, β, γ, φ, σ_ε, N, P, L, TFP, τ, d, agrid, zgrid, numeraire_cntry = 0):
+    def __init__(self, β, γ, φ, σ_ε, N, P, L, TFP, τ, d, agrid, zgrid, ψ_slope, numeraire_cntry = 0):
         self.β, self.γ, self.φ = β, γ, φ
         self.σ_ε, self.N, self.P = σ_ε, N, P
         self.L, self.TFP, self.τ, self.d = L, TFP, τ, d
         self.τ, self.d = τ, d
         self.agrid, self.zgrid = agrid, zgrid
+        self.ψ_slope = ψ_slope
         self.numeraire_cntry = numeraire_cntry 
 
     def solve_model_FG(self, R, w):
@@ -280,20 +281,28 @@ class MulticountryHATmodel:
         τ, d = self.τ, self.d
         agrid, zgrid = self.agrid, self.zgrid
         find_trade_stats = self.find_trade_stats 
+        find_ψ = self.find_ψ
 
         A_i = np.empty(N)
         Y_i = np.empty(N)
         C_i = np.empty(N)
         G_i = np.empty(N)
         C_ij = np.empty((N, N))
+        gc_i = np.empty((agrid.shape[0], zgrid.shape[0], N, N)) 
+        ga_i = np.empty((agrid.shape[0], zgrid.shape[0], N, N)) 
+        v_i = np.empty((agrid.shape[0], zgrid.shape[0], N, N)) 
+        π_i = np.empty((agrid.shape[0], zgrid.shape[0], N, N)) 
+        T_i = np.empty((agrid.shape[0]*zgrid.shape[0],agrid.shape[0]*zgrid.shape[0], N)) 
+        λ_i = np.empty((agrid.shape[0]*zgrid.shape[0], N)) 
         for i in range(N):
-            m_i = HATmodel(β, γ, φ, σ_ε, N, P, L[i], TFP[i], τ[i], d[i,:], agrid, zgrid)    
-            A_i[i], Y_i[i], C_i[i], C_ij[i, :], G_i[i] = m_i.solve_model(R, w[i], i)
+            ψ = find_ψ(i)
+            m_i = HATmodel(β, γ, φ, σ_ε, N, P, L[i], TFP[i], τ[i], d[i,:], agrid, zgrid, ψ)    
+            A_i[i], Y_i[i], C_i[i], C_ij[i, :], G_i[i], gc_i[:,:,:,i], ga_i[:,:,:,i], π_i[:,:,:,i], v_i[:,:,:,i], T_i[:,:,i], λ_i[:,i] = m_i.solve_model(R, w[i], i)
 
         # Find total exports and imports
         M_i, X_i, tradeshares = find_trade_stats(C_ij)
 
-        return A_i, Y_i, C_i, C_ij, G_i, M_i, X_i, tradeshares
+        return A_i, Y_i, C_i, C_ij, G_i, M_i, X_i, tradeshares, gc_i, ga_i, π_i, v_i, T_i, λ_i
 
     def objective_FG(self, x):
         numeraire_cntry = self.numeraire_cntry
@@ -308,7 +317,7 @@ class MulticountryHATmodel:
         w[mask] = 1
         w[mask==False] = x[1:]       
 
-        A_i, Y_i, C_i, C_ij, G_i, M_i, X_i, tradeshares = solve_model_FG(R, w)
+        A_i, Y_i, C_i, C_ij, G_i, M_i, X_i, tradeshare, gc_i, ga_i, π_i, v_i, T_i, λ_i = solve_model_FG(R, w)
         Y_i1 = C_i + G_i + X_i - M_i 
 
         resid = np.zeros(N)
@@ -346,9 +355,9 @@ class MulticountryHATmodel:
         w[mask] = 1
         w[mask==False] = out[1:]    
 
-        A_i, Y_i, C_i, C_ij, G_i, M_i, X_i, tradeshares = solve_model_FG(R, w) 
+        A_i, Y_i, C_i, C_ij, G_i, M_i, X_i, tradeshares, gc_i, ga_i, π_i, v_i, T_i, λ_i = solve_model_FG(R, w) 
 
-        return Equilibrium(R, w, A_i, Y_i, C_i, C_ij, G_i, M_i, X_i, tradeshares) 
+        return Equilibrium(R, w, A_i, Y_i, C_i, C_ij, G_i, M_i, X_i, tradeshares, gc_i, ga_i, π_i, v_i, T_i, λ_i) 
 
     def find_log_c(self, m_i, R, w, log_d):
 
@@ -357,7 +366,7 @@ class MulticountryHATmodel:
         m_i1.change_d(np.exp(log_d))
 
         # Find policies
-        gc, ga, π = m_i1.find_policies(R, w)
+        gc, ga, π, v = m_i1.find_policies(R, w)
 
         return np.log(gc), np.log(π) 
 
@@ -388,12 +397,41 @@ class MulticountryHATmodel:
 
         return θc, θπ 
 
+    def find_ψ(self, cntry):
+        agrid, zgrid, N = self.agrid, self.zgrid, self.N
+        ψ_slope = self.ψ_slope 
+
+        slope = ψ_slope * np.log(zgrid)
+
+        ψ = np.zeros((agrid.shape[0], zgrid.shape[0], N))
+        for a_i, a in enumerate(agrid):
+            for z_i, z in enumerate(zgrid):
+                for N_i in range(N):
+                    if cntry == N_i:
+                        ψ[a_i, z_i, N_i] = 0. + slope[z_i] 
+
+        return ψ 
+
+            
 class Equilibrium:
 
-    def __init__(self, R, w, A_i, Y_i, C_i, C_ij, G_i, M_i, X_i, tradeshares):
+    def __init__(self, R, w, A_i, Y_i, C_i, C_ij, G_i, M_i, X_i, tradeshares, gc_i, ga_i, π_i, v_i, T_i, λ_i):
         self.R, self.w = R, w
         self.A_i, self.Y_i, self.C_i = A_i, Y_i, C_i 
         self.C_ij, self.G_i, self.M_i = C_ij, G_i, M_i 
         self.X_i, self.tradeshares = X_i, tradeshares 
+        self.gc_i, self.ga_i, self.π_i, self.v_i, self.T_i, self.λ_i = gc_i, ga_i, π_i, v_i, T_i, λ_i
 
+
+class CEV:
+
+    def __init__(self, m1, m2, eqm1, eqm2):
+        self.m1, self.m2, self.eqm1, self.eqm2 = m1, m2, eqm1, eqm2 
+        self.N = m1.N
+        self.p1, self.p2 = m1.find_p(eqm1.w), m2.find_p(eqm2.w)
+
+    def objective(self, CEV, i):
+        m1, m2, eqm1, eqm2  = self.m1, self.m2, self.eqm1, self.eqm2 
+        p1, p2 = self.p1, self.p2
+        N = self.N
 
