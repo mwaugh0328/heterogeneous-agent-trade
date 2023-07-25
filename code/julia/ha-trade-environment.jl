@@ -397,12 +397,18 @@ end
 
 function make_ψ(home, model_params)
 
-    @unpack Na, Nshocks, Ncntry, mc, ψslope = model_params
+    @unpack Na, Nar, Nma, ρ, Nshocks, Ncntry, mc, σar, ψslope = model_params
 
+    ~ , perm_z = rouwenhorst(Nar, ρ, σar, 0.0)
+    
     ψ = similar(model_params.ψ)
     fill!(ψ, 0.0)
 
-    slope = ψslope.*mc.state_values
+    perm_z = repeat(perm_z, inner = Nma, outer = 1)
+    
+    slope = ψslope.*perm_z
+
+    @assert length(slope) ≈ Nshocks
     
     for cntry = 1:Ncntry
 

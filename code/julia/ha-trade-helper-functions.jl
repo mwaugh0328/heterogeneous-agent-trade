@@ -22,6 +22,7 @@ struct hhXsection
     income::Array{Float64} #exports
     pc::Array{Float64}
     homeshare::Array{Float64}
+    θx::Array{Float64}
 end
 
 ##############################################################################
@@ -306,7 +307,7 @@ end
 ##############################################################################
 ##############################################################################
 
-function make_Xsection(R, W, p, household, distribution, home_cntry, model_params; Nsims = 100)
+function make_Xsection(R, W, p, household, distribution, θ, home_cntry, model_params; Nsims = 100)
     
     @unpack mc, agrid, Ncntry = model_params
     @unpack state_index = distribution
@@ -327,6 +328,8 @@ function make_Xsection(R, W, p, household, distribution, home_cntry, model_param
 
     income = Array{eltype(W)}(undef, Nsims)
 
+    θx = Array{eltype(W)}(undef, Nsims, Ncntry)
+
     pc = Array{eltype(W)}(undef, Nsims)
     fill!(pc, 0.0)
 
@@ -344,6 +347,8 @@ function make_Xsection(R, W, p, household, distribution, home_cntry, model_param
 
             pc[foo] +=  p[cntry] * cons_policy[xxx[1], xxx[2], cntry] * πprob[xxx[1], xxx[2], cntry]
 
+            θx[foo, cntry] = θ.θπ[xxx[1], xxx[2], cntry]
+
         end
 
         homeshare[foo] = ( p[home_cntry] * cons_policy[xxx[1], xxx[2], home_cntry] 
@@ -351,7 +356,7 @@ function make_Xsection(R, W, p, household, distribution, home_cntry, model_param
 
     end
 
-    return hhXsection(wz, a, income, pc, homeshare)
+    return hhXsection(wz, a, income, pc, homeshare, θx)
 
 end
 
