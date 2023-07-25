@@ -401,7 +401,7 @@ class MulticountryHATmodel:
         agrid, zgrid, N = self.agrid, self.zgrid, self.N
         ψ_slope = self.ψ_slope 
 
-        slope = ψ_slope * zgrid
+        slope = ψ_slope * np.log(zgrid)
 
         ψ = np.zeros((agrid.shape[0], zgrid.shape[0], N))
         for a_i, a in enumerate(agrid):
