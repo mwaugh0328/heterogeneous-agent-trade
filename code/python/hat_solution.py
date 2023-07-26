@@ -266,8 +266,9 @@ class HATmodel:
 
 class MulticountryHATmodel:
 
-    def __init__(self, β, γ, φ, σ_ε, N, P, L, TFP, τ, d, agrid, zgrid, ψ_slope, numeraire_cntry = 0):
+    def __init__(self, β,n_p, n_iid, ρ_p, σ_p, σ_iid, γ, φ, σ_ε, N, P, L, TFP, τ, d, agrid, zgrid, ψ_slope, numeraire_cntry = 0):
         self.β, self.γ, self.φ = β, γ, φ
+        self.n_p, self.n_iid, self.ρ_p, self.σ_p, self.σ_iid =  n_p, n_iid, ρ_p, σ_p, σ_iid
         self.σ_ε, self.N, self.P = σ_ε, N, P
         self.L, self.TFP, self.τ, self.d = L, TFP, τ, d
         self.τ, self.d = τ, d
@@ -399,9 +400,12 @@ class MulticountryHATmodel:
 
     def find_ψ(self, cntry):
         agrid, zgrid, N = self.agrid, self.zgrid, self.N
+        n_iid, n_p, ρ_p, σ_p = self.n_iid, self.n_p, self.ρ_p, self.σ_p 
         ψ_slope = self.ψ_slope 
 
-        slope = ψ_slope * np.log(zgrid)
+        # Persistent component of productivity process
+        persistent, _ = rouwenhorst(n_p, ρ_p, σ_p)
+        slope = ψ_slope * np.repeat(persistent, n_iid) 
 
         ψ = np.zeros((agrid.shape[0], zgrid.shape[0], N))
         for a_i, a in enumerate(agrid):
