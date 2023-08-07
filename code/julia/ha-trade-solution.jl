@@ -166,7 +166,7 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
 
         p = make_p(W, TFP, d[cntry, :], tariff[cntry, :] )
 
-        ψ = make_ψ(cntry, hh_params)
+        ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), hh_params)
 
         agrid = make_agrid(hh_params, TFP[cntry])
 

@@ -10,7 +10,7 @@ using DataFrames
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-dftrade.trade = parse.(Float64, dftrade.trade)
+#dftrade.trade = parse.(Float64, dftrade.trade)
     # forsome reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -48,9 +48,10 @@ Ncntry = size(L)[1]
 
 γ = 1.5
 σϵ = 0.25
+ψslope = 0.0
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
-γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ)
+γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
@@ -107,8 +108,12 @@ p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
 
 agrid = make_agrid(hh_prm, TFP[cntry])
 
+ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), hh_prm)
+
+agrid = make_agrid(hh_prm, TFP[cntry])
+
 foo_hh_prm = household_params(hh_prm, agrid = agrid, 
-TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)))
+TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
 
 τsol = zeros(cntry_prm.Ncntry)
 
@@ -142,3 +147,17 @@ df = DataFrame(θij = agθ,
 root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
 
 # CSV.write(root, df);
+
+fooX = make_Xsection(Rsol[cntry], Wsol[cntry], p, hh[cntry], dist[cntry],
+         θ, cntry, foo_hh_prm; Nsims = 100000)
+
+df = DataFrame(income = fooX.income, 
+        assets = fooX.a,
+        homeshare = fooX.homeshare,
+        expenditure = fooX.pc);
+
+df = hcat(df, DataFrame(fooX.θx , :auto), makeunique=true)
+
+root = rootfile*"ek-us-cross-section.csv"
+
+CSV.write(root, df);
