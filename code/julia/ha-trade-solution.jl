@@ -51,7 +51,9 @@ function world_equillibrium_FG(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
 
     @assert length(x) ≈ Ncntry
 
-    W = [x[1:(Ncntry - one(Ncntry))]; 1.0 ]
+    W = [x[1:(Ncntry - one(Ncntry))]; cntry_params.TFP[end] ]
+    # There is an assumption that the final country is the one we 
+    # are normalizing everything to. 
 
     R = ones(Ncntry)*x[end]
 
@@ -126,7 +128,7 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
     @assert hh_params.ϕ > 0.0
 
     @unpack Ncntry, TFP, d, tariff, L = cntry_params
-    @unpack γ, σϵ = hh_params
+    @unpack ψslope, γ, σϵ = hh_params
 
     @assert length(R) ≈ Ncntry
     @assert length(W) ≈ Ncntry
@@ -145,8 +147,9 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
 
         p = make_p(W, TFP, d[cntry, :], tariff[cntry, :] )
 
-        ψ = make_ψ(cntry, hh_params)
-        # this creates the a,z quality shifter
+        ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), hh_params)
+        # this creates the z quality shifter
+        # scaled in a way that is invariant to level of TFP
 
         agrid = make_agrid(hh_params, TFP[cntry])
         # this creates teh asset grid so it's alwasy a fraction of home labor income

@@ -395,9 +395,9 @@ end
 ##########################################################################
 ##########################################################################
 
-function make_ψ(home, model_params)
+function make_ψ(home, ψslope, model_params)
 
-    @unpack Na, Nar, Nma, ρ, Nshocks, Ncntry, mc, σar, ψslope = model_params
+    @unpack Na, Nar, Nma, ρ, Nshocks, Ncntry, σar, = model_params
 
     ~ , perm_z = rouwenhorst(Nar, ρ, σar, 0.0)
     
