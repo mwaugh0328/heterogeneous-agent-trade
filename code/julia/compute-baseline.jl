@@ -10,7 +10,7 @@ using DataFrames
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-#dftrade.trade = parse.(Float64, dftrade.trade)
+dftrade.trade = parse.(Float64, dftrade.trade)
     # forsome reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -48,14 +48,14 @@ Ncntry = size(L)[1]
 
 γ = 1.5
 σϵ = 0.25
-ψslope = 0.0
+ψslope = 0.60
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-dfparams = DataFrame(CSV.File("current-guess-ek-new.csv"))
+dfparams = DataFrame(CSV.File("current-guess-ek-quality.csv"))
 #dfparams = DataFrame(CSV.File("current-guess-ek-gamma125.csv"))
 #dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 
@@ -147,6 +147,9 @@ df = DataFrame(θij = agθ,
 root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
 
 # CSV.write(root, df);
+
+p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
+# prices from the perspective of those in that country
 
 fooX = make_Xsection(Rsol[cntry], Wsol[cntry], p, hh[cntry], dist[cntry],
          θ, cntry, foo_hh_prm; Nsims = 100000)
