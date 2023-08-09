@@ -161,6 +161,6 @@ df = DataFrame(income = fooX.income,
 
 df = hcat(df, DataFrame(fooX.θx , :auto), makeunique=true)
 
-root = rootfile*"ek-us-cross-section.csv"
+root = rootfile*"ek-us-cross-section-45.csv"
 
 CSV.write(root, df);

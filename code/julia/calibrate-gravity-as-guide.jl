@@ -51,7 +51,7 @@ Ncntry = size(L)[1]
 
 γ = 1.5
 σϵ = 0.25
-ψslope = 0.45
+ψslope = 0.55
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
@@ -59,7 +59,7 @@ hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
 
-dfparams = DataFrame(CSV.File("current-guess-ek-quality.csv"))
+dfparams = DataFrame(CSV.File("current-guess-ek-quality45.csv"))
 #dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 
 initial_x = dfparams.guess
