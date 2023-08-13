@@ -25,6 +25,20 @@ struct hhXsection
     θx::Array{Float64}
 end
 
+function make_stats(df)
+    # takes df that is the form of hhXsection
+
+    poor = df.expenditure .< percentile(df.expenditure, 25)
+    rich = df.expenditure .> percentile(df.expenditure, 75)
+
+    poor_homeshare = median(df[poor,:].homeshare)
+    rich_homeshare = median(df[rich,:].homeshare)
+
+    return rich_homeshare, poor_homeshare
+
+end
+
+
 ##############################################################################
 
 function get_aprime(asset_policy, πprob, state_index, model_params)

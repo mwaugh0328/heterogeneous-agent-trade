@@ -3,6 +3,7 @@ using MINPACK
 using Plots
 using CSV
 using DataFrames
+using StatsBase
 
 ####################################################################################
 ####################################################################################
@@ -48,29 +49,35 @@ Ncntry = size(L)[1]
 
 γ = 1.5
 σϵ = 0.25
-ψslope = 0.45
+ψslope = 0.60
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-dfparams = DataFrame(CSV.File("current-guess-ek-quality45.csv"))
+dfparams = DataFrame(CSV.File("current-guess-ek-quality60.csv"))
 #dfparams = DataFrame(CSV.File("current-guess-ek-gamma125.csv"))
 #dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 
 
 xxx = dfparams.guess
 
-out_moment_vec, Wsol, Rsol, πshare  = calibrate(xxx, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)
+R = 1.01
+
+out_moment_vec, Wsol, β, πshare  = calibrate(xxx, R, grvdata, grv_params, hh_prm, 
+                            cntry_prm, trade_cost_type = trade_cost_type)
 
 TFP, d = make_country_params(xxx, cntry_prm, grv_params, trade_cost_type = trade_cost_type)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L, d = d, TFP = TFP)
 
-####################################################################################
-####################################################################################
+hh_prm = household_params(hh_prm, β = β)
 
+Rsol = ones(Ncntry)*R
+
+# ####################################################################################
+# ####################################################################################
 
 Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, hh_prm, cntry_prm, tol_vfi = 1e-10);
 
@@ -95,11 +102,11 @@ rootfile = "../../notebooks/output/"
 
 root = rootfile*"model-data-trade.csv"
 
-# CSV.write(root, dfplot)
+# # CSV.write(root, dfplot)
 
-####################################################################################
-####################################################################################
-# Let's construct bilateral trade elasticities
+# ####################################################################################
+# ####################################################################################
+# # Let's construct bilateral trade elasticities
 
 cntry = 19 # this is the country I'll look at
 
@@ -161,6 +168,8 @@ df = DataFrame(income = fooX.income,
 
 df = hcat(df, DataFrame(fooX.θx , :auto), makeunique=true)
 
-root = rootfile*"ek-us-cross-section-45.csv"
+rich, poor = make_stats(df)
 
-CSV.write(root, df);
+# root = rootfile*"ek-us-cross-section-45.csv"
+
+# CSV.write(root, df);

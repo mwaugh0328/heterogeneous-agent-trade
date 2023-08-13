@@ -43,6 +43,22 @@ end
 
 # ##########################################################################
 # ##########################################################################
+function world_equillibrium_FG(x, R, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration")
+    # multiple dispatch version to find β, given R, so that asset market clears
+
+    β = x[end]
+
+    foo_hh_params = household_params(hh_params, β = β)
+
+    x[end] = R # this is bc x is setup for R to be there 
+    # should change later
+
+    return world_equillibrium_FG(x, foo_hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+        hh_solution_method = "itteration", stdist_sol_method = "itteration")
+
+end
+
 
 function world_equillibrium_FG(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration")
@@ -508,7 +524,7 @@ end
 ##########################################################################
 ##########################################################################
 
-function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+function calibrate(xxx, R, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
     # multiple dispatch version that creates own initial guess
 
@@ -522,17 +538,19 @@ function calibrate(xxx, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1
 
     @assert length(xxx) == 2*(Ncntry - 1) + 4 + 6  
 
-    TFP, d = make_country_params(xxx, cntry_params, grvparams, trade_cost_type = trade_cost_type)
+    # TFP, d = make_country_params(xxx, cntry_params, grvparams, trade_cost_type = trade_cost_type)
 
-    initial_x = log.([TFP[1:18]; 1.02])
+    dfWguess = DataFrame(CSV.File("wage-guess.csv"))
 
-    return calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    initial_x = log.([dfWguess.guess[1:18]; 0.93])
+
+    return calibrate(xxx, R, initial_x, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
             hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
 
 end
 
 
-function calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+function calibrate(xxx, R, initial_x, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
     # this takes primitives (i) solves for an eq. and then (ii) runs gravity regression
 
@@ -553,7 +571,8 @@ function calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; 
     calibrate_cntry_params = country_params(TFP = TFP, d = d, 
                             Ncntry = Ncntry, L = cntry_params.L)
 
-    f(x) = world_equillibrium_FG(exp.(x), hh_params, calibrate_cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+
+    f(x) = world_equillibrium_FG(exp.(x), R, hh_params, calibrate_cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
     hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method);
 
     function f!(fvec, x)
@@ -576,9 +595,13 @@ function calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; 
     
     Wsol = [exp.(sol.x[1:(Ncntry - 1)]); 1.0]
     
-    Rsol = ones(Ncntry)*exp(sol.x[end])
+    Rsol = ones(Ncntry)*R
 
-    πshare = world_equillibrium(Rsol, Wsol, hh_params, calibrate_cntry_params)[5];
+    β = exp(sol.x[end])
+
+    foo_hh_params = household_params(hh_params, β = β)
+
+    πshare = world_equillibrium(Rsol, Wsol, foo_hh_params, calibrate_cntry_params)[5];
     # using the mulitiple dispacth version...since calibration tariffs are zero
 
     ##################################################################
@@ -597,7 +620,7 @@ function calibrate(xxx, initial_x, grvdata, grvparams, hh_params, cntry_params; 
 
     ##################################################################
 
-    return out_moment_vec, Wsol, Rsol,  πshare
+    return out_moment_vec, Wsol, β,  πshare
 end
 
 ##########################################################################
