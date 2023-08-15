@@ -145,17 +145,23 @@ end
 
 ##############################################################################
 
-function welfare_by_state(hh, Δ_hh, country, σϵ)
+function welfare_by_state(hh, Δ_hh, dist, Δ_dist, country, model_params)
 
-    v = log_sum_column(hh[country].Tv,  σϵ)
+    @unpack σϵ, ψ = model_params
 
-    Δ_v = log_sum_column(Δ_hh[country].Tv,  σϵ)
+    v = alt_log_sum(hh[country].πprob, hh[country].Tv, σϵ, ψ)    
 
-    ∂logW = 100.0 .*( Δ_v - v) ./ v  
-    
-    ∂W = ( Δ_v - v)
+    Δ_v = alt_log_sum(Δ_hh[country].πprob, Δ_hh[country].Tv, σϵ, ψ)
 
-    return ∂W, ∂logW
+    SW = sum(vec(v).*dist[country].λ)
+
+    Δ_SW = sum(vec(Δ_v).*Δ_dist[country].λ)
+
+    ∂SW = ( Δ_SW - SW) / SW
+
+    ∂W = ( Δ_v .- v) ./ SW
+
+    return ∂W, ∂SW, v , Δ_v
 
 end
 

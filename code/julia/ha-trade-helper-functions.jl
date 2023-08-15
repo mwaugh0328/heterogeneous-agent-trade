@@ -23,6 +23,7 @@ struct hhXsection
     pc::Array{Float64}
     homeshare::Array{Float64}
     mpc_avg::Array{Float64}
+    welfare::Array{Float64}
     θavg::Array{Float64}
     θx::Array{Float64}
 end
@@ -48,7 +49,12 @@ function make_stats(df; prctile = [50, 50])
     rich_mpc = mean(df[rich,:].mpc)
     middle_mpc= mean(df[middle,:].mpc)
 
-    return (rich_πii, rich_θ, rich_mpc), (poor_πii, poor_θ, poor_mpc), (middle_πii, middle_θ, middle_mpc)
+    poor_∂W = mean(df[poor,:].∂W)
+    rich_∂W = mean(df[rich,:].∂W)
+    middle_∂W= mean(df[middle,:].∂W)
+
+    return (rich_πii, rich_θ, rich_∂W, rich_mpc), (poor_πii, poor_θ, poor_∂W, poor_mpc), 
+        (middle_πii, middle_θ, middle_∂W ,middle_mpc)
 
 end
 
@@ -335,7 +341,7 @@ end
 ##############################################################################
 ##############################################################################
 
-function make_Xsection(R, W, p, household, distribution, θ, mpc, home_cntry, model_params; Nsims = 100)
+function make_Xsection(R, W, p, household, distribution, θ, mpc, ∂W, home_cntry, model_params; Nsims = 100)
     
     @unpack mc, agrid, Ncntry = model_params
     @unpack state_index = distribution
@@ -359,6 +365,8 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, home_cntry, mo
     income = Array{eltype(W)}(undef, Nsims)
 
     mpc_avg = Array{eltype(W)}(undef, Nsims)
+
+    welfare = Array{eltype(W)}(undef, Nsims)
 
     θx = Array{eltype(W)}(undef, Nsims, Ncntry-1)
 
@@ -407,6 +415,8 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, home_cntry, mo
             
         end
 
+        welfare[foo] = ∂W[xxx[1], xxx[2]]
+
         homeshare[foo] = ( p[home_cntry] * cons_policy[xxx[1], xxx[2], home_cntry] 
                     * πprob[xxx[1], xxx[2], home_cntry] ) / pc[foo]
 
@@ -416,7 +426,7 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, home_cntry, mo
 
     end
 
-    return hhXsection(wz, a, income, pc, homeshare, mpc_avg, θavg, θx)
+    return hhXsection(wz, a, income, pc, homeshare, mpc_avg, welfare, θavg, θx)
 
 end
 
