@@ -22,19 +22,33 @@ struct hhXsection
     income::Array{Float64} #exports
     pc::Array{Float64}
     homeshare::Array{Float64}
+    mpc_avg::Array{Float64}
+    θavg::Array{Float64}
     θx::Array{Float64}
 end
+##############################################################################
 
-function make_stats(df)
+function make_stats(df; prctile = [50, 50])
     # takes df that is the form of hhXsection
 
-    poor = df.expenditure .< percentile(df.expenditure, 25)
-    rich = df.expenditure .> percentile(df.expenditure, 75)
+    poor = df.income .< percentile(df.income, prctile[1])
+    rich = df.income .> percentile(df.income, prctile[2])
 
-    poor_homeshare = median(df[poor,:].homeshare)
-    rich_homeshare = median(df[rich,:].homeshare)
+    middle = (df.income .> percentile(df.income, 55)) .== (df.income .< percentile(df.income, 45))
 
-    return rich_homeshare, poor_homeshare
+    poor_πii = mean(df[poor,:].homeshare)
+    rich_πii = mean(df[rich,:].homeshare)
+    middle_πii = mean(df[middle,:].homeshare)
+
+    poor_θ = mean(df[poor,:].θ)
+    rich_θ = mean(df[rich,:].θ)
+    middle_θ = mean(df[middle,:].θ)
+
+    poor_mpc = mean(df[poor,:].mpc)
+    rich_mpc = mean(df[rich,:].mpc)
+    middle_mpc= mean(df[middle,:].mpc)
+
+    return (rich_πii, rich_θ, rich_mpc), (poor_πii, poor_θ, poor_mpc), (middle_πii, middle_θ, middle_mpc)
 
 end
 
@@ -321,7 +335,7 @@ end
 ##############################################################################
 ##############################################################################
 
-function make_Xsection(R, W, p, household, distribution, θ, home_cntry, model_params; Nsims = 100)
+function make_Xsection(R, W, p, household, distribution, θ, mpc, home_cntry, model_params; Nsims = 100)
     
     @unpack mc, agrid, Ncntry = model_params
     @unpack state_index = distribution
@@ -340,9 +354,19 @@ function make_Xsection(R, W, p, household, distribution, θ, home_cntry, model_p
 
     homeshare = Array{eltype(W)}(undef, Nsims)
 
+    θavg = Array{eltype(W)}(undef, Nsims)
+
     income = Array{eltype(W)}(undef, Nsims)
 
-    θx = Array{eltype(W)}(undef, Nsims, Ncntry)
+    mpc_avg = Array{eltype(W)}(undef, Nsims)
+
+    θx = Array{eltype(W)}(undef, Nsims, Ncntry-1)
+
+    θweight = Array{eltype(W)}(undef, Nsims, Ncntry-1)
+
+    weight = Array{eltype(W)}(undef, Nsims, Ncntry-1)
+
+    mpc_weight = Array{eltype(W)}(undef, Nsims, Ncntry)
 
     pc = Array{eltype(W)}(undef, Nsims)
     fill!(pc, 0.0)
@@ -355,22 +379,44 @@ function make_Xsection(R, W, p, household, distribution, θ, home_cntry, model_p
 
         a[foo] = agrid[xxx[1]]
 
-        income[foo] = wz[foo] + R*a[foo]
+        income[foo] = wz[foo] 
+        # + R*a[foo]
+
+        cntry_count = 0
 
         for cntry = 1:Ncntry
 
-            pc[foo] +=  p[cntry] * cons_policy[xxx[1], xxx[2], cntry] * πprob[xxx[1], xxx[2], cntry]
+            cntry_pc = p[cntry] * cons_policy[xxx[1], xxx[2], cntry] * πprob[xxx[1], xxx[2], cntry]
 
-            θx[foo, cntry] = θ.θπ[xxx[1], xxx[2], cntry]
+            pc[foo] +=  cntry_pc
 
+            mpc_weight[foo, cntry] = mpc[xxx[1], xxx[2], cntry]*cntry_pc
+
+            if cntry != home_cntry
+
+                cntry_count = cntry_count + 1
+
+                θx[foo, cntry_count ] =  1.0 + ( θ.θπ[xxx[1], xxx[2], cntry] - θ.θπii[xxx[1], xxx[2],cntry])
+                                    ( θ.θc[xxx[1], xxx[2], cntry] - θ.θcii[xxx[1], xxx[2],cntry])
+
+                weight[foo, cntry_count ] = cntry_pc
+
+                θweight[foo, cntry_count ] = θx[foo, cntry_count]*weight[foo, cntry_count]
+
+            end
+            
         end
 
         homeshare[foo] = ( p[home_cntry] * cons_policy[xxx[1], xxx[2], home_cntry] 
                     * πprob[xxx[1], xxx[2], home_cntry] ) / pc[foo]
 
+        θavg[foo] = sum(θweight[foo, :]) ./ sum(weight[foo, :])
+
+        mpc_avg[foo] = sum(mpc_weight[foo,:] ) / pc[foo]
+
     end
 
-    return hhXsection(wz, a, income, pc, homeshare, θx)
+    return hhXsection(wz, a, income, pc, homeshare, mpc_avg, θavg, θx)
 
 end
 

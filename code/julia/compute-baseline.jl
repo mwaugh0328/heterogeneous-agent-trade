@@ -49,14 +49,14 @@ Ncntry = size(L)[1]
 
 γ = 1.5
 σϵ = 0.25
-ψslope = 0.60
+ψslope = 0.0
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-dfparams = DataFrame(CSV.File("current-guess-ek-quality60.csv"))
+dfparams = DataFrame(CSV.File("current-guess-ek-new.csv"))
 #dfparams = DataFrame(CSV.File("current-guess-ek-gamma125.csv"))
 #dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 
@@ -149,8 +149,6 @@ df = DataFrame(θij = agθ,
                trade = cntrytrade,
                );
 
-
-
 root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
 
 # CSV.write(root, df);
@@ -158,17 +156,24 @@ root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
 p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
 # prices from the perspective of those in that country
 
+mpc = make_mpc(hh[cntry], Rsol[cntry], Wsol[cntry], p, 0.016/2, foo_hh_prm)
+
 fooX = make_Xsection(Rsol[cntry], Wsol[cntry], p, hh[cntry], dist[cntry],
-         θ, cntry, foo_hh_prm; Nsims = 100000)
+         θ, mpc, cntry, foo_hh_prm; Nsims = 100000)
 
 df = DataFrame(income = fooX.income, 
         assets = fooX.a,
         homeshare = fooX.homeshare,
-        expenditure = fooX.pc);
+        expenditure = fooX.pc,
+        mpc = fooX.mpc_avg,
+        θ = fooX.θavg);
 
-df = hcat(df, DataFrame(fooX.θx , :auto), makeunique=true)
+# df = hcat(df, DataFrame(fooX.θx , :auto), makeunique=true)
 
-rich, poor = make_stats(df)
+rich, poor, middle = make_stats(df)
+
+
+
 
 # root = rootfile*"ek-us-cross-section-45.csv"
 
