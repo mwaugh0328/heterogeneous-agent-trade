@@ -828,7 +828,7 @@ Description & Value & \multicolumn{1}{c}{Target}\\
 Discount Factor, \ $\beta$                          & $0.92$ & Global Interest Rate of $1\%$ \\
 CRRA parameter, \ $\gamma$                          & $1.50$ & Micro elasticities of \citet{auer2022unequal} \\
 Slope of Quality Shifter, \ $\psi_{ii}(z)$          & $0.60$ & Micro import share facts of \citet{borusyak2021distributional} \\
-Type One EV parameter, \ $1 / \sigma_{\epsilon}$    & $4.0$ & --- \\
+Type One E-V parameter, \ $1 / \sigma_{\epsilon}$    & $4.0$ & --- \\
 Borrowing Constraint \ $\phi_{i}$                   & --- & $50\%$ of $i$'s autarky labor income \\
 Income Process on \ $z$                             & --- & \citet{krueger2016macroeconomics} \\
 \hline
@@ -1687,24 +1687,25 @@ To visualize some of this on the computer, Figures (\ref{fig:log-elasticity}) an
 
 \section{Computing Welfare}
 
-First the issue. Given the structure of the value function, a simple Lucas style consumption equivalent measure is not easy to construct. And the key issue that there are multiple value functions for each good consumed and they are aggregated in a non-linear way.
+I'm going to walk through a couple of measures of welfare. 
 
-I'm going to construct the following equivalent variation measure. First define the value function of a household in the base period as
+\subsection{Equivalent Variation}
+
+Equivalent variation does the following. Let's suppose some price change gets us to utility level $u_1$, the equivalent variation asks ``at the old prices, $p_0$, how much extra income must I provide you to be indifferent between $u_1$ and $u_0$.''
+
+Now, let's do this in my model. Define the value function of a household in the base period as
 \begin{align}
 v_i(a, z ; \ p_{ij}, R_{i}, w_{i})
 \end{align}
 And then define the value function for the same states, but at some counter factual prices
 \begin{align}
-v_i(a, z ; \ p'_{ij}, R'_{i}, w'_{i})
+v'_i(a, z ; \ p'_{ij}, R'_{i}, w'_{i})
 \end{align}
-Then my equivalent variation measure is a lump sum transfer (in the units of the numeraire or asset), in the base period, such that
+Then my equivalent variation measure is a transfer $\tau$, in the base period at the old prices such that the new level of utility $v'_i$ is achieved. 
 \begin{align}
-v_i(a, z ; \ p_{ij}, R_{i}, w_{i}, \tau) - v_i(a, z ; p'_{ij}, R'_{i}, w'_{i}) = 0
-\label{apx-eq:equivalent-variation}
+EV = v'_i - v_i(a, z ; \ p_{ij}, R_{i}, w_{i}, \ \tau) = 0
 \end{align}
-where the first part with the argument $\tau$ means that the household gets $\tau$ at the base prices. Then once this $\tau$ is solved, this measure can be converted into interesting economics units as one wishes.
 
-Numerically, this is done by simply solving for $\tau$ at the old prices such that (\ref{apx-eq:equivalent-variation}) is satisfied. Notice, this is a transfer given permanently to people of all states. But what this is asking is what $\tau$ makes the $a,z$ guy indifferent. Then do this state by state, so the result is a distribution of $\tau$s which are $a,z$ specific.
 
 
 %\section{Government and Tariffs}

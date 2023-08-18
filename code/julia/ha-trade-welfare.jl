@@ -3,12 +3,11 @@ function eq_variation(R, w, p, Δ_hh, state_index, model_params)
     # Δ_hh is the value function at the new prices
     # this works through everything state by state
 
-
-    @unpack σϵ, Na, Nshocks, Ncntry = model_params
+    @unpack σϵ, Na, Nshocks, Ncntry, ψ = model_params
 
     τeqv = Array{Float64}(undef,Na,Nshocks)
 
-    Δ_v = log_sum_column(Δ_hh.Tv,  σϵ)
+    Δ_v = alt_log_sum(Δ_hh.πprob, Δ_hh.Tv, σϵ, ψ)
     
     xguess = [0.0]
 
@@ -17,8 +16,6 @@ function eq_variation(R, w, p, Δ_hh, state_index, model_params)
 
     for (foo, xxx) in enumerate(state_index)
         # work through all the states
-
-        # ΔW[xxx[1], xxx[2]] = eq_variation(τ , xxx[1], xxx[2], R, w, p, Δ_v[xxx[1], xxx[2]], model_params)
 
         f(x) = eq_variation(x, xxx[1], xxx[2], R, w, p, Δ_v[xxx[1], xxx[2]], model_params)
 
@@ -50,9 +47,11 @@ function eq_variation(xxx, astate, shockstate, R, w, p, Δ_v, model_params)
     # core function that computes difference between 
     # value fun at old prices + transfer (xxx) and new value fun
 
+    @unpack ψ , σϵ , Ncntry = model_params
+
     eqv_hh = solve_household_problem(R, w, p, xxx[1], model_params)
 
-    v = log_sum_v(eqv_hh.Tv[astate, shockstate,:], model_params.σϵ, model_params.Ncntry)
+    v = log_sum_v(ψ[astate, shockstate, :] .+ eqv_hh.Tv[astate, shockstate,:], σϵ, Ncntry)
 
     return Δ_v - v
     #Δ_v is new value fun
@@ -159,7 +158,7 @@ function welfare_by_state(hh, Δ_hh, dist, Δ_dist, country, model_params)
 
     ∂SW = ( Δ_SW - SW) / SW
 
-    ∂W = ( Δ_v .- v) ./ SW
+    ∂W = ( Δ_v .- v) 
 
     return ∂W, ∂SW, v , Δ_v
 

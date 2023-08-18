@@ -350,7 +350,7 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, ∂W, home_cnt
     Qmc = MarkovChain(distribution.Q) 
     # converts markov chain to a markov chain interperted by 
     # quant econ
-
+    Random.seed!(03281978) # this sets the seed
     X = state_index[simulate(Qmc, Nsims)]
     # this returns the states
 
@@ -379,11 +379,11 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, ∂W, home_cnt
     pc = Array{eltype(W)}(undef, Nsims)
     fill!(pc, 0.0)
 
-    for (foo, xxx) in enumerate(X)
+    ef_units = exp.(mc.state_values)
 
-        ef_units = exp.(mc.state_values[xxx[2]])
+    @inbounds @views for (foo, xxx) in enumerate(X)
 
-        wz[foo] = labor_income(ef_units, W)
+        wz[foo] = labor_income(ef_units[xxx[2]], W)
 
         a[foo] = agrid[xxx[1]]
 
@@ -405,7 +405,7 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, ∂W, home_cnt
                 cntry_count = cntry_count + 1
 
                 θx[foo, cntry_count ] =  1.0 + ( θ.θπ[xxx[1], xxx[2], cntry] - θ.θπii[xxx[1], xxx[2],cntry])
-                                    ( θ.θc[xxx[1], xxx[2], cntry] - θ.θcii[xxx[1], xxx[2],cntry])
+                                    ( θ.θc[xxx[1], xxx[2], cntry] - θ.θcii[xxx[1], xxx[2], cntry])
 
                 weight[foo, cntry_count ] = cntry_pc
 
@@ -415,7 +415,7 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, ∂W, home_cnt
             
         end
 
-        welfare[foo] = ∂W[xxx[1], xxx[2]]
+        welfare[foo] = ∂W[xxx[1], xxx[2]] / ( wz[foo])
 
         homeshare[foo] = ( p[home_cntry] * cons_policy[xxx[1], xxx[2], home_cntry] 
                     * πprob[xxx[1], xxx[2], home_cntry] ) / pc[foo]

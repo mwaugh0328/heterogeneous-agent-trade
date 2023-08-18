@@ -56,7 +56,7 @@ hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-dfparams = DataFrame(CSV.File("current-guess-ek-quality.csv"))
+dfparams = DataFrame(CSV.File("current-guess-ek-quality60.csv"))
 #dfparams = DataFrame(CSV.File("current-guess-ek-gamma125.csv"))
 #dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
 
@@ -158,19 +158,22 @@ p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
 
 mpc = make_mpc(hh[cntry], Rsol[cntry], Wsol[cntry], p, 0.016/2, foo_hh_prm)
 
+τeqv = zeros(foo_hh_prm.Na, foo_hh_prm.Nshocks);
+
 fooX = make_Xsection(Rsol[cntry], Wsol[cntry], p, hh[cntry], dist[cntry],
-         θ, mpc, cntry, foo_hh_prm; Nsims = 100000)
+         θ, mpc, τeqv, cntry, foo_hh_prm; Nsims = 100000);
 
 df = DataFrame(income = fooX.income, 
-        assets = fooX.a,
-        homeshare = fooX.homeshare,
-        expenditure = fooX.pc,
-        mpc = fooX.mpc_avg,
-        θ = fooX.θavg);
+         assets = fooX.a,
+         homeshare = fooX.homeshare,
+         expenditure = fooX.pc,
+         mpc = fooX.mpc_avg,
+         θ = fooX.θavg,
+         ∂W = fooX.welfare);
 
 # df = hcat(df, DataFrame(fooX.θx , :auto), makeunique=true)
 
-rich, poor, middle = make_stats(df)
+rich, poor, middle = make_stats(df);
 
 
 
