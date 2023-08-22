@@ -37,6 +37,7 @@ include("mix-MarkovChain.jl")
     mc::MarkovChain{Float64, Matrix{Float64}, Vector{Float64}} = mMarkovChain(Nar,Nma,ρ,σar,σma)
     ψ::Array{Float64, 3} = zeros(Na, Nshocks, Ncntry)
     ψslope::Float64 = 0.0
+    λτ::Float64 = 1.0
 end
 
 @with_kw struct country_params
@@ -68,7 +69,7 @@ end
 
 function coleman_operator(c, v, R, W, p, τ, model_params)
     # Organization 
-    @unpack agrid, mc, β, γ, σϵ, ψ, Na, Nshocks, Ncntry = model_params
+    @unpack agrid, mc, β, γ, σϵ, ψ, λτ, Na, Nshocks, Ncntry = model_params
 
     aprime = similar(c)
     Kg = similar(c)
@@ -92,14 +93,16 @@ function coleman_operator(c, v, R, W, p, τ, model_params)
     ∑π_ϵ!(muc_ϵ, c, πprob, p, γ)
     # this integrates over ϵ
 
-    Emuc .= β*R*( matmul( muc_ϵ , mc.p'))
+    Emuc .= β*R*λτ*( matmul( muc_ϵ , mc.p') )
+    # λτ is porportional tax / subsidy on 
+    # all income. used for welfare analysis
 
     #Step (3) Work through each county option
      @inbounds @views for cntry = 1:Ncntry
 
         muc_inverse!( gc, p[cntry] * Emuc, γ)
 
-        ã .= @. (p[cntry] * gc + agrid - W*shocks' - τ) / R
+        ã .= @. (p[cntry] * gc + agrid - λτ*W*shocks' - τ) / ( R*λτ )
         # off budget constraint a = (p_jc_j + a' - w*z - τ ) / R
 
         # then linear interpolation to get back on grid.
@@ -115,7 +118,7 @@ function coleman_operator(c, v, R, W, p, τ, model_params)
     
             aprime[:, shk, cntry ] .= foo.(agrid)
 
-            Kg[:, shk, cntry] .= @. ( -aprime[:, shk, cntry] + R*agrid + W*shocks[shk] + τ ) / p[cntry]
+            Kg[:, shk, cntry] .= @. ( -aprime[:, shk, cntry] + λτ*(R*agrid + W*shocks[shk]) + τ ) / p[cntry]
             # again off budget constraint pc = -a' + Ra + wz + τ 
     
         end

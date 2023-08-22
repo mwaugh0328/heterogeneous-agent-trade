@@ -415,7 +415,7 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, ∂W, home_cnt
             
         end
 
-        welfare[foo] = ∂W[xxx[1], xxx[2]] / ( wz[foo])
+        welfare[foo] = ∂W[xxx[1], xxx[2]] 
 
         homeshare[foo] = ( p[home_cntry] * cons_policy[xxx[1], xxx[2], home_cntry] 
                     * πprob[xxx[1], xxx[2], home_cntry] ) / pc[foo]

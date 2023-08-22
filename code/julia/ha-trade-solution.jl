@@ -482,7 +482,7 @@ function make_gc_guess!(gc, R, W, p, model_params)
 
         for shk = 1:Nshocks
 
-            gc[:, shk, cntry] .= (-agrid[1]  + R*(agrid[1]) + W*shocks[shk] ) / p[cntry]
+            gc[:, shk, cntry] .= (-agrid[1]  + (R*agrid[1] + W*shocks[shk]) ) / p[cntry]
        
         end
 

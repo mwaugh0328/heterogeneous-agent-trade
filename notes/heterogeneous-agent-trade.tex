@@ -824,7 +824,7 @@ At a mechanical level, finding the minimum to (\ref{eq:smm-condition}) amounts t
 \multicolumn{3}{c}{{\normalsize\textbf{Table \ref{tb-calibration}: Preferences, Shocks, and Constraints | Calibrated Parameters}} }
 \\\hline \hline
 Description & Value & \multicolumn{1}{c}{Target}\\
-\cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3} 
+\cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3}
 Discount Factor, \ $\beta$                          & $0.92$ & Global Interest Rate of $1\%$ \\
 CRRA parameter, \ $\gamma$                          & $1.50$ & Micro elasticities of \citet{auer2022unequal} \\
 Slope of Quality Shifter, \ $\psi_{ii}(z)$          & $0.60$ & Micro import share facts of \citet{borusyak2021distributional} \\
@@ -1687,7 +1687,7 @@ To visualize some of this on the computer, Figures (\ref{fig:log-elasticity}) an
 
 \section{Computing Welfare}
 
-I'm going to walk through a couple of measures of welfare. 
+I'm going to walk through a couple of measures of welfare.
 
 \subsection{Equivalent Variation}
 
@@ -1701,12 +1701,18 @@ And then define the value function for the same states, but at some counter fact
 \begin{align}
 v'_i(a, z ; \ p'_{ij}, R'_{i}, w'_{i})
 \end{align}
-Then my equivalent variation measure is a transfer $\tau$, in the base period at the old prices such that the new level of utility $v'_i$ is achieved. 
+Then my equivalent variation measure is a transfer $\tau$, in the base period at the old prices such that the new level of utility $v'_i$ is achieved:
 \begin{align}
-EV = v'_i - v_i(a, z ; \ p_{ij}, R_{i}, w_{i}, \ \tau) = 0
+EV = v'_i - v_i(a, z ; \ p_{ij}, R_{i}, w_{i}, \ \tau(a,z)) = 0.
 \end{align}
+where I'm treating the $v'_i$ part like a number and the question is how do I get there. \textbf{Choices.} This all sounds straight forward, but how do you give the $\tau$ both in the units and temporally.  Here is what I'm currently dong:
+\begin{itemize}
+\item My Lucas-style equivalent variation finds the $\tau(a,z)$ at the old prices to meet the new level of utility. The $\tau$ is a proportional increase in consumption of all commodities. This is relatively simple because I can fix policy functions at the old prices and reconstruct the value function simply scaling consumption in every state, every commodity by $\tau(a,z)$ and then find the proportional increase
+\end{itemize}
 
 
+
+\subsection{Equivalent Variation}
 
 %\section{Government and Tariffs}
 %
