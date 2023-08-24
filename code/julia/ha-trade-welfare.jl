@@ -30,7 +30,7 @@ function eq_variation_porportional(R, w, p, Δ_hh, state_index, model_params)
             ml=diag_adjust, mu=diag_adjust,
             diag=ones(n),
             mode= 1,
-            tol=1e-10,)
+            tol=1e-5,)
 
 
         τeqv[xxx[1], xxx[2]] = sol.x[1]
