@@ -12,6 +12,8 @@ using Interpolations
 using LinearAlgebra
 using LoopVectorization
 using FiniteDifferences
+using Random
+using DelimitedFiles
 
 include("mix-MarkovChain.jl")
 

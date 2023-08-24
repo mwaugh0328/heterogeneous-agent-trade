@@ -13,7 +13,7 @@ using StatsBase
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
 dftrade.trade = parse.(Float64, dftrade.trade)
-    # forsome reason, now it reads in as a "String7"
+    # for some reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
     
@@ -106,7 +106,7 @@ println(" ")
 # country = 16
 # country_name = "-ESP"
 
-Δ_d = 0.10
+Δ_d = 0.010
 
 d_prime = deepcopy(d)
 d_prime[home_country, :] =  (d[home_country, :]).*(1.0 - Δ_d)
@@ -145,6 +145,12 @@ print(Δ_sol)
             hh_prm, Δ_cntry_prm, tol_vfi = 1e-10);
 
 
+ACR = 100*(1.0 / 3.0)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
+
+println(" ")
+println(" ")
+println("ACR-gains")
+println(ACR)
 ####################################################################################
 ####################################################################################
 # now construct welfare and micro-moments
@@ -167,6 +173,8 @@ W = Wsol[home_country]
 # construct welfare, porportional increase in total income 
 # needed at the **old** prices to match **new** value function            
 λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
+
+writedlm("welfare-quality-ge-1prct.txt", λτeqv)
 
 τsol = zeros(Δ_cntry_prm.Ncntry)
 
@@ -192,7 +200,7 @@ rich, poor, middle = make_stats(df)
 
 rootfile = "../../notebooks/output/"
  
-root = rootfile*"ek-us-cross-section-quality60-ge.csv"
+root = rootfile*"ek-us-cross-section-quality60-ge-1prct.csv"
 
 CSV.write(root, df);
  
