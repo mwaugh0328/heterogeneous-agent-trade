@@ -184,7 +184,7 @@ for lib_cntry = 1:2
     # needed at the **old** prices to match **new** value function            
     λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
 
-    writedlm("welfare-"*cntryname[lib_cntry]*".txt", λτeqv)
+    writedlm("./output/welfare-"*cntryname[lib_cntry]*".txt", λτeqv)
 
     τsol = zeros(Δ_cntry_prm.Ncntry)
 
