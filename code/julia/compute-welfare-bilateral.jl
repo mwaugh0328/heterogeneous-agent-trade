@@ -107,7 +107,7 @@ println(" ")
 println("########### computing counter factual eq ################")
 println(" ")
 
-for lib_cntry = 1:2
+for lib_cntry = 3:13
 
     country_name = cntryname[lib_cntry]
 
