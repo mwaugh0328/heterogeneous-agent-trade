@@ -12,7 +12,7 @@ using StatsBase
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-#dftrade.trade = parse.(Float64, dftrade.trade)
+dftrade.trade = parse.(Float64, dftrade.trade)
     # for some reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -147,7 +147,7 @@ print(Δ_sol)
             hh_prm, Δ_cntry_prm, tol_vfi = 1e-10);
 
 
-ACR = 100*(1.0 / 3.0)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
+ACR = 100*(1.0 / 4.0)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
 
 println(" ")
 println(" ")
@@ -182,7 +182,7 @@ W = Wsol[home_country]
 # needed at the **old** prices to match **new** value function            
 λτeqv =  eq_variation_porportional(R, W, p, Δ_hh, dist[home_country].state_index, foo_hh_prm)
 
-writedlm("welfare-fixR.txt", λτeqv)
+writedlm("./output/welfare-fixR.txt", λτeqv)
 
 τsol = zeros(Δ_cntry_prm.Ncntry)
 
@@ -208,7 +208,7 @@ rich, poor, middle = make_stats(df)
 
 rootfile = "../../notebooks/output/"
  
-root = rootfile*"cross-section-fixR.csv"
+root = rootfile*"us-cross-section-fixR.csv"
 
 CSV.write(root, df);
  

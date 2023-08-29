@@ -895,7 +895,7 @@ In this section, I measure the gains from trade and study how they are distribut
 
 \subsection{Measuring Welfare}
 
-In the previous section, I focused on what amount to level changes in utils. Here I define an equivalent variation measure that has more interpretable units.
+In the previous section, I focused on what amount to level changes in utils. For quantitative analysis, utils are hard to interpret and depend on the cardinalization of utilty function. Here I define an equivalent variation measure that has more interpretable units.
 
 As a quick refresher, equivalent variation does the following: given that some price change delivers utility level $u'$, equivalent variation asks ``at the old prices, $p_0$, how much extra income must be provided to be indifferent between $u'$ and $u$.''
 
@@ -907,21 +907,19 @@ And then the value function for the same states, but at counterfactual prices
 \begin{align}
 v'_i(a, z ; \ p', R'_{i}, w'_{i}),
 \end{align}
-where I'm evaluating this with the prices prevailing at the new steady state and, hence, there are no $t$ subscripts. I focus this section on across steady states, not transition paths. Those may be important, but add an additional computational challenge which I've decided to abstract from.
+where I'm evaluating this with the prices prevailing at the new steady state and, hence, there are no $t$ subscripts. I focus this section on across steady states, not transition paths. Those may be important, but it adds an additional computational challenge which I've decided to abstract from.
 
 Given these definitions, my equivalent variation measure is a permanent, proportional increase in income (asset and labor) $\tau_{i,a,z}$, at the old prices such that the new level of utility $v'_i$ is achieved:
 \begin{align}
 v'_i(a, z ; \ p', R'_{i}, w'_{i}) - v_i(a, z ; \ p, R_{i}\tau_{i,a,z}, w_{i}\tau_{i,a,z})) = 0. \label{eq:welfare-eqv}
 \end{align}
-To be clear, this says  a household with states $a,z$ must have their income increased today and for the infinite future increased by the number $\tau_{i,a,z}$. The underscore notation indexes this value by the original-type of household I'm looking at, and so there is one number for a household with $a,z$ states in country $i$. The $\tau$s that solve (\ref{eq:welfare-eqv}) is my primary measure of welfare at the household level.\footnote{To be clear, there are alternatives like a Lucas-style consumption equivalent variation | this however confronts questions about which consumption. I also explored a lump sum transfer version of \ref{eq:welfare-eqv} as well. The proportional increase measure is my preference because it's essentially the same that is done in \citet{auer2022unequal}.}
-
-
+To be clear, this says a household living in country $i$ with states $a,z$ must have their income increased today ( and for the infinite future ) by the number $\tau_{i,a,z}$. The underscore notation indexes this value by the original-type of household I'm looking at, and so there is one number for a household with $a,z$ states in country $i$. The $\tau$s that solve (\ref{eq:welfare-eqv}) are my primary measure of welfare at the household level.\footnote{To be clear, there are alternatives like a Lucas-style consumption equivalent variation | this however confronts questions about which consumption. I also explored a lump sum transfer version of \ref{eq:welfare-eqv} as well. The proportional increase measure is my preference because it's essentially the same as in \citet{auer2022unequal}.}
 
 \subsection{10\% Reduction in US Trade Costs}
 
-In this section, I study a ten percent reduction in all US trade costs. That is $d_{us,j}$ is shifted down for all $j$ partners by $0.90$. The top panel of Table \ref{tb-welfare} reports how much US imports change in this counterfactual and how the global interest rate changes.
+This section studies a ten percent reduction in all US trade costs. That is $d_{us,j}$ is shifted down for all $j$ partners by $0.90$. The top panel of Table \ref{tb-welfare} reports how much US imports change in this counterfactual and how the global interest rate changes.
 
-Figure \ref{fig:welfare-households} reports how the welfare gains very across households. Here households are binned by quantiles of the initial distribution of consumption expenditure and the y-axis reports average welfare gains within each bin. For example, households in the bottom 20th percentile of the consumption expenditure distribution experience gains of about $2.6$.
+Figure \ref{fig:welfare-households} reports how the welfare gains, in equivalent variation units, varies across households. Here households are binned by quantiles of the initial distribution of consumption expenditure and the y-axis reports average welfare gains within each bin. For example, households in the bottom 20th percentile of the consumption expenditure distribution experience gains of about $2.6$.
 
 The gains from trade are strongly pro-poor. And the magnitudes across income brackets are large with the poorest households gaining six times more from trade than the richest households.
 
@@ -956,40 +954,24 @@ $R - 1$ & $1.00$ & $0.8$ & $1.00$  \\
 \end{center}
 \end{table}
 
-On average, the gains across households are much larger than representative agent benchmarks. The third row of Table \ref{tb-welfare} and the dashed line in Figure \ref{fig:welfare-households} show that the average gain is 1.2 percent. In contrast, a calculation of \citet{arkolakis2012new} off of the change in the US import share with an elasticity of four implies that the aggregate gains are only half a percent (bottom row of Table \ref{tb-welfare}). This is half the size of the heterogenous agent model.
+On average, the gains across households are much larger than representative agent benchmarks. The third row of Table \ref{tb-welfare} and the dashed line in Figure \ref{fig:welfare-households} show that the average gain is 1.2 percent. In contrast, a calculation of \citet{arkolakis2012new} off of the change in the US import share with an elasticity of four implies that the aggregate gains are only half a percent (bottom row of Table \ref{tb-welfare}).\footnote{I show in the appendix, the formula in \citet{arkolakis2012new} is equivalent variation measure as I compute and, hence, the large gains I'm finding are not because I add curvature to the utility function or having infinitely lived agents | these do not matter when computing equivalent variation.} This is half the size of the heterogenous agent model.
 
-The reason why my model delivers larger gains is because of the large gains in the bottom part of the income distribution. Looking at Figure \ref{fig:welfare-households}, the gains from trade for the rich households look a lot like those that would come out of \citet{arkolakis2012new}-style calculation. However, for poor households, the gains are big as price changes contribute large amounts to utility for these households.
+The reason why my model delivers larger gains is because of the large gains in the bottom part of the income distribution. Looking at Figure \ref{fig:welfare-households}, the gains from trade for the rich households look a lot like those that would come out of \citet{arkolakis2012new}-style calculation. However, for poor households, the gains are big as price changes matter a lot for these households.
 
 Following the discussion around Proposition \ref{prp:gains-trade}, the other issue at play is how interest rates are changing and inducing valuation effects. The blue bars in Figure \ref{fig:welfare-households} report the gains when $R$ is fixed at its initial level and thus the asset market is not clearing, while all other prices are allowed to adjust. Thus, the comparison of the red vs. blue bars partials out the role that interest rates are playing.
 
-There is only a modest effect of interest rates.\footnote{Also, because interest rates don't change that much, all households in the US gain in this counterfactual.} There are  Since intrust rates decline in the counterfactual, rich households gain slightly more ($0.44$ vs. $0.42$) when $R$ is held fixed. These households are those holding assets, are most effected by the decline in interest rates, but also loose less since they are rich and their marginal utility is low. For the poorest households the situation is flipped. They gain less ($2.15$ vs. $2.59$) when $R$ is held fixed. These are debtor households (or soon to be) and thus any decline in interest rates relaxes their budget constraint. And because these are high marginal utility households, the small change in interest rates is magnified for them.
+There is only a modest effect of interest rates. Since intrust rates decline in the counterfactual, rich households gain slightly more ($0.44$ vs. $0.42$) when $R$ is held fixed. These households are those holding assets, are most effected by the decline in interest rates, but also loose less since they are rich and their marginal utility is low. For the poorest households the situation is flipped. They gain less ($2.15$ vs. $2.59$) when $R$ is held fixed. These are debtor households (or soon to be) and thus any decline in interest rates relaxes their budget constraint. And because these are high marginal utility households, the small change in interest rates is magnified for them.
 
 Interest rates only change slightly there is financial globalization. While the US is the largest economy in the model, with 19 countries changes in US trade costs have small effects on global asset demand and supply.  In Section \ref{sec:asset-market}, I explore the alternative case with financial autarky where larger moves in domestic interest rates are observed.
 
 \subsection{Heterogeneity by Trading Partner}
 
 
+\begin{figure}[!t]
+\centering{\includegraphics[scale = .5]{./figures/welfare-bilateral.pdf}}
+\caption{Welfare Gains by Household: 10\% Reduction in $d_{us,j}$}\label{fig:welfare-households}
+\end{figure}
 
-%\begin{table}[t]
-%\small
-%\begin{center}
-%\refstepcounter{table}
-%\setlength {\tabcolsep}{5.5mm}
-%\renewcommand{\arraystretch}{1.60}\label{tb-micro-shares}
-%\begin{tabular}[t]{l c c c}
-%\multicolumn{4}{c}{{\normalsize\textbf{Table \ref{tb-micro-shares}: Model: Shares, Elasticities, and MPCs by Income of US Households}} }
-%\\\hline \hline
-%& Import Shares & Trade Elasticities & MPCs\\
-%\cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4}
-%Below Median Income & $0.08$ & $-6.24$ & 0.50\\
-%Median   & $0.08$ & $-4.88$ & 0.28\\
-%Above Median Income & $0.08$ & $-3.97$ & 0.17\\
-%\hline
-%\end{tabular}
-%\\[0.5ex]
-%%\parbox{5.95in}{\footnotesize \textbf{Note:} }
-%\end{center}
-%\end{table}
 
 \subsection{The Role of the Asset Market}\label{sec:asset-market}
 
@@ -1628,30 +1610,31 @@ and is (i) independent of the household heterogeneity and (ii) summarized by the
 
 
 
-\subsection{Equivalent Variation}
+\subsection{Appendix: Equivalent Variation Measures}
 
-%\section{Government and Tariffs}
-%
-%Here I'm going to introduce a government who collects the tariffs and redistributes them.
-%
-%First some notation, let $t_{ij}$ be the ad-valorem tariff rate that country $i$ collects on goods from country $j$. Then the prices that consumers face are now:
-%\begin{align}
-%p_{ij} = (1 + t_{ij})\frac{d_{ij}w_{j}}{A_{j}}.
-%\end{align}
-%Then the government collects tariff revenue. In country $i$, the total amount of revenue collected is
-%\begin{align}
-%& \sum_{j} \frac{t_{ij}}{(1+ t_{ij})} \times p_{ij} \times \int c_i(a,z,j) \pi_{ij}(a,z) L_i \lambda_i(a,z) \\
-%\nonumber \\
-%& =  \sum_{j} \frac{t_{ij}}{(1+ t_{ij})} \times M_{ij}
-%\end{align}
-%and just to validate this to my self, the first line is taking the ratio of net tariffs to the gross tariff rate to get the net total revenue. Then the second line follows given the definition of imports.
-%
-%The government will then redistribute the tariffs to households in a lump sum fashion to everybody. The notation is that each household gets $\tau$ transfer. I assume that the government will run a balanced budget and thus:
-%\begin{align}
-%L_i \tau_{i} =  \sum_{j} \frac{t_{ij}}{(1+ t_{ij})} \times M_{ij}
-%\end{align}
-%so total transfers must equal total revenue collected from tariffs.
-
+One question: How would this work in ACR world? I'll do this with CRRA and ignore household types. The value function of a household at base period prices is
+\begin{align}
+v_i\left ( \frac{w_{i}}{P_{i}} \right).
+\end{align}
+And then the value function, but at counterfactual prices
+\begin{align}
+v'_i\left( \frac{w'_{i}}{P'_{i}} \right),
+\end{align}
+then equivalent variation finds the $\tau$ at the old prices which equate value functions. So with CRRA and infinitely lived households this becomes
+\begin{align}
+\frac{\left( \frac{w_{i}}{P_{i}} \tau \right )^{1-\gamma}}{(1 - \beta)(1-\gamma)} = \frac{ \left( \frac{w'_{i}}{P'_{i}}  \right)^{1-\gamma}}{(1 - \beta)(1-\gamma)} 
+\end{align}
+Then I'm going to insert the result from \citet{arkolakis2012new} that the real wage is proportional to the home trade share
+\begin{align}
+\frac{w_{i}}{P_{i}} \propto \pi_{ii}^{\frac{-1}{\theta}}.
+\end{align}
+Then inserting this into the expression above and canceling terms gives
+\begin{align}
+\tau^{1-\gamma} &= \left( \pi_{ii}^{\prime} \right)^{\frac{1-\gamma}{-\theta}} /  \left( \pi_{ii} \right)^{\frac{1-\gamma}{-\theta}}, \\
+\nonumber \\
+\Rightarrow \ \ \  \tau & = \left( \pi_{ii}^{\prime}  /   \pi_{ii} \right)^{\frac{-1}{\theta}}.
+\end{align}
+So my equivalent variation measure in an ACR world is the change in the home trade shares taken to the power of one over the trade elasticity. And this is the classic formula, thus adding curvature to the utility function, infinitely lived vs. static does not matter for computing equivalent variation.  
 
 \newpage
 
