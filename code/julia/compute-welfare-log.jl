@@ -46,16 +46,16 @@ L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.5
+γ = 1.0
 σϵ = 0.25
-ψslope = 0.60
+ψslope = 0.00
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.csv"))
+dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-log.csv"))
 
 xxx = dfparams.guess
 
@@ -106,12 +106,8 @@ println(" ")
 Δ_d = 0.10
 
 d_prime = deepcopy(d)
-
-for cntryx = 1:Ncntry
-
-    d_prime[cntryx, :] =  (d[cntryx, :]).*(1.0 - Δ_d)
-    d_prime[cntryx, cntryx] = 1.0
-end
+d_prime[home_country, :] =  (d[home_country, :]).*(1.0 - Δ_d)
+d_prime[home_country, home_country] = 1.0
 
 
 Δ_cntry_prm = country_params(Ncntry = Ncntry, L = L, d = d_prime, TFP = TFP)
@@ -178,7 +174,7 @@ W = Wsol[home_country]
 # needed at the **old** prices to match **new** value function            
 λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
 
-writedlm("./output/welfare-global.txt", λτeqv)
+writedlm("./output/welfare-log.txt", λτeqv)
 
 τsol = zeros(Δ_cntry_prm.Ncntry)
 
@@ -206,9 +202,9 @@ rich, poor, middle = make_stats(df)
 
 rootfile = "../../notebooks/output/"
 
-writedlm(rootfile*"welfare-global-ACR.txt", ACR)
+writedlm(rootfile*"welfare-log-ACR.txt", ACR)
  
-root = rootfile*"us-cross-section-global.csv"
+root = rootfile*"us-cross-section-log.csv"
 
 CSV.write(root, df);
  
