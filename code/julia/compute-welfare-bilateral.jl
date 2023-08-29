@@ -16,7 +16,7 @@ cntryname = ["AUS","AUT","BEL","CAN","DNK","FIN","FRA",
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-dftrade.trade = parse.(Float64, dftrade.trade)
+#dftrade.trade = parse.(Float64, dftrade.trade)
     # for some reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -107,7 +107,7 @@ println(" ")
 println("########### computing counter factual eq ################")
 println(" ")
 
-for lib_cntry = 1:2
+for lib_cntry = 14:16
 
     country_name = cntryname[lib_cntry]
 

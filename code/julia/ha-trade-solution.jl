@@ -24,7 +24,8 @@ function world_equillibrium(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis 
 
     @assert length(x) ≈ ( Ncntry + (Ncntry - one(Ncntry)) )
 
-    W = [1.0; x[1:(Ncntry - one(Ncntry))]]
+    W = [x[1:(Ncntry - one(Ncntry))]; 1.0 ]
+    W = W ./ ( sum(W) / Ncntry)
     
     R = x[Ncntry:end]
 
@@ -60,14 +61,17 @@ function world_equillibrium_FG(x, R, hh_params, cntry_params; tol_vfi = 1e-6, to
 end
 
 
+
 function world_equillibrium_FG(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
     hh_solution_method = "itteration", stdist_sol_method = "itteration")
 
     @unpack Ncntry = cntry_params
 
     @assert length(x) ≈ Ncntry
+    
 
-    W = [x[1:(Ncntry - one(Ncntry))]; cntry_params.TFP[end] ]
+    W = [x[1:(Ncntry - one(Ncntry))]; 1.0 ]
+    W = W ./ ( sum(W) / Ncntry)
     # There is an assumption that the final country is the one we 
     # are normalizing everything to. 
 
@@ -594,6 +598,8 @@ function calibrate(xxx, R, initial_x, grvdata, grvparams, hh_params, cntry_param
     #print(sol)
     
     Wsol = [exp.(sol.x[1:(Ncntry - 1)]); 1.0]
+    Wsol = Wsol ./ ( sum(Wsol / Ncntry) )
+
     
     Rsol = ones(Ncntry)*R
 

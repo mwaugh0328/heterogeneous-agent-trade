@@ -12,7 +12,7 @@ using StatsBase
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-dftrade.trade = parse.(Float64, dftrade.trade)
+#dftrade.trade = parse.(Float64, dftrade.trade)
     # for some reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -106,7 +106,7 @@ println(" ")
 # country = 16
 # country_name = "-ESP"
 
-Δ_d = 0.010
+Δ_d = 0.10
 
 d_prime = deepcopy(d)
 d_prime[home_country, :] =  (d[home_country, :]).*(1.0 - Δ_d)
@@ -139,6 +139,8 @@ diag_adjust = n - 1
 print(Δ_sol)
 
 Δ_Wsol = exp.([Δ_sol.x[1:Ncntry-1] ; 0.0 ])
+Δ_Wsol = Δ_Wsol ./ ( sum(Δ_Wsol / Ncntry) )
+
 Δ_Rsol = ones(Ncntry)*exp.(Δ_sol.x[end])
 
 Δ_Y, Δ_tradeflows, Δ_A_demand, Gbudget, Δ_tradeshare, Δ_hh, Δ_dist = world_equillibrium(Δ_Rsol, Δ_Wsol, 
@@ -151,6 +153,7 @@ println(" ")
 println(" ")
 println("ACR-gains")
 println(ACR)
+println((Δ_Wsol .- Wsol)[19])
 ####################################################################################
 ####################################################################################
 # now construct welfare and micro-moments
@@ -174,7 +177,7 @@ W = Wsol[home_country]
 # needed at the **old** prices to match **new** value function            
 λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
 
-writedlm("welfare-quality-ge-1prct.txt", λτeqv)
+writedlm("welfare-quality-ge-altnum.txt", λτeqv)
 
 τsol = zeros(Δ_cntry_prm.Ncntry)
 
@@ -200,7 +203,7 @@ rich, poor, middle = make_stats(df)
 
 rootfile = "../../notebooks/output/"
  
-root = rootfile*"ek-us-cross-section-quality60-ge-1prct.csv"
+root = rootfile*"ek-us-cross-section-quality60-ge-altnum.csv"
 
 CSV.write(root, df);
  
