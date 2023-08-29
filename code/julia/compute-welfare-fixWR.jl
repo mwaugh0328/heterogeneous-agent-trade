@@ -153,7 +153,6 @@ println(" ")
 println(" ")
 println("ACR-gains")
 println(ACR)
-println((Δ_Wsol .- Wsol)[19])
 ####################################################################################
 ####################################################################################
 # now construct welfare and micro-moments
@@ -175,15 +174,15 @@ R = Rsol[home_country]
             
 W = Wsol[home_country]
 
-# find value function at new ps, but old income prices, W and R
-Δ_hh = solve_household_problem(R, W, Δ_p , 0.0, foo_hh_prm, tol = 1e-10)
+# find value function at new ps, but old R
+Δ_hh = solve_household_problem(R, Δ_Wsol[home_country], Δ_p , 0.0, foo_hh_prm, tol = 1e-10)
+# to fix W too, replace it with W above
 
-
-# construct welfare, porportional increase in total income 
+# construct welfare, permanent porportional increase in total income 
 # needed at the **old** prices to match **new** value function            
 λτeqv =  eq_variation_porportional(R, W, p, Δ_hh, dist[home_country].state_index, foo_hh_prm)
 
-writedlm("welfare-quality-ge-altnum-fixWR.txt", λτeqv)
+writedlm("welfare-fixR.txt", λτeqv)
 
 τsol = zeros(Δ_cntry_prm.Ncntry)
 
@@ -209,7 +208,7 @@ rich, poor, middle = make_stats(df)
 
 rootfile = "../../notebooks/output/"
  
-root = rootfile*"ek-us-cross-section-quality60-ge-altnum-fixWR.csv"
+root = rootfile*"cross-section-fixR.csv"
 
 CSV.write(root, df);
  

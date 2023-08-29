@@ -177,7 +177,7 @@ W = Wsol[home_country]
 # needed at the **old** prices to match **new** value function            
 λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
 
-writedlm("welfare-quality-ge-altnum.txt", λτeqv)
+writedlm("welfare-ge.txt", λτeqv)
 
 τsol = zeros(Δ_cntry_prm.Ncntry)
 
@@ -203,7 +203,7 @@ rich, poor, middle = make_stats(df)
 
 rootfile = "../../notebooks/output/"
  
-root = rootfile*"ek-us-cross-section-quality60-ge-altnum.csv"
+root = rootfile*"us-cross-section-ge.csv"
 
 CSV.write(root, df);
  
