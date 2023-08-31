@@ -198,7 +198,7 @@ end
 ##########################################################################
 ##########################################################################
 
-# function calibrate_world_equillibrium(xxx, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-10, tol_dis = 1e-10, 
+# function calibrate_world_equillibrium(xxx, R, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-10, tol_dis = 1e-10, 
 #     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
 
 # # This is the function to try and do everything in one step, 
@@ -212,7 +212,9 @@ end
 
 #     W = [prices[1:(Ncntry - one(Ncntry))]; 1.0]
 
-#     R = ones(Ncntry)*prices[Ncntry]
+#     R = ones(Ncntry)*R
+
+#     foo_hh_params = household_params(hh_params, β = xxx[end])
 
 #     TFP_grav_params = xxx[Ncntry+1:end]
 
@@ -224,7 +226,7 @@ end
 
 #     calibrate_cntry_params = country_params(TFP = TFP, d = d, Ncntry = Ncntry, L = cntry_params.L)
 
-#     Y, tradeflows, A_demand, Gbudget, πshare = world_equillibrium(R, W, hh_params, calibrate_cntry_params, tol_vfi = tol_vfi, tol_dis = tol_dis, 
+#     Y, tradeflows, A_demand, Gbudget, πshare = world_equillibrium(R, W, foo_hh_params, calibrate_cntry_params, tol_vfi = tol_vfi, tol_dis = tol_dis, 
 #         hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:5]
 
 #     goods_market = Y .- vec(sum(tradeflows, dims = 1))
@@ -249,7 +251,7 @@ end
 
 #     ##################################################################
 
-#     return [sum(asset_market); goods_market[2:end]; out_moment_vec]
+#     return [sum(A_demand); goods_market[2:end]; out_moment_vec]
 
 # end
 
