@@ -1,8 +1,4 @@
-include("ha-trade-environment.jl")
-include("ha-trade-solution.jl")
-include("ha-trade-helper-functions.jl")
-include("static-trade-environment.jl")
-include("gravity-tools.jl")
+include("ha-trade.jl")
 using MINPACK
 using Plots
 using CSV
@@ -43,15 +39,13 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 ####################################################################################
 #################################################################################
 
-df = DataFrame(CSV.File("solution-fg.csv"))
-
-L = df.L
+L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.0
-σϵ = 0.25
-ψslope = 0.00
+γ = 1.50
+σϵ = 0.30
+ψslope = 0.60
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
@@ -62,12 +56,12 @@ R = 1.01
 
 
 #dfparams = DataFrame(CSV.File("current-guess-ek-quality60.csv"))
-dfparams = DataFrame(CSV.File("current-guess-log-ek.csv"))
+dfparams = DataFrame(CSV.File("current-guess-15-285.csv"))
 
 initial_x = dfparams.guess
 
 out, Wsol, β, πshare = calibrate(initial_x, R, grvdata, grv_params, hh_prm, 
-                                cntry_prm, trade_cost_type = trade_cost_type) 
+                                cntry_prm, trade_cost_type = trade_cost_type)
 
 
 f(x) = calibrate(x, R, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)[1]

@@ -25,9 +25,37 @@ struct hhXsection
     mpc_avg::Array{Float64}
     welfare::Array{Float64}
     θavg::Array{Float64}
-    θx::Array{Float64}
+end
+
+struct micromoments
+    poor_πii::Float64 #consumption
+    rich_πii::Float64 #imports
+    middle_πii::Float64 #exports
+    poor_θ::Float64
+    rich_θ::Float64
+    middle_θ::Float64
 end
 ##############################################################################
+
+function cal_make_stats(Xsec ; prctile = [50.0, 50.0])
+    # takes df that is the form of hhXsection
+
+    poor = Xsec.income .< percentile(Xsec.income, prctile[1])
+    rich = Xsec.income .> percentile(Xsec.income, prctile[2])
+
+    middle = (Xsec.income .> percentile(Xsec.income, 55.0)) .== (Xsec.income .< percentile(Xsec.income, 45.0))
+
+    poor_πii = median(Xsec.homeshare[poor])
+    rich_πii = median(Xsec.homeshare[rich])
+    middle_πii = median(Xsec.homeshare[middle])
+
+    poor_θ = median(Xsec.θavg[poor])
+    rich_θ = median(Xsec.θavg[rich])
+    middle_θ = median(Xsec.θavg[middle])
+
+    return micromoments(poor_πii, rich_πii, middle_πii, poor_θ, rich_θ, middle_θ)
+
+end
 
 function make_stats(df; prctile = [50, 50])
     # takes df that is the form of hhXsection
@@ -37,21 +65,21 @@ function make_stats(df; prctile = [50, 50])
 
     middle = (df.income .> percentile(df.income, 55)) .== (df.income .< percentile(df.income, 45))
 
-    poor_πii = mean(df[poor,:].homeshare)
-    rich_πii = mean(df[rich,:].homeshare)
-    middle_πii = mean(df[middle,:].homeshare)
+    poor_πii = median(df[poor,:].homeshare)
+    rich_πii = median(df[rich,:].homeshare)
+    middle_πii = median(df[middle,:].homeshare)
 
-    poor_θ = mean(df[poor,:].θ)
-    rich_θ = mean(df[rich,:].θ)
-    middle_θ = mean(df[middle,:].θ)
+    poor_θ = median(df[poor,:].θ)
+    rich_θ = median(df[rich,:].θ)
+    middle_θ = median(df[middle,:].θ)
 
-    poor_mpc = mean(df[poor,:].mpc)
-    rich_mpc = mean(df[rich,:].mpc)
-    middle_mpc= mean(df[middle,:].mpc)
+    poor_mpc = median(df[poor,:].mpc)
+    rich_mpc = median(df[rich,:].mpc)
+    middle_mpc= median(df[middle,:].mpc)
 
-    poor_∂W = mean(df[poor,:].∂W)
-    rich_∂W = mean(df[rich,:].∂W)
-    middle_∂W= mean(df[middle,:].∂W)
+    poor_∂W = median(df[poor,:].∂W)
+    rich_∂W = median(df[rich,:].∂W)
+    middle_∂W= median(df[middle,:].∂W)
 
     return (rich_πii, rich_θ, rich_∂W, rich_mpc), (poor_πii, poor_θ, poor_∂W, poor_mpc), 
         (middle_πii, middle_θ, middle_∂W ,middle_mpc)
@@ -346,6 +374,7 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, ∂W, home_cnt
     @unpack mc, agrid, Ncntry = model_params
     @unpack state_index = distribution
     @unpack cons_policy, πprob = household
+    @unpack θπ, θπii, θc, θcii = θ
 
     Qmc = MarkovChain(distribution.Q) 
     # converts markov chain to a markov chain interperted by 
@@ -354,62 +383,64 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, ∂W, home_cnt
     X = state_index[simulate(Qmc, Nsims)]
     # this returns the states
 
-    wz = Array{eltype(W)}(undef, Nsims)
-
     a = Array{eltype(W)}(undef, Nsims)
 
-    homeshare = Array{eltype(W)}(undef, Nsims)
+    homeshare = similar(a)
 
-    θavg = Array{eltype(W)}(undef, Nsims)
+    θavg = similar(a)
 
-    income = Array{eltype(W)}(undef, Nsims)
+    income = similar(a)
 
-    mpc_avg = Array{eltype(W)}(undef, Nsims)
+    mpc_avg = similar(a)
 
-    welfare = Array{eltype(W)}(undef, Nsims)
+    welfare = similar(a)
 
-    θx = Array{eltype(W)}(undef, Nsims, Ncntry-1)
+    θx = Array{eltype(W)}(undef, Ncntry-1)
 
-    θweight = Array{eltype(W)}(undef, Nsims, Ncntry-1)
+    θweight = similar(θx)
 
-    weight = Array{eltype(W)}(undef, Nsims, Ncntry-1)
+    weight = similar(θx)
 
-    mpc_weight = Array{eltype(W)}(undef, Nsims, Ncntry)
+    mpc_weight = Array{eltype(W)}(undef, Ncntry)
 
-    pc = Array{eltype(W)}(undef, Nsims)
+    pc = similar(a)
+
     fill!(pc, 0.0)
 
     ef_units = exp.(mc.state_values)
 
-    @inbounds @views for (foo, xxx) in enumerate(X)
+    # cons_πprob = cons_policy .* πprob
 
-        wz[foo] = labor_income(ef_units[xxx[2]], W)
+    @inbounds for (foo, xxx) in enumerate(X)
 
         a[foo] = agrid[xxx[1]]
 
-        income[foo] = wz[foo] 
+        income[foo] = labor_income(ef_units[xxx[2]], W)
         # + R*a[foo]
 
         cntry_count = 0
 
+        # fill!(weight, 0.0)
+        # fill!(θweight, 0.0)
+        # fill!(mpc_weight, 0.0)
+
         for cntry = 1:Ncntry
 
-            cntry_pc = p[cntry] * cons_policy[xxx[1], xxx[2], cntry] * πprob[xxx[1], xxx[2], cntry]
+            cntry_pc = p[cntry] * cons_policy[xxx[1], xxx[2], cntry] * πprob[xxx[1], xxx[2], cntry]          
+            # 
 
             pc[foo] +=  cntry_pc
 
-            mpc_weight[foo, cntry] = mpc[xxx[1], xxx[2], cntry]*cntry_pc
+            mpc_weight[cntry] = mpc[xxx[1], xxx[2], cntry]*cntry_pc
 
             if cntry != home_cntry
 
-                cntry_count = cntry_count + 1
+                cntry_count = cntry_count + one(cntry_count)
 
-                θx[foo, cntry_count ] =  1.0 + ( θ.θπ[xxx[1], xxx[2], cntry] - θ.θπii[xxx[1], xxx[2],cntry])
-                                    ( θ.θc[xxx[1], xxx[2], cntry] - θ.θcii[xxx[1], xxx[2], cntry])
+                weight[cntry_count] = cntry_pc
 
-                weight[foo, cntry_count ] = cntry_pc
-
-                θweight[foo, cntry_count ] = θx[foo, cntry_count]*weight[foo, cntry_count]
+                θweight[cntry_count] = (1.0 + ( θπ[xxx[1], xxx[2], cntry] - θπii[xxx[1], xxx[2],cntry]) + 
+                ( θc[xxx[1], xxx[2], cntry] - θcii[xxx[1], xxx[2], cntry] ) ) * weight[cntry_count]
 
             end
             
@@ -420,13 +451,13 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, ∂W, home_cnt
         homeshare[foo] = ( p[home_cntry] * cons_policy[xxx[1], xxx[2], home_cntry] 
                     * πprob[xxx[1], xxx[2], home_cntry] ) / pc[foo]
 
-        θavg[foo] = sum(θweight[foo, :]) ./ sum(weight[foo, :])
+        θavg[foo] = sum(θweight) / sum(weight)
 
-        mpc_avg[foo] = sum(mpc_weight[foo,:] ) / pc[foo]
+        mpc_avg[foo] = sum(mpc_weight ) / pc[foo]
 
     end
 
-    return hhXsection(wz, a, income, pc, homeshare, mpc_avg, welfare, θavg, θx)
+    return hhXsection(income, a, income, pc, homeshare, mpc_avg, welfare, θavg)
 
 end
 

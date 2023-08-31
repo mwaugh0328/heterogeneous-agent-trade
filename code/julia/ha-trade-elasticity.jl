@@ -71,7 +71,7 @@ function make_θ(homecontry, R, W, p, τ, model_params; points = 3, order = 1)
     θπii = similar(θπ)
     θcii = similar(θπ)
 
-    @inbounds for idxj = 1:model_params.Ncntry
+    Threads.@threads  for idxj = 1:model_params.Ncntry
 
         # now construct the extensive margin elascitity
 

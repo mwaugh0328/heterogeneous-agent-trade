@@ -3,6 +3,8 @@ include("ha-trade-environment.jl")
 
 include("ha-trade-solution.jl")
 
+include("ha-trade-calibrate.jl")
+
 include("ha-trade-helper-functions.jl")
 
 include("ha-trade-elasticity.jl")
