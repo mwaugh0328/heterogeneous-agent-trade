@@ -255,3 +255,71 @@ function calibrate_world_equillibrium(xxx, R, grvdata, grv_params, hh_params, cn
 end
 
 ##################################################################
+
+
+function calibrate_world_equillibrium(xxx, R, micro_moment, grvdata, grv_params, 
+    hh_params, cntry_params; tol_vfi = 1e-10, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
+    # using mulitple dispacth here
+    # tries to do in all one step + micro moments (the shares)
+
+    @unpack Ncntry = cntry_params
+
+    ## A bunch of organization here ####################
+
+    prices = xxx[1:Ncntry]
+
+    W = [prices[1:(Ncntry - one(Ncntry))]; 19.0 - sum(prices[1:(Ncntry - one(Ncntry))])]
+    W = W./ ( sum(W / Ncntry) )
+
+    R = ones(Ncntry)*R
+
+    foo_hh_params = household_params(hh_params, β = xxx[Ncntry], ψslope = xxx[Ncntry+1])
+
+    TFP_grav_params = xxx[Ncntry+2:end]
+
+    @assert length(TFP_grav_params) == 2*(Ncntry - 1) + 4 + 6  
+
+    TFP, d = make_country_params(TFP_grav_params, cntry_params, grv_params, trade_cost_type = trade_cost_type)
+
+    ##################################################################
+
+    calibrate_cntry_params = country_params(TFP = TFP, d = d, Ncntry = Ncntry, L = cntry_params.L)
+
+    Y, tradeflows, A_demand, Gbudget, πshare, hh, dist = world_equillibrium(R, W, foo_hh_params, calibrate_cntry_params, tol_vfi = tol_vfi, tol_dis = tol_dis, 
+        hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)
+
+    goods_market = ( Y .- vec(sum(tradeflows, dims = 1)) ) 
+    # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
+    # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
+
+    ##################################################################
+    # Run gravity regression on model "data"
+
+    trademodel = log.(normalize_by_home_trade(πshare, Ncntry)')
+
+    dfmodel = hcat(DataFrame(trade = vec(drop_diagonal(trademodel, Ncntry))), grv_params.dfcntryfix)
+
+    grvmodel = gravity(dfmodel, trade_cost_type =  trade_cost_type)
+
+    out_moment_vec = [grvmodel.S[1:end-1] .- grvdata.S[1:end-1] ; 
+        grvmodel.θm[1:end-1] .- grvdata.θm[1:end-1] ;
+        grvmodel.dist_coef .- grvdata.dist_coef;
+        grvmodel.lang_coef .- grvdata.lang_coef] 
+
+    ##################################################################
+    cntry = 19 # look at the US
+
+    p = make_p(W[1:end], TFP, d[cntry, :],  calibrate_cntry_params.tariff[cntry, :] )
+
+    fooX = make_Xsection(R[cntry], W[cntry], p, hh[cntry], dist[cntry], cntry, foo_hh_params; Nsims = 100000);
+
+    micro_model = cal_πii_make_stats(fooX, prctile = [20.0, 80.0])
+
+    out_micro_vec = [(micro_model.rich_πii - micro_model.poor_πii) - micro_moment]
+
+    ##################################################################
+
+    return [sum(A_demand); goods_market[2:end]; out_moment_vec; out_micro_vec]
+
+end

@@ -44,7 +44,7 @@ L = dflabor.L
 Ncntry = size(L)[1]
 
 γ = 1.50
-σϵ = 0.285
+σϵ = 0.25
 ψslope = 0.60
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
@@ -58,13 +58,15 @@ dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.cs
 
 dfWguess = DataFrame(CSV.File("wage-guessbaseline60.csv"))
 
-initial_x = [dfWguess.guess[1:18]; 0.925; dfparams.guess]
+micro_moment = 0.0
 
-out = calibrate_world_equillibrium(initial_x, R, grvdata, grv_params, hh_prm, 
+initial_x = [dfWguess.guess[1:18]; 0.925; 0.40; dfparams.guess]
+
+out = calibrate_world_equillibrium(initial_x, R, micro_moment, grvdata, grv_params, hh_prm, 
                                 cntry_prm, trade_cost_type = trade_cost_type)
 
 
-f(x) = calibrate_world_equillibrium(x, R, grvdata, grv_params, hh_prm, 
+f(x) = calibrate_world_equillibrium(x, R, micro_moment, grvdata, grv_params, hh_prm, 
                 cntry_prm, trade_cost_type = trade_cost_type)
 
 function f!(fvec, x)

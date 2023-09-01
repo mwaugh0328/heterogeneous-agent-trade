@@ -37,6 +37,22 @@ struct micromoments
 end
 ##############################################################################
 
+function cal_πii_make_stats(Xsec ; prctile = [50.0, 50.0])
+    # takes df that is the form of hhXsection
+
+    poor = Xsec.income .< percentile(Xsec.income, prctile[1])
+    rich = Xsec.income .> percentile(Xsec.income, prctile[2])
+
+    middle = (Xsec.income .> percentile(Xsec.income, 55.0)) .== (Xsec.income .< percentile(Xsec.income, 45.0))
+
+    poor_πii = mean(Xsec.homeshare[poor])
+    rich_πii = mean(Xsec.homeshare[rich])
+    middle_πii = mean(Xsec.homeshare[middle])
+
+    return micromoments(poor_πii, rich_πii, middle_πii, 0.0, 0.0, 0.0)
+
+end
+
 function cal_make_stats(Xsec ; prctile = [50.0, 50.0])
     # takes df that is the form of hhXsection
 
@@ -57,34 +73,34 @@ function cal_make_stats(Xsec ; prctile = [50.0, 50.0])
 
 end
 
-function make_stats(df; prctile = [50, 50])
-    # takes df that is the form of hhXsection
+# function make_stats(df; prctile = [50, 50])
+#     # takes df that is the form of hhXsection
 
-    poor = df.income .< percentile(df.income, prctile[1])
-    rich = df.income .> percentile(df.income, prctile[2])
+#     poor = df.income .< percentile(df.income, prctile[1])
+#     rich = df.income .> percentile(df.income, prctile[2])
 
-    middle = (df.income .> percentile(df.income, 55)) .== (df.income .< percentile(df.income, 45))
+#     middle = (df.income .> percentile(df.income, 55)) .== (df.income .< percentile(df.income, 45))
 
-    poor_πii = median(df[poor,:].homeshare)
-    rich_πii = median(df[rich,:].homeshare)
-    middle_πii = median(df[middle,:].homeshare)
+#     poor_πii = median(df[poor,:].homeshare)
+#     rich_πii = median(df[rich,:].homeshare)
+#     middle_πii = median(df[middle,:].homeshare)
 
-    poor_θ = median(df[poor,:].θ)
-    rich_θ = median(df[rich,:].θ)
-    middle_θ = median(df[middle,:].θ)
+#     poor_θ = median(df[poor,:].θ)
+#     rich_θ = median(df[rich,:].θ)
+#     middle_θ = median(df[middle,:].θ)
 
-    poor_mpc = median(df[poor,:].mpc)
-    rich_mpc = median(df[rich,:].mpc)
-    middle_mpc= median(df[middle,:].mpc)
+#     poor_mpc = median(df[poor,:].mpc)
+#     rich_mpc = median(df[rich,:].mpc)
+#     middle_mpc= median(df[middle,:].mpc)
 
-    poor_∂W = median(df[poor,:].∂W)
-    rich_∂W = median(df[rich,:].∂W)
-    middle_∂W= median(df[middle,:].∂W)
+#     poor_∂W = median(df[poor,:].∂W)
+#     rich_∂W = median(df[rich,:].∂W)
+#     middle_∂W= median(df[middle,:].∂W)
 
-    return (rich_πii, rich_θ, rich_∂W, rich_mpc), (poor_πii, poor_θ, poor_∂W, poor_mpc), 
-        (middle_πii, middle_θ, middle_∂W ,middle_mpc)
+#     return (rich_πii, rich_θ, rich_∂W, rich_mpc), (poor_πii, poor_θ, poor_∂W, poor_mpc), 
+#         (middle_πii, middle_θ, middle_∂W ,middle_mpc)
 
-end
+# end
 
 
 ##############################################################################
@@ -462,6 +478,55 @@ function make_Xsection(R, W, p, household, distribution, θ, mpc, ∂W, home_cnt
 end
 
 
+
+function make_Xsection(R, W, p, household, distribution, home_cntry, model_params; Nsims = 100)
+    
+    @unpack mc, agrid, Ncntry = model_params
+    @unpack state_index = distribution
+    @unpack cons_policy, πprob = household
+
+    Qmc = MarkovChain(distribution.Q) 
+    # converts markov chain to a markov chain interperted by 
+    # quant econ
+    Random.seed!(03281978) # this sets the seed
+    X = state_index[simulate(Qmc, Nsims)]
+    # this returns the states
+
+    a = Array{eltype(W)}(undef, Nsims)
+
+    homeshare = similar(a)
+
+    income = similar(a)
+
+    pc = similar(a)
+
+    fill!(pc, 0.0)
+
+    ef_units = exp.(mc.state_values)
+
+    # cons_πprob = cons_policy .* πprob
+
+    @inbounds for (foo, xxx) in enumerate(X)
+
+        a[foo] = agrid[xxx[1]]
+
+        income[foo] = labor_income(ef_units[xxx[2]], W)
+        # + R*a[foo]
+
+        for cntry = 1:Ncntry
+
+            pc[foo] +=  p[cntry] * cons_policy[xxx[1], xxx[2], cntry] * πprob[xxx[1], xxx[2], cntry] 
+
+        end
+
+        homeshare[foo] = ( p[home_cntry] * cons_policy[xxx[1], xxx[2], home_cntry] 
+                    * πprob[xxx[1], xxx[2], home_cntry] ) / pc[foo]
+
+    end
+
+    return hhXsection(income, a, income, pc, homeshare, [0.0], [0.0], [0.0])
+    
+end
 
 
 ##############################################################################
