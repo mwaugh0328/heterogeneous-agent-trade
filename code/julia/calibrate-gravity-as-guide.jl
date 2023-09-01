@@ -43,8 +43,8 @@ L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.50
-σϵ = 0.30
+γ = 1.65
+σϵ = 0.36
 ψslope = 0.60
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
@@ -56,7 +56,7 @@ R = 1.01
 
 
 #dfparams = DataFrame(CSV.File("current-guess-ek-quality60.csv"))
-dfparams = DataFrame(CSV.File("current-guess-15-285.csv"))
+dfparams = DataFrame(CSV.File("current-guess-165-39.csv"))
 
 initial_x = dfparams.guess
 
