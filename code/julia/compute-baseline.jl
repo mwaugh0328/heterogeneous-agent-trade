@@ -11,7 +11,7 @@ using StatsBase
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-dftrade.trade = parse.(Float64, dftrade.trade)
+#dftrade.trade = parse.(Float64, dftrade.trade)
     # forsome reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -45,8 +45,8 @@ L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.65
-σϵ = 0.39
+γ = 1.50
+σϵ = 0.36
 ψslope = 0.60
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
@@ -55,7 +55,7 @@ hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
 # dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.csv"))
-dfparams = DataFrame(CSV.File("current-guess-165-39.csv"))
+dfparams = DataFrame(CSV.File("current-guess-15-36.csv"))
 
 xxx = dfparams.guess
 
@@ -71,6 +71,10 @@ cntry_prm = country_params(Ncntry = Ncntry, L = L, d = d, TFP = TFP)
 hh_prm = household_params(hh_prm, β = β)
 
 Rsol = ones(Ncntry)*R
+
+dfWsol = DataFrame(guess = Wsol)
+
+CSV.write("wage-guess-15-36.csv", dfWsol)
 
 # ####################################################################################
 # ####################################################################################

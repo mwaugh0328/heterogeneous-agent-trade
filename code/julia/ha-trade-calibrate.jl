@@ -80,7 +80,7 @@ function calibrate(xxx, R, initial_x, grvdata, grvparams, hh_params, cntry_param
 
     foo_hh_params = household_params(hh_params, β = β)
 
-    πshare= world_equillibrium(Rsol, Wsol, foo_hh_params, calibrate_cntry_params)[5];
+    πshare, hh, dist = world_equillibrium(Rsol, Wsol, foo_hh_params, calibrate_cntry_params)[5:7];
     # using the mulitiple dispacth version...since calibration tariffs are zero
 
     ##################################################################
@@ -99,39 +99,50 @@ function calibrate(xxx, R, initial_x, grvdata, grvparams, hh_params, cntry_param
 
     ##################################################################
 
-    return out_moment_vec, Wsol, β, πshare
+    return out_moment_vec, Wsol, β, πshare, hh, dist
 end
 
 # #####################################################################################################
 
-# function calibrate_micro(xxx, micro_moments, R, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-#     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
-#     # multiple dispatch version that creates own initial guess
+function calibrate_micro(xxx, R, micro_moment, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
+    # multiple dispatch version that creates own initial guess
 
-#     @unpack Ncntry = cntry_params
+    dfWguess = DataFrame(CSV.File("wage-guess.csv"))
 
-#     dfguess = DataFrame(guess = xxx);
+    initial_x = log.([dfWguess.guess[1:18]; 0.93])
 
-#     CSV.write("current-guess.csv", dfguess)
+    gravx = xxx[1:end-1]
 
-#     ## A bunch of organization here ####################
+    foo_hh_params = household_params(hh_params, ψslope = xxx[end])
 
-#     @assert length(xxx) == 2*(Ncntry - 1) + 4 + 6  
+    out_macro_vec, Wsol, β, πshare, hh, dist = calibrate(gravx, R, initial_x, grvdata, grvparams, foo_hh_params, cntry_params; 
+            tol_vfi = tol_vfi, tol_dis = tol_dis, 
+            hh_solution_method = hh_solution_method, 
+            stdist_sol_method = stdist_sol_method , trade_cost_type = trade_cost_type)
 
-#     # TFP, d = make_country_params(xxx, cntry_params, grvparams, trade_cost_type = trade_cost_type)
+    new_hh_params = household_params(hh_params, β = β)
 
-#     dfWguess = DataFrame(CSV.File("wage-guess.csv"))
+    TFP, d = make_country_params(gravx, cntry_params, grvparams, trade_cost_type = trade_cost_type)
 
-#     initial_x = log.([dfWguess.guess[1:18]; 0.93])
+    #     ##################################################################
+    cntry = 19 # look at the US
 
-#     return calibrate_micro(xxx, micro_moments, R, initial_x, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-#             hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
+    p = make_p(Wsol[1:end], TFP, d[cntry, :],  cntry_params.tariff[cntry, :] )
 
-# end
+    fooX = make_Xsection(R, Wsol[cntry], p, hh[cntry], dist[cntry], cntry,  new_hh_params; Nsims = 100000);
+
+    micro_model = cal_πii_make_stats(fooX, prctile = [20.0, 80.0])
+
+    out_micro_vec = [(micro_model.rich_πii - micro_model.poor_πii) - micro_moment]
+
+    return [out_macro_vec; out_micro_vec]
+
+end
 
 # #####################################################################################################
 
-# function calibrate_micro(xxx, micro_moments, R, initial_x, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+# function calibrate_micro(xxx, micro_moment, R, initial_x, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
 #     hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
 
 #     out_moment_vec, Wsol, β, πshare, hh, dist = calibrate(xxx, R, initial_x, grvdata, grvparams, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
@@ -141,34 +152,18 @@ end
 
 #     TFP, d = make_country_params(xxx, cntry_params, grvparams, trade_cost_type = trade_cost_type)
 
-#     @unpack σϵ, γ, ψslope = foo_hh_params
+#     ##################################################################
+#     cntry = 19 # look at the US
 
-#     cntry = 19
+#     p = make_p(Wsol[1:end], TFP, d[cntry, :],  cntry_params.tariff[cntry, :] )
 
-#     p = make_p(Wsol, TFP, d[cntry, :], cntry_params.tariff[cntry, :] )
+#     fooX = make_Xsection(R[cntry], Wsol[cntry], p, hh[cntry], dist[cntry], cntry, foo_hh_params; Nsims = 100000);
 
-#     ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), foo_hh_params)
+#     micro_model = cal_πii_make_stats(fooX, prctile = [20.0, 80.0])
 
-#     agrid = make_agrid(hh_params, TFP[cntry])
+#     out_micro_vec = [(micro_model.rich_πii - micro_model.poor_πii) - micro_moment]
 
-#     cntry_hh_prm = household_params(foo_hh_params, agrid = agrid, 
-#     TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
-
-#     println("here")
-
-#     θ = make_θ(cntry, Rsol[cntry], Wsol[cntry], p, 0.0, cntry_hh_prm; points = 3, order = 1)
-      # line keeps triggering a segfault...no idea why  
-
-#     τeqv = zeros(cntry_hh_prm.Na, cntry_hh_prm.Nshocks)
-
-#     fooX = make_Xsection(Rsol[cntry], Wsol[cntry], p, hh[cntry], dist[cntry],
-#          θ, τeqv, τeqv, cntry, cntry_hh_prm; Nsims = 100000)
-
-#     # # println("here")     
-
-#     # # microm = cal_make_stats(fooX)
-
-#     return out_moment_vec, Wsol, β,  πshare, fooX 
+#     return [out_moment_vec; out_micro_vec]
 
 # end
 

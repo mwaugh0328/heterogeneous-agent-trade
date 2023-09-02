@@ -3,6 +3,7 @@ using MINPACK
 using Plots
 using CSV
 using DataFrames
+using StatsBase
 
 ####################################################################################
 ####################################################################################
@@ -56,15 +57,17 @@ R = 1.01
 
 
 dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.csv"))
-#dfparams = DataFrame(CSV.File("current-guess-165-39.csv"))
 
-initial_x = dfparams.guess
+micro_moment = 0.0
 
-out, Wsol, β, πshare = calibrate(initial_x, R, grvdata, grv_params, hh_prm, 
-                                cntry_prm, trade_cost_type = trade_cost_type)[1:4]
+initial_x = [dfparams.guess; 0.60]
+
+out = calibrate_micro(initial_x, R, micro_moment, grvdata, grv_params, hh_prm, 
+                                cntry_prm, trade_cost_type = trade_cost_type)
 
 
-# f(x) = calibrate(x, R, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)[1]
+# f(x) = calibrate_world_equillibrium(x, R, micro_moment, grvdata, grv_params, hh_prm, 
+#                 cntry_prm, trade_cost_type = trade_cost_type)
 
 # function f!(fvec, x)
 
@@ -74,14 +77,17 @@ out, Wsol, β, πshare = calibrate(initial_x, R, grvdata, grv_params, hh_prm,
 
 # n = length(initial_x)
 
-# diag_adjust = n - 1
+# diag_adjust = 19
+
 
 # sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
-#       ml=diag_adjust, mu=diag_adjust,
-#       diag=ones(n),
-#       mode= 1,
-#       tol=1e-3,
-#        )
+#     ml=diag_adjust, mu=diag_adjust,
+#     diag=ones(n),
+#     mode= 1,
+#     tol=1e-3,
+#     )
 
+# dfguess = DataFrame(guess = sol.x[Ncntry+2:end]);
 
+# CSV.write("current-guess-all.csv", dfguess)
 
