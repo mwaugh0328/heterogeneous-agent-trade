@@ -41,8 +41,8 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 ####################################################################################
 # Compute the EQ at the gravity parameters
 
-dfparams = DataFrame(CSV.File("current-guess-all-15-36.csv"))
-xxx = dfparams.guess[1:end-1]
+dfparams = DataFrame(CSV.File("current-guess-15-36-75.csv"))
+xxx = dfparams.guess[1:end]
 
 L = dflabor.L
 
@@ -50,7 +50,7 @@ Ncntry = size(L)[1]
 
 γ = 1.50
 σϵ = 0.36
-ψslope = dfparams.guess[end]
+ψslope = 0.75
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
@@ -72,99 +72,99 @@ hh_prm = household_params(hh_prm, β = β)
 
 Rsol = ones(Ncntry)*R
 
-dfWsol = DataFrame(guess = Wsol)
+# dfWsol = DataFrame(guess = Wsol)
 
-CSV.write("wage-guess-15-36.csv", dfWsol)
+# CSV.write("wage-guess-15-36-70.csv", dfWsol)
+
+####################################################################################
+####################################################################################
+
+Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, hh_prm, cntry_prm, tol_vfi = 1e-10);
+
+# This is a Plot test to make sure this is doing what I think it is
+
+trademodel = log.(vec(normalize_by_home_trade(tradeshare, grv_params.Ncntry)'))
+
+dfplot = DataFrame(trademodel = trademodel)
+
+filter!(row -> ~(row.trademodel ≈ 1.0), dfplot);
+
+filter!(row -> ~(row.trademodel ≈ 0.0), dfplot);
+
+dfplot = hcat(dftrade, dfplot);
+
+plot(dfplot.trademodel, dfplot.trade, seriestype = :scatter, alpha = 0.75,
+    xlabel = "model",
+    ylabel = "data",
+    legend = false)
+
+rootfile = "../../notebooks/output/"
+
+root = rootfile*"model-data-trade.csv"
+
+# CSV.write(root, dfplot)
 
 # ####################################################################################
 # ####################################################################################
+# # Let's construct bilateral trade elasticities
 
-# Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist = world_equillibrium(Rsol, Wsol, hh_prm, cntry_prm, tol_vfi = 1e-10);
+cntry = 19 # this is the country I'll look at
 
-# # This is a Plot test to make sure this is doing what I think it is
+p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
+# prices from the perspective of those in that country
 
-# trademodel = log.(vec(normalize_by_home_trade(tradeshare, grv_params.Ncntry)'))
+agrid = make_agrid(hh_prm, TFP[cntry])
 
-# dfplot = DataFrame(trademodel = trademodel)
+ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), hh_prm)
 
-# filter!(row -> ~(row.trademodel ≈ 1.0), dfplot);
+agrid = make_agrid(hh_prm, TFP[cntry])
 
-# filter!(row -> ~(row.trademodel ≈ 0.0), dfplot);
+foo_hh_prm = household_params(hh_prm, agrid = agrid, 
+TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
 
-# dfplot = hcat(dftrade, dfplot);
+τsol = zeros(cntry_prm.Ncntry)
 
-# plot(dfplot.trademodel, dfplot.trade, seriestype = :scatter, alpha = 0.75,
-#     xlabel = "model",
-#     ylabel = "data",
-#     legend = false)
+θ = make_θ(cntry, Rsol[cntry], Wsol[cntry], p, τsol[cntry], foo_hh_prm; points = 3, order = 1)
 
-# rootfile = "../../notebooks/output/"
+ω = make_ω(hh[cntry], dist[cntry], L[cntry], p, foo_hh_prm)
+# makes the expenditure weights
 
-# root = rootfile*"model-data-trade.csv"
+agθ = aggregate_θ(θ, ω, cntry, foo_hh_prm)
 
-# # CSV.write(root, dfplot)
+deleteat!(agθ, cntry)
 
-# # ####################################################################################
-# # ####################################################################################
-# # # Let's construct bilateral trade elasticities
+deleteat!(p, cntry)
 
-# cntry = 19 # this is the country I'll look at
+plot(p, -agθ, seriestype = :scatter, alpha = 0.75,
+    xlabel = "price",
+    ylabel = "elasticity",
+    legend = false)
 
-# p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
-# # prices from the perspective of those in that country
+cntrytrade = tradeshare[cntry,:]
 
-# agrid = make_agrid(hh_prm, TFP[cntry])
+deleteat!(cntrytrade, cntry)
 
-# ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), hh_prm)
+df = DataFrame(θij = agθ,
+               p = p,
+               trade = cntrytrade,
+               );
 
-# agrid = make_agrid(hh_prm, TFP[cntry])
+root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
 
-# foo_hh_prm = household_params(hh_prm, agrid = agrid, 
-# TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
+# ####################################################################################
+# ####################################################################################
+# # Let's construct bilateral trade elasticities
 
-# τsol = zeros(cntry_prm.Ncntry)
+# CSV.write(root, df);
 
-# θ = make_θ(cntry, Rsol[cntry], Wsol[cntry], p, τsol[cntry], foo_hh_prm; points = 3, order = 1)
+p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
+# prices from the perspective of those in that country
 
-# ω = make_ω(hh[cntry], dist[cntry], L[cntry], p, foo_hh_prm)
-# # makes the expenditure weights
+mpc = make_mpc(hh[cntry], Rsol[cntry], Wsol[cntry], p, 0.016/2, foo_hh_prm)
 
-# agθ = aggregate_θ(θ, ω, cntry, foo_hh_prm)
+τeqv = zeros(foo_hh_prm.Na, foo_hh_prm.Nshocks);
 
-# deleteat!(agθ, cntry)
+fooX = make_Xsection(Rsol[cntry], Wsol[cntry], p, hh[cntry], dist[cntry],
+         θ, mpc, τeqv, cntry, foo_hh_prm; Nsims = 100000);
 
-# deleteat!(p, cntry)
-
-# plot(p, -agθ, seriestype = :scatter, alpha = 0.75,
-#     xlabel = "price",
-#     ylabel = "elasticity",
-#     legend = false)
-
-# cntrytrade = tradeshare[cntry,:]
-
-# deleteat!(cntrytrade, cntry)
-
-# df = DataFrame(θij = agθ,
-#                p = p,
-#                trade = cntrytrade,
-#                );
-
-# root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
-
-# # ####################################################################################
-# # ####################################################################################
-# # # Let's construct bilateral trade elasticities
-
-# # CSV.write(root, df);
-
-# p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
-# # prices from the perspective of those in that country
-
-# mpc = make_mpc(hh[cntry], Rsol[cntry], Wsol[cntry], p, 0.016/2, foo_hh_prm)
-
-# τeqv = zeros(foo_hh_prm.Na, foo_hh_prm.Nshocks);
-
-# fooX = make_Xsection(Rsol[cntry], Wsol[cntry], p, hh[cntry], dist[cntry],
-#          θ, mpc, τeqv, cntry, foo_hh_prm; Nsims = 100000);
-
-# microm = cal_make_stats(fooX, prctile = [20.0, 80.0])
+microm = cal_make_stats(fooX, prctile = [20.0, 80.0])
