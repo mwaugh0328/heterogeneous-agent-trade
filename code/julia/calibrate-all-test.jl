@@ -3,6 +3,7 @@ using MINPACK
 using Plots
 using CSV
 using DataFrames
+using StatsBase
 
 ####################################################################################
 ####################################################################################
@@ -10,7 +11,7 @@ using DataFrames
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-#dftrade.trade = parse.(Float64, dftrade.trade)
+dftrade.trade = parse.(Float64, dftrade.trade)
     # forsome reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -44,7 +45,7 @@ L = dflabor.L
 Ncntry = size(L)[1]
 
 γ = 1.50
-σϵ = 0.25
+σϵ = 0.36
 ψslope = 0.60
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
@@ -54,13 +55,13 @@ cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
 R = 1.01
 
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.csv"))
+dfparams = DataFrame(CSV.File("current-guess-all-15-36.csv"))
 
-dfWguess = DataFrame(CSV.File("wage-guessbaseline60.csv"))
+dfWguess = DataFrame(CSV.File("wage-guess-15-36.csv"))
 
-micro_moment = 0.0
+micro_moment = 1.0
 
-initial_x = [dfWguess.guess[1:18]; 0.925; 0.40; dfparams.guess]
+initial_x = [dfWguess.guess[1:18]; 0.927; 0.85; dfparams.guess[1:end-1]]
 
 out = calibrate_world_equillibrium(initial_x, R, micro_moment, grvdata, grv_params, hh_prm, 
                                 cntry_prm, trade_cost_type = trade_cost_type)

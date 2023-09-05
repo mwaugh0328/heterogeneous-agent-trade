@@ -10,7 +10,7 @@ using DataFrames
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-#dftrade.trade = parse.(Float64, dftrade.trade)
+dftrade.trade = parse.(Float64, dftrade.trade)
     # forsome reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -44,8 +44,8 @@ L = dflabor.L
 Ncntry = size(L)[1]
 
 γ = 1.50
-σϵ = 0.25
-ψslope = 0.60
+σϵ = 0.36
+ψslope = 0.85
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
@@ -54,9 +54,8 @@ cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
 R = 1.01
 
-
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.csv"))
-#dfparams = DataFrame(CSV.File("current-guess-165-39.csv"))
+# dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.csv"))
+dfparams = DataFrame(CSV.File("current-guess-15-36.csv"))
 
 initial_x = dfparams.guess
 
@@ -64,24 +63,24 @@ out, Wsol, β, πshare = calibrate(initial_x, R, grvdata, grv_params, hh_prm,
                                 cntry_prm, trade_cost_type = trade_cost_type)[1:4]
 
 
-# f(x) = calibrate(x, R, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)[1]
+f(x) = calibrate(x, R, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)[1]
 
-# function f!(fvec, x)
+function f!(fvec, x)
 
-#     fvec .= f(x)
+    fvec .= f(x)
 
-# end
+end
 
-# n = length(initial_x)
+n = length(initial_x)
 
-# diag_adjust = n - 1
+diag_adjust = n - 1
 
-# sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
-#       ml=diag_adjust, mu=diag_adjust,
-#       diag=ones(n),
-#       mode= 1,
-#       tol=1e-3,
-#        )
+sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
+      ml=diag_adjust, mu=diag_adjust,
+      diag=ones(n),
+      mode= 1,
+      tol=1e-3,
+       )
 
 
 

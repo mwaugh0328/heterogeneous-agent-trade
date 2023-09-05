@@ -11,7 +11,7 @@ using StatsBase
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-#dftrade.trade = parse.(Float64, dftrade.trade)
+dftrade.trade = parse.(Float64, dftrade.trade)
     # forsome reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -45,7 +45,7 @@ L = dflabor.L
 Ncntry = size(L)[1]
 
 γ = 1.50
-σϵ = 0.25
+σϵ = 0.36
 ψslope = 0.60
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
@@ -55,39 +55,40 @@ cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
 R = 1.01
 
+dfparams = DataFrame(CSV.File("current-guess-all-15-36.csv"))
 
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.csv"))
+micro_moment = 1.0
 
-micro_moment = 0.0
-
-initial_x = [dfparams.guess; 0.60]
+initial_x = [dfparams.guess[1:end-1]; 0.85]
 
 out = calibrate_micro(initial_x, R, micro_moment, grvdata, grv_params, hh_prm, 
                                 cntry_prm, trade_cost_type = trade_cost_type)
 
 
-# f(x) = calibrate_world_equillibrium(x, R, micro_moment, grvdata, grv_params, hh_prm, 
-#                 cntry_prm, trade_cost_type = trade_cost_type)
+f(x) = calibrate_micro(x, R, micro_moment, grvdata, grv_params, hh_prm, 
+                cntry_prm, trade_cost_type = trade_cost_type)
 
-# function f!(fvec, x)
+function f!(fvec, x)
 
-#     fvec .= f(x)
+    fvec .= f(x)
 
-# end
+end
 
-# n = length(initial_x)
+n = length(initial_x)
 
-# diag_adjust = 19
+diag_adjust = n - 1
 
 
-# sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
-#     ml=diag_adjust, mu=diag_adjust,
-#     diag=ones(n),
-#     mode= 1,
-#     tol=1e-3,
-#     )
+sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
+    ml=diag_adjust, mu=diag_adjust,
+    diag=ones(n),
+    mode= 1,
+    tol=1e-3,
+    )
 
-# dfguess = DataFrame(guess = sol.x[Ncntry+2:end]);
+print(sol)
 
-# CSV.write("current-guess-all.csv", dfguess)
+dfguess = DataFrame(guess = sol.x[1:end]);
+
+CSV.write("current-guess-all-15-36.csv", dfguess)
 

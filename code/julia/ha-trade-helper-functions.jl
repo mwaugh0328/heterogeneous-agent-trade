@@ -61,9 +61,9 @@ function cal_make_stats(Xsec ; prctile = [50.0, 50.0])
 
     middle = (Xsec.income .> percentile(Xsec.income, 55.0)) .== (Xsec.income .< percentile(Xsec.income, 45.0))
 
-    poor_πii = median(Xsec.homeshare[poor])
-    rich_πii = median(Xsec.homeshare[rich])
-    middle_πii = median(Xsec.homeshare[middle])
+    poor_πii = mean(Xsec.homeshare[poor])
+    rich_πii = mean(Xsec.homeshare[rich])
+    middle_πii = mean(Xsec.homeshare[middle])
 
     poor_θ = median(Xsec.θavg[poor])
     rich_θ = median(Xsec.θavg[rich])
