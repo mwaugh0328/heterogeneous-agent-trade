@@ -41,16 +41,16 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 ####################################################################################
 # Compute the EQ at the gravity parameters
 
-dfparams = DataFrame(CSV.File("current-guess-15-36.csv"))
+dfparams = DataFrame(CSV.File("current-guess-145-30-725.csv"))
 xxx = dfparams.guess[1:end]
 
 L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.50
-σϵ = 0.36
-ψslope = 0.60
+γ = 1.450
+σϵ = 0.33
+ψslope = 0.725
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)

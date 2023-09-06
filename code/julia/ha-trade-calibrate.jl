@@ -311,7 +311,7 @@ function calibrate_world_equillibrium(xxx, R, micro_moment, grvdata, grv_params,
 
     micro_model = cal_πii_make_stats(fooX, prctile = [20.0, 80.0])
 
-    out_micro_vec = [(micro_model.rich_πii / micro_model.poor_πii) - micro_moment]
+    out_micro_vec = [(micro_model.rich_πii - micro_model.poor_πii) - micro_moment]
 
     ##################################################################
 

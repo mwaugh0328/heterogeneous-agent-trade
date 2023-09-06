@@ -65,9 +65,9 @@ function cal_make_stats(Xsec ; prctile = [50.0, 50.0])
     rich_πii = mean(Xsec.homeshare[rich])
     middle_πii = mean(Xsec.homeshare[middle])
 
-    poor_θ = median(Xsec.θavg[poor])
-    rich_θ = median(Xsec.θavg[rich])
-    middle_θ = median(Xsec.θavg[middle])
+    poor_θ = mean(Xsec.θavg[poor])
+    rich_θ = mean(Xsec.θavg[rich])
+    middle_θ = mean(Xsec.θavg[middle])
 
     return micromoments(poor_πii, rich_πii, middle_πii, poor_θ, rich_θ, middle_θ)
 
