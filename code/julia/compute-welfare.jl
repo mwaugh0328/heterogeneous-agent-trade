@@ -42,22 +42,21 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 ####################################################################################
 # Compute the EQ at the gravity parameters
 
+dfparams = DataFrame(CSV.File("./calibration-files/current-guess-145-30-725.csv"))
+xxx = dfparams.guess[1:end]
+
 L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.5
-σϵ = 0.25
-ψslope = 0.60
+γ = 1.450
+σϵ = 0.33
+ψslope = 0.725
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
-
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.csv"))
-
-xxx = dfparams.guess
 
 R = 1.01
 
@@ -90,7 +89,8 @@ dfplot = hcat(dftrade, dfplot);
 plot(dfplot.trademodel, dfplot.trade, seriestype = :scatter, alpha = 0.75,
     xlabel = "model",
     ylabel = "data",
-    legend = false)
+    legend = false,
+    show = true)
 
 home_country = 19
 
