@@ -144,7 +144,7 @@ print(Δ_sol)
             hh_prm, Δ_cntry_prm, tol_vfi = 1e-10);
 
 
-ACR = 100*(1.0 / 4.0)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
+ACR = 100*(1.0 / 4.5)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
 
 println(" ")
 println(" ")
