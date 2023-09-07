@@ -47,7 +47,27 @@ breaklinks]{hyperref}
 \newtheorem{rmk}{Remark}
 \newenvironment{prf}{{\bf Proof}}{\hfill { }}
 
+\tcolorboxenvironment{corr}{%
+boxrule = 0mm, breakable, colframe=white,
+before skip=5pt,after skip=5pt,
+colback=gray!5!white,
+top = 2mm,
+bottom = 2mm%,
+%borderline north={1pt}{1pt}{gray},
+%borderline south={1pt}{1pt}{gray}
+}
+
 \tcolorboxenvironment{prp}{%
+boxrule = 0mm, breakable, colframe=white,
+before skip=5pt,after skip=5pt,
+colback=gray!5!white,
+top = 2mm,
+bottom = 2mm%,
+%borderline north={1pt}{1pt}{gray},
+%borderline south={1pt}{1pt}{gray}
+}
+
+\tcolorboxenvironment{df}{%
 boxrule = 0mm, breakable, colframe=white,
 before skip=5pt,after skip=5pt,
 colback=gray!5!white,
@@ -100,7 +120,7 @@ bottom = 2mm%,
 
 \vspace{0.5cm}
 
-\textbf{In Progress.} This draft: August 2023
+This draft: September 2023
 
 \vspace{1.5cm}
 
@@ -109,7 +129,7 @@ bottom = 2mm%,
 
 ABSTRACT ------------------------------------------------------------------------------------------------------------
 
-This paper studies the implications of household heterogeneity for trade. I develop a model where household heterogeneity is induced via the standard incomplete markets model and results in heterogenous price sensitivity. Even if exposure to trade is similar across households, heterogeneity in price sensitivity implies that different households value price changes differently and, thus, rich and poor households experience different gains from trade. I calibrate the model to match bilateral trade flows and micro-facts about household-level expenditure patterns and price elasticities. The gains from trade are pro-poor with the poorest households gaining six times more than the richest. The average gains from trade are nearly three times larger than representative agent benchmarks.
+This paper studies the implications of household heterogeneity for trade. I develop a model where household heterogeneity is induced via the standard incomplete markets model and results in heterogenous price sensitivity. Even if exposure to trade is similar across households, heterogeneity in price sensitivity implies that different households value price changes differently and, thus, rich and poor households experience different gains from trade. I calibrate the model to match bilateral trade flows and micro-facts about household-level expenditure patterns and price elasticities. The gains from trade are pro-poor with a ten percent reduction in trade costs delivering welfare gain equivalent to a permanent 600 dollar transfer of income for the poorest households. These gains are four and a half times larger than those for the richest households; the average gains are three times larger than representative agent benchmarks.
 
 ------------------------------------------------------------------------------------------------------------------------------
 %%\vspace{0.25cm}
@@ -137,7 +157,7 @@ The core issue in my model is that heterogeneity in price sensitivity reflects h
 
 The model that I develop builds upon workhorse frameworks. Trade in goods follows the Armington tradition with producers in each country producing a national variety. The important twist is that households have random utility over these varieties and they make a discrete choice over the varieties to consume (\citet{mcfadden1974frontiers}).  Household heterogeneity is induced via the standard incomplete markets model (\citet{bewley1979optimum}, \citet{imrohorouglu1989cost}, \citet{huggett1993risk}, \citet{aiyagari1994uninsured}) with households facing incomplete insurance against idiosyncratic productivity and taste shocks. This setting naturally leads to dispersion the marginal utility of consumption.
 
-Together, the discrete choice and incomplete markets model interact with the key force being household-level trade (price) elasticities that endogenously vary with income and wealth. Income and wealth matter because a household's price elasticity, in essence, is about the semi-elasticity of the marginal utility of consumption with respect to consumption. For poor high marginal utility households, a price reduction for a variety delivers a lot of utility| on the margin | and, thus, this induces strong substitution into that variety. In contrast, rich households' marginal utility is low, a price reduction for delivers little incremental gain in utility and, thus, this induces weak substitution into that variety. In aggregate, the distribution of households | how many rich and poor people are in a country | then determines the aggregate response of economy to changes in trade frictions and the aggregate pattern of trade.
+Together, the discrete choice and incomplete markets model interact with the key force being household-level trade (price) elasticities that endogenously vary with income and wealth. Income and wealth matter because a household's price elasticity, in essence, is about the marginal utility of consumption. For poor high marginal utility households, a price reduction for a variety delivers a lot of utility | on the margin | and, thus, this induces strong substitution into that variety. In contrast, rich households' marginal utility is low, a price reduction for delivers little incremental gain in utility and, thus, this induces weak substitution into that variety. In aggregate, the distribution of households | how many rich and poor people are in a country | then determines the aggregate response of economy to changes in trade frictions and the aggregate pattern of trade.
 
 The issues behind heterogeneity in price sensitivity leads to new perspectives on the welfare gains from trade. First, I show how one aspect of the gains from trade reflect the expected, discounted stream of changes in a household's home choice probability, similar in spirit to the result of \citet*{arkolakis2012new}. Unpacking this component reveals that the change in the home choice probability is essentially about two forces: (i) how exposed a household is to trade through its expenditure shares and (ii) its own price elasticity. Because the elasticity part reflects the marginal utility of consumption, the elasticity effect delivers the intuitive idea that one aspect of the gains from trade is a households' individual valuation of the price reduction. So even if a rich and poor household have similar expenditure patterns, the reduction in price is more valuable on the margin for the poor, high marginal utility households.
 
@@ -164,54 +184,6 @@ While this work motivates my paper, I take a conceptually different approach. Ra
 My paper also relates to a recent series of papers that combines trade models with heterogenous agent, incomplete market models. Some of this is my own work in \citet{lyon2018redistributing}, \citet{lyon2019}, \citet{waugh_consumption}; \citet*{gaston2018} and \citet{carroll2020heterogeneous} are important contributions as well. This class of papers primarily focuses on how heterogenous exposure through the labor market passes through to consumption and, thus, welfare. In this paper, I'm doing something different and it is an attempt to answer the question: does heterogeneity and market incompleteness matter for trade?
 
 This paper also relates to a body of work focusing on the pricing implications in the presence of heterogenous price sensitivity. \citet{nakamura2010accounting} is an early example of a macro-style model with an IO-style demand system similar in spirit to my paper and they focuses on the implications for the incomplete pass through of shocks to prices. My own work in \citet{p-iq} is very much a companion piece to this paper with imperfect competition in product markets and it focuses on the heterogenous pass-through of supply and demand shocks into prices for different types of consumers. \citet{nord2022shopping} takes a search-theoretic approach, but the core issue is the same | how demand composition affects pricing decisions. With that said, this model simplifies matters by focusing on a world with perfect competition and, hence, I turn my focus on how household heterogeneity matters for trade.
-
-
-
-
-% Connect with close economy stuff...evidence on prices
-
-
-%because  within their respective literatures.
-%
-%
-%
-%
-%%\footnote{Separate from this is computational challenge. Finding an equilibrium requires (i) solving for households dynamic problems|in each country (ii) constructing the stationary distribution of expenditure patterns and wealth|in each country (iii) aggregating and then (iv) finding a vector of prices so goods markets and financial markets clear world wide. Plot twist: It's doable. My github repository and the Appendix provides a complete description of my approach and methods.}
-%
-%
-%then allows me to think explicitly about normative issues
-%
-%
-%As a I show, market incompleteness is not a sufficient condition to
-
-
-
-
-%Lit review:
-%\begin{itemize}
-%  \item FK paper, about heterogeneity in shares. This is about elasticities. They say model is pro-poor, but the issue is about sector. This is a model of within catagory/sector. Relates to Cravino Levchncho.
-%
-% \item Cravino Levchenko is about have a within discussion, they just don't see shares. But what they do see (in the is that high income guys buy high priced stuff). Then when constructing the price index, they assume this in some way. Simmilar to Krill. Key is to distingusih, income on price within varity, vs. income and shares (imported or not) and where they come from.
-
-%  \item Note my formulas have similar flavor to fixed share approach. Planner is share times change is welfare gain. Need to look at krill paper.
-%
-%\item Krill paper... they do find that within category, rich buy more imported stuff than poor. The issue is complicated as you go across categories and then you do not get much action. The KN data set goes a deep dive and finds this as well. China is strange, strong case for thinking about qualit see Page 18 second to last paragraph. There you see the Armington quirk, imported stuff is more expensive, and rich guys are buying imported stuff. Other thing about Krill paper is critique of FK paper...AIDS generates a mechanical pro-poor bias. Non-homothetic CES is flexible to generate pattern in the data, FK is not. Final point, the Krill paper derives the share approach, this turns out to be exactly the same as the gains from trade in planner allocation
-%
-%\item Torston Jaccard does something simmilar to Krill, Auer. China messe stuff up, Europe strong pro rich exposure. All personal beuty products. Simmilar stuff to Auer. Proably more relavent for work with Simon is the stuff abour urban vs. rural and how this is above and beyond income, suggests something up about retailer. Does nested logit.
-%
-%\item The hotman paper is strange. This is mostly across sectors and claim they find something like Krill. No elasticity effect. Second, the Layspayers gives a totally different estimate than the model (inflation is high for poor vs rich) Why? Not really told that. The inflation results are suggestive that rich benefited more...but not quite obvious. Also not sure what the role of the firm is.
-%
-%\item Walsh paper...looks similar to my welfare calculations. Builds on the Moll paper too. Interesting is how they compute money metric by computing change in welfare relative to change in muc. Should put in labor income channel.
-%
-%\item Moll paper is very slick. Again more related than Walsh. One thing they do is put things in a money metric units by dividing through by muc in period 0. In the efficient economy, this then is back to Krill's formula. This money metric formula is why things are discounted by $R$ in Walsh...because the euler equation implies the ratio of muc's are equal to $R$. The other trick about this is that when assets are in zero net supply, the aggregate welfare gain in money metric units is zero. Key is that it's in money metric units though, in utils space there is true redistribution (worth talking about in either finacial globalization space or finacial autarky world).
-%
-%\item Is kind of related to Auclart...this the interest rate exposure channel. Less than I thought. As the key thing is more about dc. Tobin quote is nice about heterogenaity in muc. Everything is short term assets, so like in the moll paper sales = stocks. And then some people have different unhedge exposures to changes in interest rates.
-%\end{itemize}
-
-
-%This pattern of elasticities is consistent with recent evidence focusing on expenditure switching at the household level. \citet*{auer2022unequal} explore the heterogenous impact of the 2015 Swiss Franc appreciation and find that the exchange rate shock lead to larger changes in expenditure shares for poor households relative to the rich. In other words, poor households are more sensitive to price than rich households. Outside of the trade literature, there is broader set of evidence in support of the idea that price sensitivity declines with income; e.g. \citet{sangani2022markups} provides evidence in support of this fact using Nielsen Homescan data.
-%%Discuss this evidence better. Faber Falley, Dellevingo,
-
 
 \section{The Heterogeneous Agent Trade Model}
 
@@ -411,15 +383,14 @@ In this case trade need not be balanced for each country. Here a specific countr
 
 Below I formally define the Decentralized Stationary Equilibrium where private market participants taking prices as given solve their problems, the distribution of households is stationary, and prices are consistent with market clearing.
 
-\textbf{The Decentralized Stationary Equilibrium.} A Decentralized Stationary Equilibrium are asset policy functions and commodity choice probabilities $\{\  g_{i}(a, z, j), \pi_{ij}(a, z) \ \}_{i}$, probability distributions $\{ \ \lambda_i(a, z) \ \}_{i}$ and positive real numbers $\left \{w_i, p_{ij}, R_i\right \}_{i,j}$ such that
+\begin{df}[\textbf{The Decentralized Stationary Equilibrium}] \normalfont A Decentralized Stationary Equilibrium are asset policy functions and commodity choice probabilities $\{\  g_{i}(a, z, j), \pi_{ij}(a, z) \ \}_{i}$, probability distributions $\{ \ \lambda_i(a, z) \ \}_{i}$ and positive real numbers $\left \{w_i, p_{ij}, R_i\right \}_{i,j}$ such that
 \begin{itemize}
-\vspace{-.4cm}
 \item[i]  Prices ($w_i, p_{ij}$) satisfy (\ref{eq:marginal-product}) and (\ref{eq:marginal-product-ship});
 \item[ii] The policy functions and choice probabilities solve the household's optimization problem in (\ref{eq:valuefun}) and (\ref{eq:value_fun_option});
-\item[iv] The probability distribution $\lambda_i(a, z)$ induced by the policy functions, choice probabilities, and primitives satisfies (\ref{eq:law_motion}) and is stationary;
-\item[v] Goods market clears:
+\item[iii] The probability distribution $\lambda_i(a, z)$ induced by the policy functions, choice probabilities, and primitives satisfies (\ref{eq:law_motion}) and is stationary;
+\item[iv] Goods market clears:
 \begin{align}
-p_{i} Y_{i} - \sum_{j}^{M}  X_{ji} = 0, \ \ \forall i
+p_{i} Y_{i} - \sum_{j}  X_{ji} = 0, \ \ \forall i
 \end{align}
 \item[v] Bond market clears with either
 \begin{align}
@@ -427,6 +398,8 @@ p_{i} Y_{i} - \sum_{j}^{M}  X_{ji} = 0, \ \ \forall i
 \label{eq:fa-condition}
 \end{align}
 \end{itemize}
+\end{df}
+
 
 \subsection{Outline of the rest of paper}
 
@@ -439,7 +412,7 @@ This model above has households making individual choices over national varietie
 
 \section{Trade Elasticities and the Gains from Trade}
 
-This section focuses on the decentralized equilibrium and works towards understanding outcomes like trade elasticities and gains from trade (as in Proposition \ref{prp:gains-efficient-allocation}). I show how micro-level decisions shape the aggregate trade elasticity and then the gains from trade and the sources of those gains.
+This section focuses on the decentralized equilibrium and works towards understanding core trade outcomes | trade elasticities (Proposition \ref{prp:GET}) and the gains from trade (Proposition \ref{prp:gains-trade}) and how micro-level heterogeneity determines them. I then contrast these results with how elasticities behave in the efficient allocation (Proposition \ref{prp:gains-efficient-allocation}) and the $\log$ preference case when micro-level heterogeneity does not affect aggregate trade outcomes (Corollary \ref{prp:seperation}).
 
 \subsection{Trade Elasticities}\label{sec:trade-elasticity}
 
@@ -450,11 +423,12 @@ Given this discussion, my mathematical definition of the aggregate trade elastic
 \theta_{ij} = \frac{\partial M_{ij} / M_{ij}}{\partial d_{ij} / d_{ij}}  - \frac{\partial M_{ii} / M_{ii}}{\partial d_{ij} / d_{ij}}.
 \label{eq:def_trade_elasticity}
 \end{align}
-Then working from the definition of imports in (\ref{eq:imports}), Proposition \ref{prp:GET} connects the trade elasticity with micro-economic behavior:
-\begin{prp}[\textbf{The H-A Trade Elasticity}] \label{prp:GET} The trade elasticity between country $i$ and country $j$ is:
+Then working from the definition of imports in (\ref{eq:imports}), Proposition \ref{prp:GET} connects the aggregate trade elasticity with micro-level behavior:
+
+\begin{prp}[\textbf{The HA Trade Elasticity}] \label{prp:GET} The trade elasticity between country $i$ and country $j$ is:
 {\footnotesize
 \begin{align}
-\theta_{ij} = 1 + \int_{z,a} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z)da \ dz - \int_{z,a} \bigg \{ \theta_{ii,j}(a,z)^{I} + \theta_{ii,j}(a,z)^{E} \bigg \}\omega_{ii}(a,z) \ da \ dz
+\theta_{ij} = 1 + \int_{z,a} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z)da \ dz - \int_{z,a} \bigg \{ \theta_{ii,j}(a,z)^{I} + \theta_{ii,j}(a,z)^{E} \bigg \}\omega_{ii}(a,z)da \ dz
 \label{eq:trade-elasticity}
 \end{align}
 }which is an expenditure-weighted average of micro-level elasticities. The micro-level elasticities are decomposed into an intensive margin and extensive margin
@@ -464,54 +438,56 @@ Then working from the definition of imports in (\ref{eq:imports}), Proposition \
 \theta_{ij}(a,z)^{I} = \frac{\partial c_{i}(a,z,j)/ c_{i}(a,z,j)}{\partial d_{ij} / d_{ij}}, \ \ \ \ \ \ \theta_{ij}(a,z)^{E} = \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \
 \end{align}
 }
-and the expenditure weights are
+and the expenditure weights are defined as
 {\footnotesize
 \begin{align}
 \nonumber
 \omega_{ij}(a,z) = \frac{p_{ij}c_{i}(a,z,j)\pi_{ij}(a,z) \lambda_{i}(a,z) L_i}{M_{ij}}.
 \end{align}
 }
-and the notation $\theta_{ii,j}^I,  \ \ \ \theta_{ii,j}^E $ represents how home choices on the intensive and extensive margin respond to the $i,j$ change in trade costs.
+and the notation $\theta_{ii,j}^I,  \  \theta_{ii,j}^E $ represents how home choice probabilities on the intensive and extensive margin respond to the $ij$ change in trade costs.
 \end{prp}
-Proposition \ref{prp:GET} says that the aggregate trade elasticity is an expenditure weighted average of micro-level trade elasticities. And these micro-level trade elasticities are decomposed into two components: an intensive margin trade elasticity $\theta_{ij}(a,z)^{I}$ reflecting the change in spending by a household on variety from $j$ as trade costs change and an extensive margin trade elasticity $\theta(a,z)_{ij}^{E}$ reflecting how households substitute across varieties as trade costs change. And this is all relative to how these margins adjust home choices given the change in $j$, hence, the subscripts $ii,j$ in the second part of equation (\ref{eq:trade-elasticity}).
 
-Proposition \ref{prp:GET} is derived only off the aggregation of imports at the micro level|no market clearing, functional forms, etc. It's essentially an identity that could be applied to any model. The next step is to insert my model of household behavior. From the household's budget constraint, I can say more about the intensive margin elasticity. Then with the Type 1 extreme value assumption and the household's problem, I can say more about the extensive margin elasticity.
+Proposition \ref{prp:GET} says that the aggregate trade elasticity is an expenditure weighted average of micro-level trade elasticities. And these elasticities are decomposed into two components: an intensive margin trade elasticity $\theta_{ij}(a,z)^{I}$ which is the change in spending by a household on variety from $j$ and an extensive margin trade elasticity $\theta(a,z)_{ij}^{E}$ reflecting how households substitute across varieties. And this is all relative to how these margins adjust home choices given the change in $j$, hence, the subscripts $ii,j$ in the second part of equation (\ref{eq:trade-elasticity}).
 
-\textbf{The Intensive Margin.} The intensive margin elasticity reflects, conditional on a choice, how do quantities change. By using the households budget constraint in (\ref{eq:trade-budget-constraint}) I can express the intensive margin elasticity as:
+Proposition \ref{prp:GET} is derived only off the aggregation of imports at the micro level|no market clearing, functional forms, etc. It's essentially an identity that could be applied to any model. The next step inserts my model of household behavior. From the household's budget constraint, I can say more about the intensive margin elasticity. Then with the Type 1 extreme value assumption and the household's problem, I can say more about the extensive margin elasticity.
+
+\textbf{The Intensive Margin Elasticity.} The intensive margin elasticity is about how do quantities change, conditional on a choice. Starting from the budget constraint in (\ref{eq:trade-budget-constraint}) I express the intensive margin elasticity as:
 \begin{align}
 \underbrace{\frac{\partial c_{i}(a,z,j)/ c_{i}(a,z,j)}{\partial d_{ij} / d_{ij}}}_{\theta_{ij}(a,z)^{I}} &= \bigg [-\frac{\partial g_{i}(a,z,j)/ p_{ij}c_{i}(a,z,j)}{\partial p_{ij}/ p_{ij}} - 1 \bigg ]\frac{\partial p_{ij}/p_{ij}}{\partial d_{ij}/ d_{ij}} ,
 \label{eq:intensive-margin}
 \end{align}
-where $g_{i}(a,z,j)$ is the policy function mapping states into asset holdings next period $a'$. The inside bracket of Equation (\ref{eq:intensive-margin}) connects the intensive margin elasticity with the household's savings decision, i.e., how it adjusts its wealth relative to expenditure when prices change.\footnote{Outside of the bracket in (\ref{eq:intensive-margin}) is how prices change with trade costs which is also known as ``pass-through.'' In the competitive environment here, it is always one, even though there is an is an active super-elasticity in the background. In the non-competitive environment of \citet{p-iq}, the super-elasticity matters for price responses and pass-through deviates from one.} A way to think about (\ref{eq:intensive-margin}) is that it answers the question: If a household faced with lower prices, how much would go to extra consumption, how much to savings? And this division of resources determines the intensive margin elasticity.
+where $g_{i}(a,z,j)$ is the policy function mapping states into asset holdings next period $a'$.
+
+The inside bracket of Equation (\ref{eq:intensive-margin}) connects the intensive margin elasticity with the household's savings decision, i.e., how it adjusts its wealth relative to expenditure when prices change.\footnote{Outside of the bracket in (\ref{eq:intensive-margin}) is how prices change with trade costs which is also known as ``pass-through.'' In the competitive environment here, it is always one, even though there is an is an active super-elasticity in the background. In the non-competitive environment of \citet{p-iq}, the super-elasticity matters for price responses and pass-through deviates from one.} A way to think about (\ref{eq:intensive-margin}) is that it answers the question: If a household faced with lower prices, how much would go to extra consumption, how much to savings? And this division of resources determines the intensive margin elasticity.
 
 Heterogeneity matters here because this division is not invariant to a household's state $a, z$ and it works through their incentives to save. For example, if a households is constrained, assets can't adjust, and the intensive margin becomes $-1$. In contrast, wealthy households save some stuff from a reduction in prices and the intensive margin for these households will be less than one in absolute value. The result is that poor households are more price sensitive than rich households | on the intensive margin | and the mechanism works through their savings motives.
 
-\textbf{The Extensive Margin.} The idea here is to understand how households adjust their choice of variety. I'm going to work in several steps by first deriving the elasticity of the choice probability and then assume that the number of countries is large to isolate the key mechanism.
-
-The elasticity of the choice probability with respect to a change in trade costs is
+\textbf{The Extensive Margin Elasticity.} The extensive margin elasticity is about how households substitute across varieties. The elasticity of the choice probability with respect to a change in trade costs is
 \begin{align}
-\underbrace{ \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{E}} &= -\frac{\partial \Phi_{i}(a,z) / \Phi_{i}(a,z)}{\partial d_{ij}/d_{ij}} + \frac{1}{\sigma_{\epsilon}}\frac{\partial v_{i}(a,z,j)}{\partial d_{ij}/d_{ij}} .
+\underbrace{ \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}} }_{\theta_{ij}(a,z)^{E}} &=
+\frac{1}{\sigma_{\epsilon}}\frac{\partial v_{i}(a,z,j)}{\partial d_{ij}/d_{ij}}  - \frac{\partial \Phi_{i}(a,z) / \Phi_{i}(a,z)}{\partial d_{ij}/d_{ij}}
 \label{eq:extensive-margin}
 \end{align}
-The first term reflects the fact that the change choice $j$ depends upon a comparison relative to the overall change in the value of options across variety. This is very much similar to how CES models behave except that this term is state $a,z$ specific. The second term is how the choice specific value function changes multiplied by the taste shock parameter.\footnote{As I show in the Appendix, a third term reflecting the effect of borrowing constraints would also be here, but via envelope theorem type arguments, they zero out for small changes in trade costs.} In other words, how elastic or inelastic the extensive margin is depends on how much more valuable choice $j$ becomes.
+The second term is how the value of all variety options change (recalling the definition of $\Phi_{i}(a,z)$  in \ref{eq:big-phi}). This is very much similar to how CES models behave except that the price-index-like term is state $a,z$ specific. The leading term is how the choice specific value function changes multiplied by the taste shock parameter.\footnote{As I show in the Appendix, a third term reflecting the effect of borrowing constraints would also be here, but via envelope theorem type arguments, they zero out for small changes in trade costs.} In other words, how elastic or the extensive margin is depends on how much more valuable choice $j$ becomes.
 
-Now assume the number of countries is large. Then the effects on the $\Phi$ term are negligible and the effects working through the value function lead to
+Now assume the number of countries is large. Then the effects on the $\Phi$ term are negligible. Thus the second term in (\ref{eq:extensive-margin}) is negligible. Moreover, because the future impacts in the value function are just functions of $\Phi$, the only non-negligible term in the value function moving around is the effect of the change in utility today and, hence:
 \begin{align}
 \theta_{ij}(a,z)^{E} \approx -\frac{1}{\sigma_{\epsilon}}\bigg[u'(c_{i}(a,z,j))c_{i}(a,z,j)\bigg]. \label{eq:extensive-margin-large}
 \end{align}
-This says that how elastic a household is on the extensive margin relates to how many more incremental utils does a household get from the change in trade costs. What this means is that if a household receives a lot of utils, on the margin, from the change in trade costs then the extensive margin responds much more.
-
-This term also mimics the trade elasticity expression in the efficient allocation, equation (\ref{eq:eff-trade-elasticity}). In the efficient allocation, the planner's elasticity reflects the incremental social gain in utils from the change in trade costs. What is different in (\ref{eq:extensive-margin-large}), is that households' private valuations associated with the change in trade costs differ and, thus, they substitute differently given their own specific circumstances. Here, heterogeneity in elasticities are a symptom of a conflict between social and private valuations of the change in trade costs.
+The term in the brackets is a core piece of this paper and it shows up repeatedly. Mathematically, this term is the semi-elasticity of utility with respect to a percent change in consumption.\footnote{If this is not clear, note that this semi-elasticity is $ \partial u(c) / ( \partial c / c) = u'(c)c $.} So it determines how many more incremental utils does a household get, given a percent change in consumption. The intuition as to why this matters for the extensive margin elasticity is that if a household receives a lot of utils, on the margin, from the change in trade costs, then the substitution to that variety is stronger. In contrast, if that variety does not yield a lot of utils, on the margin, than substitution is weak.
 
 How does this elasticity depend upon a household's circumstances? Differentiate (\ref{eq:extensive-margin-large}) with respect to assets. The thought experiment here is if a household was a bit wealthier how much more elastic would the household be:
 \begin{align}
 \frac{\partial (u'(c_{i}(a,z,j))c_{i}(a,z,j))}{\partial a} = u'(c_{i}(a,z,j))\times \mathbf{MPC}_{i}(a,z,j) \times \bigg[-\gamma_{i}(a,z,j) + 1\bigg], \label{eq:elasticity-mpc}
 \end{align}
-where $\mathbf{MPC}_{i}(a,z,j)$ is the household's marginal propensity to consume and $\gamma_{i}(a,z,j)$ is the Arrow-Pratt measure of relative risk aversion.
+where $\mathbf{MPC}_{i}(a,z,j)$ is the household's marginal propensity to consume and $\gamma_{i}(a,z,j)$ is the Arrow-Pratt measure of relative risk aversion. With constant relative risk aversion (CRRA) preferences then $\gamma_{i}(a,z,j)$ becomes a constant $\gamma$ and log preferences is when $\gamma = 1$. Equation (\ref{eq:elasticity-mpc}) implies that if $\gamma > 1$, then poor, high marginal utility households who are also likely high MPC households are \emph{more elastic relative} to rich households on the extensive margin.
 
-With constant relative risk aversion (CRRA) preferences then $\gamma_{i}(a,z,j)$ becomes a constant $\gamma$ and log preferences is when $\gamma = 1$. Equation (\ref{eq:elasticity-mpc}) implies that if $\gamma > 1$, then poor, high marginal utility households who are also likely high MPC households are \emph{more elastic relative} to rich households on the extensive margin. This is the sense in which wealthy or poor households will have systematically different extensive margin elasticities.
+Intuitively, what this means is given a price reduction on some variety, it delivers a lot of utility | on the margin | for poor households. So this induces strong substitution into that variety by poor households. For rich households a price reduction for delivers little incremental gain in utility and, thus, this induces weak substitution into that variety.
 
-I find  (\ref{eq:elasticity-mpc}) clarifying because it makes clear the specific role that preferences play vs. the more general environment, i.e., savings, shocks, market incompleteness. For things like savings motives to play a role, for heterogeneity to matter, a necessary condition seems to be a departure from log preferences.\footnote{I directly tackle this case in Section \ref{sec:log-preferences}. A careful reader may anticipate that while log implies no heterogeneity in the extensive margin, what about the intensive margin? Amazingly, it turns out that it is constant as well.} Then conditional on a departure from log preferences, the incomplete markets model starts to play a role. And the incomplete markets model provides me an equilibrium theory of how marginal utility and marginal propensities to consume vary across households.
+Two more points about this that foreshadow several results. It makes clear the specific role that preferences play. For example, with $\log$ preferences the semi-elasticity of utility with respect to a percent change in consumption is always one ,i.e., the term in brackets in (\ref{eq:extensive-margin-large}) is one. Even though market incompleteness generates heterogeneity in marginal utility, a percent change in consumption delvers the same change in utils for rich and poor households alike (this can be seen also in (\ref{eq:elasticity-mpc})). Then rich and poor households substitute on the extensive margin in the same way.
+
+Second, equation (\ref{eq:extensive-margin-large})  mimics the trade elasticity expression in the socially optimal, efficient allocation in equation (\ref{eq:eff-trade-elasticity}). In the efficient allocation, the planner's elasticity reflects the incremental social gain in utils from the change in trade costs. What is different in (\ref{eq:extensive-margin-large}), is that households' private valuations associated with the change in trade costs differ and, thus, they substitute differently given their own specific circumstances (outside of the knife edge case of $\log$ preferences).  Here, heterogeneity in elasticities are a symptom of a conflict between social and private valuations of the change in trade costs.
 
 \begin{figure}[t!]
 \centering
@@ -531,63 +507,41 @@ Figure \ref{fig:micro-elasticity} and \ref{fig:micro-trade} illustrates how this
 
 This pattern of trade elasticities has a strong intuitive feel and there is evidence in support of it.\footnote{This idea goes back to \citeapos{harrod1936trade} ``Law of Diminishing Elasticity of Demand'' that says that price sensitivity declines with income which is not to be confused with Marshall's Second Law of Demand which I discuss later.}. This result comes out of estimates in \citet{berry1995automobile} and in a more macro context, \citet{nakamura2010accounting}. \citet{sangani2022markups} is a recent paper that provides evidence in support of this fact from the Kilts-Nielsen data set. The evidence in \citet*{auer2022unequal} most closely relates to the patterns in Figure \ref{fig:micro-elasticity} with poorer households having higher price elasticities; \citet*{colicev2022impact} finds similar results.
 
-One more implication of this result: because rich and poor households face the same prices, differences in elasticities lead to different expenditure shares. Figure \ref{fig:micro-trade} illustrates this point by plotting expenditure on the foreign good relative to total expenditure. Because of trade costs and symmetry across countries, the home good is the relatively cheaper good. Thus, poor, high-price-elastic households spend more on the cheap home good versus the expensive foreign good. In fact, for those near the borrowing constraint in this example, it's near zero.
+One more implication of this result: because rich and poor households face the same prices, differences in elasticities lead to different expenditure shares. Figure \ref{fig:micro-trade} illustrates this point by plotting expenditure on the foreign good relative to total expenditure. Because of trade costs and symmetry across countries, the home good is the relatively cheaper good. Thus, poor, high-price-elastic households spend more on the cheap home good versus the expensive foreign good. In fact, for those near the borrowing constraint in this example, it's near zero. This pattern appears counterfactual per the evidence of \citet{borusyak2021distributional} and, hence, it motivates my introduction of non-price product attributes (quality) in the quantitative application to match micro-level expenditure shares and elasticities.
 
 \subsection{The Gains from Trade}
 
-In this section I compute how social welfare changes due to a change in trade costs. I derive these gains across steady states, the idea here is that I'm thinking a situation where the change is small and there is an immediate jump to the new steady state. The purpose here is to heuristically illustrate mechanics and where the gains from trade arise from. Unlike the trade elasticity, I take total derivatives that encompass general equilibrium changes in wages and interest rates.
+In this section I compute how welfare changes due to a change in trade costs. The purpose here is to illustrate mechanics and where the gains from trade arise from. To that end, I derive these gains across steady states where I'm thinking a situation where the change is small and there is an immediate jump to the new steady state.  Unlike the trade elasticity, I take total derivatives that encompass general equilibrium changes in wages and interest rates.
 
-The analysis proceeds in several steps before stating the main result in Proposition \ref{prp:gains-trade}. First, I focus only on country $i$ and study a change in trade costs $d_{ij}$. To simplify the algebra, I choose $w_i$ to be the numeraire and normalize $A_i = 1$. This implies is that $p_{ii}$ equals one and it's derivative with respect to a change in trade costs is zero as it's pinned down by my choice of normalizations.
-
-I focus on country $i$ with a utilitarian social welfare function:
+The analysis proceeds in several steps before stating the main result in Proposition \ref{prp:gains-trade}. First, I focus only on country $i$ and study a change in trade costs $d_{ij}$. I then start from the top down with the following social welfare function:
 \begin{align}
 W_{i} = \int_{z} \int_{a}  v_{i}(a,z) L_i \lambda_{i}(a,z)
 \label{eq:social-welfare}
 \end{align}
-where $v_{i}(a,z)$ is a households ex-ante (before preference shocks are realized) value function in country $i$, with states $a,z$. The total change in total welfare is
+where $v_{i}(a,z)$ is a households ex-ante value function in country $i$, with states $a,z$. The total change in total welfare is
 \begin{align}
 \frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} \approx \int_{z} \int_{a} \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} L_i \lambda_{i}(a,z) \ da \ dz.
 \label{eq:social-welfare-change}
 \end{align}
 where the $\approx$ symbol reinforces that this is a heuristic, thinking about a small change and there is an immediate jump to the new steady state.
 
-At a high-level, (\ref{eq:social-welfare-change}) illustrates that the gains from trade come through two forces. The first component reflects changes in household-level welfare. So conditional on a distribution of households across states, this computes if households are better (or worse!) off from the change. Relative to the efficient allocation this force is always present, however, the planner equalizes things across households such that individual states do not matter and, thus, distributional issues do not matter.
+At a high-level, (\ref{eq:social-welfare-change}) illustrates that the gains from trade come through two forces. The first component reflects changes in household-level welfare. So conditional on a distribution of households across states, this computes if households are better or worse off. The second component of (\ref{eq:social-welfare-change}) is about reallocation. It says: take the old $v$'s and compute how the change in the distribution (that arise because of behavioral responses of households) effects social welfare. So does trade make it more or less likely that households are in ``good'' parts of the distribution. 
 
-The second component of (\ref{eq:social-welfare-change}) is about reallocation. It says: take the old $v$'s and compute how the change in the distribution (that arise because of behavioral responses of households) effects social welfare. So does trade make it more or less likely that households are in ``good'' parts of the distribution. This force is unique to the decentralized allocation and symptomatic of an inefficiency in the initial allocation.
-
-In total, the change in social welfare is then the weighted average of these two forces with the weights being those at the initial distribution.
-
-A key issue is how household-level welfare changes. Here, I make the use of the observation in Equation (\ref{eq:log_sum-home}) that the ex-ante value function can be represented in only in terms of home choice $ii$ values and then recursively push forward. In other words, I can compute $\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}$ \emph{as if} one only consumed the home good for the infinite future. This observation gives rise to the following:
+The key issue is how household-level welfare changes. Here, I make the use of the observation in Equation (\ref{eq:log_sum-home}) that I can express the ex-ante value function in only in terms of home choice $ii$ values and then recursively push forward. In other words, I can compute the change in the ex-ante value function \emph{as if} the household only consumed the home good for the infinite future. Appendix \ref{apx-sec:gains-trade} provides the details and leads to the following expression:
+{\small
 \begin{align}
-\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} =& -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}} \ + \ u'(c_{i}(a,z,i))a \ \frac{\mathrm{d} R_{i}}{\mathrm{d} d_{ij} / d_{ij}} \\
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} =& \underbrace{-\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}}}_{A(a,z)} \label{eq:welfare-vterms} \\
 \nonumber \\
-& + \beta \mathbb{E} \bigg \{ -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\mathrm{d}d_{ij} / d_{ij}} +  u'(c_{i}(a',z',i))\frac{\mathrm{d} R_{i}}{\mathrm{d} d_{ij} / d_{ij}}a' \ \  \ldots \mbox{and into the future.} \nonumber
+& + \underbrace{u'(c_{i}(a,z,i)) \bigg[ \frac{\mathrm{d} w_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}}z  +  \frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} a  \bigg]}_{B(a,z)} \nonumber \\
+\nonumber \\
+& + \underbrace{\bigg \{- \frac{u'(c_{i}(a,z,i))}{p_{ii}} + \beta \mathbb{E}_{z'} \bigg [-\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + \frac{u'(c_{i}(a',z',i))R_{i}}{p_{ii}} \bigg ] \bigg \}\frac{\mathrm{d} g_{i}(a,z,i)}{\mathrm{d} d_{ij} / d_{ij}}}_{C(a,z)} \nonumber \\
+\nonumber \\
+& + \beta \mathbb{E}_{z'} \bigg \{\underbrace{-\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\mathrm{d}d_{ij} / d_{ij}}}_{A(a',z')} +  \underbrace{u'(c_{i}(a',z',i)) \bigg[ \frac{\mathrm{d} w_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}}z'  +  \frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} a' \bigg]}_{B(a',z')} \ \  \ldots \nonumber
 \end{align}
-The first term: $-\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}}$ is what I'll call \emph{gains from substitution}. The second term is what I'll term as \emph{gains to asset trade}.\footnote{As discussed previously and worked out in the Appendix, the general expression has terms reflecting the effect of borrowing constraints. But again, envelope arguments for small changes mean that these terms are zero.}
+}Let me walk through the interpretation of each term: 
 
-Finally, these repeat themselves into the expected future, appropriately discounted. Proposition \ref{prp:gains-trade} summarizes the result below.
-\begin{prp}[\textbf{H-A Gains from Trade}] \label{prp:gains-trade} The welfare gains from trade are given by
-{\footnotesize
-\begin{align}
-\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} \approx \int_{z} \int_{a}  \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} L_i \lambda_{i}(a,z).
-\nonumber
-\end{align}
-}which reflects the change in household level gains and how the distribution of households changes. Household level gains are given by
-{\footnotesize
-\begin{align}
-\nonumber
-\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} = \mathbb{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a_{t},z_{t}) / \pi_{ii}(a_{t},z_{t})}{\mathrm{d}d_{ij} / d_{ij}} + u'(c_{i}(a_{t},z_{t},i))a_{t} \times \frac{\mathrm{d} R_{i}}{\mathrm{d} d_{ij} / d_{ij}} \bigg \}
-\end{align}
-}where each term represents:
-\begin{itemize}
-\item Gains from substitution: $-\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a_{t},z_{t}) / \pi_{ii}(a_{t},z_{t})}{\mathrm{d}d_{ij} / d_{ij}}$.
 
-\item Gains to asset trade: $u'(c_{i}(a_{t},z_{t}, i))a_{t} \times \frac{\mathrm{d} R_{i}}{\mathrm{d} d_{ij} / d_{ij}}$
-\end{itemize}
-\end{prp}
-Before moving on, I unpack the components in this result and provide some intuition.
-
-\textbf{Gains from substitution.} The change in the home share summarizes two forces: (i) how exposed a household is to the change through the choice probabilities and then (ii) elasticities. To see this, define $\bar{\theta}(a,z) ^E_{ij',j}$ as the extensive margin, cross-price elasticity, in total derivative form (and it's derivation follows what is done in \ref{eq:extensive-margin}). As I show in the Appendix \ref{apx-sec:gains-trade}, the change in the home share can be expressed as:
+\textbf{Gains from substitution: $A(a,z)$} The $A(a,z)$ term here is a household-specific gains from substitution term and is summarized by the change in the home choice probability and the dispersion parameter on tastes. The change in the home share summarizes two forces: (i) how exposed a household is to the change through the choice probabilities and then (ii) elasticities. To see this, define $\bar{\theta}(a,z) ^E_{ij',j}$ as the extensive margin, cross-price elasticity, in total derivative form (and it's derivation follows what is done in \ref{eq:extensive-margin}). As I show in the Appendix \ref{apx-sec:gains-trade}, the change in the home share can be expressed as:
 \begin{align}
 -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z) }{\mathrm{d} d_{ij} / d_{ij}} &= \sigma_{\epsilon} \sum_{j'} \pi_{ij'}(a,z) \times \bigg[ \bar{\theta}(a,z) ^E_{ii,j} - \bar{\theta}(a,z) ^E_{ij',j}\bigg], \\
 \nonumber \\
@@ -599,43 +553,78 @@ In words, the top line says that the change in home choice probability is equiva
 
 The next line assumes that all cross-terms are small, then the gains from substitution depend upon the initial exposure of a household to market $j$ and their own-price elasticity (the total derivative analog to (\ref{eq:extensive-margin}). And because the own-price elasticity is intimately connected to marginal utility of consumption, the elasticity effect picks up the intuitive idea that one aspect of the gains from trade is a household's individual valuation of the price reduction, in addition to the household's exposure.
 
-Equation (\ref{eq:gains-substitution}) is interesting for several reasons. First it is analogous to the gains from trade formula in the efficient allocation (Proposition \ref{prp:gains-efficient-allocation}). The difference is that in that market incompleteness leads to heterogeneity in both exposure \emph{and} elasticities giving rise to heterogenous gains from trade.
+This expression also connects with two related papers. \citet{borusyak2021distributional} (following an approach dating back to at least \citet{deaton1989rice}) consider an environment where, to a first order, only exposure matters, similar to the exposure term in Equation (\ref{eq:gains-substitution}). \citet{auer2022unequal} work out second order effects with non-homothetic CES preferences and additional effects from elasticities show up, similar to the elasticity term in (\ref{eq:gains-substitution}). Here both are present in a first-order formulation. The interpretation here has a different flavor than articulated in \citet{auer2022unequal}. Because elasticities are intimately connected with the marginal utility of consumption, this relationship is saying that the reason high elasticity households gain (conditional on exposure) more, is because the price reduction from trade is more valuable, on the margin.
 
-This expression also connects with two related papers. \citet{borusyak2021distributional} (following an approach dating back to at least \citet{} consider an environment where, to a first order, only exposure matters, similar to the exposure term in Equation (\ref{eq:gains-substitution}). \citet{auer2022unequal} work out second order effects with non-homothetic CES preferences and additional effects from elasticities show up, similar to the elasticity term in (\ref{eq:gains-substitution}). The interpretation here has a different flavor than articulated in \citet{auer2022unequal}. Because elasticities are intimately connected with the marginal utility of consumption, this relationship is saying that the reason high elasticity households gain (conditional on exposure) more, is because the price reduction from trade is more valuable, on the margin.
+\textbf{Gains from factor prices: $B(a,z)$} The second $B(a,z)$ terms is essentially how a reduction in trade costs affects factor prices | the wage relative to the price of the home good and the interest rate relative to the price of the home good. And these effects are all valued at that household's marginal utility of consumption. I can simplify this term in two ways: in the perfect competition world I consider $\frac{w_i}{p_{ii}} = A_{i}$ from (\ref{eq:marginal-product}) and, thus, $\frac{\mathrm{d} w_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} = 0$, so households are perfectly ``hedged'' from any effect of trade on labor earnings.
 
-\textbf{Gains to asset trade.} The idea here is that changes in trade costs affect the equilibrium interest rate in the country and then benefit (or hurt) households depending upon their net asset position. For example, if a trade liberalization leads to an increase in interest rates, net debtors suffer since their terms to borrow deteriorated, while net savers benefit.
-
-Why might a trade liberalization change interest rates? It's because the liberalization has heterogenous effects on expenditure patterns and savings through the forces discussed in Section \ref{sec:trade-elasticity}. So if the liberalization disproportionately benefits rich /savers in the economy, they shed assets to consume a bit more of the now cheaper goods. Then interest rates must increase to clear financial markets impacting the poor / debtors in the economy. The novelty here is how the goods trade and the financial market are interlinked|not separate as they are typically treated.
-
-\subsection{Elasticities and Gains in the Efficient Allocation}\label{sec:log-preferences}
-
-One issue behind the results above is market incompleteness. Households are imperfectly insured against the risks they face, this leads to heterogeneity in the marginal utility of consumption and, in turn, heterogeneity in price sensitivity, expenditure patterns, and the gains from trade. This section contrasts these previous results with an allocation where a social planner can overcome market incompleteness and, thus, I shed some light on what role market incompleteness is playing in the analysis.
-
-The starting point is a utilitarian social welfare function:
+The second simplification is that $\frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\mathrm{d} R_{i} / w_{i}}{\mathrm{d} d_{ij} / d_{ij}}$ and so the $B(a,z)$ term becomes 
 \begin{align}
-W = \sum_{i} \underbrace{\sum_{t=0}^{\infty} \int\limits_{z} \beta^{t}  v_{i}(z,t) L_{i}\lambda_{i}(z,t)}_{W_i},
-\label{eq:planner-welfare}
+B(a,z) = u'(c_{i}(a,z,i)) \times  a \times \frac{\mathrm{d} R_{i} / w_{i}}{\mathrm{d} d_{ij} / d_{ij}}.
 \end{align}
-and here $v_i(z,t)$ is a households ex-ante utility with state $z$, time $t$, in country $i$. I highlight the under-braced term $W_i$ as the welfare of those living in country $i$ and which is analogous to (\ref{eq:social-welfare}).
+Two issue that this term presents (i) how does the ratio of the gross interest rate relative to the wage rate change and (ii) how exposed is the household to this change. Unlike labor earnings, households are not perfectly hedged against these changes and because households can have negative positions in $a$ changes in relative factor prices have distributional effects.  For example, if a trade liberalization leads to an increase in $R / w$, net debtors suffer since their terms to borrow deteriorated, while net savers benefit. This force is very much analogous to forces identified in \citet{auclert2019monetary}.
 
-In \citet{waughoptimal}, I fully characterize a Planner's choice of consumption allocations $c_{i}(z, j, t)$ and choice probabilities $\pi_{ij}(z,t)$ for all $i,j$ pairs, $z$ states, and dates $t$ to maximize (\ref{eq:planner-welfare}). Given a characterization of the optimal allocation, I can compute the welfare gains from a change in trade costs and study how welfare changes across the two stationary allocations.\footnote{Unlike the previous section, the move across stationary allocations is no consequence as there is no moving aggregate state variable, so the jump across stationary equilibrium is instantaneous.}
+\textbf{Gains from changes in asset holdings: $C(a,z)$} The third term which I'm labeling as $C(a,z)$ is about changes in asset holdings. For the small / local changes that I'm considering it should zero out, but for larger changes this term could be relevant. Let me expand upon this.
 
-Proposition \ref{prp:gains-efficient-allocation} describes the result, Appendix \ref{sec:apx-planner} works out the details.
+First, notice that the inside the bracket term is the Euler Equation from (\ref{eq:euler_equation-home}) and its multiplied by the change in policy function. Now if the household is unconstrained, the inside the bracket term is zero as there is no gain through changes in asset behavior. Asset holdings are already chosen optimally so that margins are equated, thus, on the margin any benefit of lower trade costs on changes in asset behavior is zero. This inside the bracket term may not be zero because of borrowing constrained households. However, the bracket is multiplied by the change in the asset policy function. What this picks up is that if the household is constrained, then assets can't adjust so the outside term is zero and, thus, overall the second term is zero.
 
-\begin{prp}[\textbf{Trade Elasticities and Welfare Gains in the Efficient Allocation}]\label{prp:gains-efficient-allocation} The elasticity of trade to a change in trade costs between $i,j$ in the efficient allocation is:
+Via this logic, the only people that benefit (and contribute to social welfare) through these are those on the margin between constrained and not-constrained. But if they are on the margin between being constrained and not-constrained, then they are on their Euler equation anyways.
+
+Finally, these repeat themselves into the expected future, appropriately discounted. Proposition \ref{prp:gains-trade} summarizes the result below.
+
+\begin{prp}[\textbf{HA Gains from Trade}] \label{prp:gains-trade} The welfare gains from trade are given by
+{\footnotesize
+\begin{align}
+\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = \int_{a}\int_{z}  \bigg \{ \frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}}  + v_{i}(a,z) \frac{\mathrm{d} \lambda_{i}(a,z)/ \lambda_{i}(a,z)}{\mathrm{d} d_{ij} / d_{ij}}  \bigg \} \lambda_{i}(a,z).
+\nonumber
+\end{align}
+}which reflects the change in household level gains and how the distribution of households changes. Household level gains are given by
+{\footnotesize
+\begin{align}
+\nonumber
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} = \mathbb{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ A(a_{t},z_{t}) + B(a_{t},z_{t}) + C(a_{t},z_{t}) \bigg \}
+\end{align}
+}where each term represents:
+\begin{itemize}
+\item Gains from substitution: $A(a_{t},z_{t}) = -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}}$.
+
+\item Gains from factor prices: $B(a_{t},z_{t}) = u'(c_{i}(a_{t},z_{t},i))\frac{\mathrm{d} R_{i}/p_{ii}}{\mathrm{d} d_{ij} / d_{ij}}a$
+
+\item Gains from changes in asset holdings:
+{\footnotesize
+\begin{align}
+\nonumber
+C(a_{t},z_{t}) = \bigg \{- \frac{u'(c_{i}(a,z,i))}{p_{ii}} + \beta \mathbb{E}_{z'} \bigg [-\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + \frac{u'(c_{i}(a',z',i))R_{i}}{p_{ii}} \bigg ] \bigg \}\frac{\mathrm{d} g_{i}(a,z,i)}{\mathrm{d} d_{ij} / d_{ij}}
+\end{align}}
+which is zero for small changes.
+\end{itemize}
+\end{prp}
+
+\subsection{Elasticities and Gains in the Efficient Allocation}\label{sec:efficient}
+
+One issue behind the results above is market incompleteness. Households are imperfectly insured against the risks they face, this leads to heterogeneity in the marginal utility of consumption and, in turn, heterogeneity in price sensitivity, expenditure patterns, and the gains from trade. Building on work in from my related paper in \citet{waughoptimal}, I contrasts the previous results with the elasticities and gains from trade in an allocation where a social planner can overcome market incompleteness. Appendix \ref{apx-sec:efficient} provides a self-contained discussion of the planning problem and derivation of the results. 
+
+The starting point is a utilitarian social welfare function which is analogous to (\ref{eq:social-welfare}). In \citet{waughoptimal}, I fully characterize a Planner's choice of consumption allocations $c_{i}(z, j, t)$ and choice probabilities $\pi_{ij}(z,t)$ for all $i,j$ pairs, $z$ states, and dates $t$ to maximize social welfare. Given a characterization of the optimal allocation, I can compute trade elasticities and the welfare gains from a change in trade costs and study how welfare changes across the two stationary allocations.\footnote{Unlike the previous section, the move across stationary allocations is no consequence as there is no moving aggregate state variable, so the jump across stationary equilibrium is instantaneous.}
+
+Proposition \ref{prp:gains-efficient-allocation} describes the result, Appendix \ref{apx-sec:efficient} works out the details.
+
+\begin{prp}[\textbf{Trade Elasticities and Welfare Gains in the Efficient Allocation}]\label{prp:gains-efficient-allocation} The elasticity of trade to a change in trade costs between $ij$ in the efficient allocation is:
 \begin{align}
 \theta_{ij} =  -\frac{1}{\sigma_{\epsilon}} \bigg [ u'(c_{i}(j)) c_{i}(j) \bigg]. \label{eq:eff-trade-elasticity}
 \end{align}
 And the welfare gains from a reduction in trade costs between $i,j$ are
 \begin{align}
-\frac{\mathrm{d} W}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\partial W}{\partial d_{ij} / d_{ij}} = \frac{\sigma_{\epsilon} \  \theta_{ij} \  \pi_{ij} \ L_i}{1-\beta}
+\frac{\mathrm{d} W }{\mathrm{d} d_{ij} / d_{ij}} &= \frac{\sigma_{\epsilon} \  \theta_{ij} \  \pi_{ij} \ L_i}{1-\beta},
 \label{eq:eff-trade-gains}
+\end{align} 
+which is the discounted, direct effect from relaxing the aggregate resource constraint. And this can be expressed as
+\begin{align}
+= -\sigma_{\epsilon} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \times \frac{L_i}{1 - \beta}.
+\label{eq:eff-trade-gains-acr}
 \end{align}
-which is the discounted, direct effect from relaxing the aggregate resource constraint.
 \end{prp}
-Proposition \ref{prp:gains-efficient-allocation} highlights a couple of things. First, the trade elasticity is both similar and different than typically thought. Consistent with intuition from \citeapos{eaton2002technology}, the dispersion parameter matters inversely. If $\sigma_{\epsilon}$ is small, national varieties are ``as if they are near substitutes'' and thus trade flows will respond a lot.
+Proposition \ref{prp:gains-efficient-allocation} highlights a couple of things. Consistent with intuition from \citeapos{eaton2002technology}, the dispersion parameter matters inversely. If $\sigma_{\epsilon}$ is small, national varieties are ``as if they are near substitutes'' and thus trade flows will respond a lot.
 
-The non-standard part of the trade elasticity is that the marginal utility of consumption times consumption shows up. One way to view this part of the elasticity is that it's the rate of conversion from quantities into utils. That is how many utils, on the margin, a particular quantity of level of consumption delivers. And this matters for the elasticity in a very intuitive way|country pairs that deliver a lot of utility, on the margin, are the pairs where the planner will be most responsive to changes in trade costs.
+Very similar to the household-level extensive margin elasticity in (\ref{eq:extensive-margin-large}), the aggregate trade elasticity has a term with the marginal utility of consumption times consumption showing up. Like in the discussion above, this term matters for the elasticity in a very intuitive way|country pairs that deliver a lot of utility, on the margin, are the pairs where the planner will be most responsive to changes in trade costs.
 
 The second part of Proposition \ref{prp:gains-efficient-allocation} summarizes the gains from trade. It says that the total change in welfare only reflects those eating that commodity $\pi_{ij} \times L_i$ which is the share of households consuming commodity $j$ times the number of households in country $i$. This is then converted into utils using the elasticity which, as discussed above, is something about the dispersion in shocks and then the rate at which utils are being delivered at current quantities.\footnote{An alternative perspective is to divide through both sides of (\ref{eq:eff-trade-gains}) by the marginal utility of consumption and then the welfare is in money metric units.} This is then discounted for the infinite future, hence the $1/ (1-\beta)$ term.
 
@@ -643,54 +632,46 @@ This is just the direct effect from a reduction in trade costs relaxing the reso
 
 This result is reminiscent of \citet{AtkesonBurstein2010} who make a similar claim in the context of a model with rich firm heterogeneity. They show that the only first order effect of lower trade costs on welfare is the direct consumption effect and that indirect effects are second order. This is similar, but with household heterogeneity, by saying that, in the efficient allocation all margins are properly equated heterogeneity is irrelevant and the welfare gains only the direct benefits.
 
-Before moving on, let me connect the results in Proposition \ref{prp:gains-efficient-allocation} with \citet{arkolakis2012new}. As I show in the appendix, in the efficient allocation the percent change in the home choice probability exactly equals the $i, j$ choice probability times the trade elasticity
+The final part of Proposition \ref{prp:gains-efficient-allocation} connects with \citet{arkolakis2012new}. As I show in the appendix, in the efficient allocation the percent change in the home choice probability exactly equals the $ij$ choice probability times the trade elasticity
 \begin{align}
 \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d} d_{ij} / d_{ij}} = -\theta_{ij} \times \pi_{ij},
 \label{eq:effecient-home-share}
 \end{align}
-then inserting (\ref{eq:effecient-home-share}) into  (\ref{eq:eff-trade-gains}) I have
-\begin{align}
-\frac{\mathrm{d} W}{\mathrm{d} d_{ij} / d_{ij}} =  \sigma_{\epsilon} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \times \frac{L_i}{1 - \beta}.
-\label{eq:eff-trade-gains}
-\end{align}
-Now the form of (\ref{eq:eff-trade-gains}) is closely related to \citet{arkolakis2012new}. Interestingly, and much like in the decentralized allocation, the change in the home choice probability summarizes a lot. Moreover, now there is an equivalence between \citet{AtkesonBurstein2010}-like logic and \citet{arkolakis2012new}-style formulas.
+then inserting (\ref{eq:effecient-home-share}) into  (\ref{eq:eff-trade-gains}) delivers the final line of Proposition \ref{prp:gains-efficient-allocation}. Now the form of (\ref{eq:eff-trade-gains}) is closely related to \citet{arkolakis2012new}. Interestingly, and much like in the decentralized allocation, the change in the home choice probability summarizes a lot. Moreover, now there is an equivalence between \citet{AtkesonBurstein2010}-like logic and \citet{arkolakis2012new}-style formulas.
 
-There are two details: choice probabilities do not necessarily correspond with expenditure shares and the $\sigma_{\epsilon}$ is not the inverse of the trade. However, with $\log$ the trade elasticity becomes $1 / \sigma_{\epsilon}$, choice probabilities are proportional to expenditure shares, and the correspondence between the gains from trade under efficiency and \citet{arkolakis2012new} becomes exact. The case of $\log$ has an additional implication that heterogeneity and market incompleteness does not matter for trade outcomes and I turn to this case next.
+There are two details: choice probabilities do not necessarily correspond with expenditure shares and the $\sigma_{\epsilon}$ is not the inverse of the trade elasticity However, with $\log$ the trade elasticity becomes $1 / \sigma_{\epsilon}$, choice probabilities are proportional to expenditure shares, and the correspondence between the gains from trade under efficiency and \citet{arkolakis2012new} becomes exact. The case of $\log$ has an additional implication that heterogeneity and market incompleteness does not matter for trade outcomes and I turn to this case next.
 
 \subsection{The Case of $\log$ preferences}\label{sec:log-preferences}
 
-The case of $\log$ preferences over the physical commodity displays some unique features. This (very common) preference structure leads to an interesting result where micro-level heterogeneity, market incompleteness completely sperate from the trade side of the economy. So in this one case, trade behaves ``as if'' there were a representative agent Armington-CES consumer and then the gains from trade take the form in \citet{arkolakis2012new}|even though individual households are facing shocks, borrowing constraints, and in general trying to deal with life's circumstances.
+The case of $\log$ preferences over the physical commodity displays some unique features. This very common) preference structure leads to an interesting result where micro-level heterogeneity, market incompleteness completely sperate from the trade side of the economy. So in this one case, trade behaves ``as if'' there were a representative agent Armington-CES consumer.
 
 Consider the following preference structure:
 \begin{align}
 \tilde{u}( c_{ij,t} ) =  \log(c_{ij,t}) + \epsilon_{j,t}. \nonumber
 \end{align}
-There is essentially one insight and then everything follows. Examining the problem in (\ref{eq:value_fun_option}) and substituting in the households budget constraint from (\ref{eq:trade-budget-constraint}), then leads to the observation that the optimal $a'$ conditional on a choice $j$ is \textbf{independent} of the price and the choice $j$. In Appendix \ref{apx-sec:log-preferences}, I employ a formal ``guess and verify'' approach off the Euler equation and show it leads to the same conclusion and this is verified on the computer as well.
+There is essentially one insight and then everything follows. Examining the problem in (\ref{eq:value_fun_option}) and substituting in the households budget constraint from (\ref{eq:trade-budget-constraint}), then the observation is that the optimal $a'$ conditional on a choice $j$ is \textbf{independent} of the choice $j$. And this observation implies that choice probabilities become independent of states $a$ and $z$. Everything follows from these observations and Proposition \ref{prp:GET} and Proposition \ref{prp:gains-trade} can be applied. Corollary \ref{prp:seperation} states the result and Appendix \ref{apx-sec:log-preferences} works through this logic step-by-step.
 
-Everything follows from this observation.
-
-Because assets don't adjust to changes in prices, from (\ref{eq:intensive-margin}) the intensive margin elasticity for $ij$ is minus one. On the extensive margin, things are more involved as at the micro level they are varying by income and assets. But across different destinations, within states, they vary in the same exact way. Given that the trade elasticity is always defined relative to home choices, heterogenous effects wash out and the end result is that everything collapses to $-\frac{1}{\sigma_{\epsilon}}$. Similarly, aggregate trade satisfies a gravity-like relationship (which no role for household heterogeneity) as in a CES-Armington model or \citet{eaton2002technology}.
-
-Working from Proposition \ref{prp:gains-trade} one can see how the gains only depend on aggregates. The reallocation term in (\ref{eq:social-welfare-change}) is zero because asset holdings don't change. The gains to asset trade are zero because $R$ does not move. Thus, the gains from trade are only about the discounted stream of changes in the home choice probability $\pi_{ii}$|which is the same for rich and poor households per the argument in the previous paragraph.
-
-Appendix \ref{apx-sec:log-preferences} works through this logic step-by-step. Below I state the result:
-\begin{corr}[\textbf{Separation of Trade and Micro-Heterogeneity}]\label{prp:seperation} In the dynamic, heterogenous agent trade model where preferences are logarithmic over the physical commodity: The trade elasticity is
+\begin{corr}[\textbf{Separation of Trade and Heterogeneity}]\label{prp:seperation} In the dynamic, heterogenous agent trade model where preferences are logarithmic over the physical commodity: The trade elasticity is
 \begin{align}
 \theta = -\frac{1}{\sigma_{\epsilon}}, \nonumber
 \end{align}
-and relative trade flows satisfy a gravity relationship
+and trade flows satisfy a standard gravity relationship
 \begin{align}
 \frac{M_{ij}}{M_{ii}} = \left( \frac{  w_{j} / A_{j} }{  w_{i} / A_{i} } \right)^{\frac{-1}{\sigma_{\epsilon}}} d_{ij}^{\frac{-1}{\sigma_{\epsilon}}}, \nonumber
 \end{align}
-and are independent of the household heterogeneity. Ant the welfare gains from trade are
+and both are independent of the household heterogeneity. And the welfare gains from trade for an individual household are
 \begin{align}
-\frac{\mathrm{d} W_{i}}{\mathrm{d} d_{ij} / d_{ij}} = -\frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}}. \nonumber
+\nonumber
+\frac{\mathrm{d} v_i(a, z)}{\mathrm{d} d_{ij} / d_{ij}} = \frac{1}{\theta (1-\beta)} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d}d_{ij} / d_{ij}} \ \ + \ \
+\mathbb{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} \bigg \{ B(a_{t},z_{t}) + C(a_{t},z_{t}) \bigg \}
 \end{align}
-and is (i) independent of the household heterogeneity and (ii) summarized by the trade elasticity and the change in the home choice probability.
+where the gains from substitution are (i) independent of the household heterogeneity and (ii) summarized by the trade elasticity and the change in the home choice probability and (iii) the other sources of gains are as in Proposition \ref{apx-prp:gains-trade}.
 \end{corr}
-To be honest, I found this result surprising. By looking at the choice probabilities in (\ref{eq:choice-prob}) and noting how the value functions determine choices, not period utility functions, one would suspect that the household's income fluctuations problem would shape aggregate trade outcomes. Corollary \ref{prp:seperation} shows that is not the case but that micro-outcomes and aggregate trade outcomes ``separate.''
+The first part of this result is heterogeneity plays no role in determining the aggregate trade elasticity. Like in the CES-Armington model or \citet{eaton2002technology}, it's just about how innately substitutable national varieties are. Similarly, aggregate trade satisfies a gravity relationship which no role for household heterogeneity.
 
-Not only does heterogeneity not matter, aggregate outcomes essentially mimic the results of \citet{arkolakis2012new} and, thus, my heterogenous agent model \emph{with log preferences} delivers the ``same old gains.'' Trade flows take a constant elasticity form with the trade elasticity pinned down by the dispersion parameter on the trade shocks. And then the total change in welfare is summarized by the trade elasticity and how the share of home purchases changes to any change in trade costs.
+Welfare is a bit more subtle. Choice probabilities are independent of states (and proportional to expenditure shares), then applying Proposition \ref{prp:gains-trade} and inserting the expression for the trade elasticity allows me to express the gains from substitution component of Proposition \ref{prp:gains-trade} mimic the results of \citet{arkolakis2012new}. What is still present from the heterogenous agent part of the model is how changes in factor prices influence welfare.
+
+To be honest, I found this result surprising. By looking at the choice probabilities in (\ref{eq:choice-prob}) and noting how the value functions determine choices, not period utility functions, one would suspect that the household's income fluctuations problem would shape aggregate trade outcomes. Corollary \ref{prp:seperation} shows that is not the case but that micro-outcomes and aggregate trade outcomes ``separate.''
 
 Proposition \ref{prp:seperation} is also interesting because it generalizes the results of \citet*{anderson1987ces} and \citet{anderson1992discrete} to a far more complicated economy. They showed that in a static model with log utility and additive logit shocks, the economy behaves \emph{as if} there were a representative agent CES consumer. I recover their result, but I must emphasize the complexity of the economy at the micro-level for which this result stands|households are froward looking, face productivity and taste shocks in the presence of incomplete markets and borrowing constraints. Yet, these details don't matter when the magic of $\log$ kicks in.
 
@@ -719,8 +700,6 @@ The borrowing constraint is set in the following way. First, I scale it by a cou
 In my main calibration, I work with the case of financial globalization. In this case there is one interest rate clearing the global asset market. All countries are assumed to have the same discount factor and it is set so the equilibrium world interest rate is 1 percent.
 
 Per the discussion above, the taste shock parameter is set in the following way. TFP in the United States is normalized to one and then, per the discussion above, I set this so that $1 / \sigma_{\epsilon} = 4.0$ and, thus, $1 / \sigma_{\epsilon,us} = 4.0$. And again, per the discussion above, all other countries shock parameters are pinned down by $\sigma_{\epsilon}$ and their level of TFP $A_i$.
-
-
 
 \subsection{Using Gravity as a Guide to Match Trade Data}
 
@@ -935,7 +914,7 @@ Figure \ref{fig:welfare-households} reports how the welfare gains, in equivalent
 The gains from trade are strongly pro-poor. And the magnitudes across income brackets are large with the poorest households gaining six times more from trade than the richest households.
 
 \begin{figure}[!t]
-\centering{\includegraphics[scale = .55]{./figures/ge-welfare-household-fixR.pdf}}
+\centering{\includegraphics[scale = 0.65]{./figures/ge-welfare-household-vs-log.pdf}}
 \caption{Welfare Gains by Household: 10\% Reduction in $d_{us,j}$}\label{fig:welfare-households}
 \end{figure}
 
@@ -947,21 +926,21 @@ The key force behind this result lies in the discussion around equation (\ref{eq
 \refstepcounter{table}
 \setlength {\tabcolsep}{5.75mm}
 \renewcommand{\arraystretch}{1.60}\label{tb-welfare}
-\begin{tabular}[t]{l c c c}
-\multicolumn{4}{c}{{\normalsize\textbf{Table \ref{tb-welfare}: 10\% Reduction in US Trade Costs: Interest Rates, Trade, Welfare}} }
+\begin{tabular}[t]{l c c}
+\multicolumn{3}{c}{{\normalsize\textbf{Table \ref{tb-welfare}: 10\% Reduction in US Trade Costs: Interest Rates, Trade, Welfare}} }
 \\ \hline \hline
-& Baseline & GE & Fixed R \\
-\cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4}
-US Imports / GDP & $7.2$ & $9.1$ & $9.2$  \\
-$R - 1$ & $1.00$ & $0.8$ & $1.00$  \\
+& Baseline & Log Model \\
+\cmidrule(lr){2-2} \cmidrule(lr){3-3}
+$\Delta$ US Imports / GDP  & $1.7$ & $1.1$  \\
+$\Delta R_{us} / w_{us}$  & $4.6$ & $4.5$  \\
 \hline
-\multicolumn{2}{l}{Average Gains} & $1.2$ & $1.1$\\
-\multicolumn{2}{l}{Ratio of Bottom 20 vs. Top 20 Welfare} & $6.1$ & $4.8$\\
-\multicolumn{2}{l}{ACR Implied Gains } & $0.52$ & $0.53$ \\
+Average Welfare Gain & $1.35$ & $0.21$\\
+Ratio of Bottom 20 vs. Top 20 Welfare & $4.5$ & $0.78$\\
+ACR Implied Gains  & $0.43$ & $0.29$ \\
 \hline
 \end{tabular}
 \\[0.5ex]
-\parbox{5.75in}{\footnotesize \textbf{Note:} Imports / GDP, Interest Rates, and Welfare are in percent. All values from the perspective of the US. Bottom 20 vs. Top 20 Welfare reports the ratio of household welfare for those in the bottom 20th percentile of the expenditure distribution vs. those at the top 20th.}
+\parbox{5.75in}{\footnotesize \textbf{Note:} Imports / GDP is in percentage points; $\Delta R_{us} / w_{us}$ and welfare are in percent change. Bottom 20 vs. Top 20 Welfare reports the ratio of household welfare for those in the bottom 20th percentile of the expenditure distribution vs. those at the top 20th.}
 \end{center}
 \end{table}
 
@@ -1364,7 +1343,7 @@ This expression is interesting because now it is analogous to the gains from tra
 %\hrulefill
 
 
-\section{Gains in the Efficient Allocation}\label{sec:apx-planner}
+\section{Gains in the Efficient Allocation}\label{apx-sec:efficient}
 
 This section of the appendix presents abbreviated results from my related paper in \citet{waughoptimal}. Below I discus the planning problem, I state the solution to it, then discuss how I arrive at the gains from trade calculations in Proposition \ref{prp:gains-efficient-allocation}.
 
@@ -1804,6 +1783,52 @@ Now to reduce the dimensionality of these parameters, I set this up as a home bi
 %%\parbox{5.75in}{\footnotesize \textbf{Note:} Targets are \ 4.4, \ 6.6}
 %%\end{center}
 %%\end{table}
+
+
+% Connect with close economy stuff...evidence on prices
+
+
+%because  within their respective literatures.
+%
+%
+%
+%
+%%\footnote{Separate from this is computational challenge. Finding an equilibrium requires (i) solving for households dynamic problems|in each country (ii) constructing the stationary distribution of expenditure patterns and wealth|in each country (iii) aggregating and then (iv) finding a vector of prices so goods markets and financial markets clear world wide. Plot twist: It's doable. My github repository and the Appendix provides a complete description of my approach and methods.}
+%
+%
+%then allows me to think explicitly about normative issues
+%
+%
+%As a I show, market incompleteness is not a sufficient condition to
+
+
+
+
+%Lit review:
+%\begin{itemize}
+%  \item FK paper, about heterogeneity in shares. This is about elasticities. They say model is pro-poor, but the issue is about sector. This is a model of within catagory/sector. Relates to Cravino Levchncho.
+%
+% \item Cravino Levchenko is about have a within discussion, they just don't see shares. But what they do see (in the is that high income guys buy high priced stuff). Then when constructing the price index, they assume this in some way. Simmilar to Krill. Key is to distingusih, income on price within varity, vs. income and shares (imported or not) and where they come from.
+
+%  \item Note my formulas have similar flavor to fixed share approach. Planner is share times change is welfare gain. Need to look at krill paper.
+%
+%\item Krill paper... they do find that within category, rich buy more imported stuff than poor. The issue is complicated as you go across categories and then you do not get much action. The KN data set goes a deep dive and finds this as well. China is strange, strong case for thinking about qualit see Page 18 second to last paragraph. There you see the Armington quirk, imported stuff is more expensive, and rich guys are buying imported stuff. Other thing about Krill paper is critique of FK paper...AIDS generates a mechanical pro-poor bias. Non-homothetic CES is flexible to generate pattern in the data, FK is not. Final point, the Krill paper derives the share approach, this turns out to be exactly the same as the gains from trade in planner allocation
+%
+%\item Torston Jaccard does something simmilar to Krill, Auer. China messe stuff up, Europe strong pro rich exposure. All personal beuty products. Simmilar stuff to Auer. Proably more relavent for work with Simon is the stuff abour urban vs. rural and how this is above and beyond income, suggests something up about retailer. Does nested logit.
+%
+%\item The hotman paper is strange. This is mostly across sectors and claim they find something like Krill. No elasticity effect. Second, the Layspayers gives a totally different estimate than the model (inflation is high for poor vs rich) Why? Not really told that. The inflation results are suggestive that rich benefited more...but not quite obvious. Also not sure what the role of the firm is.
+%
+%\item Walsh paper...looks similar to my welfare calculations. Builds on the Moll paper too. Interesting is how they compute money metric by computing change in welfare relative to change in muc. Should put in labor income channel.
+%
+%\item Moll paper is very slick. Again more related than Walsh. One thing they do is put things in a money metric units by dividing through by muc in period 0. In the efficient economy, this then is back to Krill's formula. This money metric formula is why things are discounted by $R$ in Walsh...because the euler equation implies the ratio of muc's are equal to $R$. The other trick about this is that when assets are in zero net supply, the aggregate welfare gain in money metric units is zero. Key is that it's in money metric units though, in utils space there is true redistribution (worth talking about in either finacial globalization space or finacial autarky world).
+%
+%\item Is kind of related to Auclart...this the interest rate exposure channel. Less than I thought. As the key thing is more about dc. Tobin quote is nice about heterogenaity in muc. Everything is short term assets, so like in the moll paper sales = stocks. And then some people have different unhedge exposures to changes in interest rates.
+%\end{itemize}
+
+
+%This pattern of elasticities is consistent with recent evidence focusing on expenditure switching at the household level. \citet*{auer2022unequal} explore the heterogenous impact of the 2015 Swiss Franc appreciation and find that the exchange rate shock lead to larger changes in expenditure shares for poor households relative to the rich. In other words, poor households are more sensitive to price than rich households. Outside of the trade literature, there is broader set of evidence in support of the idea that price sensitivity declines with income; e.g. \citet{sangani2022markups} provides evidence in support of this fact using Nielsen Homescan data.
+%%Discuss this evidence better. Faber Falley, Dellevingo,
+
 
 \newpage
 

@@ -144,65 +144,65 @@ print(Δ_sol)
             hh_prm, Δ_cntry_prm, tol_vfi = 1e-10);
 
 
-ACR = 100*(1.0 / 4.5)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
+ACR = 100*(1.0 / 4.22)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
 
 println(" ")
 println(" ")
 println("ACR-gains")
 println(ACR)
-println((Δ_Wsol .- Wsol)[19])
+println(Δ_Rsol[19] /Δ_Wsol[19] / (Rsol[19] /Wsol[19]))
 ####################################################################################
 ####################################################################################
 # now construct welfare and micro-moments
 
-ψ = make_ψ(home_country, ψslope.*TFP[home_country].^(1.0 - γ), hh_prm)
+# ψ = make_ψ(home_country, ψslope.*TFP[home_country].^(1.0 - γ), hh_prm)
                         
-agrid = make_agrid(hh_prm, TFP[home_country])
+# agrid = make_agrid(hh_prm, TFP[home_country])
                         
-foo_hh_prm = household_params(hh_prm, agrid = agrid, 
-                TFP = TFP[home_country], L = L[home_country], σϵ = σϵ*(TFP[home_country]^(1.0 - γ)), ψ = ψ)
+# foo_hh_prm = household_params(hh_prm, agrid = agrid, 
+#                 TFP = TFP[home_country], L = L[home_country], σϵ = σϵ*(TFP[home_country]^(1.0 - γ)), ψ = ψ)
             
 
-# create **old** prices from perspective of home country
-p = make_p(Wsol[1:end], TFP, d[home_country, :], cntry_prm.tariff[home_country, :] )
+# # create **old** prices from perspective of home country
+# p = make_p(Wsol[1:end], TFP, d[home_country, :], cntry_prm.tariff[home_country, :] )
             
-R = Rsol[home_country]
+# R = Rsol[home_country]
             
-W = Wsol[home_country]
+# W = Wsol[home_country]
 
-# construct welfare, porportional increase in total income 
-# needed at the **old** prices to match **new** value function            
-λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
+# # construct welfare, porportional increase in total income 
+# # needed at the **old** prices to match **new** value function            
+# λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
 
-writedlm("./output/welfare-ge.txt", λτeqv)
+# writedlm("./output/welfare-ge.txt", λτeqv)
 
-τsol = zeros(Δ_cntry_prm.Ncntry)
+# τsol = zeros(Δ_cntry_prm.Ncntry)
 
-# compute elasticities and mpcs (do at old prices)
-θ = make_θ(home_country, R, W, p, 
-        τsol[home_country], foo_hh_prm; points = 3, order = 1)
+# # compute elasticities and mpcs (do at old prices)
+# θ = make_θ(home_country, R, W, p, 
+#         τsol[home_country], foo_hh_prm; points = 3, order = 1)
 
-mpc = make_mpc(hh[home_country], R, W, p, 0.016/2, foo_hh_prm)
+# mpc = make_mpc(hh[home_country], R, W, p, 0.016/2, foo_hh_prm)
 
-# do at old prices
-fooX = make_Xsection(R, W, p, hh[home_country], dist[home_country],
-          θ, mpc, λτeqv, home_country, foo_hh_prm; Nsims = 100000)
+# # do at old prices
+# fooX = make_Xsection(R, W, p, hh[home_country], dist[home_country],
+#           θ, mpc, λτeqv, home_country, foo_hh_prm; Nsims = 100000)
 
-# construct the dataframe to output for plotting
+# # construct the dataframe to output for plotting
 
-df = DataFrame(income = fooX.income, 
-         assets = fooX.a,
-         homeshare = fooX.homeshare,
-         expenditure = fooX.pc,
-         mpc = fooX.mpc_avg,
-         θ = fooX.θavg,
-         ∂W = fooX.welfare);
+# df = DataFrame(income = fooX.income, 
+#          assets = fooX.a,
+#          homeshare = fooX.homeshare,
+#          expenditure = fooX.pc,
+#          mpc = fooX.mpc_avg,
+#          θ = fooX.θavg,
+#          ∂W = fooX.welfare);
 
-rich, poor, middle = make_stats(df)
+# rich, poor, middle = make_stats(df)
 
-rootfile = "../../notebooks/output/"
+# rootfile = "../../notebooks/output/"
  
-root = rootfile*"us-cross-section-ge.csv"
+# root = rootfile*"us-cross-section-ge.csv"
 
-CSV.write(root, df);
+# CSV.write(root, df);
  

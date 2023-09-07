@@ -12,7 +12,7 @@ using StatsBase
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-#dftrade.trade = parse.(Float64, dftrade.trade)
+dftrade.trade = parse.(Float64, dftrade.trade)
     # for some reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -42,22 +42,21 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 ####################################################################################
 # Compute the EQ at the gravity parameters
 
+dfparams = DataFrame(CSV.File("./calibration-files/current-guess-log-24.csv"))
+xxx = dfparams.guess[1:end]
+
 L = dflabor.L
 
 Ncntry = size(L)[1]
 
 γ = 1.0
-σϵ = 0.25
-ψslope = 0.00
+σϵ = 0.2369
+ψslope = 0.0
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
-
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-log.csv"))
-
-xxx = dfparams.guess
 
 R = 1.01
 
@@ -144,7 +143,7 @@ print(Δ_sol)
             hh_prm, Δ_cntry_prm, tol_vfi = 1e-10);
 
 
-ACR = 100*(1.0 / 4.0)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
+ACR = 100*(σϵ)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
 
 println(" ")
 println(" ")
@@ -197,8 +196,6 @@ df = DataFrame(income = fooX.income,
          mpc = fooX.mpc_avg,
          θ = fooX.θavg,
          ∂W = fooX.welfare);
-
-rich, poor, middle = make_stats(df)
 
 rootfile = "../../notebooks/output/"
 
