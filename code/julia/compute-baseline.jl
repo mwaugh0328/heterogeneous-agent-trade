@@ -41,16 +41,21 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 ####################################################################################
 # Compute the EQ at the gravity parameters
 
-dfparams = DataFrame(CSV.File("current-guess-145-30-725.csv"))
+# dfparams = DataFrame(CSV.File("current-guess-145-30-725.csv"))
+dfparams = DataFrame(CSV.File("./calibration-files/current-guess-log-22.csv"))
 xxx = dfparams.guess[1:end]
 
 L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.450
-σϵ = 0.33
-ψslope = 0.725
+γ = 1.0
+σϵ = 0.22
+ψslope = 0.0
+
+# γ = 1.450
+# σϵ = 0.33
+# ψslope = 0.725
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
@@ -72,9 +77,9 @@ hh_prm = household_params(hh_prm, β = β)
 
 Rsol = ones(Ncntry)*R
 
-# dfWsol = DataFrame(guess = Wsol)
+dfWsol = DataFrame(guess = [Wsol[1:18] ; β])   
 
-# CSV.write("wage-guess-15-36-70.csv", dfWsol)
+# CSV.write("./calibration-files/current-wage-guess-log", dfWsol)
 
 ####################################################################################
 ####################################################################################
@@ -96,7 +101,8 @@ dfplot = hcat(dftrade, dfplot);
 plot(dfplot.trademodel, dfplot.trade, seriestype = :scatter, alpha = 0.75,
     xlabel = "model",
     ylabel = "data",
-    legend = false)
+    legend = false,
+    show = true)
 
 rootfile = "../../notebooks/output/"
 

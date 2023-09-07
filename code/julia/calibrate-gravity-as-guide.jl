@@ -45,7 +45,7 @@ Ncntry = size(L)[1]
 
 γ = 1.50
 σϵ = 0.36
-ψslope = 0.80
+ψslope = 0.78
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
