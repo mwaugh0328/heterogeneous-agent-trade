@@ -44,9 +44,13 @@ L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.45
-σϵ = 0.33
-ψslope = 0.725
+# γ = 1.45
+# σϵ = 0.33
+# ψslope = 0.725
+
+γ = 1.00
+σϵ = 0.222
+ψslope = 0.0
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
@@ -55,9 +59,11 @@ cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
 R = 1.01
 
-dfparams = DataFrame(CSV.File("current-guess-145-30-70.csv"))
+# dfparams = DataFrame(CSV.File("current-guess-145-30-70.csv"))
+dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-log.csv"))
 
-dfWguess = DataFrame(CSV.File("current-wage-guess-145-30-70.csv"))
+# dfWguess = DataFrame(CSV.File("current-wage-guess-145-30-70.csv"))
+dfWguess = DataFrame(CSV.File("./calibration-files/current-wage-guess-log"))
 
 micro_moment = 0.0
 
@@ -90,8 +96,10 @@ sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
 
 
 dfguess = DataFrame(guess = sol.x[20:end]);
+CSV.write("./calibration-files/current-guess-log-22.csv", dfguess)
 
 dfWRguess = DataFrame(guess = sol.x[1:19]);
+CSV.write("./calibration-files/current-wage-guess-log-22", dfWRguess)
 
 
 
