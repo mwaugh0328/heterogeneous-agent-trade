@@ -47,6 +47,16 @@ breaklinks]{hyperref}
 \newtheorem{rmk}{Remark}
 \newenvironment{prf}{{\bf Proof}}{\hfill { }}
 
+\tcolorboxenvironment{prp}{%
+boxrule = 0mm, breakable, colframe=white,
+before skip=5pt,after skip=5pt,
+colback=gray!5!white,
+top = 2mm,
+bottom = 2mm%,
+%borderline north={1pt}{1pt}{gray},
+%borderline south={1pt}{1pt}{gray}
+}
+
 \DeclareMathOperator*{\plim}{plim}
 \DeclareMathOperator*{\umax}{max}
 
@@ -1170,7 +1180,7 @@ So what this says is that the change in the home choice completely summarizes ho
 
 This section derives the gains from a permanent change in trade costs, across steady states. Like the discussion above, the idea here is that I'm thinking a situation where the change is small and there is an immediate jump to the new steady state. Unlike the trade elasticity, I'm going to take total derivatives encompassing general equilibrium changes in wages and interest rates.
 
-The analysis proceeds in several steps. First, I'll focus on country $i$ and study a change in trade costs $d_{ij}$ with respect to partner $j$. Second, I start by working a utilitarian social welfare function and then drill down into how welfare of an individual household changes. 
+The analysis proceeds in several steps. First, I'll focus on country $i$ and study a change in trade costs $d_{ij}$ with respect to partner $j$. Second, I start by working a utilitarian social welfare function and then drill down into how welfare of an individual household changes.
 
 Social welfare from the perspective of country $i$ is
 \begin{align}
@@ -1262,7 +1272,7 @@ Let me walk through the interpretation of each term:
 
     Two more observations. First, in the perfect competition world I consider $\frac{w_i}{p_{ii}} = A_{i}$ from (\ref{eq:marginal-product}). And thus, $\frac{\mathrm{d} w_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} = 0$, so households are perfectly ``hedged'' from any effect on labor earnings.
 
-    Second, there is an effect from how the ``real'' interest rate changes. Here real is in quotes because this is real in units of the home good (and per the observation above, this boils down to the change in the interest rate relative to the wage rate). And because the $a$ can take on positive or negative values, this is a force that could in principal lead to losers from trade. 
+    Second, there is an effect from how the ``real'' interest rate changes. Here real is in quotes because this is real in units of the home good (and per the observation above, this boils down to the change in the interest rate relative to the wage rate). And because the $a$ can take on positive or negative values, this is a force that could in principal lead to losers from trade.
 
 \item[\textbf{C(a,z) -}]  The third term which I'm labeling as $C(a,z)$ is about changes in asset holdings. For the small / local changes that I'm considering it should zero out, but for larger changes this term should be relevant. Let me expand upon this.
 
@@ -1494,7 +1504,7 @@ This says a sufficient statistic for the direct effect of the gains in the effic
 
 \section{Log Preferences}\label{apx-sec:log-preferences}
 
-This example is interesting because it retains an aggregate constant trade elasticity and the welfare gains from trade formula looks like ACR kind of thing and the expression in the efficient allocation (\ref{apx-eq:eff-trade-gains-acr}). 
+This example is interesting because it retains an aggregate constant trade elasticity and the welfare gains from trade formula looks like ACR kind of thing and the expression in the efficient allocation (\ref{apx-eq:eff-trade-gains-acr}).
 
 \textbf{Step 1: Individual Choices.} With log preferences the $j$ choice value function is
 \begin{align}
@@ -1737,7 +1747,7 @@ how is the true again? Then there is an Euler Equation for each variety choice $
 \begin{align}
 \frac{u'(c_{i}(a, z, j))}{p_{ij}} = \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij'}(a', z') \bigg( \ \frac{u'(c_{i}(a', z', j'))}{p_{ij'}} \bigg) \right].
 \end{align}
-So fundamentally, nothing really changed by introducing quality shifters. 
+So fundamentally, nothing really changed by introducing quality shifters.
 
 Now to reduce the dimensionality of these parameters, I set this up as a home bias term $\psi_{i}(z,i)$ which takes on some number and for all other $j$s this is where $\psi_{i}(z,i) = 0$. Then assume that it's a log-linear function of a households permanent productivity state and this function is the same across countries. Slightly abusing notation, this is where $\psi_{i}(z,i) = \tilde \psi \times z$. The slope of this relationship is calibrated to match the fact from \citet{borusyak2021distributional}) that import expenditure shares are essentially the same between US poor (below median income) and rich (above median income) households.
 
