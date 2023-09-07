@@ -79,7 +79,7 @@ Rsol = ones(Ncntry)*R
 
 dfWsol = DataFrame(guess = [Wsol[1:18] ; β])   
 
-# CSV.write("./calibration-files/current-wage-guess-log", dfWsol)
+# CSV.write("./calibration-files/current-wage-guess-log-22.csv", dfWsol)
 
 ####################################################################################
 ####################################################################################
