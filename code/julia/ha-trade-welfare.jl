@@ -6,6 +6,7 @@ function eq_variation_porportional(R, w, p, Δ_hh, state_index, model_params)
     @unpack σϵ, Na, Nshocks, Ncntry, ψ = model_params
 
     τeqv = Array{Float64}(undef,Na,Nshocks)
+    flag = Array{Bool}(undef,Na,Nshocks)
 
     Δ_v = alt_log_sum(Δ_hh.πprob, Δ_hh.Tv, σϵ, ψ)
     
@@ -30,18 +31,21 @@ function eq_variation_porportional(R, w, p, Δ_hh, state_index, model_params)
             ml=diag_adjust, mu=diag_adjust,
             diag=ones(n),
             mode= 1,
-            tol=1e-5,)
+            tol=1e-10,)
 
 
         τeqv[xxx[1], xxx[2]] = sol.x[1]
 
         println(τeqv[xxx[1], xxx[2]])
 
+        flag[xxx[1], xxx[2]] = sol.converged
+
+
         #xguess .= τeqv[xxx[1], xxx[2]]
 
     end
     
-    return τeqv
+    return τeqv, flag
 
 end
 
@@ -61,7 +65,7 @@ function eq_variation_porportional(x, astate, shockstate, R, w, p, Δ_v, model_p
 
     v = log_sum_v(ψ[astate, shockstate, :] .+ eqv_hh.Tv[astate, shockstate,:], σϵ, Ncntry)
 
-    return (Δ_v - v ) / Δ_v
+    return (Δ_v - v ) 
     #Δ_v is new value fun
 
 end

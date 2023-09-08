@@ -155,24 +155,24 @@ println(Δ_Rsol[19] /Δ_Wsol[19] / (Rsol[19] /Wsol[19]))
 ####################################################################################
 # now construct welfare and micro-moments
 
-# ψ = make_ψ(home_country, ψslope.*TFP[home_country].^(1.0 - γ), hh_prm)
+ψ = make_ψ(home_country, ψslope.*TFP[home_country].^(1.0 - γ), hh_prm)
                         
-# agrid = make_agrid(hh_prm, TFP[home_country])
+agrid = make_agrid(hh_prm, TFP[home_country])
                         
-# foo_hh_prm = household_params(hh_prm, agrid = agrid, 
-#                 TFP = TFP[home_country], L = L[home_country], σϵ = σϵ*(TFP[home_country]^(1.0 - γ)), ψ = ψ)
+foo_hh_prm = household_params(hh_prm, agrid = agrid, 
+                TFP = TFP[home_country], L = L[home_country], σϵ = σϵ*(TFP[home_country]^(1.0 - γ)), ψ = ψ)
             
 
-# # create **old** prices from perspective of home country
-# p = make_p(Wsol[1:end], TFP, d[home_country, :], cntry_prm.tariff[home_country, :] )
+# create **old** prices from perspective of home country
+p = make_p(Wsol[1:end], TFP, d[home_country, :], cntry_prm.tariff[home_country, :] )
             
-# R = Rsol[home_country]
+R = Rsol[home_country]
             
-# W = Wsol[home_country]
+W = Wsol[home_country]
 
-# # construct welfare, porportional increase in total income 
-# # needed at the **old** prices to match **new** value function            
-# λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
+# construct welfare, porportional increase in total income 
+# needed at the **old** prices to match **new** value function            
+λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
 
 # writedlm("./output/welfare-ge.txt", λτeqv)
 

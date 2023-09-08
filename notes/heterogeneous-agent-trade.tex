@@ -525,7 +525,7 @@ where $v_{i}(a,z)$ is a households ex-ante value function in country $i$, with s
 \end{align}
 where the $\approx$ symbol reinforces that this is a heuristic, thinking about a small change and there is an immediate jump to the new steady state.
 
-At a high-level, (\ref{eq:social-welfare-change}) illustrates that the gains from trade come through two forces. The first component reflects changes in household-level welfare. So conditional on a distribution of households across states, this computes if households are better or worse off. The second component of (\ref{eq:social-welfare-change}) is about reallocation. It says: take the old $v$'s and compute how the change in the distribution (that arise because of behavioral responses of households) effects social welfare. So does trade make it more or less likely that households are in ``good'' parts of the distribution. 
+At a high-level, (\ref{eq:social-welfare-change}) illustrates that the gains from trade come through two forces. The first component reflects changes in household-level welfare. So conditional on a distribution of households across states, this computes if households are better or worse off. The second component of (\ref{eq:social-welfare-change}) is about reallocation. It says: take the old $v$'s and compute how the change in the distribution (that arise because of behavioral responses of households) effects social welfare. So does trade make it more or less likely that households are in ``good'' parts of the distribution.
 
 The key issue is how household-level welfare changes. Here, I make the use of the observation in Equation (\ref{eq:log_sum-home}) that I can express the ex-ante value function in only in terms of home choice $ii$ values and then recursively push forward. In other words, I can compute the change in the ex-ante value function \emph{as if} the household only consumed the home good for the infinite future. Appendix \ref{apx-sec:gains-trade} provides the details and leads to the following expression:
 {\small
@@ -538,7 +538,7 @@ The key issue is how household-level welfare changes. Here, I make the use of th
 \nonumber \\
 & + \beta \mathbb{E}_{z'} \bigg \{\underbrace{-\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\mathrm{d}d_{ij} / d_{ij}}}_{A(a',z')} +  \underbrace{u'(c_{i}(a',z',i)) \bigg[ \frac{\mathrm{d} w_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}}z'  +  \frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} a' \bigg]}_{B(a',z')} \ \  \ldots \nonumber
 \end{align}
-}Let me walk through the interpretation of each term: 
+}Let me walk through the interpretation of each term:
 
 
 \textbf{Gains from substitution: $A(a,z)$} The $A(a,z)$ term here is a household-specific gains from substitution term and is summarized by the change in the home choice probability and the dispersion parameter on tastes. The change in the home share summarizes two forces: (i) how exposed a household is to the change through the choice probabilities and then (ii) elasticities. To see this, define $\bar{\theta}(a,z) ^E_{ij',j}$ as the extensive margin, cross-price elasticity, in total derivative form (and it's derivation follows what is done in \ref{eq:extensive-margin}). As I show in the Appendix \ref{apx-sec:gains-trade}, the change in the home share can be expressed as:
@@ -557,7 +557,7 @@ This expression also connects with two related papers. \citet{borusyak2021distri
 
 \textbf{Gains from factor prices: $B(a,z)$} The second $B(a,z)$ terms is essentially how a reduction in trade costs affects factor prices | the wage relative to the price of the home good and the interest rate relative to the price of the home good. And these effects are all valued at that household's marginal utility of consumption. I can simplify this term in two ways: in the perfect competition world I consider $\frac{w_i}{p_{ii}} = A_{i}$ from (\ref{eq:marginal-product}) and, thus, $\frac{\mathrm{d} w_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} = 0$, so households are perfectly ``hedged'' from any effect of trade on labor earnings.
 
-The second simplification is that $\frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\mathrm{d} R_{i} / w_{i}}{\mathrm{d} d_{ij} / d_{ij}}$ and so the $B(a,z)$ term becomes 
+The second simplification is that $\frac{\mathrm{d} R_{i} / p_{ii}}{\mathrm{d} d_{ij} / d_{ij}} = \frac{\mathrm{d} R_{i} / w_{i}}{\mathrm{d} d_{ij} / d_{ij}}$ and so the $B(a,z)$ term becomes
 \begin{align}
 B(a,z) = u'(c_{i}(a,z,i)) \times  a \times \frac{\mathrm{d} R_{i} / w_{i}}{\mathrm{d} d_{ij} / d_{ij}}.
 \end{align}
@@ -601,7 +601,7 @@ which is zero for small changes.
 
 \subsection{Elasticities and Gains in the Efficient Allocation}\label{sec:efficient}
 
-One issue behind the results above is market incompleteness. Households are imperfectly insured against the risks they face, this leads to heterogeneity in the marginal utility of consumption and, in turn, heterogeneity in price sensitivity, expenditure patterns, and the gains from trade. Building on work in from my related paper in \citet{waughoptimal}, I contrasts the previous results with the elasticities and gains from trade in an allocation where a social planner can overcome market incompleteness. Appendix \ref{apx-sec:efficient} provides a self-contained discussion of the planning problem and derivation of the results. 
+One issue behind the results above is market incompleteness. Households are imperfectly insured against the risks they face, this leads to heterogeneity in the marginal utility of consumption and, in turn, heterogeneity in price sensitivity, expenditure patterns, and the gains from trade. Building on work in from my related paper in \citet{waughoptimal}, I contrasts the previous results with the elasticities and gains from trade in an allocation where a social planner can overcome market incompleteness. Appendix \ref{apx-sec:efficient} provides a self-contained discussion of the planning problem and derivation of the results.
 
 The starting point is a utilitarian social welfare function which is analogous to (\ref{eq:social-welfare}). In \citet{waughoptimal}, I fully characterize a Planner's choice of consumption allocations $c_{i}(z, j, t)$ and choice probabilities $\pi_{ij}(z,t)$ for all $i,j$ pairs, $z$ states, and dates $t$ to maximize social welfare. Given a characterization of the optimal allocation, I can compute trade elasticities and the welfare gains from a change in trade costs and study how welfare changes across the two stationary allocations.\footnote{Unlike the previous section, the move across stationary allocations is no consequence as there is no moving aggregate state variable, so the jump across stationary equilibrium is instantaneous.}
 
@@ -615,7 +615,7 @@ And the welfare gains from a reduction in trade costs between $i,j$ are
 \begin{align}
 \frac{\mathrm{d} W }{\mathrm{d} d_{ij} / d_{ij}} &= \frac{\sigma_{\epsilon} \  \theta_{ij} \  \pi_{ij} \ L_i}{1-\beta},
 \label{eq:eff-trade-gains}
-\end{align} 
+\end{align}
 which is the discounted, direct effect from relaxing the aggregate resource constraint. And this can be expressed as
 \begin{align}
 = -\sigma_{\epsilon} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \times \frac{L_i}{1 - \beta}.
@@ -885,19 +885,17 @@ In this section, I measure the gains from trade and study how they are distribut
 
 \subsection{Measuring Welfare}
 
-In the previous section, I focused on what amount to level changes in utils. For quantitative analysis, utils are hard to interpret and depend on the cardinalization of utilty function. Here I define an equivalent variation measure that has more interpretable units.
+In the previous section, I focused on what amount to level changes in utils. Here I define an equivalent variation measure that has more interpretable units and I use in the quantitative results.
 
-As a quick refresher, equivalent variation does the following: given that some price change delivers utility level $u'$, equivalent variation asks ``at the old prices, $p_0$, how much extra income must be provided to be indifferent between $u'$ and $u$.''
-
-To implement this in my model, define the value function of a household at base period prices as
+As a quick refresher, equivalent variation does the following: given that some price change delivers utility level $u'$, equivalent variation asks ``at the old prices, $p_0$, how much extra income must be provided to be indifferent between $u'$ and $u$.'' To implement this in my model, define the value function of a household at base period prices as
 \begin{align}
 v_i(a, z ; \ p, R_{i}, w_{i}).
 \end{align}
-And then the value function for the same states, but at counterfactual prices
+And the value function for the same states, but at counterfactual prices
 \begin{align}
-v'_i(a, z ; \ p', R'_{i}, w'_{i}),
+v'_i(a, z ; \ p', R'_{i}, w'_{i}), \label{eq:welfare-eqv-cftc}
 \end{align}
-where I'm evaluating this with the prices prevailing at the new steady state and, hence, there are no $t$ subscripts. I focus this section on across steady states, not transition paths. Those may be important, but it adds an additional computational challenge which I've decided to abstract from.
+where I'm evaluating this with the prices prevailing at the new steady state and, hence, there are no $t$ subscripts. I focus on across steady states, not transition paths. Those may be important, but it adds an additional computational challenge which I've decided to abstract from.
 
 Given these definitions, my equivalent variation measure is a permanent, proportional increase in income (asset and labor) $\tau_{i,a,z}$, at the old prices such that the new level of utility $v'_i$ is achieved:
 \begin{align}
@@ -907,52 +905,42 @@ To be clear, this says a household living in country $i$ with states $a,z$ must 
 
 \subsection{10\% Reduction in US Trade Costs}
 
-This section studies a ten percent reduction in all US trade costs. That is $d_{us,j}$ is shifted down for all $j$ partners by $0.90$. The top panel of Table \ref{tb-welfare} reports how much US imports change in this counterfactual and how the global interest rate changes.
+This section studies a ten percent reduction in all US trade costs. That is $d_{us,j}$ is shifted down for all $j$ partners by ten percent. 
 
-Figure \ref{fig:welfare-households} reports how the welfare gains, in equivalent variation units, varies across households. Here households are binned by quantiles of the initial distribution of consumption expenditure and the y-axis reports average welfare gains within each bin. For example, households in the bottom 20th percentile of the consumption expenditure distribution experience gains of about $2.6$.
-
-The gains from trade are strongly pro-poor. And the magnitudes across income brackets are large with the poorest households gaining six times more from trade than the richest households.
+Figure \ref{fig:welfare-households} reports the welfare gains, in equivalent variation units, across households where households are binned by quantiles of the initial distribution of consumption expenditure and the y-axis reports average gains within each bin. The red bars report the baseline model and the blue bars report the $\log$ preference case when, per Corollary \ref{prp:seperation}, heterogenous price sensitivity is turned off.
 
 \begin{figure}[!t]
 \centering{\includegraphics[scale = 0.65]{./figures/ge-welfare-household-vs-log.pdf}}
-\caption{Welfare Gains by Household: 10\% Reduction in $d_{us,j}$}\label{fig:welfare-households}
+\caption{Welfare Gains by Household Expenditure: 10\% Reduction in $d_{us,j}$ }\label{fig:welfare-households}
 \end{figure}
 
-The key force behind this result lies in the discussion around equation (\ref{eq:gains-substitution}) and how welfare changes. Two issues are at play: (i) how exposed a household to trade and (ii) how households value a price reduction. The model was calibrated so that exposure was roughly equal across the income distribution so the first force is not leading to heterogenous gains from trade. In contrast, the model was designed and calibrated to match the fact that poor households are very elastic with respect to price and, thus, strongly value a price reduction. So the second force is the component driving the pro-poor aspect of these gains from trade.\footnote{For example, I calibrated the model without quality shifters delivering a pattern of micro-level expenditure shares with the poor unexposed to trade similar Figure \ref{fig:micro-trade}. In this case, the equivalent variation gains are flat across the income distribution except for the vary poorest; in utils they are strongly increasing in income.}
+The main outcome is that gains from trade are strongly pro-poor. And the magnitudes across income brackets are large with the poorest households gaining four and a half times more from trade than the richest households (2.93 percent vs. 0.65 percent). If one were to convert this to dollar amounts, a US household in the bottom 20th percentile has income around \$20,000. My model implies that a 10 percent reduction in trade costs is equivalent to a|permanent| transfer of \$600 to the poorest households in the economy at the old prices.
 
-\begin{table}[t]
-\small
-\begin{center}
-\refstepcounter{table}
-\setlength {\tabcolsep}{5.75mm}
-\renewcommand{\arraystretch}{1.60}\label{tb-welfare}
-\begin{tabular}[t]{l c c}
-\multicolumn{3}{c}{{\normalsize\textbf{Table \ref{tb-welfare}: 10\% Reduction in US Trade Costs: Interest Rates, Trade, Welfare}} }
-\\ \hline \hline
-& Baseline & Log Model \\
-\cmidrule(lr){2-2} \cmidrule(lr){3-3}
-$\Delta$ US Imports / GDP  & $1.7$ & $1.1$  \\
-$\Delta R_{us} / w_{us}$  & $4.6$ & $4.5$  \\
-\hline
-Average Welfare Gain & $1.35$ & $0.21$\\
-Ratio of Bottom 20 vs. Top 20 Welfare & $4.5$ & $0.78$\\
-ACR Implied Gains  & $0.43$ & $0.29$ \\
-\hline
-\end{tabular}
-\\[0.5ex]
-\parbox{5.75in}{\footnotesize \textbf{Note:} Imports / GDP is in percentage points; $\Delta R_{us} / w_{us}$ and welfare are in percent change. Bottom 20 vs. Top 20 Welfare reports the ratio of household welfare for those in the bottom 20th percentile of the expenditure distribution vs. those at the top 20th.}
-\end{center}
-\end{table}
+On average, the gains across households are much larger than representative agent benchmarks. The dashed line in Figure \ref{fig:welfare-households} show that the average gain is 1.35 percent. In contrast, a calculation of \citet{arkolakis2012new} off of the change in the US import share with an elasticity equal to the average (trade-weighted) elasticity implies a gain of only 0.45 percent.\footnote{I show in the appendix, the formula in \citet{arkolakis2012new} is equivalent variation measure as I compute and, hence, the large gains I'm finding are not because I add curvature to the utility function or having infinitely lived agents | these do not matter when computing equivalent variation.} This is a third of the size of the average gains in my baseline model. 
 
-On average, the gains across households are much larger than representative agent benchmarks. The third row of Table \ref{tb-welfare} and the dashed line in Figure \ref{fig:welfare-households} show that the average gain is 1.2 percent. In contrast, a calculation of \citet{arkolakis2012new} off of the change in the US import share with an elasticity of four implies that the aggregate gains are only half a percent (bottom row of Table \ref{tb-welfare}).\footnote{I show in the appendix, the formula in \citet{arkolakis2012new} is equivalent variation measure as I compute and, hence, the large gains I'm finding are not because I add curvature to the utility function or having infinitely lived agents | these do not matter when computing equivalent variation.} This is half the size of the heterogenous agent model.
+The reason why my model delivers larger average gains is because of the large gains in the bottom part of the income distribution. Looking at Figure \ref{fig:welfare-households}, the gains from trade for the rich households look a lot like those that would come out of \citet{arkolakis2012new}-style calculation. However, for poor households, the gains for the poor are big relative to the rich. Then when averaging over ACR-like gains for rich households and large gains for poor households, the average gains in my model are three times larger.
 
-The reason why my model delivers larger gains is because of the large gains in the bottom part of the income distribution. Looking at Figure \ref{fig:welfare-households}, the gains from trade for the rich households look a lot like those that would come out of \citet{arkolakis2012new}-style calculation. However, for poor households, the gains are big as price changes matter a lot for these households.
+The blue bars in Figure \ref{fig:welfare-households} help answer why the gains are pro-poor. These bars are the gains in the $\log$ preference model where, per Corollary \ref{prp:seperation}, the gains from substitution are the same across households and any heterogeneity arises from changes in factor prices and potential effects from people coming off their borrowing constraint. The important takeaway from Figure \ref{fig:welfare-households} is that now the gains from trade are nearly uniform across the distribution. Overall, the level of gains is lower as well, but this is because trade increases by less. 
 
-Following the discussion around Proposition \ref{prp:gains-trade}, the other issue at play is how interest rates are changing and inducing valuation effects. The blue bars in Figure \ref{fig:welfare-households} report the gains when $R$ is fixed at its initial level and thus the asset market is not clearing, while all other prices are allowed to adjust. Thus, the comparison of the red vs. blue bars partials out the role that interest rates are playing.
+The comparison between the red and blue bars illustrates that heterogeneity in the gains from substitution is the force behind the pro-poor gains from trade. As discussed around equation (\ref{eq:gains-substitution}) there are essentially two issues are at play determining how this aspect of the model leads to heterogenous gains across households: (i) how exposed a household to trade and (ii) how households value a price reduction. The model was calibrated so that exposure was equal across the income distribution, thus (i) is not leading to heterogenous gains from trade.  In contrast, the model was designed and calibrated to match the fact that poor households are very elastic with respect to price and, thus, they strongly value a price reduction. So the second force is the key component driving the pro-poor aspect of these gains from trade.\footnote{For example, I calibrated the model without quality shifters delivering a pattern of micro-level expenditure shares with the poor unexposed to trade similar Figure \ref{fig:micro-trade}. In this case, the equivalent variation gains are flat across the income distribution except for the vary poorest.}
 
-There is only a modest effect of interest rates. Since intrust rates decline in the counterfactual, rich households gain slightly more ($0.44$ vs. $0.42$) when $R$ is held fixed. These households are those holding assets, are most effected by the decline in interest rates, but also loose less since they are rich and their marginal utility is low. For the poorest households the situation is flipped. They gain less ($2.15$ vs. $2.59$) when $R$ is held fixed. These are debtor households (or soon to be) and thus any decline in interest rates relaxes their budget constraint. And because these are high marginal utility households, the small change in interest rates is magnified for them.
+Per the results in Proposition \ref{prp:gains-trade}, what is the role of factor prices and how the change in the interest rate relative to the wage rate influences the gains from trade. In the counterfactual, the ratio of $R/w$ increases by about 4.6 percent. The reason for the decline is that demand for US goods (and hence labor) falls as households substitute into foreign goods and so US wages fall. The interest rate is essentially globally determined and increases only slightly. Then thinking through this the implication is that there is a counteracting pro-rich force behind Figure \ref{fig:welfare-households}. That is for those holding positive assets, these moves in factor prices are beneficial and for debtors these moves hurt.
 
-Interest rates only change slightly there is financial globalization. While the US is the largest economy in the model, with 19 countries changes in US trade costs have small effects on global asset demand and supply.  In Section \ref{sec:asset-market}, I explore the alternative case with financial autarky where larger moves in domestic interest rates are observed.
+To isolate this force, I resolved the households problem and constructed the value function in (\ref{eq:welfare-eqv-cftc}) with the new equilibrium prices, but assuming that the factor prices entering the households budget constraint (the wage and the interest rate) are the same. So this partials out the effect from these moves in factor prices.
+
+
+
+
+
+
+
+
+
+%Following the discussion around Proposition \ref{prp:gains-trade}, the other issue at play is how interest rates are changing and inducing valuation effects. The blue bars in Figure \ref{fig:welfare-households} report the gains when $R$ is fixed at its initial level and thus the asset market is not clearing, while all other prices are allowed to adjust. Thus, the comparison of the red vs. blue bars partials out the role that interest rates are playing.
+%
+%There is only a modest effect of interest rates. Since intrust rates decline in the counterfactual, rich households gain slightly more ($0.44$ vs. $0.42$) when $R$ is held fixed. These households are those holding assets, are most effected by the decline in interest rates, but also loose less since they are rich and their marginal utility is low. For the poorest households the situation is flipped. They gain less ($2.15$ vs. $2.59$) when $R$ is held fixed. These are debtor households (or soon to be) and thus any decline in interest rates relaxes their budget constraint. And because these are high marginal utility households, the small change in interest rates is magnified for them.
+%
+%Interest rates only change slightly there is financial globalization. While the US is the largest economy in the model, with 19 countries changes in US trade costs have small effects on global asset demand and supply.  In Section \ref{sec:asset-market}, I explore the alternative case with financial autarky where larger moves in domestic interest rates are observed.
 
 \subsection{Heterogeneity by Trading Partner}
 
