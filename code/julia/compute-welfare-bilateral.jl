@@ -46,22 +46,22 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 ####################################################################################
 # Compute the EQ at the gravity parameters
 
+dfparams = DataFrame(CSV.File("./calibration-files/current-guess-145-30-725.csv"))
+
+xxx = dfparams.guess
+
 L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.5
-σϵ = 0.25
-ψslope = 0.60
+γ = 1.450
+σϵ = 0.33
+ψslope = 0.725
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
-
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.csv"))
-
-xxx = dfparams.guess
 
 R = 1.01
 
@@ -107,7 +107,7 @@ println(" ")
 println("########### computing counter factual eq ################")
 println(" ")
 
-for lib_cntry = 1:7
+for lib_cntry = 1:8
 
     country_name = cntryname[lib_cntry]
 
@@ -147,6 +147,8 @@ for lib_cntry = 1:7
     foobar = Δ_sol.x    
     Δ_Wsol, Δ_Rsol = exp.([foobar[1:Ncntry-1] ; 0.0 ]) , ones(Ncntry)*exp.(foobar[end])
 
+    Δ_Wsol = Δ_Wsol ./ ( sum(Δ_Wsol / Ncntry) )
+
     writedlm("./output/Δ_Wsol-"*cntryname[lib_cntry]*".txt", Δ_Wsol)
     writedlm("./output/Δ_Rsol-"*cntryname[lib_cntry]*".txt", Δ_Rsol)
 
@@ -154,7 +156,7 @@ for lib_cntry = 1:7
             hh_prm, Δ_cntry_prm, tol_vfi = 1e-10);
 
 
-    ACR = 100*(1.0 / 4.0)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
+    ACR = 100*(1.0 / 4.22)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
 
     println(" ")
     println(" ")
