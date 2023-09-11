@@ -107,7 +107,7 @@ println(" ")
 println("########### computing counter factual eq ################")
 println(" ")
 
-for lib_cntry = 1:8
+for lib_cntry = 9:18
 
     country_name = cntryname[lib_cntry]
 
@@ -184,7 +184,7 @@ for lib_cntry = 1:8
 
     # construct welfare, porportional increase in total income 
     # needed at the **old** prices to match **new** value function            
-    λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
+    λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
 
     writedlm("./output/welfare-"*cntryname[lib_cntry]*".txt", λτeqv)
 
