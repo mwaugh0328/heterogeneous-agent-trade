@@ -1,5 +1,5 @@
-include("ha-trade.jl")
-include("ha-trade-welfare.jl")
+include("../ha-trade.jl")
+include("../ha-trade-welfare.jl")
 using MINPACK
 using Plots
 using CSV
@@ -12,7 +12,7 @@ using StatsBase
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-#dftrade.trade = parse.(Float64, dftrade.trade)
+dftrade.trade = parse.(Float64, dftrade.trade)
     # for some reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -42,22 +42,21 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 ####################################################################################
 # Compute the EQ at the gravity parameters
 
+dfparams = DataFrame(CSV.File("./calibration-files/current-guess-145-30-725.csv"))
+xxx = dfparams.guess[1:end]
+
 L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.5
-σϵ = 0.25
-ψslope = 0.60
+γ = 1.450
+σϵ = 0.33
+ψslope = 0.725
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
-
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-ek-quality60.csv"))
-
-xxx = dfparams.guess
 
 R = 1.01
 
@@ -111,6 +110,7 @@ for cntryx = 1:Ncntry
 
     d_prime[cntryx, :] =  (d[cntryx, :]).*(1.0 - Δ_d)
     d_prime[cntryx, cntryx] = 1.0
+
 end
 
 
@@ -154,7 +154,7 @@ println(" ")
 println(" ")
 println("ACR-gains")
 println(ACR)
-println((Δ_Wsol .- Wsol)[19])
+println(Δ_Rsol[19] /Δ_Wsol[19] / (Rsol[19] /Wsol[19]))
 ####################################################################################
 ####################################################################################
 # now construct welfare and micro-moments
