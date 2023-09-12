@@ -148,7 +148,7 @@ print(Δ_sol)
             hh_prm, Δ_cntry_prm, tol_vfi = 1e-10);
 
 
-ACR = 100*(1.0 / 4.0)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
+ACR = 100*(1.0 / 4.22)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
 
 println(" ")
 println(" ")
@@ -176,39 +176,39 @@ W = Wsol[home_country]
 
 # construct welfare, porportional increase in total income 
 # needed at the **old** prices to match **new** value function            
-λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
+# λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
 
-writedlm("./output/welfare-global.txt", λτeqv)
+# writedlm("./output/welfare-global.txt", λτeqv)
 
-τsol = zeros(Δ_cntry_prm.Ncntry)
+# τsol = zeros(Δ_cntry_prm.Ncntry)
 
-# compute elasticities and mpcs (do at old prices)
-θ = make_θ(home_country, R, W, p, 
-        τsol[home_country], foo_hh_prm; points = 3, order = 1)
+# # compute elasticities and mpcs (do at old prices)
 
-mpc = make_mpc(hh[home_country], R, W, p, 0.016/2, foo_hh_prm)
+# θ = make_θ(home_country, R, W, p, 
+#         τsol[home_country], foo_hh_prm; points = 3, order = 1)
 
-# do at old prices
-fooX = make_Xsection(R, W, p, hh[home_country], dist[home_country],
-          θ, mpc, λτeqv, home_country, foo_hh_prm; Nsims = 100000)
+# mpc = make_mpc(hh[home_country], R, W, p, 0.016/2, foo_hh_prm)
 
-# construct the dataframe to output for plotting
+# # do at old prices
+# fooX = make_Xsection(R, W, p, hh[home_country], dist[home_country],
+#           θ, mpc, λτeqv[1], home_country, foo_hh_prm; Nsims = 100000)
 
-df = DataFrame(income = fooX.income, 
-         assets = fooX.a,
-         homeshare = fooX.homeshare,
-         expenditure = fooX.pc,
-         mpc = fooX.mpc_avg,
-         θ = fooX.θavg,
-         ∂W = fooX.welfare);
+# # construct the dataframe to output for plotting
 
-rich, poor, middle = make_stats(df)
+# df = DataFrame(income = fooX.income, 
+#          assets = fooX.a,
+#          homeshare = fooX.homeshare,
+#          expenditure = fooX.pc,
+#          mpc = fooX.mpc_avg,
+#          θ = fooX.θavg,
+#          ∂W = fooX.welfare);
 
-rootfile = "../../notebooks/output/"
 
-writedlm(rootfile*"welfare-global-ACR.txt", ACR)
+# rootfile = "../../notebooks/output/"
+
+# writedlm(rootfile*"welfare-global-ACR.txt", ACR)
  
-root = rootfile*"us-cross-section-global.csv"
+# root = rootfile*"us-cross-section-global.csv"
 
-CSV.write(root, df);
+# CSV.write(root, df);
  
