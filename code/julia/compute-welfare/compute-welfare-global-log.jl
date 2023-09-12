@@ -148,7 +148,7 @@ print(Δ_sol)
             hh_prm, Δ_cntry_prm, tol_vfi = 1e-10);
 
 
-ACR = 100*(1.0 / 4.0)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
+ACR = 100*(σϵ )*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
 
 println(" ")
 println(" ")
@@ -174,11 +174,13 @@ R = Rsol[home_country]
             
 W = Wsol[home_country]
 
-# construct welfare, porportional increase in total income 
-# needed at the **old** prices to match **new** value function            
-λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
+# # construct welfare, porportional increase in total income 
+# # needed at the **old** prices to match **new** value function            
+λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
 
 writedlm("./output/welfare-global-log.txt", λτeqv)
+
+# λτeqv = readdlm("./output/welfare-global-log.txt")[1]
 
 τsol = zeros(Δ_cntry_prm.Ncntry)
 
@@ -202,7 +204,7 @@ df = DataFrame(income = fooX.income,
          θ = fooX.θavg,
          ∂W = fooX.welfare);
 
-rich, poor, middle = make_stats(df)
+
 
 rootfile = "../../notebooks/output/"
 
