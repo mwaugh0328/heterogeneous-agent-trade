@@ -5,6 +5,45 @@ struct θs{T}
     θcii::Array{T} # how cii changes w.r. dij
 end
 
+
+function make_agθ(W, R, hh, tradeshare, cntry, hh_params, cntry_params)
+
+    @unpack TFP, d, tariff, L  = cntry_params
+    @unpack ψslope, γ = hh_params
+
+    p = make_p(W, TFP, d[cntry, :], cntry_params.tariff[cntry, :] )
+    # prices from the perspective of those in that country
+        
+    ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), hh_params)
+    
+    agrid = make_agrid(hh_params, TFP[cntry])
+    
+    foo_hh_prm = household_params(hh_params, agrid = agrid, 
+        TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
+    
+    τsol = zeros(cntry_params.Ncntry)
+    
+    θ = make_θ(cntry, R[cntry], W[cntry], p, τsol[cntry], foo_hh_prm; points = 3, order = 1)
+    
+    ω = make_ω(hh[cntry], dist[cntry], L[cntry], p, foo_hh_prm)
+    # makes the expenditure weights
+
+    agθ_ij = aggregate_θ(θ, ω, cntry, foo_hh_prm)
+
+    cntrytrade = tradeshare[cntry,:]
+
+    deleteat!(cntrytrade, cntry)
+
+    deleteat!(agθ_ij , cntry)
+
+    agθ = sum((agθ_ij.*cntrytrade) )/ sum(cntrytrade)
+
+    return agθ, agθ_ij
+
+end
+
+
+
 ##########################################################################
 ##########################################################################
 

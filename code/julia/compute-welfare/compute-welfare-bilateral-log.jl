@@ -185,29 +185,29 @@ for lib_cntry = 1:18
     # needed at the **old** prices to match **new** value function            
     λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
 
-    writedlm("./output/welfare-"*cntryname[lib_cntry]*".txt", λτeqv)
+    writedlm("./output/welfare-log-"*cntryname[lib_cntry]*".txt", λτeqv)
 
-    τsol = zeros(Δ_cntry_prm.Ncntry)
+#     τsol = zeros(Δ_cntry_prm.Ncntry)
 
-    # # compute elasticities and mpcs (can do at old prices)
-    θ = make_θ(home_country, R, W, p, 
-        τsol[home_country], foo_hh_prm; points = 3, order = 1)
+#     # # compute elasticities and mpcs (can do at old prices)
+#     θ = make_θ(home_country, R, W, p, 
+#         τsol[home_country], foo_hh_prm; points = 3, order = 1)
 
-    mpc = make_mpc(hh[home_country], R, W, p, 0.016/2, foo_hh_prm)
+#     mpc = make_mpc(hh[home_country], R, W, p, 0.016/2, foo_hh_prm)
 
-# # do this at the old stuff...so everything is consistent
-    fooX = make_Xsection(R, W, p, hh[home_country], dist[home_country],
-           θ, mpc, λτeqv, home_country, foo_hh_prm; Nsims = 100000)
+# # # do this at the old stuff...so everything is consistent
+#     fooX = make_Xsection(R, W, p, hh[home_country], dist[home_country],
+#            θ, mpc, λτeqv, home_country, foo_hh_prm; Nsims = 100000)
 
-    df = DataFrame(income = fooX.income, assets = fooX.a,
-            homeshare = fooX.homeshare, expenditure = fooX.pc,
-            mpc = fooX.mpc_avg, θ = fooX.θavg, ∂W = fooX.welfare);
+#     df = DataFrame(income = fooX.income, assets = fooX.a,
+#             homeshare = fooX.homeshare, expenditure = fooX.pc,
+#             mpc = fooX.mpc_avg, θ = fooX.θavg, ∂W = fooX.welfare);
 
-    rootfile = "../../notebooks/output/"
+#     rootfile = "../../notebooks/output/"
  
-    root = rootfile*"welfare-cross-section-"*cntryname[lib_cntry]*".csv"
+#     root = rootfile*"welfare-cross-section-"*cntryname[lib_cntry]*".csv"
 
-    CSV.write(root, df);
+#     CSV.write(root, df);
 
 end
 
