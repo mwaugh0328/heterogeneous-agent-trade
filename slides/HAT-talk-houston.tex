@@ -116,57 +116,73 @@ Reserve Bank of Minneapolis or the Federal Reserve System. This project was deve
 \section{}
 \end{frame}
 
-\begin{frame}[t]{What am I doing?}
+\begin{frame}[t]{Heterogenous Price Elasticities and Trade}
 \smallskip
 To trade economists, household heterogeneity is interesting because of the notion that some benefit from trade and others don't.\\
 \bigskip
 One mechanism behind this notion is heterogeneity in \begin{alert}{\textbf{elasticities}}\end{alert}.
 \begin{itemize}
-\smallskip
 \item \citet*{auer2022unequal} is a nice example. In the context of the 2015 Swiss appreciation, they find that poor households are more price elastic.
+\smallskip
+\item A very intuitive idea. Missing almost entirely from macro and trade, but a foundation of modern-demand estimation in IO, e.g., \citet*{berry1995automobile}.
 \end{itemize}
 \bigskip
 \medskip
 This paper:\\
 \begin{itemize}
-\smallskip
-\item A model of household heterogeneity in price elasticities at the micro level \emph{and} they arise because of a market failure, i.e., the lack of insurance against life's circumstances.\\
-\medskip
-\item And I use it as a laboratory to think about aggregate trade, the gains from trade and how they are distributed, and the normative implications, e.g., what \emph{should} the pattern of trade look like.
+\item A model of household heterogeneity that results in heterogenous price elasticities and I use it as a laboratory to think about aggregate trade, the gains from trade and how they are distributed.
 \end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[t]{How I do it\ldots}
+\begin{frame}[t]{Heterogenous Price Elasticities and Trade | How it Works}
 Two ingredients:
 \begin{itemize}
-\smallskip
 \item Trade as in Armington, but households have random utility over varieties | \citet{mcfadden1974frontiers}
 \smallskip
 \item Standard incomplete markets model with households facing incomplete insurance against idiosyncratic productivity and taste shocks | \citet{bewley1979optimum}
 \end{itemize}
 \bigskip
-\only<1>{
-Qualitatively I characterize:
+The core mechanism / insight | a household's price elasticity, in essence, is about the marginal gain in utility from a percent change in consumption.
 \begin{itemize}
+\item A price reduction delivers a lot of extra utility for high marginal utility ( poor ) households and this induces strong substitution by the poor.
 \smallskip
-\item How price elasticities vary at the micro-level and when micro-heterogeneity shapes aggregates.
-\smallskip
-\item The welfare gains from trade at the micro and macro level.
-\smallskip
-\item The efficient allocation and, thus, how market incompleteness shapes these outcomes.
-\end{itemize}}
-\only<2>{Quantitatively:
+\item An implication is that the poor value the trade-induced price reduction more than the rich.
+\end{itemize}
+\bigskip
+I work these ideas out and find that this mechanism delivers quantitatively large gains from trade.
 \begin{itemize}
-\smallskip
-\item I work at a scale typically reserved for static frameworks|I calibrate a 19 country model (the \citet{eaton2002technology} data set) to match trade flow data using ``gravity as a guide.''
-\smallskip
-\item Illustrate some workings of the model through gains from trade type calculations.
-\smallskip
-\item Compare trade in the efficient allocation vs. the decentralized allocation.
-\end{itemize}}
+\item The poorest households gain 4.5X more than the richest; the average gains from trade are 3X than representative agent benchmarks.
+\end{itemize}
+%\only<2>{
+%Qualitatively I characterize:
+%\begin{itemize}
+%\smallskip
+%\item How price elasticities and the welfare gains from trade vary at the micro- and macro-level.
+%\smallskip
+%\item Two special cases to highlight the role of preferences and market incompleteness:\\
+%\smallskip
+%\textbf{1.} With $\log$ preferences hh-heterogeneity does not matter for aggregate trade and the gains are \citet*{arkolakis2012new}-like.\\
+%\smallskip
+%
+%\textbf{2.} In the efficient allocation, only direct effects matter for the gains from trade; reminiscent of \citet{AtkesonBurstein2010}.
+%\end{itemize}}
+%\only<3>{Quantitatively:
+%\begin{itemize}
+%\smallskip
+%\item I work at a scale typically reserved for static frameworks|I calibrate a 19 country model to match bilateral trade flows and facts about household-level expenditure patterns and price elasticities.
+%\smallskip
+%\item Evaluate the gains from trade and how they are distributed across households within a country.
+%\\
+%\medskip
+%The gains are pro-poor with the poorest households gaining 4.5X more than the richest\ldots\\
+%\smallskip
+%The average gains are 3X larger than representative agent benchmarks...\\
+%\smallskip
+%And the key force is heterogeneity in price elasticities.
+%\end{itemize}}
 
 \end{frame}
 
@@ -315,18 +331,17 @@ p_{i} Y_{i}  =  \underbrace{L_{i} \sum_{j} \int_{z} \int_{a}  p_{ij} c_{i}(a, z,
 {\small
 \begin{df}[ {\normalsize The Decentralized Stationary Equilibrium}] \normalfont A Decentralized Stationary Equilibrium are asset policy functions and commodity choice probabilities $\{\  g_{i}(a, z, j), \pi_{ij}(a, z) \ \}_{i}$, probability distributions $\{ \ \lambda_i(a, z) \ \}_{i}$ and positive real numbers $\left \{w_i, p_{ij}, R_i\right \}_{i,j}$ such that
 \begin{itemize}
-\item[i]  Prices ($w_i, p_{ij}$) satisfy (\ref{eq:marginal-product}) and (\ref{eq:marginal-product-ship});
-\item[ii] The policy functions and choice probabilities solve the household's optimization problem in (\ref{eq:valuefun}) and (\ref{eq:value_fun_option});
-\item[iii] The probability distribution $\lambda_i(a, z)$ induced by the policy functions, choice probabilities, and primitives satisfies (\ref{eq:law_motion}) and is stationary;
+\item[i]  Prices ($w_i, p_{ij}$) satisfy firms problem;
+\item[ii] The policy functions and choice probabilities solve the household's problem;
+\item[iii] The probability distribution $\lambda_i(a, z)$ induced by the policy functions, choice probabilities, and primitives satisfies the law of motion and is stationary;
 \item[iv] Goods market clears:
-\begin{align}
+\begin{align*}
 p_{i} Y_{i} - \sum_{j}  X_{ji} = 0, \ \ \forall i
-\end{align}
+\end{align*}
 \item[v] Bond market clears with either
-\begin{align}
+\begin{align*}
 \mathrm{A_i'} = 0, \ \ \forall i \ \ \ \mbox{or} \ \ \ \sum_{i}\mathrm{A_i'} = 0
-\label{eq:fa-condition}
-\end{align}
+\end{align*}
 \end{itemize}
 \end{df}
 }
@@ -338,7 +353,7 @@ p_{i} Y_{i} - \sum_{j}  X_{ji} = 0, \ \ \forall i
 \begin{frame}[t]{The HA Trade Elasticity}
 \vspace{-.25cm}
 \smallskip
-{\small 
+{\small
 \begin{prp}[{\normalsize The HA Trade Elasticity} ] \label{prp:GET} The trade elasticity between country $i$ and country $j$ is:
 \begin{align}
 \theta_{ij} = 1 + \int_{z,a} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z)da \ dz - \int_{z,a} \bigg \{ \theta_{ii,j}(a,z)^{I} + \theta_{ii,j}(a,z)^{E} \bigg \}\omega_{ii}(a,z)da \ dz \nonumber
@@ -368,10 +383,10 @@ The idea: a $\Delta$ in trade costs relaxes the budget constraint and then the d
 {\small
 \begin{align*}
 \theta_{ij}(a,z)^{E} = \frac{1}{\sigma_{\epsilon}}\frac{\partial v_{i}(a,z,j)}{\partial d_{ij}/d_{ij}}  - \frac{\partial \Phi_{i}(a,z) / \Phi_{i}(a,z)}{\partial d_{ij}/d_{ij}} .
-\end{align*}\\
+\end{align*}}\\
 \bigskip
 Now assume the number of countries is large\ldots\\
-}}
+}
 \only<4>{
 \medskip
 {\small
@@ -379,7 +394,7 @@ Now assume the number of countries is large\ldots\\
 \theta_{ij}(a,z)^{E} \approx -\frac{1}{\sigma_{\epsilon}}\bigg[u'(c_{i}(a,z,j))c_{i}(a,z,j)\bigg] .
 \end{align*}}\\
 \bigskip
-With CRRA and relative risk aversion $ > 1$ then \begin{alert}<4>{\textbf{poor hh's are the most price sensitive.}}\end{alert}
+With CRRA and relative risk aversion $ > 1$ then \begin{alert}<4>{\textbf{poor hh's are the most price sensitive on the extensive margin.}}\end{alert}
 }
 \end{frame}
 
@@ -423,7 +438,7 @@ This term is what I call the ``gains from substitution'':
 {\small \begin{align*}
 A(a,z) = -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}}  \\
 \\
-\approx -\sigma_{\epsilon} \times \pi_{ij}(a,z) \times \bar{\theta}(a_{t},z_{t}) ^E_{ij} 
+\approx -\sigma_{\epsilon} \times \pi_{ij}(a,z) \times \bar{\theta}(a,z) ^E_{ij}
 \end{align*}
 }\\
 \medskip
@@ -433,7 +448,7 @@ Where the last line says these gains from substitution are about (i) exposure ( 
 \medskip
 This term is what I call the ``gains from changes in factor prices'':
 {\small \begin{align*}
- B(a,z) = u'(c_{i}(a,z,i)) \times  a \times \frac{\mathrm{d} R_{i} / w_{i}}{\mathrm{d} d_{ij} / d_{ij}} 
+ B(a,z) = u'(c_{i}(a,z,i)) \times  a \times \frac{\mathrm{d} R_{i} / w_{i}}{\mathrm{d} d_{ij} / d_{ij}}
 \end{align*}
 }\\
 \bigskip
@@ -450,7 +465,7 @@ C(a,z) = \bigg \{\underbrace{ - \frac{u'(c_{i}(a,z,i))}{p_{ii}} + \beta \mathbb{
 }
 \\
 \medskip
-which is zero for small changes as hh's are either (i) on their Euler equation or (ii) constrained and can't adjust their asset position. 
+which is zero for small changes as hh's are either (i) on their Euler equation or (ii) constrained and can't adjust their asset position.
 }
 \end{frame}
 
@@ -478,7 +493,7 @@ and both are independent of the household heterogeneity. \uncover<2->{And the we
 }
 \medskip
 \only<1>{This mimics the results of \citet*{anderson1987ces}. This was not obvious to me given the environment \ldots risk, market incompleteness, borrowing constraints, etc.}
-\only<2>{And we are back to \citet{arkolakis2012new} $+$ what's going on with factor prices and asset holdings.}
+\only<2>{And we are back to \citet{arkolakis2012new} $+$ what's going on with factor prices and borrowing constraints.}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -490,7 +505,7 @@ and both are independent of the household heterogeneity. \uncover<2->{And the we
 {\small
 \begin{prp}[{\normalsize Trade Elasticities and Welfare Gains in the Efficient Allocation}]\label{prp:gains-efficient-allocation} The elasticity of trade to a change in trade costs between $ij$ in the efficient allocation is:
 \begin{align*}
-\theta_{ij} =  -\frac{1}{\sigma_{\epsilon}} \bigg [ u'(c_{i}(j)) c_{i}(j) \bigg]. 
+\theta_{ij} =  -\frac{1}{\sigma_{\epsilon}} \bigg [ u'(c_{i}(j)) c_{i}(j) \bigg].
 \end{align*}
 \uncover<2->{And the welfare gains from a reduction in trade costs between $i,j$ are
 \begin{align*}
@@ -505,9 +520,9 @@ which is the discounted, direct effect from relaxing the aggregate resource cons
 \medskip
 \only<1>{Same idea as in decentralized allocation, but now everyone substitutes in a common way...}
 
-\only<2>{ Mimics the results of \citet{AtkesonBurstein2010} but with household (not firm) heterogeneity.}
+\only<2>{Mimics the results of \citet{AtkesonBurstein2010} but with household (not firm) heterogeneity.}
 
-\only<3>{And we are back to \citet{arkolakis2012new}-like expression and with $\log$ its exact.}
+\only<3>{And | again| we are back to an \citet{arkolakis2012new}-like expression and with $\log$ its exact.}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -543,13 +558,13 @@ Parameters scaled across countries to deliver balanced-growth-like properties.
 \smallskip
 \item Set $\sigma_{\epsilon,i} = \sigma_{\epsilon}\times A_i^{1-\gamma}$, \uncover<2->{| $\sigma_{\epsilon}$ varied to fit elasticities in \citet{auer2022unequal}}.
 \medskip
-\item Set the borrowing constraint so $\phi_{i} = \phi \times A_i$ where $\phi = 0.50$.  
+\item Set the borrowing constraint so $\phi_{i} = \phi \times A_i$ where $\phi = 0.50$.
 \end{itemize}
 \bigskip
 Household-specific quality shifters | a home bias term $\psi_{ii}(z)$ which additively shifts utility
 \begin{itemize}
 \smallskip
-\item Without this prices and price elasticities determine shares, so to flexibly fit the data there needs to be interactions between quality and household characteristics; same idea as in \citet{berry1995automobile}.
+\item Without this prices and price elasticities determine shares, so to fit the data interactions between quality and household characteristics is a way; same idea as in \citet{berry1995automobile}.
 \smallskip
 \uncover<2->{\item Slope of $\psi_{ii}(z)$ wrt $z$ varied to fit \citet{borusyak2021distributional} facts.}
 \end{itemize}
@@ -643,7 +658,7 @@ Far distances $\approx$ 10 percent less expensive than standard models would pre
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}[t]
-\frametitle{Micro Moments}
+\frametitle{Micro Moments | Model Consistent with Data}
 \begin{table}[t]
 \small
 \begin{center}
@@ -655,23 +670,45 @@ Far distances $\approx$ 10 percent less expensive than standard models would pre
 \\\hline \hline
 & Import Shares & Trade Elasticities & MPCs\\
 \cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4}
-Below Median Income & $0.08$ & $-6.24$ & 0.50\\
-Median   & $0.08$ & $-4.88$ & 0.28\\
-Above Median Income & $0.08$ & $-3.97$ & 0.17\\
+Below Median Income & $0.08$ & $-6.64$ & 0.50\\
+Median   & $0.08$ & $-4.48$ & 0.28\\
+Above Median Income & $0.08$ & $-3.78$ & 0.17\\
 \hline
 \end{tabular}
 \\[0.5ex]
 %\parbox{5.95in}{\footnotesize \textbf{Note:} }
 \end{center}
 \end{table}
+\bigskip
+\begin{itemize}
+\smallskip
+\item Household-level import shares consistent with facts from  \citet{borusyak2021distributional}, i.e. rich and poor do not spend unequally on imports.
+\smallskip
+\item Household-level elasticities slightly understate those in \citet*{auer2022unequal}, rich more elastic than their estimates.
+\smallskip
+\item Household MPCs consistent with \citet{kaplan2022marginal}.
+\end{itemize}
 \end{frame}
 
 
 \begin{frame}[t]
 \frametitle{Measuring Welfare}
 \smallskip
-
-
+Want is a measure of welfare in interpretable units. No straight answer for a lot of reasons. \\
+\medskip
+I'm going to focus on equivalent variation.\\
+\medskip
+Reminder: Given some price change delivering utility level $V'$, equivalent variation asks ``at the old prices, $p_0$, how much extra income must be provided to be indifferent between $V'$ and $V(p_0)$?''\\
+\bigskip
+\bigskip
+My measure is a permanent, proportional increase in income (asset and labor) $\tau_{i,a,z}$, at the old prices such that the new level of utility $v'_i$ is achieved:
+\begin{align*}
+v'_i(a, z ; \ p', R'_{i}, w'_{i}) - v_i(a, z ; \ p, \ R_{i}\tau_{i,a,z}, \ w_{i}\tau_{i,a,z})) = 0.
+\end{align*}\\
+\medskip
+To be clear, this says a household with states $a,z$ must have their income increased today ( and for the infinite future ) by the number $\tau_{i,a,z}$.\\
+\bigskip
+Also, I'm doing this across steady states, not transitions. 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -697,17 +734,18 @@ Above Median Income & $0.08$ & $-3.97$ & 0.17\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[t]
-\frametitle{Where I'm headed next\ldots}
+\frametitle{Final Thoughts\ldots}
 \smallskip
-On my todo list:
+This paper has prompted even more questions\ldots
 \begin{itemize}
+\smallskip
+\item The efficient pattern of trade? In a companion paper, I show that near-shoring is an outcome that a global planner likes.
 \smallskip
 \item Can trade policy improve outcomes? Put in tariffs and redistribute.
 \smallskip
-\item Quality or ``residual demand shifters'' and calibration to line up with the micro-evidence of papers like \citet{auer2022unequal}.
+\item The interaction between trade goods and trade in assets?
 \end{itemize}
 \medskip
-Any thing else? Email me!\\
 \bigskip
 One more thing: My github repository provides the code and supplementary work behind this paper at \url{https://github.com/mwaugh0328/heterogeneous-agent-trade}.
 
