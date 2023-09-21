@@ -129,7 +129,7 @@ This draft: September 2023
 
 ABSTRACT ------------------------------------------------------------------------------------------------------------
 
-This paper studies the implications of household heterogeneity for trade. I develop a model where household heterogeneity is induced via the standard incomplete markets model and results in heterogenous price elasticities. Conditional on exposure to trade, heterogenous price elasticities imply that different households value price changes differently and, thus, rich and poor households experience different gains from trade. I calibrate the model to match bilateral trade flows and micro-facts about household-level expenditure patterns and price elasticities. I find that gains from trade are pro-poor with a ten percent reduction in trade costs delivering welfare gains equivalent to a permanent 600 dollar transfer of income for the poorest households. These gains are four and a half times larger than those for the richest households and the average gains are three times larger than representative agent benchmarks.
+This paper studies the implications of household heterogeneity for trade. I develop a model where household heterogeneity is induced via the standard incomplete markets model and results in heterogenous price elasticities. Conditional on exposure to trade, heterogenous price elasticities imply that different households value price changes differently and, thus, rich and poor households experience different gains from trade. I calibrate the model to match bilateral trade flows and micro-facts about household-level expenditure patterns and price elasticities. I find that gains from trade are pro-poor with a ten percent reduction in trade costs delivering welfare gains equivalent to a permanent, three percent increase in income for the poorest households. These gains are four and a half times larger than those for the richest households and the average gains from trade are three times larger than representative agent benchmarks.
 
 ------------------------------------------------------------------------------------------------------------------------------
 %%\vspace{0.25cm}
@@ -179,7 +179,7 @@ Motivating my work has been a sequence of papers focusing on measuring the heter
 
 While this work motivates my paper, I take a conceptually different approach. Rather than focusing on measurement, I develop a model of household heterogeneity that endogenously delivers heterogeneity in price elasticities and study its implications. In this sense, my papers approach is most similar to \citet*{fajgelbaum2011income} who study how inequality and non-homotheticities shape trade in vertically differentiated products. A unique aspect of my work is that I start with a theory behind the distribution of income and wealth. This theory plus a demand system with heterogenous price elasticities then breaks aggregation in the goods market. And because aggregation is broken, it opens the door to new insights about trade, the interaction of trade and financial markets, and how market incompleteness shapes the aggregate pattern of trade.
 
-My paper also relates to a recent series of papers that combines trade models with heterogenous agent, incomplete market models. Some of this is my own work in \citet{lyon2018redistributing}, \citet{lyon2019}, \citet{waugh_consumption}; \citet*{gaston2018} and \citet{carroll2020heterogeneous} are important contributions as well. This class of papers primarily focuses on how heterogenous exposure through the labor market passes through to consumption and, thus, welfare. In this paper, I'm doing something different and it is focused on the heterogenous exposure through the consumption side.
+My paper also relates to a recent series of papers that combines trade models with heterogenous agent, incomplete market models. Some of this is my own work in \citet{lyon2018redistributing}, \citet{lyon2019}, \citet{waugh_consumption}; \citet*{gaston2018}, \citet{carroll2020heterogeneous}, and \citet{dvorkin2023heterogeneous} are important contributions as well. This class of papers primarily focuses on how heterogenous exposure through the labor market passes through to consumption and, thus, welfare. In this paper, I'm doing something different and it is focused on the heterogenous exposure through the consumption side.
 
 This paper also relates to a body of work focusing on the pricing implications in the presence of heterogenous price sensitivity. \citet{nakamura2010accounting} is an early example of a macro-style model with an IO-style demand system similar in spirit to my paper and they focuses on the implications for the incomplete pass through of shocks to prices. My own work in \citet{p-iq} is very much a companion piece to this paper with imperfect competition in product markets and it focuses on the heterogenous pass-through of supply and demand shocks into prices for different types of consumers. \citet{nord2022shopping} takes a search-theoretic approach, but the core issue is the same | how demand composition affects pricing decisions. With that said, this model simplifies matters by focusing on a world with perfect competition and, hence, I turn my focus on how household heterogeneity matters for trade.
 
@@ -405,9 +405,9 @@ p_{i} Y_{i} - \sum_{j}  X_{ji} = 0, \ \ \forall i
 
 This model above has households making individual choices over national varieties, savings, all while facing productivity and taste shocks. Explicit aggregation of household behavior determines the pattern of trade and this is linked with trade in financial assets.  The remaining sections of the paper work through the following questions:
 \begin{enumerate}
-\item \textbf{What are the model's implications for trade elasticities and the gains from trade in decentralized allocation?} Here I characterize micro and macro level trade elasticities and connect them with households' inter-temporal motives and the heterogeneity in the marginal utility of consumption that is induced by market incompleteness. I also workout a knife edge case when utility is $\log$ over consumption and how it delivers complete separation between the heterogenous agent side of the economy and trade.
-
-\item \textbf{What are the quantitative implications of this model?} I then compute and calibrate the model with a key featuring being that the model matches the spatial distribution of economic activity in the data|just as well as static, standard, constant elasticity gravity models. I then perform several counterfactuals to illustrate the mechanics of the model and how the gains from trade vary across rich and poor households.
+\item \textbf{What are the model's implications for trade elasticities and the gains from trade in decentralized allocation?} Here I characterize micro and macro level trade elasticities and then the gains from trade and I connect them with heterogeneity in the marginal utility of consumption that is induced by market incompleteness. I explore two special cases: (i) the efficient allocation and (ii0 when utility is $\log$ over consumption and how this case delivers separation between the heterogenous agent side of the economy and trade.
+    
+\item \textbf{What are the quantitative implications of this model?} I then compute and calibrate the model with a key featuring being that the model matches the spatial distribution of economic activity in the data. I then perform several counterfactuals to illustrate the mechanics of the model and how the gains from trade vary across rich and poor households.
 \end{enumerate}
 
 \section{Trade Elasticities and the Gains from Trade}
@@ -585,9 +585,9 @@ Finally, these repeat themselves into the expected future, appropriately discoun
 \end{align}
 }where each term represents:
 \begin{itemize}
-\item Gains from substitution: $A(a_{t},z_{t}) = -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a,z) / \pi_{ii}(a,z)}{\mathrm{d}d_{ij} / d_{ij}}$.
+\item Gains from substitution: $A(a_{t},z_{t}) = -\sigma_{\epsilon} \frac{\mathrm{d} \pi_{ii}(a_{t},z_{t}) / \pi_{ii}(a_{t},z_{t})}{\mathrm{d}d_{ij} / d_{ij}}$.
 
-\item Gains from factor prices: $B(a_{t},z_{t}) = u'(c_{i}(a_{t},z_{t},i))\frac{\mathrm{d} R_{i}/p_{ii}}{\mathrm{d} d_{ij} / d_{ij}}a$
+\item Gains from factor prices: $B(a_{t},z_{t}) = u'(c_{i}(a_{t},z_{t},i))\frac{\mathrm{d} R_{i}/p_{ii}}{\mathrm{d} d_{ij} / d_{ij}}a_{t}$
 
 \item Gains from changes in asset holdings:
 {\footnotesize
@@ -603,7 +603,7 @@ which is zero for small changes.
 
 One issue behind the results above is market incompleteness. Households are imperfectly insured against the risks they face, this leads to heterogeneity in the marginal utility of consumption and, in turn, heterogeneity in price sensitivity, expenditure patterns, and the gains from trade. Building on work in from my related paper in \citet{waughoptimal}, I contrasts the previous results with the elasticities and gains from trade in an allocation where a social planner can overcome market incompleteness. Appendix \ref{apx-sec:efficient} provides a self-contained discussion of the planning problem and derivation of the results.
 
-The starting point is a utilitarian social welfare function which is analogous to (\ref{eq:social-welfare}). In \citet{waughoptimal}, I fully characterize a Planner's choice of consumption allocations $c_{i}(z, j, t)$ and choice probabilities $\pi_{ij}(z,t)$ for all $i,j$ pairs, $z$ states, and dates $t$ to maximize social welfare. Given a characterization of the optimal allocation, I can compute trade elasticities and the welfare gains from a change in trade costs and study how welfare changes across the two stationary allocations.\footnote{Unlike the previous section, the move across stationary allocations is no consequence as there is no moving aggregate state variable, so the jump across stationary equilibrium is instantaneous.}
+The starting point is a utilitarian social welfare function which is analogous to (\ref{eq:social-welfare}). In \citet{waughoptimal}, I fully characterize a Planner's choice of consumption allocations $c_{i}(z, j, t)$ and choice probabilities $\pi_{ij}(z,t)$ for all $i,j$ pairs, $z$ states, and dates $t$ to maximize social welfare.\footnote{In a more general, but static setting, \citet{mongey-waugh-2} characterize complete markets and efficient allocations in additive, random utility discrete choice models. A precursor to my characterization of the gains from trade under efficiency are the efficiency results in \citet*{lagakos2023welfare}.} Given a characterization of the optimal allocation, I can compute trade elasticities and the welfare gains from a change in trade costs and study how welfare changes across the two stationary allocations.\footnote{Unlike the previous section, the move across stationary allocations is no consequence as there is no moving aggregate state variable, so the jump across stationary equilibrium is instantaneous.}
 
 Proposition \ref{prp:gains-efficient-allocation} describes the result, Appendix \ref{apx-sec:efficient} works out the details.
 
@@ -683,38 +683,64 @@ This section focuses on my approach to calibrating the model. The next two subse
 
 The final section follows the trade literature by picking country specific TFP and trade cost parameters to match bilateral trade flows. How I do this is an indirect inference procedure | ``gravity as a guide'' | to overcome the fact that my model does not admit a closed form map from trade flows to parameters as static, gravity models do. I describe this approach below.
 
-\subsection{Utility Function, Shocks, Constraints}
+\subsection{Preferences, Shocks, and Constraints}
 
-Utility over the physical commodity is CRRA with relative risk aversion $\gamma$. This parameter is calibrated (along with the taste shock parameter) to match the price elasticities of the median and poor households in the data of \citet*{auer2022unequal}.
+Table \ref{tb-calibration} provides an overview of the non-country-specific parameters (or if they are country specific, they are all scaled in the same way). Below, I discuss each choice in turn. Some of the choices are made to keep things simple (e.g. the earnings process). Others are guided by the theoretical results above and, hence, the moments chosen appropriately.
+
+Utility over the physical commodity is CRRA with relative risk aversion $\gamma$. This parameter is calibrated (along with the taste shock parameter) to match the price elasticities of the median and poor households in the data of \citet*{auer2022unequal}. And the correspondence between this parameter and these moments are motivated by the results in (\ref{eq:extensive-margin-large}) and (\ref{eq:elasticity-mpc}) showing how the curvature of the utility function partially shapes micro-level elasticities and how they vary across households.
 
 On top of these preferences I do two things to ensure that micro and macro facts can be matched given that there is a sense in which preferences are non-homothetic on the extensive margin.
 
-The first feature I introduce are household-specific quality shifters. Mechanically, I implement quality shifters by introducing a home bias term $\psi_{i}(z,i)$ which additively shifts period utility when consuming the home good $i$ and it is indexed by the households productivity state $z$; Appendix \ref{apx-sec:quality} provides details. This last point implies that rich and poor households may have different valuations quality between home and foreign goods. To reduce $\psi$s dimensionality, I assume that it's a log-linear function of a households permanent productivity state and this function is the same across countries. The slope of this relationship is calibrated to match the fact from \citet{borusyak2021distributional}) that import expenditure shares are essentially the same between US poor (below median income) and rich (above median income) households.
+The first feature I introduce are household-specific quality shifters. Mechanically, I implement quality shifters by introducing a home bias term $\psi_{i}(z,i)$ which additively shifts period utility when consuming the home good $i$ and it differs by the households productivity state $z$. Appendix \ref{apx-sec:quality} provides details, but the key issue is that with the additivity, it only effects shares, not elasticities per se. To reduce $\psi$s dimensionality, I assume that it's a log-linear function of a households permanent productivity state and this function is the same across countries. The slope of this relationship is calibrated to match the fact from \citet{borusyak2021distributional}) that import expenditure shares are essentially the same between US poor (below median income) and rich (above median income) households. And as equation \ref{eq:gains-substitution} motivates, how import shares vary across rich and poor households is an important input into determining how the gains from trade vary across households.
 
-This is important because it helps the model match facts regarding how import shares vary across rich and poor households. The necessity of quality shifters relates to the discussion around Figure \ref{fig:micro-trade} | that prices and price elasticities solely determine how shares vary across households and these forces lead to a pattern of sorting with poor, high-elasticity households concentrating their expenditures on the cheapest commodities available. Quality shifters that vary with household-specific characteristics are one way to match shares, yet allow for heterogeneity in price elasticities. \citet*{berry1995automobile} make this point and it motivates their modeling of demand with interactions between attributes of the product and household characteristics; \citet{auer2022unequal} allows for this force as well in both their model and empirical specification.
+The necessity of quality shifters relates to the discussion around Figure \ref{fig:micro-trade} | that prices and price elasticities solely determine how shares vary across households and these forces lead to a pattern of sorting with poor, high-elasticity households concentrating their expenditures on the cheapest commodities available. Quality shifters that vary with household-specific characteristics are one way to match shares, yet allow for heterogeneity in price elasticities. \citet*{berry1995automobile} make this point and it motivates their modeling of demand with interactions between attributes of the product and household characteristics; \citet{auer2022unequal} allows for this force as well in both their model and empirical specification.
 
-The second feature is that I want things to scale and deliver a ``balanced-growth-like'' property. Specifically, the want-operator here is that if there were two countries one with high TFP and one with low TFP, elasticities (both at the micro and macro level) in the two countries are the same. The way to do this is to make the Type 1 Extreme value parameter country specific and scaled so that $\sigma_{\epsilon,i} = \sigma_{\epsilon} A_i^{1-\gamma}$ and similarly for the quality shifters above. The common component of the taste shock parameter, $\sigma_{\epsilon}$ is calibrated (along with the risk aversion parameter) to match the price elasticities of the median and poor households in the data of \citet*{auer2022unequal}.
+The second feature I want is that things to scale and deliver a ``balanced-growth-like'' property. Specifically, the want-operator here is that if there are two countries one with high TFP and one with low TFP, elasticities (both at the micro and macro level) in the two countries are the same. The way to do this is to make the Type 1 Extreme value parameter country specific and scaled so that $\sigma_{\epsilon,i} = \sigma_{\epsilon} A_i^{1-\gamma}$ and similarly for the quality shifters above. The common component of the taste shock parameter, $\sigma_{\epsilon}$ is calibrated (along with the risk aversion parameter) to match the price elasticities of the median and poor households in the data of \citet*{auer2022unequal}.
 
 The income shock process is set up to be a mixture of a AR(1) persistent component and an iid transitory component and this is calibrated using results from \citet*{krueger2016macroeconomics}. I use their exact parameter values at an annual frequency. It is the same across countries.
 
-The borrowing constraint is set in the following way. First, I scale it by a country's autarky level of average real labor income. Then it is set so that a household can borrow up to fifty percent of it's autarky level of income. The scaling here is done to deliver a balanced-growth-like property of the model so a households debt capacity is invariant to a country's autarky level of income. The precise number of fifty percent seems reasonable to me, but as a check I show that the marginal propensities to consume and how they vary across households is consistent with the evidence of \citet{kaplan2022marginal}.
+The borrowing constraint is set in the following way. I scale it by a country's autarky level of average real labor income. Then it is set so that a household can borrow up to fifty percent of it's autarky level of income. The scaling here is done (again) to deliver a balanced-growth-like property of the model so a households debt capacity is invariant to a country's autarky level of income. The precise number of fifty percent seems reasonable to me, but as a check I show that the marginal propensities to consume and how they vary across households is consistent with the evidence of \citet{kaplan2022marginal}.
 
-All the quantitative results I show are with the case of financial globalization. In this case there is one interest rate clearing the global asset market. All countries are assumed to have the same discount factor and I calibrate the discount factor so the equilibrium world interest rate is 1 percent.
+\begin{table}[t]
+\small
+\begin{center}
+\refstepcounter{table}
+\setlength {\tabcolsep}{4.5mm}
+\renewcommand{\arraystretch}{1.60}\label{tb-calibration}
+\begin{tabular}[t]{l c l}
+\multicolumn{3}{c}{{\normalsize\textbf{Table \ref{tb-calibration}: Preferences, Shocks, and Constraints | Calibrated Parameters}} }
+\\\hline \hline
+Description & Value & \multicolumn{1}{c}{Target}\\
+\cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3}
+Discount Factor, \ $\beta$                          & $0.92$ & \phantom{\} } Global Interest Rate of $1\%$ \\
+CRRA parameter, \ $\gamma$                          & $1.45$ & \multirow{2}{*}{\Bigg \} Micro elasticities of {\small \citet{auer2022unequal}} }\\
+Type One E-V parameter, \ $1 / \sigma_{\epsilon}$    & $3.0$ & \\
+Slope of Quality Shifter, \ $\psi_{ii}(z)$          & $0.60$ & \phantom{\} } Micro moments of {\small \citet{borusyak2021distributional} } \\
+Borrowing Constraint \ $\phi_{i}$                   & --- & \phantom{\} } $50\%$ of $i$'s autarky labor income \\
+Income Process on \ $z$                             & --- & \phantom{\} } {\small \citet*{krueger2016macroeconomics}} \\
+\hline
+\end{tabular}
+\\[0.5ex]
+%\parbox{5.95in}{\footnotesize \textbf{Note:} }
+\end{center}
+\end{table}
+
+All the quantitative results I show are with the case of financial globalization. In this case there is one interest rate clearing the global asset market. Households in all countries have the same discount factor and I calibrate the discount factor so the equilibrium world interest rate is 1 percent.
 
 \subsection{Using Gravity as a Guide to Match Trade Data}
 
-In analyzing how changes in trade frictions affect outcomes, I  want the model to match spatial distribution of economic activity in the data|just as well as standard, constant elasticity gravity models. The calibration challenge is that model does not admit a gravity representation that allows researchers to invert trade frictions and productivity levels from trade flows as done in \citet{eaton2002technology} and many subsequent papers. Similarly, the model does not admit the use of exact-hat algebra which allows the research to construct counterfactuals without the knowledge of primitives like trade frictions or productivity (see, e.g., \citet{costinot2014trade} or the dynamic extension in \citet*{caliendo2015trade}).
+In analyzing how changes in trade frictions affect outcomes, I to want the model to match the spatial distribution of economic activity in the data. The calibration challenge is that model does not admit a gravity representation that allows researchers to invert trade frictions and productivity levels from trade flows as done in \citet{eaton2002technology}. Similarly, the model does not admit the use of exact-hat algebra which allows the research to construct counterfactuals without the knowledge of primitives like trade frictions or productivity (see, e.g., \citet{costinot2014trade} or the dynamic extension in \citet*{caliendo2015trade}).
 
-My calibration strategy is to use the gravity regression as a guide in an indirect inference procedure where I estimate parameters of the model so that the regression coefficients from a standard gravity regression run on my model's data match the coefficients when the same regression is ran on the data. Here are the details. 
+My calibration strategy is to use the gravity regression as a guide in an indirect inference procedure where I estimate parameters of the model so that the regression coefficients from a standard gravity regression run on my model's data match the coefficients when the same regression is ran on the data. Here are the details.
 
-The bilateral trade flows that I use are from \citet{eaton2002technology}. The 19 countries in this data set is a nice size to do what I want to do in about an afternoon. In the 19 country model, the parameters I need to choose are $19 - 1$ country-specific TFP parameters (the $A_i$s) and then $(19-1) \times (19-1)$ trade costs (with the minus one since the $ii$ trade costs is normalized to one) to infer from the bilateral trade data. This leaves me under-identified with  only $(19-1) \times (19-1)$ bilateral trade shares and $19 -1$ TFP parameters.
+The bilateral trade flow data that I use are from \citet{eaton2002technology}. The 19 countries in this data set is a nice size to do what I want to do in about an afternoon. In the 19 country model, the parameters I need to choose are $19 - 1$ country-specific TFP parameters (the $A_i$s with the minus because one normalization is free) and then $(19-1) \times (19-1)$ trade costs (with the minus one since the $ii$ trade costs is normalized to one) to infer. This leaves me under-identified with  only $(19-1) \times (19-1)$ bilateral trade shares and $19 -1$ TFP parameters.
 
-\textbf{Step 0.} I'll reduce the number of parameters to estimate by placing a restriction on trade costs that are a function of observable data. Specifically, I assume that trade costs take the form as in \citet{eaton2002technology} with
+\textbf{Step 0.} I reduce the number of parameters to estimate by placing a restriction on trade costs such that they are a function of observable data. Specifically, I assume that trade costs take the form as in \citet{eaton2002technology} with
 \begin{align}
 \log d_{ij} = d_{k} + b + l + e_{h} + m_{i},
 \label{eq:trade-cost-function}
 \end{align}
-where trade costs are a logarithmic function of distance, where $d_k$ with $k = 1,2,...,6$, is the effect of distance between country $i$ and $j$ lying in the $k$-th distance interval.\footnote{Intervals are in miles: $[0,375)$; $[375,750)$; $[750,1500)$; $[1500,3000)$; $[3000,6000)$; and $[6000,\mbox{maximum}]$. } The $b$ term is the effect of a shared border in which $b =1$ if country $i$ and $j$ share a border and zero otherwise. Similarly $l$ is a dummy variable if country's $i$ and $j$ share a language, and $e_{h}$ represent two dummy variable for different indicators of European integration. The final part is an importer fixed effect shifting trade costs up or down depending upon the identity of the importer.
+where trade costs are a logarithmic function of distance, where $d_k$ with $k = 1,2,...,6$, is the effect of distance between country $i$ and $j$ lying in the $k$-th distance interval.\footnote{Intervals are in miles: $[0,375)$; $[375,750)$; $[750,1500)$; $[1500,3000)$; $[3000,6000)$; and $[6000,\mbox{maximum}]$. } The $b$ term is the effect of a shared border in which $b =1$ if country $i$ and $j$ share a border and zero otherwise. Similarly $l$ is a dummy variable if country's $i$ and $j$ share a language, and $e_{h}$ represent two dummy variables for different indicators of European integration. The final part is an importer fixed effect that shifts trade costs up or down depending upon the identity of the importer.
 
 At this point, I've reduced the parameter space to the  coefficients on the trade cost function rather than the complete matrix of trade costs and then the TFP terms.
 
@@ -723,21 +749,17 @@ At this point, I've reduced the parameter space to the  coefficients on the trad
 \log \left( {\frac{M_{ij}}{M_{ii}}} \right) = {im_{i}} + {ex_{j}} + {d_{k}} + {b} + {l} + {e_{h}} + \delta_{ij},
 \label{eq:gravity-data}
 \end{align}
-which projects imports between country $i$ and $j$ ( normalized relative to domestic expenditures ) on an importer effect, exporter effect and then the gravity variables relating to distance, border, language, etc. and finally there is an error term $\delta_{ij}$ that reflects other factors not in this specification.
+which projects imports between country $i$ and $j$ ( normalized relative to domestic expenditures ) on an importer effect, exporter effect, and then the gravity variables relating to distance, border, language, etc. Finally there is an error term $\delta_{ij}$ that reflects other factors not in this specification.
 
-This is the canonical representation of trade flows|the gravity model. In a standard Armington-CES, \citet{eaton2002technology}, or \citet{melitz2003impact} style model, the importer effects and exporter effects have specific interpretations. And given the point estimates from (\ref{eq:gravity-data}), productivity and the importer fixed effects on the trade cost function are easily recovered.
-
-In my model, this is not the case. However, the idea is to use the point estimates from (\ref{eq:gravity-data}) as moments for my model to match. The next step constructs model analogs to (\ref{eq:gravity-data}).
-%
-%Abstracting from normalizations, I now have $19 + 29$ point estimates to match up with the $19 + 29$ parameters I need to estimate.\footnote{To be clear about normalizations: I really only have 18 TFP parameters to match and then a normalization on the importer fixed effects is that they sum to zero as in \citet{eaton2002technology}. The fixed effects in \ref{eq:gravity-data} satisfy the normalization that each of their sum is zero. Thus I have $18 + 28$ parameters to match $18 + 28$ moments}
+This is the canonical representation of trade flows | the gravity model. In a standard Armington-CES, \citet{eaton2002technology}, or \citet{melitz2003impact} style model, the importer effects and exporter effects have specific interpretations. And given the point estimates from (\ref{eq:gravity-data}), productivity and the importer fixed effects on the trade cost function are easily recovered. In my model, this is not the case. However, the idea is to use the point estimates from (\ref{eq:gravity-data}) as moments for my model to match. The next step constructs model analogs to (\ref{eq:gravity-data}).
 
 \textbf{Step 2.} To construct model analogs to (\ref{eq:gravity-data}), I guess TFP parameters and coefficients on the trade cost function in (\ref{eq:trade-cost-function}). Define this parameter vector as $\Theta$.
 
 Given $\Theta$, I compute an equilibrium of the world economy. This amounts to: (i) solving for households' dynamic problems|in each country (ii) constructing the stationary distribution of wealth and expenditure patterns|in each country (iii) aggregating and then (iv) finding a vector of prices so goods markets and financial markets clear world wide.
 
-Once I find an equilibrium, I run the same regression as in (\ref{eq:gravity-data}) on the model generated data. As some notation, the model constructed moments are defined as, e.g., $im_{i}(\Theta)$ which is the importer effect estimated on model generated data under the parameter vector $\Theta$.
+Once I find an equilibrium, I run the same regression as in (\ref{eq:gravity-data}) on the model generated data.\footnote{One approach, that works well with good guesses and takes about an hour (rather than 6-12), is to have the solver simultaneously look for prices that clear markets and coefficients such that the trade moments are matched.} As some notation, the model constructed moments are defined as, e.g., $im_{i}(\Theta)$ which is the importer effect estimated on model generated data under the parameter vector $\Theta$.
 
-\textbf{Step 3.} The final step constructs moment conditions which provide the foundation for estimation. Define $\mathbf{y}(\Theta)$ as a set of moments conditions comparing the point estimates from the data with the point estimates from the model under the parameter vector $\Theta$. For example, ${im_{i}} - im_{i}(\Theta)$ or $d_k - d_k(\Theta)$, etc.
+\textbf{Step 3.} The final step constructs moment conditions which provide the foundation for estimation / calibration. Define $\mathbf{y}(\Theta)$ as a set of moments conditions comparing the point estimates from the data with the point estimates from the model under the parameter vector $\Theta$. For example, ${im_{i}} - im_{i}(\Theta)$.
 
 My estimation procedure is based on the moment condition
 \begin{align}
@@ -751,40 +773,13 @@ At a mechanical level, finding the minimum to (\ref{eq:smm-condition}) amounts t
 
 \subsection{Calibration Results}
 
+\subsubsection{Shares, Elasticities, and MPCs}
 
-\begin{table}[t]
-\small
-\begin{center}
-\refstepcounter{table}
-\setlength {\tabcolsep}{5.5mm}
-\renewcommand{\arraystretch}{1.60}\label{tb-calibration}
-\begin{tabular}[t]{l c l}
-\multicolumn{3}{c}{{\normalsize\textbf{Table \ref{tb-calibration}: Preferences, Shocks, and Constraints | Calibrated Parameters}} }
-\\\hline \hline
-Description & Value & \multicolumn{1}{c}{Target}\\
-\cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3}
-Discount Factor, \ $\beta$                          & $0.92$ & Global Interest Rate of $1\%$ \\
-CRRA parameter, \ $\gamma$                          & $1.50$ & Micro elasticities of \citet{auer2022unequal} \\
-Slope of Quality Shifter, \ $\psi_{ii}(z)$          & $0.60$ & Micro import share facts of \citet{borusyak2021distributional} \\
-Type One E-V parameter, \ $1 / \sigma_{\epsilon}$    & $4.0$ & --- \\
-Borrowing Constraint \ $\phi_{i}$                   & --- & $50\%$ of $i$'s autarky labor income \\
-Income Process on \ $z$                             & --- & \citet{krueger2016macroeconomics} \\
-\hline
-\end{tabular}
-\\[0.5ex]
-%\parbox{5.95in}{\footnotesize \textbf{Note:} }
-\end{center}
-\end{table}
+The second column of Table \ref{tb-calibration} reports the calibrated parameters associated with preferences, shocks and constraints. The resulting parameter values for the CRRA risk aversion parameter and Type 1 Extreme Value variance parameter are very plausible. The risk-aversion parameter is 1.45, seemingly not far from $\log$, and well within standard benchmarks in the macro-literature. The Type 1 Extreme Value parameter is 3.0 which is plausible in the sense that in the $\log$ model this value implies a trade elasticity of 3.0. This is low, but in the range of estimated aggregate trade elasticities.
 
-\subsubsection{Micro Expenditure Shares, Elasticities, and MPCs}
+The first column of Table \ref{tb-micro-shares} reports the resulting elasticities. These are right in the ballpark, but perhaps understate the heterogeneity in elasticities as rich households are more elastic in my model than found in \citet{auer2022unequal}.
 
-Table \ref{tb-micro-shares} reports household-level expenditure patterns, trade elasticities, and marginal propensities to consume (MPC). I focus on households in US and I brake down the statistics by household income.\footnote{In the model, my income measure is labor income | income including asset payments or expenditures deliver similar results since all three are highly correlated.}
-
-The first column of Table \ref{tb-micro-shares} \ref{tb-micro-shares} reports the share of imports out of total expenditure for households below median income (poor), at the median, and above the median (rich). An outcome is that the model replicates \citet{borusyak2021distributional} facts that import expenditure shares are the same between US poor (below median income) and rich (above median income) households. As discussed above, a key force behind this result are household-specific quality shifters with poor households having stronger perceived quality of imported goods than rich households.
-
-The second column of \ref{tb-micro-shares} reports household-level trade elasticities. These are constructed at the micro-level as in Proposition \ref{prp:GET} for each type of household and import partner. The import partner elasticities are then aggregated into one number using the household's expenditure weights.
-
-Table \ref{tb-micro-shares} illustrates how price elasticities systematical fall with income. For the poor households with income below the median, elasticities are a bit above 6; for the richest households they are a bit below 4. The middle row reports the elasticity for a household in the middle of the distribution and this is 4.8.  \citet{auer2022unequal} report price elasticities for the median and at points above and below in the income distribution. Similar to Table  \ref{tb-micro-shares}, they find that the household in the middle of the income distribution has an elasticity of 4.8 and those at the top and bottom (which are more extreme points than what I report here) they have elasticities of 3.0 and 6.6. Thus, the elasticities in my model at the micro-level are quantitatively consistent with those found in \citet{auer2022unequal}.
+The second column of Table \ref{tb-micro-shares} reports how household-level import shares vary across the income distribution. The share of imports out of total expenditure for households below median income is the same as those above the median. There is some non-monotonicity which is associated with the imperfect correlation between income and assets holdings and that quality shifters only work though income. With that said, the overall pattern is consistent with the facts of as found in \citet{borusyak2021distributional} and if there is any bias it is for poor households to experience less gains from trade as they are slightly less exposed relative to the median household.
 
 \begin{table}[t]
 \small
@@ -795,11 +790,11 @@ Table \ref{tb-micro-shares} illustrates how price elasticities systematical fall
 \begin{tabular}[t]{l c c c}
 \multicolumn{4}{c}{{\normalsize\textbf{Table \ref{tb-micro-shares}: Model: Shares, Elasticities, and MPCs by Income of US Households}} }
 \\\hline \hline
-& Import Shares & Trade Elasticities & MPCs\\
+& Trade Elasticities & Import Shares  & MPCs\\
 \cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4}
-Below Median Income & $0.08$ & $-6.24$ & 0.50\\
-Median   & $0.08$ & $-4.88$ & 0.28\\
-Above Median Income & $0.08$ & $-3.97$ & 0.17\\
+Below Median Income       & $-6.56$  & $0.06$  & 0.50\\
+Median                    & $-4.60$  & $0.08$  & 0.28\\
+Above Median Income       & $-3.40$  & $0.06$  & 0.17\\
 \hline
 \end{tabular}
 \\[0.5ex]
@@ -807,11 +802,11 @@ Above Median Income & $0.08$ & $-3.97$ & 0.17\\
 \end{center}
 \end{table}
 
-The final column in Table \ref{tb-micro-shares} reports marginal propensities to consume in the model. Recalling the discussion in Section \ref{sec:trade-elasticity} | how trade elasticities vary across households relates to MPCs in equation (\ref{eq:elasticity-mpc}).  MPCs in the model are computed by endowing households a one time, unanticipated cash transfer of 1,000 USD and then computing how consumption changes relative to the transfer. As with the elasticities, household level MPCs are aggregated across the different consumption baskets by the household's expenditure weights.
+The final column in Table \ref{tb-micro-shares} reports marginal propensities to consume (MPC) in the model. Recalling the discussion in Section \ref{sec:trade-elasticity} | how trade elasticities vary across households relates to MPCs in equation (\ref{eq:elasticity-mpc}).  MPCs in the model are computed by endowing households a one time, unanticipated cash transfer of 1,000 USD and then computing how consumption changes relative to the transfer. As with the elasticities, household level MPCs are aggregated across the different consumption baskets by the household's expenditure weights.
 
 MPCs are right in the ballpark of what is typically thought plausible with the median annual MPC being a little under 0.30 implying that a household spends about 30 cents per dollar of transfer on consumption; see, e.g., \citet{kaplan2022marginal}.\footnote{With that said, this calibration achieves high MPCs essentially by having very little wealth in the economy. This model feature is consistent with the small quantity of liquid wealth observed in the US economy, but leaves out large amounts of illiquid wealth.} Not surprisingly, poorer households have substantially higher MPCs and richer households lower. And together with the second column, Table \ref{tb-micro-shares} confirms the connection between how sensitive a household is to prices and how sensitive a household is to cash transfers.
 
-To summarize, the model is quantitatively matching salient facts about (i) similar import expenditure shares between rich and poor households as in \citet{borusyak2021distributional}), that (ii) poor households have higher price elasticities relative to rich households as in \citet{auer2022unequal}, and (iii) is able to mimic patterns of marginal propensities to consume as seen in micro data and surveyed \citet{kaplan2022marginal}.
+To summarize, the model is quantitatively matching salient facts about (i) poor households have higher price elasticities relative to rich households as in \citet{auer2022unequal}, (ii) that import expenditure shares between rich and poor households are similar as in \citet{borusyak2021distributional}), and (iii) is able to mimic patterns of marginal propensities to consume as seen in micro data and surveyed \citet{kaplan2022marginal}.
 
 \subsubsection{Aggregate Trade and Trade Elasticities}
 
@@ -820,7 +815,7 @@ To summarize, the model is quantitatively matching salient facts about (i) simil
 \caption{Bilateral Trade: Model vs. Data}\label{fig:model-fit}
 \end{figure}
 
-Figure \ref{fig:model-fit} provides a sense of model fit after running my ``gravity as guide procedure.'' The y-axis reports bilateral trade data and the x-axis reports the outcome from my model. The fit is very high, and nearly indistinguishable from, for example, how a standard trade model perform would perform. Or the $\log$ preference model which per Proposition \ref{prp:seperation} should (and it does) operate just like a standard trade model.
+Figure \ref{fig:model-fit} provides a sense of model fit with respect to bilateral trade flows. The y-axis reports bilateral trade data and the x-axis reports the outcome from my model. The fit is very high, and nearly indistinguishable from, for example, how a standard trade would perform. Or the $\log$ preference model which per Proposition \ref{prp:seperation} should (and it does) operate just like a standard trade model.
 
 Table \ref{tb-grav-est} reports another measure of fit and some of the resulting parameter values. The first column are the distance, border, etc. moments from the gravity regression in (\ref{eq:gravity-data}) (and note they exactly correspond with those in the top panel of Table 3 of \citet{eaton2002technology}). The second column reports the moments from the model. Here they exactly line up and are consistent with the argument in Figure \ref{fig:model-fit}, the fit is good and the model is replicating geographic pattern of activity seen in the data.
 
@@ -868,7 +863,6 @@ The feature that stands out very clearly in Figure \ref{fig:bilateral-elasticiti
 \caption{Trade Elasticities $-\theta_{us,j}$}\label{fig:bilateral-elasticities}
 \end{figure}
 
-
 At the micro-level, there are two opposing forces giving rise to this aggregate relationship. Per the arguments discussed above around Proposition \ref{prp:GET}, the aggregate bilateral trade elasticity reflects both household level elasticities $\theta(a,z)$s and a composition effect that works through the expenditure weights $\omega(a,z)$s. Thus, when prices increase as one moves from one source to a less competitive source, there are two competing forces at work: (i) how do micro-level elasticities change and (ii) how does composition change?
 
 The first force is that as prices increase \emph{both} rich and poor households' elasticities increase. In other words, everyone is more elastic when contemplating a purchase from a more expensive destination. This is a force pushing the model to have elasticities \emph{increase} with price.
@@ -877,7 +871,7 @@ The second force | the composition effect| generally works in the opposite direc
 
 Which one wins? Figure \ref{fig:bilateral-elasticities} shows that the first force dominates the composition effect. One way to view this result is through the lens of \citeapos{mrazova2017not} language that demand in this model endogenously turns out to be ``subconvex'' relative to CES demand and which is equivalent to ``Marshall's Second Law of Demand.'' The endogenous part is important as it's not parameterized as in, say, Kimball Demand which has become a popular tool to allow for non-constant elasticities. Did the model have to deliver this? Per the arguments above, it's not obvious as composition effects could have dominated.\footnote{\citet{head2021poor}, using \citeapos{berry1995automobile} estimated model, illustrate that composition does indeed dominate with pass-through greater than one when heterogeneity in the valuation of product characteristics are shut down.}
 
-In the trade literature, there is evidence suggesting that trade elasticities conform to what comes out of my model. Both \citet{novy2013international} and \citet*{carrere2020gravity} find that proxy's for the trade elasticity are larger, the less trade there is between two countries. \citet{chen2022gravity} further confirm this idea by finding that trade cost effects are strong for small bilateral relationships weak or even zero for large trading relationships. Mapping these ideas back into outcomes from my model, a currency union between the US and Canada would likely have a small effect since this is a high volume / low elasticity relationship.
+There is evidence suggesting that trade elasticities conform to what comes out of my model. Both \citet{novy2013international} and \citet*{carrere2020gravity} find that proxy's for the trade elasticity are larger, the less trade there is between two countries. \citet{chen2022gravity} further confirm this idea by finding that trade cost effects are strong for small bilateral relationships weak or even zero for large trading relationships. Mapping these ideas back into outcomes from my model, a currency union between the US and Canada would likely have a small effect since this is a high volume / low elasticity relationship.
 
 \section{The Welfare Gains From Trade}
 
@@ -905,7 +899,7 @@ This says a household living in country $i$ with states $a,z$ must have their in
 
 \subsection{Quantitative Results: The Welfare Gains Trade}
 
-This section studies the welfare gains from trade in the US under several counterfactual scenarios: (i) a unilateral reduction in trade costs by the US and (ii) a global reduction in trade costs. 
+This section studies the welfare gains from trade in the US under several counterfactual scenarios: (i) a unilateral reduction in trade costs by the US and (ii) a global reduction in trade costs.
 
 The first exercise is a ten percent reduction in all US import trade costs. That is $d_{us,j}$ is shifted down for all $j$ sources by ten percent. Figure \ref{fig:welfare-households} reports the welfare gains (in equivalent variation units) across households. Households are binned by quantiles of the initial distribution of consumption expenditure and the y-axis reports the average gains within each bin. The red bars report the baseline model and the blue bars report the $\log$ preference case when, per Corollary \ref{prp:seperation}, heterogenous price sensitivity does not operate.
 
@@ -920,7 +914,7 @@ A secondary implication is that the average gains from trade are much larger tha
 
 The reason why my model delivers larger average gains is mainly because of the gains in the bottom part of the income distribution. Looking at Figure \ref{fig:welfare-households}, the gains from trade for the rich households are quantitatively similar to those that would come out of my \citet{arkolakis2012new}-style calculation. However, for poor households, the gains are really big. Then when averaging over modest gains for rich households and large gains for poor households, the average gains in my model are three times larger.
 
-The blue bars in Figure \ref{fig:welfare-households} help answer why the gains are pro-poor. These bars are the gains in the $\log$ preference model. Recalling Corollary \ref{prp:seperation}, the gains from substitution in the $\log$ are the same across households. Thus, any heterogenous gains arise from changes in factor prices and potential effects from borrowing constraints. The blue bars in Figure \ref{fig:welfare-households} illustrate is that now the gains from trade are nearly uniform across the distribution.\footnote{The level of gains is lower as well, but this is because trade increases by less in the log model, which I suspect is because GE effects are different across the different models.} 
+The blue bars in Figure \ref{fig:welfare-households} help answer why the gains are pro-poor. These bars are the gains in the $\log$ preference model. Recalling Corollary \ref{prp:seperation}, the gains from substitution in the $\log$ are the same across households. Thus, any heterogenous gains arise from changes in factor prices and potential effects from borrowing constraints. The blue bars in Figure \ref{fig:welfare-households} illustrate is that now the gains from trade are nearly uniform across the distribution.\footnote{The level of gains is lower as well, but this is because trade increases by less in the log model, which I suspect is because GE effects are different across the different models.}
 
 The comparison between the red and blue bars illustrates that heterogeneity in the gains from substitution is the force behind the pro-poor gains from trade. As discussed around equation (\ref{eq:gains-substitution}) there are essentially two issues are at play determining how this aspect of the model leads to heterogenous gains across households: (i) how exposed a household to trade and (ii) how households value a price reduction. The model was calibrated so that exposure was equal across the income distribution, thus (i) is not leading to heterogenous gains from trade.  In contrast, the model was designed and calibrated to match the fact that poor households are very elastic with respect to price and, thus, they strongly value a price reduction. So the second force is the key component driving the pro-poor aspect of these gains from trade.\footnote{For example, I calibrated the model without quality shifters delivering a pattern of micro-level expenditure shares with the poor unexposed to trade similar Figure \ref{fig:micro-trade}. In this case, the equivalent variation gains are flat across the income distribution except for the vary poorest.}
 
