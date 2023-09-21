@@ -406,7 +406,7 @@ p_{i} Y_{i} - \sum_{j}  X_{ji} = 0, \ \ \forall i
 This model above has households making individual choices over national varieties, savings, all while facing productivity and taste shocks. Explicit aggregation of household behavior determines the pattern of trade and this is linked with trade in financial assets.  The remaining sections of the paper work through the following questions:
 \begin{enumerate}
 \item \textbf{What are the model's implications for trade elasticities and the gains from trade in decentralized allocation?} Here I characterize micro and macro level trade elasticities and then the gains from trade and I connect them with heterogeneity in the marginal utility of consumption that is induced by market incompleteness. I explore two special cases: (i) the efficient allocation and (ii0 when utility is $\log$ over consumption and how this case delivers separation between the heterogenous agent side of the economy and trade.
-    
+
 \item \textbf{What are the quantitative implications of this model?} I then compute and calibrate the model with a key featuring being that the model matches the spatial distribution of economic activity in the data. I then perform several counterfactuals to illustrate the mechanics of the model and how the gains from trade vary across rich and poor households.
 \end{enumerate}
 
@@ -781,26 +781,25 @@ The first column of Table \ref{tb-micro-shares} reports the resulting elasticiti
 
 The second column of Table \ref{tb-micro-shares} reports how household-level import shares vary across the income distribution. The share of imports out of total expenditure for households below median income is the same as those above the median. There is some non-monotonicity which is associated with the imperfect correlation between income and assets holdings and that quality shifters only work though income. With that said, the overall pattern is consistent with the facts of as found in \citet{borusyak2021distributional} and if there is any bias it is for poor households to experience less gains from trade as they are slightly less exposed relative to the median household.
 
-\begin{table}[t]
-\small
-\begin{center}
-\refstepcounter{table}
-\setlength {\tabcolsep}{5.5mm}
-\renewcommand{\arraystretch}{1.60}\label{tb-micro-shares}
-\begin{tabular}[t]{l c c c}
-\multicolumn{4}{c}{{\normalsize\textbf{Table \ref{tb-micro-shares}: Model: Shares, Elasticities, and MPCs by Income of US Households}} }
-\\\hline \hline
-& Trade Elasticities & Import Shares  & MPCs\\
-\cmidrule(lr){2-2} \cmidrule(lr){3-3} \cmidrule(lr){4-4}
-Below Median Income       & $-6.56$  & $0.06$  & 0.50\\
-Median                    & $-4.60$  & $0.08$  & 0.28\\
-Above Median Income       & $-3.40$  & $0.06$  & 0.17\\
-\hline
-\end{tabular}
-\\[0.5ex]
-%\parbox{5.95in}{\footnotesize \textbf{Note:} }
-\end{center}
-\end{table}
+\begin{figure}[t!]
+\centering
+\begin{subfigure}{.48\textwidth}
+\centering
+\centering{\includegraphics[scale = .3]{./figures/expenditure-share.pdf}}
+\caption{Import Expenditure Shares}
+\end{subfigure}
+\begin{subfigure}{.48\textwidth}
+\centering
+\centering{\includegraphics[scale = .3]{./figures/elasticity-micro.pdf}}
+\caption{Trade Elasticities}
+\end{subfigure}\\
+\bigskip
+\begin{subfigure}{.758\textwidth}
+\centering
+\centering{\includegraphics[scale = .3]{./figures/mpc.pdf}}
+\caption{Marginal Propensities to Consume}
+\end{subfigure}
+\end{figure}
 
 The final column in Table \ref{tb-micro-shares} reports marginal propensities to consume (MPC) in the model. Recalling the discussion in Section \ref{sec:trade-elasticity} | how trade elasticities vary across households relates to MPCs in equation (\ref{eq:elasticity-mpc}).  MPCs in the model are computed by endowing households a one time, unanticipated cash transfer of 1,000 USD and then computing how consumption changes relative to the transfer. As with the elasticities, household level MPCs are aggregated across the different consumption baskets by the household's expenditure weights.
 
