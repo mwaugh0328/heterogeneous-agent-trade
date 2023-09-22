@@ -129,7 +129,7 @@ This draft: September 2023
 
 ABSTRACT ------------------------------------------------------------------------------------------------------------
 
-This paper studies the implications of household heterogeneity for trade. I develop a model where household heterogeneity is induced via the standard incomplete markets model and results in heterogenous price elasticities. Conditional on exposure to trade, heterogenous price elasticities imply that different households value price changes differently and, thus, rich and poor households experience different gains from trade. I calibrate the model to match bilateral trade flows and micro-facts about household-level expenditure patterns and price elasticities. I find that gains from trade are pro-poor with a ten percent reduction in trade costs delivering welfare gains equivalent to a permanent, three percent increase in income for the poorest households. These gains are four and a half times larger than those for the richest households and the average gains from trade are three times larger than representative agent benchmarks.
+This paper studies the implications of household heterogeneity for trade. I develop a model where household heterogeneity is induced via the standard incomplete markets model and results in heterogenous price elasticities. Conditional on exposure to trade, heterogenous price elasticities imply that different households value price changes differently and, thus, rich and poor households experience different gains from trade. I calibrate the model to match bilateral trade flows and micro-facts about household-level expenditure patterns and elasticities. I find that gains from trade are pro-poor and large with a ten percent reduction in trade costs delivering welfare gains equivalent to a permanent, three percent increase in income for the poorest households. These gains are four and a half times larger than those for the richest households and the average gains from trade are three times larger than representative agent benchmarks.
 
 ------------------------------------------------------------------------------------------------------------------------------
 %%\vspace{0.25cm}
@@ -405,7 +405,7 @@ p_{i} Y_{i} - \sum_{j}  X_{ji} = 0, \ \ \forall i
 
 This model above has households making individual choices over national varieties, savings, all while facing productivity and taste shocks. Explicit aggregation of household behavior determines the pattern of trade and this is linked with trade in financial assets.  The remaining sections of the paper work through the following questions:
 \begin{enumerate}
-\item \textbf{What are the model's implications for trade elasticities and the gains from trade in decentralized allocation?} Here I characterize micro and macro level trade elasticities and then the gains from trade and I connect them with heterogeneity in the marginal utility of consumption that is induced by market incompleteness. I explore two special cases: (i) the efficient allocation and (ii0 when utility is $\log$ over consumption and how this case delivers separation between the heterogenous agent side of the economy and trade.
+\item \textbf{What are the model's implications for trade elasticities and the gains from trade in decentralized allocation?} Here I characterize micro and macro level trade elasticities and then the gains from trade and I connect them with heterogeneity in the marginal utility of consumption that is induced by market incompleteness. I explore two special cases: (i) the efficient allocation and (ii) when utility is $\log$ and how this case delivers separation between the heterogenous agent side of the economy and trade.
 
 \item \textbf{What are the quantitative implications of this model?} I then compute and calibrate the model with a key featuring being that the model matches the spatial distribution of economic activity in the data. I then perform several counterfactuals to illustrate the mechanics of the model and how the gains from trade vary across rich and poor households.
 \end{enumerate}
@@ -777,31 +777,31 @@ At a mechanical level, finding the minimum to (\ref{eq:smm-condition}) amounts t
 
 The second column of Table \ref{tb-calibration} reports the calibrated parameters associated with preferences, shocks and constraints. The resulting parameter values for the CRRA risk aversion parameter and Type 1 Extreme Value variance parameter are very plausible. The risk-aversion parameter is 1.45, seemingly not far from $\log$, and well within standard benchmarks in the macro-literature. The Type 1 Extreme Value parameter is 3.0 which is plausible in the sense that in the $\log$ model this value implies a trade elasticity of 3.0. This is low, but in the range of estimated aggregate trade elasticities.
 
-The first column of Table \ref{tb-micro-shares} reports the resulting elasticities. These are right in the ballpark, but perhaps understate the heterogeneity in elasticities as rich households are more elastic in my model than found in \citet{auer2022unequal}.
+Figure \ref{fig:quant-micro-elasticity} reports the resulting elasticities and how they vary across the distribution of expenditure for US households in the model. These are right in the ballpark of \citet{auer2022unequal}. If anything, they slightly understate the heterogeneity in elasticities with rich households being more elastic in my model.
 
-The second column of Table \ref{tb-micro-shares} reports how household-level import shares vary across the income distribution. The share of imports out of total expenditure for households below median income is the same as those above the median. There is some non-monotonicity which is associated with the imperfect correlation between income and assets holdings and that quality shifters only work though income. With that said, the overall pattern is consistent with the facts of as found in \citet{borusyak2021distributional} and if there is any bias it is for poor households to experience less gains from trade as they are slightly less exposed relative to the median household.
+Figure \ref{fig:quant-shares} reports how household-level import expenditure shares vary across the income distribution. The calibration target was such that share of imports out of total expenditure for households below median income is the same as those above the median. This was met. However, there is some slight non-monotonicity with households in the middle of the distribution being slightly more exposed to trade then those at the tails of the distribution. This non-monotonicity is associated with the imperfect correlation between income and assets holdings and that quality shifters only work though income. Overall, the pattern is consistent with the facts of as found in \citet{borusyak2021distributional} and if there is any bias it is for poor households to experience less gains from trade as they are slightly less exposed relative to the median household.
 
 \begin{figure}[t!]
 \centering
 \begin{subfigure}{.48\textwidth}
 \centering
-\centering{\includegraphics[scale = .3]{./figures/expenditure-share.pdf}}
-\caption{Import Expenditure Shares}
+\centering{\includegraphics[scale = .3]{./figures/elasticity-micro.pdf}}
+\caption{Trade Elasticities}\label{fig:quant-micro-elasticity}
 \end{subfigure}
 \begin{subfigure}{.48\textwidth}
 \centering
-\centering{\includegraphics[scale = .3]{./figures/elasticity-micro.pdf}}
-\caption{Trade Elasticities}
+\centering{\includegraphics[scale = .3]{./figures/expenditure-share.pdf}}
+\caption{Import Expenditure Shares}\label{fig:quant-shares}
 \end{subfigure}\\
 \bigskip
 \begin{subfigure}{.758\textwidth}
 \centering
 \centering{\includegraphics[scale = .3]{./figures/mpc.pdf}}
-\caption{Marginal Propensities to Consume}
+\caption{Marginal Propensities to Consume}\label{fig:quant-mpcs}
 \end{subfigure}
 \end{figure}
 
-The final column in Table \ref{tb-micro-shares} reports marginal propensities to consume (MPC) in the model. Recalling the discussion in Section \ref{sec:trade-elasticity} | how trade elasticities vary across households relates to MPCs in equation (\ref{eq:elasticity-mpc}).  MPCs in the model are computed by endowing households a one time, unanticipated cash transfer of 1,000 USD and then computing how consumption changes relative to the transfer. As with the elasticities, household level MPCs are aggregated across the different consumption baskets by the household's expenditure weights.
+Figure \ref{fig:quant-mpcs} reports marginal propensities to consume (MPC) in the model. Recalling the discussion in Section \ref{sec:trade-elasticity} | how trade elasticities vary across households relates to MPCs in equation (\ref{eq:elasticity-mpc}).  MPCs in the model are computed by endowing households a one time, unanticipated cash transfer of 1,000 USD and then computing how consumption changes relative to the transfer. As with the elasticities, household level MPCs are aggregated across the different consumption baskets by the household's expenditure weights.
 
 MPCs are right in the ballpark of what is typically thought plausible with the median annual MPC being a little under 0.30 implying that a household spends about 30 cents per dollar of transfer on consumption; see, e.g., \citet{kaplan2022marginal}.\footnote{With that said, this calibration achieves high MPCs essentially by having very little wealth in the economy. This model feature is consistent with the small quantity of liquid wealth observed in the US economy, but leaves out large amounts of illiquid wealth.} Not surprisingly, poorer households have substantially higher MPCs and richer households lower. And together with the second column, Table \ref{tb-micro-shares} confirms the connection between how sensitive a household is to prices and how sensitive a household is to cash transfers.
 
@@ -933,7 +933,10 @@ The blue bars in Figure \ref{fig:welfare-households-global} illustrate the gains
 
 \section{Conclusion}
 
-What do you find interesting? Email me.
+This paper developed a model focused on the idea of generating heterogenous price elasticities. From my perspective, a lot of stuff came out of this exercise | how heterogenous elasticities connect with the marginal utility of consumption and in turn shape the gains from trade. How preferences and market incompleteness shape these outcomes. And most surprising is how potent this force is quantitatively with large pro-poor gains from trade. 
+
+This paper does open up many more questions. One that question that I'm pursuing in \citet{waughoptimal} is the socially optimal pattern of trade and what it looks like relative to the pattern of trade we observe. And from this standpoint, the next natural question is if trade policy improve outcomes?  The third question is about the interaction between trade goods and trade in assets. Additively, I probably under-explore this point in this paper. But I think piecing together the trade side and finance side of international economics is an open area ripe for future research.
+
 
 
 
