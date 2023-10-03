@@ -991,7 +991,7 @@ To complete the derivation, I derive the own-imports term which is similar with
 \begin{align}
 \frac{\partial  M_{ii}}{\partial d_{ij}} = \int_{a,z} \bigg \{ \underbrace{\frac{\partial p_{ii}}{\partial d_{ij}} c_{i}(a,z,i) \pi_{ii}(a,z)}_{ \ = \ 0} +  \frac{\partial c_{i}(a,z,i)}{\partial d_{ij}} p_{ii} \pi_{ii}(a,z) + \frac{\partial \pi_{ii}(a,z)}{\partial d_{ij}} p_{ii}c_{i}(a,z,i) \bigg \} L_i \lambda_{i}(a,z)da \ dz,
 \end{align}
-where the first-term is zero because this is a partial equilibrium elasticity. Then after constructing the proper weights and converting everything to elasticity form we have
+where the first-term is zero because this is a partial equilibrium elasticity and hence $p_{ii}$ is not changing with $d_{ij}$. Then after constructing the proper weights and converting everything to elasticity form we have
 \begin{align}
 \frac{\partial  M_{ii} / M_{ii}}{\partial d_{ij} / d_{ij}} = \int_{a,z} \bigg \{ \theta_{ii,j}(a,z)^{I} + \theta_{ii,j}(a,z)^{E} \bigg \}\omega_{ii}(a,z)da \ dz,
 \end{align}
@@ -1426,7 +1426,7 @@ p_{ij}c_{i}(a,z,j) = p_{ii}c_{i}(a,z,i)
 \end{align}
 so within states, people always spend the same amount. This observation implies that the choice probabilities are independent of the state only prices matter so
 \begin{align}
-\pi_{ij}(a, z) = & \exp \left( \frac{ v_{ij}(a, z) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{ij'}(a, z ) }{\sigma_{\epsilon}} \right) \\
+\pi_{ij}(a, z) = & \exp \left( \frac{ v_{i}(a, z, j) }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j' ) }{\sigma_{\epsilon}} \right) \\
 \nonumber\\
 \pi_{ij} = & \exp \left( \frac{  -\log p_{ij} }{\sigma_{\epsilon}} \right) \Bigg / \sum_{j'} \exp \left( \frac{ -\log p_{ij'} }{\sigma_{\epsilon}} \right) \label{apx-eq:shares}
 \end{align}
@@ -1655,32 +1655,125 @@ So fundamentally, nothing really changed by introducing quality shifters.
 
 Now to reduce the dimensionality of these parameters, I set this up as a home bias term $\psi_{i}(z,i)$ which takes on some number and for all other $j$s this is where $\psi_{i}(z,i) = 0$. Then assume that it's a log-linear function of a households permanent productivity state and this function is the same across countries. Slightly abusing notation, this is where $\psi_{i}(z,i) = \tilde \psi \times z$. The slope of this relationship is calibrated to match the fact from \citet{borusyak2021distributional}) that import expenditure shares are essentially the same between US poor (below median income) and rich (above median income) households.
 
+\subsection{Appendix: Measuring Welfare}
+
+How to arrive at a meaningful quantitative answer as to how much welfare improves is not obvious in this model. I'm going to put forth an equivalent variation measure and I'll discuss the interpretation of it.
+
+As a quick refresher, equivalent variation does the following: given some price change delivering utility level $v'$, equivalent variation asks ``at the old prices, $p_0$, how much extra income must be provided to achieve $v'$.''  
+
+To implement this in a dynamic framework, there are several issues that I see and this is how I deal with them. The first issue is equivalent variation on \emph{what}. Here I treat wealth as the relevant object (not income or even consumption) to look for equivalent variation on. The idea here is that wealth summarizes the households resources. The second point is that does not bias or favor one resource over another, e.g., equivalent variation on labor income would be like pushing the households budget constraint out on only one dimension.
+
+The second issue is how to treat choice of assets next period. I'm going to treat the choice of assets next period as just another commodity being purchased. This choice is driven by Arrow-Debreu-logic where the household chooses these commodities (just like consumption) at different dates and states to maximize utility. With that said, the conceptual difficulty is that asset choices today affect wealth tomorrow. This implies that my equivalent variation measure equates utility by (i) directly affecting the resources the household has access to, and then (ii) indirectly by affecting wealth in the future. This aspect is unlike how things would work in a static model.
+
+The third issue is how the transfer is dispersed over time. I assume that is a constant, proportional path. From a practical point of view, this is easy to compute and implement on the computer.
+
+Given this discussion, this is how I compute equivalent variation. Define $v'_i(a,z ; \mathbf{p'})$ as the level of utility that a household with states $a,z$ enjoys under the new price vector $\mathbf{p'}$ (which includes the price of the different goods, wages, and the interest rate). Then I will look for a constant, $\tau_{a,z}$, proportional change in period wealth. This transfer modifies the households budget constraint
+\begin{align}
+p_{ij}c_{ijt} + a_{t+1} \leq \bigg\{ w_{i}z_{t} + R_i a_{t} \bigg\}\tau_{a,z},
+\end{align}
+where the left-hand side are the households expenditures on commodities (and here I'm treating new asset holdings like any other commodity). And then next period when this households states change, the new budget constraint is
+\begin{align}
+p_{ij}c_{ijt+1} + a_{t+2} \leq \bigg\{ w_{i}z_{t+1} + R_i a_{t+1} \bigg\}\tau_{a,z}
+\end{align}
+where the $\tau_{a,z}$ is the same as the previous period. Thus, as the households states evolve, the household's wealth-level is proportionally changed by the same amount. Two issues of note here. First, this has the flavor of a constant, cost-of-living index that tells us how much we must deflate expenditures or inflate spending. The second point is that it is not holding the amount of resources inside the brackets along the path constant because expenditures on assets yesterday (influenced by the transfer) result in wealth today. This is, perhaps, the difference between equivalent variation in a static model vs. here in the dynamic framework.
+
+Now given this formulation, I need to find a $\tau_{a,z}$ so that
+\begin{align}
+v'_i(a,z ; \mathbf{p'}) = v_i(a,z ; \mathbf{p}, \tau_{a,z}). \label{apx-eq:eq-var}
+\end{align}
+Finding this simply amounts to guessing an initial $\tau_{a,z}$  and then (i) using value function iteration under the transfer $\tau_{a,z}$ to compute $v_i(a,z ; \mathbf{p}, \tau_{a,z})$ and (ii) then updating the guess of $\tau_{a,z}$ so that (\ref{apx-eq:eq-var}) is satisfied. Associated with the $v_i(a,z ; \mathbf{p}, \tau_{a,z})$ satisfying (\ref{apx-eq:eq-var}) are policy functions and choice probabilities which I index as well by $\tau_{a,z}.$
+
+In the next paragraphs below, I work out what this measure picks up in simplified models. 
+
+Stepping back, the first question regards a standard Armington-CES world with CRRA risk aversion on top. So $u(c) = \frac{c^{1-\gamma}}{1-\gamma}$ and the national varieties are aggregated at the household level $c = \big [ \sum_{j} c_{j}^{\sigma} \big ]^{\frac{1}{\sigma}}$.  Let households differ by efficiency units $z$ and there are no assets. These assumptions imply that the real wage households earn and hence real aggregate consumption is
+\begin{align}
+c_i(z) = \frac{w_{i}}{P_{i}} \ z
+\end{align}
+what would vary period by period with $z$. And then in the counterfactual world, this would be
+\begin{align}
+c'_i(z) = \frac{w'_{i}}{P'_{i}} \ z
+\end{align}
+Then the associated value functions with this are
+\begin{align}
+v_i(z ; \mathbf{p}) & = \mathrm{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} u \bigg ( \ \frac{w_{i}}{P_{i}} \ z_{t} \ \bigg ) \\
+\nonumber \\
+& =\bigg( \frac{w_{i}}{P_{i}}  \bigg )^{1-\gamma} \frac{\mathrm{E}_{z} z^{1-\gamma}}{(1 - \beta)((1-\gamma)}
+\end{align}
+and then at the counterfactual prices
+\begin{align}
+v'_i(z ; \mathbf{p'}) & = \mathrm{E}_{z} \sum_{t = 0}^{\infty} \beta^{t} u \bigg ( \ \frac{w'_{i}}{P'_{i}} \ z_{t} \ \bigg ) \\
+\nonumber \\
+& =\bigg( \frac{w'_{i}}{P'_{i}}  \bigg )^{1-\gamma} \frac{\mathrm{E}_{z} z^{1-\gamma}}{(1 - \beta)((1-\gamma)}
+\end{align}
+Then equivalent variation that makes $v_i(z ; \mathbf{p}, \tau_z)$ equal to $v'_i(z ; \mathbf{p'})$ is
+\begin{align}
+\tau_z  = \bigg( \frac{w'_{i}}{P'_{i}} \bigg ) \bigg / \bigg( \frac{w_{i}}{P_{i}} \bigg)
+\end{align}
+so equivalent variation here just reflects the (i) increase in the real wage and real consumption and (ii) this is independent of the households productivity state. So even though there is heterogeneity in the marginal utility of consumption, equivalent variation results in equal measured gains across households.  
+
+The next question regards the discrete choice model as in the main body of the paper, but let's think about this in a static context. The value function of a household in the base period is
+\begin{align}
+v_i(z ; \mathbf{p}) & = \sigma_{\epsilon} \log \bigg \{ \sum_{j'} \exp \bigg ( \frac{u( (w_i / p_{j'}) z )}{\sigma_{\epsilon}} \bigg ) \bigg \}
+\end{align}
+and then the value function after prices change is 
+\begin{align}
+v_i(z ; \mathbf{p'}) & = \sigma_{\epsilon} \log \bigg \{ \sum_{j'} \exp \bigg ( \frac{u( (w'_i / p'_{j'}) z )}{\sigma_{\epsilon}} \bigg ) \bigg \}
+\end{align}
+Then inspecting this carefully implies the equivalent variation amounts to finding a $\tau_{z}$ such that 
+\begin{align}
+\sum_{j'} \exp \bigg ( \frac{u( (w_i / p_{j'}) \tau_{z} z )}{\sigma_{\epsilon}} \bigg ) = \sum_{j'} \exp \bigg ( \frac{u( (w'_i / p'_{j'}) z )}{\sigma_{\epsilon}} \bigg )
+\end{align}
+In general, it's hard to see how this is all working out, but let's impose $\log$ preferences and see what happens. In the $\log$ case things simplify to 
+\begin{align}
+\tau_{z} = w'_i \times \bigg \{ \sum_{j'}  ( p'_{j'} )^{\frac{-1}{\sigma_{\epsilon}}} \bigg \} \ \bigg /  \ w_i \times \bigg  \{ \sum_{j'}  p^{\frac{-1}{\sigma_{\epsilon}}}_{j'} \bigg \}
+\end{align}
+where notice that the terms in squiggle brackets resemble CES price indexes, so an interpretation is that the wage relative to the bracketed term is like the real wage. Overall this says that in the discrete-choice-log model, equivalent variation is (i) independent of household type and (ii) is the ratio of the real wage in each period.
+
+%then equivalent variation finds the $\tau$ at the old prices which equate value functions. So with CRRA and infinitely lived households this becomes
+%\begin{align}
+%\frac{\left( \frac{w_{i}}{P_{i}} \tau \right )^{1-\gamma}}{(1 - \beta)(1-\gamma)} = \frac{ \left( \frac{w'_{i}}{P'_{i}}  \right)^{1-\gamma}}{(1 - \beta)(1-\gamma)}
+%\end{align}
+%Then I'm going to insert the result from \citet{arkolakis2012new} that the real wage is proportional to the home trade share
+%\begin{align}
+%\frac{w_{i}}{P_{i}} \propto \pi_{ii}^{\frac{-1}{\theta}}.
+%\end{align}
+%Then inserting this into the expression above and canceling terms gives
+%\begin{align}
+%\tau^{1-\gamma} &= \left( \pi_{ii}^{\prime} \right)^{\frac{1-\gamma}{-\theta}} /  \left( \pi_{ii} \right)^{\frac{1-\gamma}{-\theta}}, \\
+%\nonumber \\
+%\Rightarrow \ \ \  \tau & = \left( \pi_{ii}^{\prime}  /   \pi_{ii} \right)^{\frac{-1}{\theta}}.
+%\end{align}
+%So my equivalent variation measure in an ACR world is the change in the home trade shares taken to the power of one over the trade elasticity. And this is the classic formula, thus adding curvature to the utility function, infinitely lived vs. static does not matter for computing equivalent variation.
+
+
+%This measure also has the interpretation as the increase in lifetime wealth to achieve the value associated with $v'_i$. To see this, consider the amount of total lifetime wealth for a household with initial states $a,z$ needed to purchase all required commodities associated with utility level $v_i(a,z)$,
+%\begin{align}
+%W(a,z; \mathbf{p}, v_i(a,z)) = \mathrm{E}_{z} \sum_{t = 0}^{\infty} R^{1-t}\sum_{j'} \pi_{ij}(a_{t},z_{t}) \bigg\{ p_{ij}c_{i}(a_{t},z_{t},j) + g(a_{t},z_{t},j) \bigg\},
+%\label{apx-eq:wealth-fun1}
+%\end{align}
+%so the inside brackets are all expenditures consumption and assets (recall that $g$ is the policy function mapping states into asset holdings) at date $t$ and I pre-integrated out the taste shocks so that the choice probabilities show up outside of the bracket. In total, this is the wealth-level that an agent starting with states $a,z$ needs meet $v_i(a,z)$.
+%
+%This is analogous to the expenditure function in a static demand model, i.e., the expenditure that is required to meet some utility given prices. Here expenditure is over time and this is the present discounted value of it and it is the amount associated with the value function $v_i(a,z)$.
+%
+%What is the expenditure function associated with the value $v'_i(a,z)$ at the old prices? Well here we can use the equivalence between $v'_i(a,z)$ and $v_i(a,z ; \mathbf{p}, \tau_{a,z})$ and the policy functions associated with $v_i(a,z ; \mathbf{p}, \tau_{a,z})$ to construct expenditure. So the amount of wealth needed to hit $v'_i(a,z)$ is
+%\begin{align}
+%W(a,z; \mathbf{p}, v'_i(a,z)) = \mathrm{E}_{z} \sum_{t = 0}^{\infty} R^{1-t}\sum_{j'} \pi_{ij}(a_{t},z_{t}; \tau_{a,z}) \bigg\{ p_{ij}c_{i}(a_{t},z_{t},j; \tau_{a,z}) + g(a_{t},z_{t},j; \tau_{a,z}) \bigg\}
+%\label{apx-eq:wealth-fun2}
+%\end{align}
+%where now there is a different sequence of choices (choice probabilities, consumption, asset choices) that is associated with utility $v'_i(a,z)$. What I have done so far is constructed expenditure functions for given states, at old prices, to achieve two different levels of utility. Then if one plugs in the budget constraint this becomes
+%\begin{align}
+%W(a,z, v'_i(a,z); \mathbf{p}) = \mathrm{E}_{z} \sum_{t = 0}^{\infty} R^{1-t} \bigg\{ w_{i}z + R_i a_{t}(\tau_{a,z}) \bigg\} \tau_{a,z}
+%\end{align}
+%and then similarly for (\ref{apx-eq:wealth-fun1}) plugging in the budget constraint one has
+%\begin{align}
+%W(a,z; \mathbf{p}, v_i(a,z)) = \mathrm{E}_{z} \sum_{t = 0}^{\infty} R^{1-t} \bigg\{ w_{i}z + R_i a_{t} \bigg\} .
+%\end{align}
+
+
 %%
 %%\subsection{Appendix: Equivalent Variation Measures}
 %%
-%%One question: How would this work in ACR world? I'll do this with CRRA and ignore household types. The value function of a household at base period prices is
-%%\begin{align}
-%%v_i\left ( \frac{w_{i}}{P_{i}} \right).
-%%\end{align}
-%%And then the value function, but at counterfactual prices
-%%\begin{align}
-%%v'_i\left( \frac{w'_{i}}{P'_{i}} \right),
-%%\end{align}
-%%then equivalent variation finds the $\tau$ at the old prices which equate value functions. So with CRRA and infinitely lived households this becomes
-%%\begin{align}
-%%\frac{\left( \frac{w_{i}}{P_{i}} \tau \right )^{1-\gamma}}{(1 - \beta)(1-\gamma)} = \frac{ \left( \frac{w'_{i}}{P'_{i}}  \right)^{1-\gamma}}{(1 - \beta)(1-\gamma)}
-%%\end{align}
-%%Then I'm going to insert the result from \citet{arkolakis2012new} that the real wage is proportional to the home trade share
-%%\begin{align}
-%%\frac{w_{i}}{P_{i}} \propto \pi_{ii}^{\frac{-1}{\theta}}.
-%%\end{align}
-%%Then inserting this into the expression above and canceling terms gives
-%%\begin{align}
-%%\tau^{1-\gamma} &= \left( \pi_{ii}^{\prime} \right)^{\frac{1-\gamma}{-\theta}} /  \left( \pi_{ii} \right)^{\frac{1-\gamma}{-\theta}}, \\
-%%\nonumber \\
-%%\Rightarrow \ \ \  \tau & = \left( \pi_{ii}^{\prime}  /   \pi_{ii} \right)^{\frac{-1}{\theta}}.
-%%\end{align}
-%%So my equivalent variation measure in an ACR world is the change in the home trade shares taken to the power of one over the trade elasticity. And this is the classic formula, thus adding curvature to the utility function, infinitely lived vs. static does not matter for computing equivalent variation.
+%%
 %%
 %%\newpage
 %%
