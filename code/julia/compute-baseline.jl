@@ -127,6 +127,10 @@ TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
 p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
 # prices from the perspective of those in that country
 
+τsol = zeros(cntry_prm.Ncntry)
+
+θ = make_θ(cntry, Rsol[cntry], Wsol[cntry], p, τsol[cntry], foo_hh_prm; points = 3, order = 1)
+
 mpc = make_mpc(hh[cntry], Rsol[cntry], Wsol[cntry], p, 0.016/2, foo_hh_prm)
 
 τeqv = zeros(foo_hh_prm.Na, foo_hh_prm.Nshocks);

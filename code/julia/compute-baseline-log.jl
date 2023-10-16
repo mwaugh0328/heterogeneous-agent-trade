@@ -20,7 +20,6 @@ grvdata, grv_params, L, dftrade = make_gravity_params(trade_cost_type)
 dfparams = DataFrame(CSV.File("./calibration-files/current-guess-log-24.csv"))
 xxx = dfparams.guess[1:end]
 
-
 Ncntry = size(L)[1]
 
 γ = 1.0
@@ -90,6 +89,33 @@ cntry = 19 # this is the country I'll look at
 p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
 # prices from the perspective of those in that country
 
+agθ, agθ_ij = make_agθ(Wsol, Rsol, hh, tradeshare, 19, hh_prm, cntry_prm)
+
+deleteat!(p, cntry)
+
+plot(p, -agθ_ij, seriestype = :scatter, alpha = 0.75,
+    xlabel = "price",
+    ylabel = "elasticity",
+    legend = false)
+
+cntrytrade = tradeshare[cntry,:]
+
+deleteat!(cntrytrade, cntry)
+
+df = DataFrame(θij = agθ_ij,
+                θ = agθ * ones(Ncntry - 1),
+                p = p,
+                trade = cntrytrade,
+                );
+
+root = rootfile*"log-elasticity-by-partner-"*string(cntry)*".csv"
+
+CSV.write(root, df);
+
+# ####################################################################################
+# ####################################################################################
+# # Let's construct micro-moments
+
 agrid = make_agrid(hh_prm, TFP[cntry])
 
 ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), hh_prm)
@@ -99,43 +125,12 @@ agrid = make_agrid(hh_prm, TFP[cntry])
 foo_hh_prm = household_params(hh_prm, agrid = agrid, 
 TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
 
+p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
+# prices from the perspective of those in that country
+
 τsol = zeros(cntry_prm.Ncntry)
 
 θ = make_θ(cntry, Rsol[cntry], Wsol[cntry], p, τsol[cntry], foo_hh_prm; points = 3, order = 1)
-
-ω = make_ω(hh[cntry], dist[cntry], L[cntry], p, foo_hh_prm)
-# makes the expenditure weights
-
-agθ = aggregate_θ(θ, ω, cntry, foo_hh_prm)
-
-deleteat!(agθ, cntry)
-
-deleteat!(p, cntry)
-
-plot(p, -agθ, seriestype = :scatter, alpha = 0.75,
-    xlabel = "price",
-    ylabel = "elasticity",
-    legend = false)
-
-cntrytrade = tradeshare[cntry,:]
-
-deleteat!(cntrytrade, cntry)
-
-df = DataFrame(θij = agθ,
-               p = p,
-               trade = cntrytrade,
-               );
-
-root = rootfile*"log-elasticity-by-partner-"*string(cntry)*".csv"
-
-# ####################################################################################
-# ####################################################################################
-# # Let's construct bilateral trade elasticities
-
-CSV.write(root, df);
-
-p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
-# prices from the perspective of those in that country
 
 mpc = make_mpc(hh[cntry], Rsol[cntry], Wsol[cntry], p, 0.016/2, foo_hh_prm)
 
@@ -145,3 +140,4 @@ fooX = make_Xsection(Rsol[cntry], Wsol[cntry], p, hh[cntry], dist[cntry],
          θ, mpc, τeqv, cntry, foo_hh_prm; Nsims = 100000);
 
 microm = cal_make_stats(fooX, prctile = [20.0, 80.0])
+
