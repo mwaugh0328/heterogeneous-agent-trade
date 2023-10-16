@@ -36,24 +36,24 @@ out, Wsol, β, πshare = calibrate(initial_x, R, grvdata, grv_params, hh_prm,
                                 cntry_prm, trade_cost_type = trade_cost_type)[1:4]
 
 
-f(x) = calibrate(x, R, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)[1]
+# f(x) = calibrate(x, R, grvdata, grv_params, hh_prm, cntry_prm, trade_cost_type = trade_cost_type)[1]
 
-function f!(fvec, x)
+# function f!(fvec, x)
 
-    fvec .= f(x)
+#     fvec .= f(x)
 
-end
+# end
 
-n = length(initial_x)
+# n = length(initial_x)
 
-diag_adjust = n - 1
+# diag_adjust = n - 1
 
-sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
-      ml=diag_adjust, mu=diag_adjust,
-      diag=ones(n),
-      mode= 1,
-      tol=1e-3,
-       )
+# sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
+#       ml=diag_adjust, mu=diag_adjust,
+#       diag=ones(n),
+#       mode= 1,
+#       tol=1e-3,
+#        )
 
 
 
