@@ -69,7 +69,7 @@ function make_gravity_params(trade_cost_type)
 
     grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 
-    return grvdata, grv_params, dflabor.L
+    return grvdata, grv_params, dflabor.L, dftrade
 
 end
 

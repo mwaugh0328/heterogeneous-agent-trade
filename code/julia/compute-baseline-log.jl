@@ -9,43 +9,17 @@ using StatsBase
 ####################################################################################
 # This sets up the EK trade data and gravity stuff
 
-dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
-
-dftrade.trade = parse.(Float64, dftrade.trade)
-    # forsome reason, now it reads in as a "String7"
-    
-dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
-    
-dflabor = DataFrame(CSV.File("../../ek-data/ek-labor.csv"))
-    
-filter!(row -> ~(row.trade ≈ 1.0), dftrade);
-    
-filter!(row -> ~(row.trade ≈ 0.0), dftrade);
-    
-dftrade = hcat(dftrade, dflang);
-    
-    #dfcntryfix = select(dftrade,Not("trade"))
-dfcntryfix = DataFrame(CSV.File("../../ek-data/ek-cntryfix.csv"))
-    # these are the fixed characteristics of each country...
-
-
 trade_cost_type = "ek"
 
-grvdata = gravity(dftrade, display = true, trade_cost_type = trade_cost_type );
-
-trc = trade_costs(grvdata.dist_coef, grvdata.lang_coef, grvdata.θm)
-
-grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
+grvdata, grv_params, L, dftrade = make_gravity_params(trade_cost_type)
 
 ####################################################################################
 ####################################################################################
 # Compute the EQ at the gravity parameters
 
-# dfparams = DataFrame(CSV.File("current-guess-145-30-725.csv"))
 dfparams = DataFrame(CSV.File("./calibration-files/current-guess-log-24.csv"))
 xxx = dfparams.guess[1:end]
 
-L = dflabor.L
 
 Ncntry = size(L)[1]
 
@@ -152,13 +126,13 @@ df = DataFrame(θij = agθ,
                trade = cntrytrade,
                );
 
-root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
+root = rootfile*"log-elasticity-by-partner-"*string(cntry)*".csv"
 
 # ####################################################################################
 # ####################################################################################
 # # Let's construct bilateral trade elasticities
 
-# CSV.write(root, df);
+CSV.write(root, df);
 
 p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
 # prices from the perspective of those in that country
