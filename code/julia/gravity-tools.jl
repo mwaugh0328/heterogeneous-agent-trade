@@ -43,6 +43,36 @@ end
 
 # end
 
+function make_gravity_params(trade_cost_type)
+
+    dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
+
+    dftrade.trade = parse.(Float64, dftrade.trade)
+    # for some reason, now it reads in as a "String7"
+    
+    dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
+    
+    dflabor = DataFrame(CSV.File("../../ek-data/ek-labor.csv"))
+    
+    filter!(row -> ~(row.trade ≈ 1.0), dftrade);
+    
+    filter!(row -> ~(row.trade ≈ 0.0), dftrade);
+    
+    dftrade = hcat(dftrade, dflang);
+
+    dfcntryfix = DataFrame(CSV.File("../../ek-data/ek-cntryfix.csv"))
+    # these are the fixed characteristics of each country...
+
+    Ncntry = size(dflabor.L)[1]
+
+    grvdata = gravity(dftrade, display = true, trade_cost_type = trade_cost_type )
+
+    grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
+
+    return grvdata, grv_params, dflabor.L
+
+end
+
 ##########################################################################
 ##########################################################################
 
