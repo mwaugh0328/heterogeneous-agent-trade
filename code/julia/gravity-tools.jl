@@ -43,11 +43,13 @@ end
 
 # end
 
-function make_gravity_params(trade_cost_type)
+function make_gravity_params(trade_cost_type; parseflag = true)
 
     dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-    dftrade.trade = parse.(Float64, dftrade.trade)
+    if parseflag == true
+        dftrade.trade = parse.(Float64, dftrade.trade)
+    end
     # for some reason, now it reads in as a "String7"
     
     dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
