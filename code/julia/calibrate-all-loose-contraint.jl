@@ -11,7 +11,7 @@ using StatsBase
 
 dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
 
-#dftrade.trade = parse.(Float64, dftrade.trade)
+dftrade.trade = parse.(Float64, dftrade.trade)
     # forsome reason, now it reads in as a "String7"
     
 dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
@@ -49,27 +49,25 @@ Ncntry = size(L)[1]
 ψslope = 0.725
 ϕ = 1.0
 
-hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
+hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.9293629804165321,
 γ = γ, ϕ = ϕ, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-R = 1.01
-
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-145-30-725.csv"))
+dfparams = DataFrame(CSV.File("./calibration-files/current-guess-loose.csv"))
 
 
-dfWguess = DataFrame(CSV.File("./calibration-files/current-wage-guess-loose.csv"))
+dfWguess = DataFrame(CSV.File("./calibration-files/current-wage-loose.csv"))
 
 
-initial_x = [dfWguess.guess[1:19]; dfparams.guess[1:end]]
+initial_x = [dfWguess.guess[1:19] ; dfparams.guess[1:end]]
 # last one in the W guess is the discount factor
 
-out = calibrate_world_equillibrium(initial_x, R, grvdata, grv_params, hh_prm, 
+out = calibrate_world_equillibrium(initial_x, grvdata, grv_params, hh_prm, 
                                 cntry_prm, trade_cost_type = trade_cost_type)
 
 
-f(x) = calibrate_world_equillibrium(x, R, grvdata, grv_params, hh_prm, 
+f(x) = calibrate_world_equillibrium(x, grvdata, grv_params, hh_prm, 
                 cntry_prm, trade_cost_type = trade_cost_type)
 
 function f!(fvec, x)
@@ -87,7 +85,6 @@ sol = fsolve(f!, initial_x, show_trace = true, method = :hybr;
       diag=ones(n),
       mode= 1,
       tol=1e-5,)
-
 
 
 dfguess = DataFrame(guess = sol.x[20:end]);

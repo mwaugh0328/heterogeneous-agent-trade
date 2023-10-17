@@ -9,53 +9,22 @@ using StatsBase
 ####################################################################################
 # This sets up the EK trade data and gravity stuff
 
-dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
-
-dftrade.trade = parse.(Float64, dftrade.trade)
-    # forsome reason, now it reads in as a "String7"
-    
-dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
-    
-dflabor = DataFrame(CSV.File("../../ek-data/ek-labor.csv"))
-    
-filter!(row -> ~(row.trade ≈ 1.0), dftrade);
-    
-filter!(row -> ~(row.trade ≈ 0.0), dftrade);
-    
-dftrade = hcat(dftrade, dflang);
-    
-    #dfcntryfix = select(dftrade,Not("trade"))
-dfcntryfix = DataFrame(CSV.File("../../ek-data/ek-cntryfix.csv"))
-    # these are the fixed characteristics of each country...
-
-
 trade_cost_type = "ek"
 
-grvdata = gravity(dftrade, display = true, trade_cost_type = trade_cost_type );
-
-trc = trade_costs(grvdata.dist_coef, grvdata.lang_coef, grvdata.θm)
-
-grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
+grvdata, grv_params, L, dftrade = make_gravity_params(trade_cost_type)
 
 ####################################################################################
 ####################################################################################
 # Compute the EQ at the gravity parameters
 
-# dfparams = DataFrame(CSV.File("current-guess-145-30-725.csv"))
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-log-22.csv"))
+dfparams = DataFrame(CSV.File("./calibration-files/current-guess-145-30-725.csv"))
 xxx = dfparams.guess[1:end]
-
-L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.0
-σϵ = 0.22
-ψslope = 0.0
-
-# γ = 1.450
-# σϵ = 0.33
-# ψslope = 0.725
+γ = 1.450
+σϵ = 0.33
+ψslope = 0.725
 
 hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
 γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
@@ -108,7 +77,7 @@ rootfile = "../../notebooks/output/"
 
 root = rootfile*"model-data-trade.csv"
 
-# CSV.write(root, dfplot)
+CSV.write(root, dfplot)
 
 # ####################################################################################
 # ####################################################################################
@@ -119,6 +88,33 @@ cntry = 19 # this is the country I'll look at
 p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
 # prices from the perspective of those in that country
 
+agθ, agθ_ij = make_agθ(Wsol, Rsol, hh, tradeshare, 19, hh_prm, cntry_prm)
+
+deleteat!(p, cntry)
+
+plot(p, -agθ_ij, seriestype = :scatter, alpha = 0.75,
+    xlabel = "price",
+    ylabel = "elasticity",
+    legend = false)
+
+cntrytrade = tradeshare[cntry,:]
+
+deleteat!(cntrytrade, cntry)
+
+df = DataFrame(θij = agθ_ij,
+                θ = agθ * ones(Ncntry - 1),
+                p = p,
+                trade = cntrytrade,
+                );
+
+root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
+
+CSV.write(root, df);
+
+# ####################################################################################
+# ####################################################################################
+# # Let's construct micro-moments
+
 agrid = make_agrid(hh_prm, TFP[cntry])
 
 ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), hh_prm)
@@ -128,43 +124,12 @@ agrid = make_agrid(hh_prm, TFP[cntry])
 foo_hh_prm = household_params(hh_prm, agrid = agrid, 
 TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
 
+p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
+# prices from the perspective of those in that country
+
 τsol = zeros(cntry_prm.Ncntry)
 
 θ = make_θ(cntry, Rsol[cntry], Wsol[cntry], p, τsol[cntry], foo_hh_prm; points = 3, order = 1)
-
-ω = make_ω(hh[cntry], dist[cntry], L[cntry], p, foo_hh_prm)
-# makes the expenditure weights
-
-agθ = aggregate_θ(θ, ω, cntry, foo_hh_prm)
-
-deleteat!(agθ, cntry)
-
-deleteat!(p, cntry)
-
-plot(p, -agθ, seriestype = :scatter, alpha = 0.75,
-    xlabel = "price",
-    ylabel = "elasticity",
-    legend = false)
-
-cntrytrade = tradeshare[cntry,:]
-
-deleteat!(cntrytrade, cntry)
-
-df = DataFrame(θij = agθ,
-               p = p,
-               trade = cntrytrade,
-               );
-
-root = rootfile*"elasticity-by-partner-"*string(cntry)*".csv"
-
-# ####################################################################################
-# ####################################################################################
-# # Let's construct bilateral trade elasticities
-
-# CSV.write(root, df);
-
-p = make_p(Wsol[1:end], TFP, d[cntry, :], cntry_prm.tariff[cntry, :] )
-# prices from the perspective of those in that country
 
 mpc = make_mpc(hh[cntry], Rsol[cntry], Wsol[cntry], p, 0.016/2, foo_hh_prm)
 

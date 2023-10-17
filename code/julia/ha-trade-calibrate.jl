@@ -192,12 +192,27 @@ end
 
 ##########################################################################
 ##########################################################################
+function calibrate_world_equillibrium(xxx, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-10, tol_dis = 1e-10, 
+        hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
+
+    foox = deepcopy(xxx)
+
+    R = xxx[Ncntry]
+
+    foox[Ncntry] = hh_params.β
+
+    return calibrate_world_equillibrium(foox, R, grvdata, grv_params, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+        hh_solution_method = hh_solution_method, stdist_sol_method = stdist_sol_method, trade_cost_type = trade_cost_type)
+
+end
+
+##############################################################################
 
 function calibrate_world_equillibrium(xxx, R, grvdata, grv_params, hh_params, cntry_params; tol_vfi = 1e-10, tol_dis = 1e-10, 
-    hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
+        hh_solution_method = "itteration", stdist_sol_method = "itteration", trade_cost_type = "ek")
 
 # This is the function to try and do everything in one step, 
-# still not working...
+# works when the guess, especially the wage part, is close
 
     @unpack Ncntry = cntry_params
 

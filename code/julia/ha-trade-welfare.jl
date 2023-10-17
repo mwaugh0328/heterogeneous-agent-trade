@@ -10,7 +10,7 @@ function eq_variation_porportional(R, w, p, Δ_hh, state_index, model_params)
 
     Δ_v = alt_log_sum(Δ_hh.πprob, Δ_hh.Tv, σϵ, ψ)
     
-    xguess = [1.05]
+    xguess = [1.10]
 
     n = length(xguess)
     diag_adjust = n - 1
@@ -112,6 +112,8 @@ function eq_variation_lumpsum(R, w, p, Δ_hh, state_index, model_params)
 
         τeqv[xxx[1], xxx[2]] = sol.x[1]
 
+        println(τeqv[xxx[1], xxx[2]])
+
     end
     
     return τeqv
@@ -121,7 +123,7 @@ end
 #########################################################################################
 #########################################################################################
 
-function eq_variation_lumpsum(xxx, astate, shockstate, R, w, p, Δ_v, model_params)
+function eq_variation_lumpsum(x, astate, shockstate, R, w, p, Δ_v, model_params)
     # core function that computes difference between 
     # value fun at old prices + transfer (xxx) and new value fun
 
@@ -187,7 +189,7 @@ function lucas_eq_variation(hh, Δhh, state_index, model_params)
         end
 
         # find the transfer to make a guy indifferent
-        sol = fsolve(f!, xguess, show_trace = false, method = :hybr;
+        sol = fsolve(f!, xguess, show_trace = true, method = :hybr;
             ml=diag_adjust, mu=diag_adjust,
             diag=ones(n),
             mode= 1,
@@ -195,6 +197,8 @@ function lucas_eq_variation(hh, Δhh, state_index, model_params)
 
 
         λeqv[xxx[1], xxx[2]] = sol.x[1]
+
+        println(λeqv[xxx[1], xxx[2]])
 
     end
     
