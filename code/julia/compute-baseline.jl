@@ -11,7 +11,9 @@ using StatsBase
 
 trade_cost_type = "ek"
 
-grvdata, grv_params, L, dftrade = make_gravity_params(trade_cost_type)
+parseflag = false
+
+grvdata, grv_params, L, dftrade = make_gravity_params(trade_cost_type, parseflag = parseflag)
 
 ####################################################################################
 ####################################################################################
