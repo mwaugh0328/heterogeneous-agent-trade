@@ -39,9 +39,16 @@ This is still preliminary but below are core elements of the code:
 
 - [ha-trade-solution.jl](./code/julia/ha-trade-solution.jl) provides method to solve the household problem in one country, find the stationary distribution within a country, find a world equilibrium.
 
-- [two-country.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook that runs through a two country example of how things work. 
+- [ha-trade-calibrate.jl](./code/julia/ha-trade-calibrate.jl) functions used to calibrate the model.
 
-- [log-model.ipynb](./notebooks/log-model.ipynb) is a jupyter notebook that runs through a two country example with log preferences and illustrating how the model collapses to a constant elasticity model.
+- [ha-trade-welfare.jl](./code/julia/ha-trade-calibrate.jl) functions used to measure welfare in the model.
+
+- [ha-trade-elasticity.jl](./code/julia/ha-trade-calibrate.jl) functions used to compute elasticities at the micro and macro level using numerical differentiation. 
+
+- [ha-trade-helper-functions.jl](./code/julia/ha-trade-calibrate.jl) stuff used to help out. 
+
+- [gravity-tools.jl](./code/julia/ha-trade-calibrate.jl) stuff used to manipulate trade data and run gravity regressions.
+
 
 To replicate results in the paper, here are the files that will execute specific elements.
 
@@ -49,12 +56,13 @@ To replicate results in the paper, here are the files that will execute specific
 
 - [calibrate-gravity-as-guide.jl](./code/julia/calibrate-gravity-as-guide.jl) This is one of the main driver files to calibrate the model as described in the paper. If one were to run it, this takes time and resources. 
 
-- [calibrate-all.jl](./code/julia/calibration-all.jl) This is an alternative and much faster approach to calibrating the model. It looks for a parameter vector and a vector of wages and an interest rate that satisfies (i) the moment conditions and (ii) that markets clear, all in one step. If is, however, far more sensitive to the initial guess.
+- [calibrate-all.jl](./code/julia/calibration-all.jl) This is an alternative and much faster approach to calibrating the model. It looks for a parameter vector and a vector of wages and an interest rate that satisfies (i) the moment conditions and (ii) that markets clear --- all in one step. It is, however, far more sensitive to the initial guess for both wages / interest rates and parameters
 
 - [coumpute-baseline.jl](./code/julia/compute-baseline.jl) This file first generates moments from the EK data set, takes in calibrated parameter values and computes a world equilibrium. Outcomes from this are then compared to the data, and output to plot trade in the model vs. the data (Figure 2 in the paper), the trade elasticities (Figure 3) in the paper, and micro moments are reported. The plotting file is [plot-calibration.ipynb](./notebooks/plot-calibration.ipynb)
 
 - [coumpute-baseline-log.jl](./code/julia/compute-baseline-log.jl) Same thing as above, but now for the log preference case.
 
+- [log-model.ipynb](./notebooks/log-model.ipynb) is a jupyter notebook that runs through a two country example with log preferences and illustrating how the model collapses to a constant elasticity model.
 
 ---
 
