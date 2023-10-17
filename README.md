@@ -17,7 +17,7 @@ This repository contain code associated with the paper [Heterogenous Agent Trade
 
 HAT is a model where aggregate trade arises from the explicit aggregation of household-level decisions.
 
-Households live lives similar to the "standard incomplete markets model" where agents face to idiosyncratic productivity and taste shocks (a new part) and have access to a risk free asset. Trade in goods follows the Armington tradition  with producers in each country producing a national variety. A Ricardian version is in progress.
+Households live lives similar to the "standard incomplete markets model" where agents face to idiosyncratic productivity and taste shocks (a new part) and have access to a risk free asset. Trade in goods follows the Armington tradition  with producers in each country producing a national variety.
 
 The **twist** is that households have random utility over these varieties and they make a discrete choice over the varieties to consume in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade.
 
@@ -31,7 +31,7 @@ HAT also provides a laboratory where there is non-trivial connection between int
 
 The goal here is to provide code and informative notebooks to illustrate how things work. 
 
-The base code is in [julia](https://github.com/JuliaLang) (there is a python version but it needs to be updated) with the goal of implementing things using transparent and well developed methods. Most the notation in the code tries to closely follow the paper. 
+The base code is in [julia](https://github.com/JuliaLang) with the goal of implementing things using transparent and well developed methods. Most the notation in the code tries to closely follow the paper. In the repository there are also python versions of the code.
 
 This is still preliminary but below are core elements of the code:
 
@@ -39,9 +39,21 @@ This is still preliminary but below are core elements of the code:
 
 - [ha-trade-solution.jl](./code/julia/ha-trade-solution.jl) provides method to solve the household problem in one country, find the stationary distribution within a country, find a world equilibrium.
 
-- [two-country.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook that runs through a two country example of how (some) things work. 
+- [two-country.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook that runs through a two country example of how things work. 
 
 - [log-model.ipynb](./notebooks/log-model.ipynb) is a jupyter notebook that runs through a two country example with log preferences and illustrating how the model collapses to a constant elasticity model.
+
+To replicate results in the paper, here are the files that will execute specific elements.
+
+- [two-country.ipynb](./notebooks/two-country.ipynb) This is a jupyter notebook (julia) used to compute a symmetric two country model and illustrate some properties as to how everything works. Figure 1a and Figure 1b are then created from the output and this is plotted in a jupyter notebook (python) in [plot-micro-elasticity.ipynb](./notebooks/plot-micro-elasticity.ipynb)
+
+- [calibrate-gravity-as-guide.jl](./code/julia/calibrate-gravity-as-guide.jl) This is one of the main driver files to calibrate the model as described in the paper. If one were to run it, this takes time and resources. 
+
+- [calibrate-all.jl](./code/julia/calibration-all.jl) This is an alternative and much faster approach to calibrating the model. It looks for a parameter vector and a vector of wages and an interest rate that satisfies (i) the moment conditions and (ii) that markets clear, all in one step. If is, however, far more sensitive to the initial guess.
+
+- [coumpute-baseline.jl](./code/julia/compute-baseline.jl) This file first generates moments from the EK data set, takes in calibrated parameter values and computes a world equilibrium. Outcomes from this are then compared to the data, and output to plot trade in the model vs. the data (Figure 2 in the paper), the trade elasticities (Figure 3) in the paper, and micro moments are reported. The plotting file is [plot-calibration.ipynb](./notebooks/plot-calibration.ipynb)
+
+- [coumpute-baseline-log.jl](./code/julia/compute-baseline-log.jl) Same thing as above, but now for the log preference case.
 
 
 ---
