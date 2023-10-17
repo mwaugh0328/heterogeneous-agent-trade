@@ -61,7 +61,7 @@ This is still preliminary but below are core elements of the code:
 
 - [coumpute-baseline-log.jl](./code/julia/compute-baseline-log.jl) Same thing as above, but now for the log preference case.
 
-- [log-model.ipynb](./notebooks/log-model.ipynb) is a jupyter notebook that runs through a two country example with log preferences and illustrating how the model collapses to a constant elasticity model.
+- [log-model.ipynb](./notebooks/log-model.ipynb) is a jupyter notebook that runs through a two country example with log preferences and illustrating how the model collapses to a constant elasticity model. The file [plot-micro-elasticity-log.ipynb](./notebooks/plot-micro-elasticity-log.ipynb) plots the results.
 
 ---
 
