@@ -4,7 +4,7 @@
 
 <p float="left" align="middle">
   <img src="./notes/figures/micro-elasticity.png" width="350" />
-  <img src="./notes/figures/ge-welfare-household-vs-log.png" width="350" height="325"  /> 
+  <img src="./notes/figures/ge-welfare-household-vs-log.png" width="350" height="250"  /> 
 </p>
 
 This repository contain code associated with the paper [Heterogenous Agent Trade](./notes/heterogeneous-agent-trade.pdf).
