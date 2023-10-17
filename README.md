@@ -3,7 +3,7 @@
 
 
 <p float="left" align="middle">
-  <img src="./notes/figures/micro-elasticity.png" width="350" /> &nbsp &nbsp
+  <img src="./notes/figures/micro-elasticity.png" width="350" /> &nbsp &nbsp &nbsp
   <img src="./notes/figures/ge-welfare-household-vs-log.png" width="350" height="250"  /> 
 </p>
 
