@@ -152,7 +152,7 @@ W = Wsol[home_country]
 # # needed at the **old** prices to match **new** value function            
 λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
 
-writedlm("./output/welfare-global-log.txt", λτeqv)
+# writedlm("./output/welfare-global-log.txt", λτeqv)
 
 # λτeqv = readdlm("./output/welfare-global-log.txt")[1]
 
@@ -180,11 +180,11 @@ df = DataFrame(income = fooX.income,
 
 
 
-rootfile = "../../notebooks/output/"
+# rootfile = "../../notebooks/output/"
 
-writedlm(rootfile*"welfare-global-ACR.txt", ACR)
+# writedlm(rootfile*"welfare-global-ACR.txt", ACR)
  
-root = rootfile*"us-cross-section-global-log.csv"
+# root = rootfile*"us-cross-section-global-log.csv"
 
-CSV.write(root, df);
+# CSV.write(root, df);
  
