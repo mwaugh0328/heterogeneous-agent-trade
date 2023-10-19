@@ -16,7 +16,7 @@ Households live lives similar to the "standard incomplete markets model" where a
 
 The **twist** is that I do not employ modeling techniques with aggregation at the household level across national varieties, and instead I have households make a discrete choices over the varieties they consume in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade.
 
-I view HAT (and related models) as providing a foundation to systematically think about the distributional affects of trade reforms, their dynamics, and complementary policies to mitigate the downsides of globalization.  
+I view HAT (and related models) as a new way to think about the distributional affects of trade reforms, their dynamics, and complementary policies to mitigate the downsides of globalization.  
 
 HAT also provides a laboratory where there is non-trivial connection between international trade and finance. Issues such as sequencing of reforms (trade or capital account first) and the value of those reforms, the distributional issues of those reforms are all natural questions to ask of this framework. I might get to it one day.
 
