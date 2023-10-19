@@ -10,33 +10,11 @@ using StatsBase
 ####################################################################################
 # This sets up the EK trade data and gravity stuff
 
-dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
-
-dftrade.trade = parse.(Float64, dftrade.trade)
-    # for some reason, now it reads in as a "String7"
-    
-dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
-    
-dflabor = DataFrame(CSV.File("../../ek-data/ek-labor.csv"))
-    
-filter!(row -> ~(row.trade ≈ 1.0), dftrade);
-    
-filter!(row -> ~(row.trade ≈ 0.0), dftrade);
-    
-dftrade = hcat(dftrade, dflang);
-    
-    #dfcntryfix = select(dftrade,Not("trade"))
-dfcntryfix = DataFrame(CSV.File("../../ek-data/ek-cntryfix.csv"))
-    # these are the fixed characteristics of each country...
-
-
 trade_cost_type = "ek"
 
-grvdata = gravity(dftrade, display = true, trade_cost_type = trade_cost_type );
+parseflag = true
 
-trc = trade_costs(grvdata.dist_coef, grvdata.lang_coef, grvdata.θm)
-
-grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
+grvdata, grv_params, L, dftrade = make_gravity_params(trade_cost_type, parseflag = parseflag)
 
 ####################################################################################
 ####################################################################################
@@ -44,8 +22,6 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 
 dfparams = DataFrame(CSV.File("./calibration-files/current-guess-145-30-725.csv"))
 xxx = dfparams.guess[1:end]
-
-L = dflabor.L
 
 Ncntry = size(L)[1]
 
@@ -178,7 +154,7 @@ W = Wsol[home_country]
 # needed at the **old** prices to match **new** value function            
 λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
 
-writedlm("./output/welfare-ge.txt", λτeqv)
+# writedlm("./output/welfare-ge.txt", λτeqv)
 
 τsol = zeros(Δ_cntry_prm.Ncntry)
 
@@ -202,11 +178,11 @@ df = DataFrame(income = fooX.income,
          θ = fooX.θavg,
          ∂W = fooX.welfare);
 
-rich, poor, middle = make_stats(df)
+# rich, poor, middle = make_stats(df)
 
-rootfile = "../../notebooks/output/"
+# rootfile = "../../notebooks/output/"
  
-root = rootfile*"us-cross-section-ge.csv"
+# root = rootfile*"us-cross-section-ge.csv"
 
-CSV.write(root, df);
+# CSV.write(root, df);
  

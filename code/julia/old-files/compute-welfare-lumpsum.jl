@@ -1,5 +1,5 @@
-include("ha-trade.jl")
-include("ha-trade-welfare.jl")
+include("../ha-trade.jl")
+include("../ha-trade-welfare.jl")
 using MINPACK
 using Plots
 using CSV
@@ -96,14 +96,16 @@ home_country = 19
 
 hh_df = make_hh_dataframe(dist, hh, home_country, Rsol, Wsol, hh_prm)
 
-####################################################################################
-####################################################################################
+agθ, agθ_ij = make_agθ(Wsol, Rsol, hh, tradeshare, home_country, hh_prm, cntry_prm)
+
+# ####################################################################################
+# ####################################################################################
 println(" ")
 println(" ")
 println("########### computing counter factual eq ################")
 println(" ")
 
-Δ_d = 0.01
+Δ_d = 0.10
 
 d_prime = deepcopy(d)
 d_prime[home_country, :] =  (d[home_country, :]).*(1.0 - Δ_d)
@@ -144,6 +146,8 @@ print(Δ_sol)
             hh_prm, Δ_cntry_prm, tol_vfi = 1e-10);
 
 
+Δ_agθ, Δ_agθ_ij = make_agθ(Δ_Wsol, Δ_Rsol, Δ_hh, Δ_tradeshare, home_country, hh_prm, Δ_cntry_prm)
+
 ACR = 100*(1.0 / 4.22)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
 
 println(" ")
@@ -151,9 +155,9 @@ println(" ")
 println("ACR-gains")
 println(ACR)
 println(Δ_Rsol[19] /Δ_Wsol[19] / (Rsol[19] /Wsol[19]))
-####################################################################################
-####################################################################################
-# now construct welfare and micro-moments
+# ####################################################################################
+# ####################################################################################
+# # now construct welfare and micro-moments
 
 ψ = make_ψ(home_country, ψslope.*TFP[home_country].^(1.0 - γ), hh_prm)
                         
@@ -170,11 +174,15 @@ R = Rsol[home_country]
             
 W = Wsol[home_country]
 
-# construct welfare, porportional increase in total income 
-# needed at the **old** prices to match **new** value function            
-λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
+# # construct welfare, porportional increase in total income 
+# # needed at the **old** prices to match **new** value function            
+# λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
 
-writedlm("./output/welfare-ge-small.txt", λτeqv)
+λeqv = lucas_eq_variation(hh[home_country], Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
+
+τeqv = eq_variation_lumpsum(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
+
+writedlm("./output/welfare-lumpsum.txt", τeqv)
 
 τsol = zeros(Δ_cntry_prm.Ncntry)
 
@@ -186,7 +194,7 @@ mpc = make_mpc(hh[home_country], R, W, p, 0.016/2, foo_hh_prm)
 
 # do at old prices
 fooX = make_Xsection(R, W, p, hh[home_country], dist[home_country],
-          θ, mpc, λτeqv, home_country, foo_hh_prm; Nsims = 100000)
+          θ, mpc, τeqv, home_country, foo_hh_prm; Nsims = 100000)
 
 # construct the dataframe to output for plotting
 
@@ -202,7 +210,7 @@ rich, poor, middle = make_stats(df)
 
 rootfile = "../../notebooks/output/"
  
-root = rootfile*"us-cross-section-ge-small.csv"
+root = rootfile*"us-cross-section-lumpsum.csv"
 
 CSV.write(root, df);
  

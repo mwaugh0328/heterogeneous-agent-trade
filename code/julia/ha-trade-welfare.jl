@@ -15,7 +15,7 @@ function eq_variation_porportional(R, w, p, Δ_hh, state_index, model_params)
     n = length(xguess)
     diag_adjust = n - 1
 
-    for (foo, xxx) in enumerate(state_index)
+    for (foo, xxx) in enumerate(state_index[1:5])
         # work through all the states
 
         f(x) = eq_variation_porportional(x, xxx[1], xxx[2], R, w, p, Δ_v[xxx[1], xxx[2]], model_params)

@@ -10,31 +10,57 @@ using StatsBase
 ####################################################################################
 # This sets up the EK trade data and gravity stuff
 
+dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
+
+dftrade.trade = parse.(Float64, dftrade.trade)
+    # for some reason, now it reads in as a "String7"
+    
+dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
+    
+dflabor = DataFrame(CSV.File("../../ek-data/ek-labor.csv"))
+    
+filter!(row -> ~(row.trade ≈ 1.0), dftrade);
+    
+filter!(row -> ~(row.trade ≈ 0.0), dftrade);
+    
+dftrade = hcat(dftrade, dflang);
+    
+    #dfcntryfix = select(dftrade,Not("trade"))
+dfcntryfix = DataFrame(CSV.File("../../ek-data/ek-cntryfix.csv"))
+    # these are the fixed characteristics of each country...
+
+
 trade_cost_type = "ek"
 
-parseflag = true
+grvdata = gravity(dftrade, display = true, trade_cost_type = trade_cost_type );
 
-grvdata, grv_params, L, dftrade = make_gravity_params(trade_cost_type, parseflag = parseflag)
+trc = trade_costs(grvdata.dist_coef, grvdata.lang_coef, grvdata.θm)
+
+grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 
 ####################################################################################
 ####################################################################################
 # Compute the EQ at the gravity parameters
 
-dfparams = DataFrame(CSV.File("./calibration-files/current-guess-log-24.csv"))
+dfparams = DataFrame(CSV.File("./calibration-files/current-guess-loose.csv"))
+
 xxx = dfparams.guess[1:end]
+
+L = dflabor.L
 
 Ncntry = size(L)[1]
 
-γ = 1.0
-σϵ = 0.2369
-ψslope = 0.0
+γ = 1.45
+σϵ = 0.33
+ψslope = 0.725
+ϕ = 1.0
 
-hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92,
-γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
+hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.9293629804165321,
+γ = γ, ϕ = ϕ, amax = 8.0, σϵ = σϵ, ψslope = ψslope)
 
 cntry_prm = country_params(Ncntry = Ncntry, L = L)
 
-R = 1.01
+R = 1.032598659486016
 
 out_moment_vec, Wsol, β, πshare  = calibrate(xxx, R, grvdata, grv_params, hh_prm, 
                             cntry_prm, trade_cost_type = trade_cost_type)
@@ -65,14 +91,17 @@ dfplot = hcat(dftrade, dfplot);
 plot(dfplot.trademodel, dfplot.trade, seriestype = :scatter, alpha = 0.75,
     xlabel = "model",
     ylabel = "data",
-    legend = false)
+    legend = false,
+    show = true)
 
 home_country = 19
 
 hh_df = make_hh_dataframe(dist, hh, home_country, Rsol, Wsol, hh_prm)
 
-####################################################################################
-####################################################################################
+agθ, agθ_ij = make_agθ(Wsol, Rsol, hh, tradeshare, home_country, hh_prm, cntry_prm)
+
+# # ####################################################################################
+# # ####################################################################################
 println(" ")
 println(" ")
 println("########### computing counter factual eq ################")
@@ -119,16 +148,19 @@ print(Δ_sol)
             hh_prm, Δ_cntry_prm, tol_vfi = 1e-10);
 
 
-ACR = 100*(σϵ)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
+Δ_agθ, Δ_agθ_ij = make_agθ(Δ_Wsol, Δ_Rsol, Δ_hh, Δ_tradeshare, home_country, hh_prm, Δ_cntry_prm)
+
+ACR = 100*(1.0 / 4.22)*log(tradeshare[home_country,home_country] / Δ_tradeshare[home_country,home_country] )
 
 println(" ")
 println(" ")
 println("ACR-gains")
 println(ACR)
-println((Δ_Wsol .- Wsol)[19])
-####################################################################################
-####################################################################################
-# now construct welfare and micro-moments
+println(Δ_Rsol[19] /Δ_Wsol[19] / (Rsol[19] /Wsol[19]))
+
+# # ####################################################################################
+# # ####################################################################################
+# # # now construct welfare and micro-moments
 
 ψ = make_ψ(home_country, ψslope.*TFP[home_country].^(1.0 - γ), hh_prm)
                         
@@ -147,9 +179,9 @@ W = Wsol[home_country]
 
 # construct welfare, porportional increase in total income 
 # needed at the **old** prices to match **new** value function            
-λτeqv, flag =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)
+λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
 
-# writedlm("./output/welfare-log.txt", λτeqv)
+writedlm("./output/welfare-ge-loose.txt", λτeqv)
 
 τsol = zeros(Δ_cntry_prm.Ncntry)
 
@@ -173,11 +205,11 @@ df = DataFrame(income = fooX.income,
          θ = fooX.θavg,
          ∂W = fooX.welfare);
 
-# rootfile = "../../notebooks/output/"
+# rich, poor, middle = make_stats(df)
 
-# writedlm(rootfile*"welfare-log-ACR.txt", ACR)
+rootfile = "../../notebooks/output/"
  
-# root = rootfile*"us-cross-section-log.csv"
+root = rootfile*"us-cross-section-ge-loose.csv"
 
-# CSV.write(root, df);
+CSV.write(root, df);
  
