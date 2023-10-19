@@ -10,33 +10,11 @@ using StatsBase
 ####################################################################################
 # This sets up the EK trade data and gravity stuff
 
-dftrade = DataFrame(CSV.File("../../ek-data/ek-data.csv"))
-
-dftrade.trade = parse.(Float64, dftrade.trade)
-    # for some reason, now it reads in as a "String7"
-    
-dflang = DataFrame(CSV.File("../../ek-data/ek-language.csv"))
-    
-dflabor = DataFrame(CSV.File("../../ek-data/ek-labor.csv"))
-    
-filter!(row -> ~(row.trade ≈ 1.0), dftrade);
-    
-filter!(row -> ~(row.trade ≈ 0.0), dftrade);
-    
-dftrade = hcat(dftrade, dflang);
-    
-    #dfcntryfix = select(dftrade,Not("trade"))
-dfcntryfix = DataFrame(CSV.File("../../ek-data/ek-cntryfix.csv"))
-    # these are the fixed characteristics of each country...
-
-
 trade_cost_type = "ek"
 
-grvdata = gravity(dftrade, display = true, trade_cost_type = trade_cost_type );
+parseflag = true
 
-trc = trade_costs(grvdata.dist_coef, grvdata.lang_coef, grvdata.θm)
-
-grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
+grvdata, grv_params, L, dftrade = make_gravity_params(trade_cost_type, parseflag = parseflag)
 
 ####################################################################################
 ####################################################################################
@@ -44,8 +22,6 @@ grv_params = gravity_params(L = dflabor.L, dfcntryfix = dfcntryfix, Ncntry = 19)
 
 dfparams = DataFrame(CSV.File("./calibration-files/current-guess-145-30-725.csv"))
 xxx = dfparams.guess[1:end]
-
-L = dflabor.L
 
 Ncntry = size(L)[1]
 
@@ -176,32 +152,32 @@ W = Wsol[home_country]
 
 # construct welfare, porportional increase in total income 
 # needed at the **old** prices to match **new** value function            
-# λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
+λτeqv =  eq_variation_porportional(R, W, p, Δ_hh[home_country], dist[home_country].state_index, foo_hh_prm)[1]
 
 # writedlm("./output/welfare-global.txt", λτeqv)
 
-# τsol = zeros(Δ_cntry_prm.Ncntry)
+τsol = zeros(Δ_cntry_prm.Ncntry)
 
-# # compute elasticities and mpcs (do at old prices)
+# compute elasticities and mpcs (do at old prices)
 
-# θ = make_θ(home_country, R, W, p, 
-#         τsol[home_country], foo_hh_prm; points = 3, order = 1)
+θ = make_θ(home_country, R, W, p, 
+        τsol[home_country], foo_hh_prm; points = 3, order = 1)
 
-# mpc = make_mpc(hh[home_country], R, W, p, 0.016/2, foo_hh_prm)
+mpc = make_mpc(hh[home_country], R, W, p, 0.016/2, foo_hh_prm)
 
-# # do at old prices
-# fooX = make_Xsection(R, W, p, hh[home_country], dist[home_country],
-#           θ, mpc, λτeqv[1], home_country, foo_hh_prm; Nsims = 100000)
+# do at old prices
+fooX = make_Xsection(R, W, p, hh[home_country], dist[home_country],
+          θ, mpc, λτeqv[1], home_country, foo_hh_prm; Nsims = 100000)
 
-# # construct the dataframe to output for plotting
+# construct the dataframe to output for plotting
 
-# df = DataFrame(income = fooX.income, 
-#          assets = fooX.a,
-#          homeshare = fooX.homeshare,
-#          expenditure = fooX.pc,
-#          mpc = fooX.mpc_avg,
-#          θ = fooX.θavg,
-#          ∂W = fooX.welfare);
+df = DataFrame(income = fooX.income, 
+         assets = fooX.a,
+         homeshare = fooX.homeshare,
+         expenditure = fooX.pc,
+         mpc = fooX.mpc_avg,
+         θ = fooX.θavg,
+         ∂W = fooX.welfare);
 
 
 # rootfile = "../../notebooks/output/"
