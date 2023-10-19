@@ -4,7 +4,7 @@
   <img src="./notes/figures/micro-elasticity.png" width="375" /> 
 </p>
 
-This repository contain code associated with the paper [Heterogeneous Agent Trade](./notes/heterogeneous-agent-trade.pdf). Please let me know of any problems.
+This repository contain code associated with the paper [Heterogeneous Agent Trade](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/heterogeneous-agent-trade.pdf). Please let me know of any problems.
 
 ---
 
