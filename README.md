@@ -4,7 +4,7 @@
   <img src="./notes/figures/micro-elasticity.png" width="375" /> 
 </p>
 
-This repository contain code associated with the paper [Heterogeneous Agent Trade](./notes/heterogeneous-agent-trade.pdf). **Please let me know of any problems.**
+This repository contain code associated with the paper [Heterogeneous Agent Trade](./notes/heterogeneous-agent-trade.pdf). Please let me know of any problems.
 
 ---
 
@@ -29,7 +29,9 @@ The goal here is to provide code and informative notebooks to illustrate how thi
 The base code is in [julia](https://github.com/JuliaLang) with the goal of implementing things using transparent and well developed methods. Most the notation in the code tries to closely follow the paper. In the repository there are also [python versions](./code/python) of the code. Results are plotted in jupyter notebooks (python).
 
 
-**Replicating results in the paper.**  Here are the files:
+**Replicating results in the paper.**  
+
+Here are the files:
 
 - [two-country.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook (julia) used to compute a symmetric two country model and illustrate some properties as to how everything works. Figure 1a and Figure 1b are then created from the output and this is plotted in a jupyter notebook (python) in [plot-micro-elasticity.ipynb](./notebooks/plot-micro-elasticity.ipynb).
 
@@ -48,7 +50,9 @@ The base code is in [julia](https://github.com/JuliaLang) with the goal of imple
 - [coumpute-welfare-global.jl](./code/julia/compute-welfare/compute-welfare.jl) computes the baseline, the counterfactual equilibrium with a global reduction of trade costs by 10 percent, then constructs welfare measures and saves the results. The [``-log``](./code/julia/compute-welfare/compute-welfare-global-log.jl)  version does the same for the log model. The jupyter notebook (python) [plot-welfare-global.ipynb] plots the results (Figure 5).
 
 
-**More about the code.** Here are core elements of the code:
+**More about the code.** 
+
+Here are core elements of the code:
 
 - [ha-trade-environment.jl](./code/julia/ha-trade-environment.jl) is behind the household problem and the economic environment it faces. 
 
