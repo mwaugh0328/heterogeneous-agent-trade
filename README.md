@@ -75,7 +75,7 @@ Much of this is a continuation of my thinking across several papers that connect
 
 - Waugh (2023) (an evolution of [Waugh (2019)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/waugh_consumption.pdf)) is an example as well.
 
-- And it connects to my papers on general equilibrium discrete choice models [Pricing Inequality](http://www.simonmongey.com/uploads/6/5/6/6/65665741/mw_2022_11_16_minneapolis_fed_online.pdf) and [] with Simon Mongey. 
+- And it connects to my papers on general equilibrium discrete choice models [Pricing Inequality](http://www.simonmongey.com/uploads/6/5/6/6/65665741/mw_2022_11_16_minneapolis_fed_online.pdf) and [Discrete Choice, Complete Markets, and Equilibrium](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/dce-sed.pdf) with Simon Mongey. 
 
 ---
 
