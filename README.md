@@ -1,4 +1,4 @@
-# HAT --- Heterogeneous Agent Trade
+# HAT: Heterogeneous Agent Trade
 
 <p float="left" align="middle">
   <img src="./notes/figures/micro-elasticity.png" width="375" /> 
