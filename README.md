@@ -45,9 +45,9 @@ Here are the files:
 
 - [log-model.ipynb](./notebooks/log-model.ipynb) is a jupyter notebook that runs through a two country example with log preferences and illustrates how the model collapses to a constant elasticity model. The jupyter notebook (python)  [plot-micro-elasticity-log.ipynb](./notebooks/plot-micro-elasticity-log.ipynb) plots the results.
 
-- [coumpute-welfare.jl](./code/julia/compute-welfare/compute-welfare.jl) computes the baseline, the counterfactual equilibrium with a unilateral reduction of trade costs by 10 percent, then constructs welfare measures and saves the results. The [``-log``](./code/julia/compute-welfare/compute-welfare-log.jl)  version does the same for the log model. The jupyter notebook (python) [plot-welfare.ipynb] plots the results (Figure 4).
+- [coumpute-welfare.jl](./code/julia/compute-welfare/compute-welfare.jl) computes the baseline, the counterfactual equilibrium with a unilateral reduction of trade costs by 10 percent, then constructs welfare measures and saves the results. The [``-log``](./code/julia/compute-welfare/compute-welfare-log.jl)  version does the same for the log model. The jupyter notebook (python) [plot-welfare.ipynb](./notebooks/plot-welfare.ipynb) plots the results (Figure 4).
 
-- [coumpute-welfare-global.jl](./code/julia/compute-welfare/compute-welfare.jl) computes the baseline, the counterfactual equilibrium with a global reduction of trade costs by 10 percent, then constructs welfare measures and saves the results. The [``-log``](./code/julia/compute-welfare/compute-welfare-global-log.jl)  version does the same for the log model. The jupyter notebook (python) [plot-welfare-global.ipynb] plots the results (Figure 5).
+- [coumpute-welfare-global.jl](./code/julia/compute-welfare/compute-welfare.jl) computes the baseline, the counterfactual equilibrium with a global reduction of trade costs by 10 percent, then constructs welfare measures and saves the results. The [``-log``](./code/julia/compute-welfare/compute-welfare-global-log.jl)  version does the same for the log model. The jupyter notebook (python) [plot-welfare-global.ipynb](./notebooks/plot-welfare-global.ipynb) plots the results (Figure 5).
 
 
 **More about the code.** 
@@ -78,6 +78,8 @@ Much of this is a continuation of my thinking across several papers that connect
 - [Lyon and Waugh (2019)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/lw_quant_losses.pdf) and [Lyon and Waugh (2018) JIE](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/lw_tax.pdf) are precursors to this work.
 
 - Waugh (2023) (an evolution of [Waugh (2019)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/waugh_consumption.pdf)) is an example as well.
+
+- [Waugh (2023)](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/equitable-trade.pdf) studies the optimal pattern of trade in the HAT environment. 
 
 - And it connects to my papers on general equilibrium discrete choice models [Pricing Inequality](http://www.simonmongey.com/uploads/6/5/6/6/65665741/mw_2022_11_16_minneapolis_fed_online.pdf) and [Discrete Choice, Complete Markets, and Equilibrium](https://www.waugheconomics.com/uploads/2/2/5/6/22563786/dce-sed.pdf) with Simon Mongey. 
 
