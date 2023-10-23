@@ -12,11 +12,11 @@ This repository contain code associated with the paper [Heterogeneous Agent Trad
 
 HAT is a model where aggregate trade arises from the explicit aggregation of household-level decisions.
 
-Households live lives similar to the "standard incomplete markets model" where agents face to idiosyncratic productivity and taste shocks (a new part) and have access to a risk free asset. Trade in goods follows the Armington tradition  with producers in each country producing a national variety.
+Households live lives similar to the "standard incomplete markets model" where agents face to idiosyncratic productivity and taste shocks (a new part) and have access to a risk free asset. Trade in goods follows the Armington tradition with producers in each country producing a national variety.
 
-The **twist** is that I do not employ modeling techniques with aggregation at the household level across national varieties, and instead I have households make a discrete choices over the varieties they consume in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade.
+The **twist** is that I do not employ modeling techniques with aggregation at the household level across national varieties, and instead I have households make discrete choices over the varieties they consume in addition to their savings decisions. The explicit aggregation of household-level decisions then determines aggregate trade flows, trade elasticities, and the gains from trade.
 
-I view HAT (and related models) as a new way to think about the distributional affects of trade reforms, their dynamics, and complementary policies to mitigate the downsides of globalization.  
+I view HAT as a new way to think about the distributional affects of trade reforms, their dynamics, and complementary policies to mitigate the downsides of globalization.  
 
 HAT also provides a laboratory where there is non-trivial connection between international trade and finance. Issues such as sequencing of reforms (trade or capital account first) and the value of those reforms, the distributional issues of those reforms are all natural questions to ask of this framework. I might get to it one day.
 
@@ -31,28 +31,26 @@ The base code is in [julia](https://github.com/JuliaLang) with the goal of imple
 
 **Replicating results in the paper.**  
 
-Here are the files:
+- [two-country.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook (julia) that computes a symmetric two country model and illustrates how everything works. Figure 1a and Figure 1b are created from this files output and it is plotted in a jupyter notebook (python) in [plot-micro-elasticity.ipynb](./notebooks/plot-micro-elasticity.ipynb).
 
-- [two-country.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook (julia) used to compute a symmetric two country model and illustrate some properties as to how everything works. Figure 1a and Figure 1b are then created from the output and this is plotted in a jupyter notebook (python) in [plot-micro-elasticity.ipynb](./notebooks/plot-micro-elasticity.ipynb).
-
-- [calibrate-gravity-as-guide.jl](./code/julia/calibrate-gravity-as-guide.jl) is one of the main driver files to calibrate the model as described in the paper. If one were to run it, this takes time and resources. 
+- [calibrate-gravity-as-guide.jl](./code/julia/calibrate-gravity-as-guide.jl) is one of the main driver files used to calibrate the model as described in the paper. This does takes time and resources. 
 
 - [calibrate-all.jl](./code/julia/calibration-all.jl) is an alternative and much faster approach to calibrating the model. It looks for a parameter vector and a vector of wages and an interest rate that satisfies (i) the moment conditions and (ii) that markets clear, all in one step. It is, however, far more sensitive to the initial guess for parameters and prices.
 
 - [coumpute-baseline.jl](./code/julia/compute-baseline.jl) generates moments from the EK data set, takes in calibrated parameter values, and computes a world equilibrium. Outcomes are then compared to the data, i.e., plot trade in the model vs. the data (Figure 2), the trade elasticities (Figure 3), and micro moments are reported. The plotting file is [plot-calibration.ipynb](./notebooks/plot-calibration.ipynb).
 
-- [coumpute-baseline-log.jl](./code/julia/compute-baseline-log.jl) same thing as above, but now for the log preference case.
+- [coumpute-baseline-log.jl](./code/julia/compute-baseline-log.jl) same thing as above, but for the log preference case.
 
 - [log-model.ipynb](./notebooks/log-model.ipynb) is a jupyter notebook that runs through a two country example with log preferences and illustrates how the model collapses to a constant elasticity model. The jupyter notebook (python)  [plot-micro-elasticity-log.ipynb](./notebooks/plot-micro-elasticity-log.ipynb) plots the results.
 
-- [coumpute-welfare.jl](./code/julia/compute-welfare/compute-welfare.jl) computes the baseline, the counterfactual equilibrium with a unilateral reduction of trade costs by 10 percent, then constructs welfare measures and saves the results. The [``-log``](./code/julia/compute-welfare/compute-welfare-log.jl)  version does the same for the log model. The jupyter notebook (python) [plot-welfare.ipynb](./notebooks/plot-welfare.ipynb) plots the results (Figure 4).
+- [coumpute-welfare.jl](./code/julia/compute-welfare/compute-welfare.jl) computes the baseline, the counterfactual equilibrium with a unilateral reduction of trade costs by 10 percent, then constructs welfare measures, and saves the results. The [``-log``](./code/julia/compute-welfare/compute-welfare-log.jl)  version does the same for the log preference model. The jupyter notebook (python) [plot-welfare.ipynb](./notebooks/plot-welfare.ipynb) plots the results (Figure 4).
 
-- [coumpute-welfare-global.jl](./code/julia/compute-welfare/compute-welfare.jl) computes the baseline, the counterfactual equilibrium with a global reduction of trade costs by 10 percent, then constructs welfare measures and saves the results. The [``-log``](./code/julia/compute-welfare/compute-welfare-global-log.jl)  version does the same for the log model. The jupyter notebook (python) [plot-welfare-global.ipynb](./notebooks/plot-welfare-global.ipynb) plots the results (Figure 5).
+- [coumpute-welfare-global.jl](./code/julia/compute-welfare/compute-welfare.jl) computes the baseline, the counterfactual equilibrium with a global reduction of trade costs by 10 percent, then constructs welfare measures, and saves the results. The [``-log``](./code/julia/compute-welfare/compute-welfare-global-log.jl)  version does the same for the log preference model. The jupyter notebook (python) [plot-welfare-global.ipynb](./notebooks/plot-welfare-global.ipynb) plots the results (Figure 5).
 
 
 **More about the code.** 
 
-Here are core elements of the code:
+Here are core elements of the code (more detailed descriptions to be provided in the coming weeks):
 
 - [ha-trade-environment.jl](./code/julia/ha-trade-environment.jl) is behind the household problem and the economic environment it faces. 
 
