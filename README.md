@@ -31,7 +31,7 @@ The base code is in [julia](https://github.com/JuliaLang) with the goal of imple
 
 **Replicating results in the paper.**  
 
-- [two-country.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook (julia) that computes a symmetric two country model and illustrates how everything works. Figure 1a and Figure 1b are created from this files output and it is plotted in a jupyter notebook (python) in [plot-micro-elasticity.ipynb](./notebooks/plot-micro-elasticity.ipynb).
+- [two-country.ipynb](./notebooks/two-country.ipynb) is a jupyter notebook (julia) that computes a symmetric two country model and illustrates how everything works. [Figure 1a](./notes/figures/micro-elasticity.pdf) and [Figure 1b](./notes/figures/trade-share.pdf)  are created from this files output and it is plotted in a jupyter notebook (python) in [plot-micro-elasticity.ipynb](./notebooks/plot-micro-elasticity.ipynb).
 
 - [calibrate-gravity-as-guide.jl](./code/julia/calibrate-gravity-as-guide.jl) is one of the main driver files used to calibrate the model as described in the paper. This does takes time and resources. 
 
