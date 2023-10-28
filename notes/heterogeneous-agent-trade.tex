@@ -137,7 +137,7 @@ This paper studies the implications of household heterogeneity for trade. I deve
 % F1 F4 E2 D3
 %%JEL Classification:
 %%
-%% tweet: 
+%% tweet:
 %
 %Does household heterogeneity matter for trade? I developed a model around the idea that rich and poor consumers have different sensitivities to price. I find large pro-poor gains to trade through this mechanism and that the average gains from trade are substantially larger than representative agent benchmarks.
 %%%Keywords: heterogenous agent, trade, inequality
@@ -258,14 +258,14 @@ The value of asset purchases and consumption expenditures must be less than or e
 
 The state variables of an individual household are its asset holdings and efficiency units. As alluded to above, for now I focus on a stationary setting where aggregates are unchanging and thus I abstract from carrying the notation associated with them around.\footnote{If you \emph{do} want to carry them around, notice that all that households in each country care about are prices (today and in the future). The distributions of households in other countries, per se, don't matter. Thus, the relevant aggregate states in country $i$ are $\big [ \ \{ w_i \}_{M}, R_i \big ]$, which is the collection wage per efficiency units and the interest rates.}
 
-The value function of a household in country $i$, after the variety shocks are realized, is
+After the taste shocks are realized, the value function of a household with states $a,z$ in country $i$ is
 \begin{align}
-v_{i}(a, z) = &  \max_{j} \big  \{ \  v_{i}(a, z, j)  \ \big \},
+\max_{j} \big  \{ \  v_{i}(a, z, j)  + \epsilon_{j} \ \big \},
 \label{eq:valuefun}
 \end{align}
-which is the maximum across the value functions associated with the discrete choices of different national varieties. The value function conditional on a choice of variety is
+which is the maximum across the value functions associated with the discrete choices of different national varieties. The value function conditional on a choice of variety and net of the taste shock is
 \begin{align}
-v_{i}(a, z, j) = &  \max_{\ a' \ }\bigg  \{ u(c_{ij}) + \epsilon_{j}  + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\},
+v_{i}(a, z, j) = &  \max_{\ a' \ }\bigg  \{ u(c_{ij}) + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\},
 \label{eq:value_fun_option} \\
 \nonumber \\
 \mbox{subject to}  \ & (\ref{eq:borrowing-constraint}) \  \mathrm{and} \ (\ref{eq:trade-budget-constraint}), \nonumber
@@ -321,7 +321,7 @@ Given this distribution, everything else follows. First, with respect to trade, 
 M_{ij} = L_i \int_{z} \int_{a}  p_{ij} c_{i}(a, z, j) \pi_{ij}(a, z) \lambda_i(a, z) \ da \ dz.
 \label{eq:imports}
 \end{align}
-Here, imports take on a mixed logit formulation that very much mimics that used in the industrial organization literature | for example, \citet{berry1995automobile}. There are, however, several interesting differences. First, there is an active intensive margin, not unit demand. Second, inside the choice probability $\pi_{ij}(a, z)$ is the non-linear value function from (\ref{eq:valuefun}).\footnote{A good contrast is \citet{nevo2000practitioner}, where inside the choice probability is an indirect utility function of the form $\eta \times (y - p_{ij})$, where $y$ and $p$ are in logs and $\eta$ is a parameter to be estimated. And $\eta$ stands in for the marginal utility of consumption. And related to my next comment, $\lambda$ is just ``read from the data'' and treated as policy invariant.} Because the choice probability reflects the value function, it embeds forward looking behavior of the household.
+Here, imports take on a mixed logit formulation that very much mimics that used in the industrial organization literature | for example, \citet{berry1995automobile}. There are, however, several interesting differences. First, there is an active intensive margin, not unit demand. Second, inside the choice probability $\pi_{ij}(a, z)$ is the non-linear value function from (\ref{eq:value_fun_option}).\footnote{A good contrast is \citet{nevo2000practitioner}, where inside the choice probability is an indirect utility function of the form $\eta \times (y - p_{ij})$, where $y$ and $p$ are in logs and $\eta$ is a parameter to be estimated. And $\eta$ stands in for the marginal utility of consumption. And related to my next comment, $\lambda$ is just ``read from the data'' and treated as policy invariant.} Because the choice probability reflects the value function, it embeds forward looking behavior of the household.
 
 The third interesting feature is that the mixing distribution (the $\lambda_{i}$ ) over which demands are aggregated is endogenous. Through the law of motion in (\ref{eq:law_motion}), household behavior (which variety to purchase) determines the distribution of wealth which intern determines the aggregate demand for a variety. In other words, this model imposes cross-equation restrictions between aggregate demand and individual demands through the distribution. So it's not a free parameter, and it will change with changes in primitives of the environment.
 
@@ -1530,7 +1530,7 @@ Now, there is a shifter $\psi_{j}$ in utility that depends upon the commodity $j
 \end{align}
 So what this means is that a household, depending upon its situation, may have different valuations for a particular commodity. Then, I'm going to write the value function of a household in country $i$, after the variety shocks are realized, as
 \begin{align}
-v_{i}(a, z) = &  \max_{j} \big  \{ \  v_{i}(a, z, j) + \psi(z, j) + \epsilon_{j} \ \big \}. \label{apx-eq:valuefun-quality}
+\max_{j} \big  \{ \  v_{i}(a, z, j) + \psi(z, j) + \epsilon_{j} \ \big \}. \label{apx-eq:valuefun-quality}
 \end{align}
 And here, I've pulled out the quality term and the shock term to be more consistent with the way my code is constructed. Specifically, solution methods will work on the $v_{i}(a, z, j)$s and then reconstruct $v_{i}(a, z)$ given the shocks and quality specification. The value function conditional on a choice of variety is
 \begin{align}

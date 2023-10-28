@@ -266,18 +266,16 @@ p_{ij}c_{ijt} +  a_{t+1} \leq    R_{i} a_{t} + w_{it} z_{t}.
 \begin{frame}[t]{What Households Do I}
 \smallskip
 Focus on a stationary setting. A hh's state are its asset holdings $a$ and shock $z$.\\
-\bigskip
 \textbf{1.} Condition on variety choice their problem is:
 \begin{align}
-v_{i}(a, z, j) =   \max_{\ a', \ c_{ij}  \ }\bigg  \{ u(c_{ij}) + \epsilon_{j}  + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\}, \nonumber \\
+v_{i}(a, z, j) =   \max_{\ a', \ c_{ij}  \ }\bigg  \{ u(c_{ij})  + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\}, \nonumber \\
 \nonumber \\
 \mbox{subject to}  \ \ \  \  p_{ij}c_{ij} +  a' \leq    R_{i} a + w_{i} z \ \ \  \mbox{and} \ \ \ \ a' \geq - \phi_{i}. \nonumber
 \end{align}\\
 \bigskip
-\medskip
 \textbf{2.} The ex-post value function of a household in country $i$ is
 \begin{align}
-v_{i}(a, z) = &  \max_{j} \big  \{ \  v_{i}(a, z, j)  \ \big \}. \nonumber
+\max_{j} \big  \{ \  v_{i}(a, z, j) + \epsilon_{j}  \ \big \}. \nonumber
 \end{align}
 \end{frame}
 
@@ -286,8 +284,7 @@ v_{i}(a, z) = &  \max_{j} \big  \{ \  v_{i}(a, z, j)  \ \big \}. \nonumber
 
 \begin{frame}[t]{What Households Do II}
 \smallskip
-Two equations characterizing the commodity choice, consumption / savings\ldots\\
-\medskip
+Three equations characterizing the commodity choice, value functions, consumption / savings\ldots\\
 \textbf{1.} The choice probability is:
 \begin{align*}
 \pi_{ij}(a, z) = \exp \left( \frac{ v_{i}(a, z, j) }{\sigma_{\epsilon}} \right) \Bigg / \Phi_{i}(a,z) ,\\
@@ -295,8 +292,12 @@ Two equations characterizing the commodity choice, consumption / savings\ldots\\
 \mbox{where} \ \ \Phi_{i}(a,z) := \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j') }{\sigma_{\epsilon}}  \right).
 \end{align*}\\
 \bigskip
-\medskip
-\textbf{2.} Away from the constraint, consumption and asset choices must respect this Euler Equation:
+\textbf{2.} The ex-ante value function of a household in country $i$ is
+\begin{align*}
+v_i(a, z) = \sigma_{\epsilon} \log \left\{ \Phi_{i}(a,z)  \right\}. 
+\end{align*}\\
+\bigskip
+\textbf{3.} Away from the constraint, consumption and asset choices must respect this Euler Equation:
 \begin{align*}
 \frac{u'(c_{i}(a, z, j))}{p_{ij}} = \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij'}(a', z') \frac{u'(c_{i}(a', z', j'))}{p_{ij'}} \right].
 \end{align*}
