@@ -139,6 +139,77 @@ function coleman_operator(c, v, R, W, p, τ, model_params)
 
 end
 
+function coleman_operator_new(cₜ₊₁, vₜ₊₁, Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params)
+    # Organization 
+    @unpack agrid, mc, β, γ, σϵ, ψ, λτ, Na, Nshocks, Ncntry = model_params
+
+    aprime = similar(cₜ₊₁)
+    Kg = similar(cₜ₊₁)
+    shocks = exp.(mc.state_values)
+
+    muc_ϵₜ₊₁ = Array{eltype(Rₜ₊₁)}(undef, Na, Nshocks)
+
+    ã = Array{eltype(Rₜ₊₁)}(undef, Na, Nshocks)
+    gc = Array{eltype(cₜ₊₁)}(undef, Na, Nshocks)
+
+    Emucₜ₊₁ = Array{eltype(Rₜ₊₁)}(undef, Na, Nshocks)
+
+    # get choice probabilities
+
+    # if sum(isnan.(v)) != 0
+    #     println(v)
+    # end
+
+    πprobₜ₊₁ = make_πprob(vₜ₊₁, σϵ, ψ)
+
+    ∑π_ϵ!(muc_ϵₜ₊₁, cₜ₊₁, πprobₜ₊₁, pₜ₊₁, γ)
+    # this integrates over ϵ
+
+    Emucₜ₊₁ .= β*Rₜ₊₁*λτ*( matmul( muc_ϵₜ₊₁ , mc.p') ) # change notation of prob.
+    # λτ is porportional tax / subsidy on 
+    # all income. used for welfare analysis
+    # This R is at t+1
+
+    #Step (3) Work through each county option
+     @inbounds @views for cntry = 1:Ncntry
+
+        muc_inverse!( gc, pₜ[cntry] * Emucₜ₊₁, γ)
+
+        ã .= @. (pₜ[cntry] * gc + agrid - λτ*Wₜ*shocks' - τ) / ( Rₜ*λτ )
+        # off budget constraint a = (p_jc_j + a' - w*z - τ ) / R
+
+        # then linear interpolation to get back on grid.
+        for shk = 1:Nshocks
+
+            # if issorted(ã[:, shk, cntry]) == false
+            #     println(c[1,1,1])
+            #     println(πprob[1,1,1])
+            #     println(v[1,1,1])
+            # end
+
+            foo = LinearInterpolation(ã[:, shk], agrid, extrapolation_bc = (Flat(), Flat()) )
+    
+            aprime[:, shk, cntry ] .= foo.(agrid)
+
+            Kg[:, shk, cntry] .= @. ( -aprime[:, shk, cntry] + λτ*(Rₜ*agrid + Wₜ*shocks[shk]) + τ ) / pₜ[cntry]
+            # again off budget constraint pc = -a' + Ra + wz + τ 
+    
+        end
+
+    end
+
+    # Now I want to infer the value function given updated policy
+    Tv = similar(vₜ₊₁)
+
+    make_Tv_new!(Tv, vₜ₊₁, Kg, aprime, πprobₜ₊₁, 1.0, ψ, model_params)
+    # then Tv = u(g(a,z)) + β*EV
+    # this function is the bottle neck...worth investing here.
+    # why so much memory? 
+
+    return Kg, Tv, aprime
+
+end
+
 ##########################################################################
 ##########################################################################
 
@@ -176,6 +247,75 @@ function make_Tv!(Tv, v, Kg, asset_policy, πprob, λ, ψ, model_params)
             
                 aprime_l = max(aprime_h - 1, 1)
             
+                p = 1.0 - (asset_policy[ast, shk, cntry] - agrid[aprime_l]) / (agrid[aprime_h] - agrid[aprime_l])
+        
+                if isnan(p)
+                    p = 1.0
+                end
+
+            # now work out what happens tomorrow,
+            # no need to loop through aprime (we know the position)
+            # or country as Ev over variety is the log sum thing
+
+                for shkprime = 1:Nshocks
+                    # work through each shock state tommorow to construct
+                    # EV
+                    prob_eprime = mc.p[shk, shkprime]
+
+                    Ev[cntry] += ( p )*prob_eprime*Φ[aprime_l, shkprime]
+                    # so Ev | states today = transition to aprime (p), transition to z',
+                    # then multiplies by v tommorow. v tommorow is the log sum thing across different 
+                    # options
+                
+                    Ev[cntry] += ( 1.0 - p )*prob_eprime*Φ[aprime_h, shkprime]
+                    # note the += here, so we are accumulting this different 
+                    # posibilities
+
+                end
+
+                Tv[ast, shk, cntry] = utility(λ*Kg[ast, shk, cntry], γ) + β*Ev[cntry]
+
+                #Then the vj = uj + βEV
+                #This does not include quality ψ
+
+                Ev[cntry] = 0.0
+
+            end
+
+        end
+
+    end
+
+end
+
+function make_Tv_new!(Tv, vₜ₊₁, Kg, asset_policy, πprobₜ₊₁, λ, ψ, model_params)
+    # constructs the choice specific value functions
+
+    @unpack Na, Nshocks, Ncntry, mc, agrid, β, γ, σϵ = model_params
+
+    Ev = Array{eltype(vₜ₊₁)}(undef, Ncntry) 
+    # need to have it like this to mulithread
+    fill!(Ev, 0.0)
+
+    Φ = reshape(alt_log_sum(πprobₜ₊₁, vₜ₊₁, σϵ, ψ), Na, Nshocks)
+
+    @inbounds @views for cntry = 1:Ncntry
+        # fix the country
+
+        for shk = 1:Nshocks
+
+            for ast = 1:Na
+            
+            # here, given aprime, figure out the position
+            # appears to by 2x faster not too use function
+
+                aprime_h = searchsortedfirst(agrid, asset_policy[ast, shk, cntry])
+                #searchsortedfirst.(Ref(agrid), asset_policy[:,shk, cntry])
+                # broadcaseted version
+            
+                aprime_l = max(aprime_h - 1, 1)
+            
+                # change notation here as p is used for mc.p
                 p = 1.0 - (asset_policy[ast, shk, cntry] - agrid[aprime_l]) / (agrid[aprime_h] - agrid[aprime_l])
         
                 if isnan(p)
