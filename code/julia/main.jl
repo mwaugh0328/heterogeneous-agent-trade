@@ -41,6 +41,7 @@ init_p = make_p(init_W, TFP, d[1, :], τ[1, :])
 # 
 
 # Check if 'policy_function_itteration' and 'policy_function_itteration_new' give exact same outputs
+# still have two versions...
 Kga, Kgc, πprob, Tv = policy_function_itteration(init_R, init_W, init_p, τ[1], hh_prm; tol = 10^-6, Niter = 500)
 Kga_new, Kgc_new, πprob_new, Tv_new = policy_function_itteration_new(init_R, init_R, init_W, init_p, init_p, τ[1], hh_prm; tol = 10^-6, Niter = 500)
 

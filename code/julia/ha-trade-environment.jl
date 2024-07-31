@@ -52,24 +52,34 @@ end
 
 ##########################################################################
 
-function coleman_operator(policy, R, W, p, τ, model_params)
-    # multiple dispatch version that directly takes policy functions
-    # single R so this means assumption is a stationary setting
+# function coleman_operator(policy, R, W, p, τ, model_params)
+#     # multiple dispatch version that directly takes policy functions
+#     # single R so this means assumption is a stationary setting
 
-    c = policy[1:model_params.Na, :, :]
+#     c = policy[1:model_params.Na, :, :]
 
-    v = policy[(model_params.Na+1):end, :, :]
+#     v = policy[(model_params.Na+1):end, :, :]
 
-    Kg, Tv = coleman_operator(c, v, R, W, p, τ, model_params)[1:2]
+#     Kg, Tv = coleman_operator(c, v, R, W, p, τ, model_params)[1:2]
 
-    return vcat(Kg, Tv)
+#     return vcat(Kg, Tv)
+
+# end
+
+function coleman_operator(c, v, R, W, p, τ, model_params)
+    # multiple dispatch version for ss equilibrium where
+    # R is constant
+
+    Kg, Tv, aprime = coleman_operator(c, v, R, R, W, p, p, τ, model_params)
+
+    return Kg, Tv, aprime
 
 end
 
 ##########################################################################
 ##########################################################################
 
-function coleman_operator(c, v, R, W, p, τ, model_params)
+function coleman_operator_old(c, v, R, W, p, τ, model_params)
     # Organization 
     @unpack agrid, mc, β, γ, σϵ, ψ, λτ, Na, Nshocks, Ncntry = model_params
 
@@ -130,7 +140,7 @@ function coleman_operator(c, v, R, W, p, τ, model_params)
     # Now I want to infer the value function given updated policy
     Tv = similar(v)
 
-    make_Tv!(Tv, v, Kg, aprime, πprob, 1.0, ψ, model_params)
+    make_Tv_old!(Tv, v, Kg, aprime, πprob, 1.0, ψ, model_params)
     # then Tv = u(g(a,z)) + β*EV
     # this function is the bottle neck...worth investing here.
     # why so much memory? 
@@ -139,7 +149,7 @@ function coleman_operator(c, v, R, W, p, τ, model_params)
 
 end
 
-function coleman_operator_new(cₜ₊₁, vₜ₊₁, Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params)
+function coleman_operator(cₜ₊₁, vₜ₊₁, Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params)
     # Organization 
     @unpack agrid, mc, β, γ, σϵ, ψ, λτ, Na, Nshocks, Ncntry = model_params
 
@@ -201,7 +211,7 @@ function coleman_operator_new(cₜ₊₁, vₜ₊₁, Rₜ, Rₜ₊₁, Wₜ, p�
     # Now I want to infer the value function given updated policy
     Tv = similar(vₜ₊₁)
 
-    make_Tv_new!(Tv, vₜ₊₁, Kg, aprime, πprobₜ₊₁, 1.0, ψ, model_params)
+    make_Tv!(Tv, vₜ₊₁, Kg, aprime, πprobₜ₊₁, 1.0, ψ, model_params)
     # then Tv = u(g(a,z)) + β*EV
     # this function is the bottle neck...worth investing here.
     # why so much memory? 
@@ -217,10 +227,10 @@ function make_Tv!(Tv, v, Kg, asset_policy, πprob, model_params)
     # multiple dispatch for no quality case
 
     make_Tv!(Tv, v, Kg, asset_policy, πprob, 1.0, 0.0, model_params)
-
+    
 end
 
-function make_Tv!(Tv, v, Kg, asset_policy, πprob, λ, ψ, model_params)
+function make_Tv_old!(Tv, v, Kg, asset_policy, πprob, λ, ψ, model_params)
     # constructs the choice specific value functions
 
     @unpack Na, Nshocks, Ncntry, mc, agrid, β, γ, σϵ = model_params
@@ -288,7 +298,7 @@ function make_Tv!(Tv, v, Kg, asset_policy, πprob, λ, ψ, model_params)
 
 end
 
-function make_Tv_new!(Tv, vₜ₊₁, Kg, asset_policy, πprobₜ₊₁, λ, ψ, model_params)
+function make_Tv!(Tv, vₜ₊₁, Kg, asset_policy, πprobₜ₊₁, λ, ψ, model_params)
     # constructs the choice specific value functions
 
     @unpack Na, Nshocks, Ncntry, mc, agrid, β, γ, σϵ = model_params

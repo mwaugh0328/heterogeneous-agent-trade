@@ -385,8 +385,6 @@ function policy_function_itteration(R, W, p, τ, model_params; tol = 10^-6, Nite
     Tv = similar(v)
 
     for iter in 1:Niter
-
-        println(iter)
         
         Kgc, Tv = coleman_operator(gc, v, R, W, p, τ, model_params)[1:2]
 
@@ -422,6 +420,7 @@ function policy_function_itteration(R, W, p, τ, model_params; tol = 10^-6, Nite
     
 end
 
+# still need to change name for this function, and inside other functions that call this guy
 function policy_function_itteration_new(Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params; tol = 10^-6, Niter = 500)
     
     @unpack Na, Nshocks, Ncntry, β, σϵ, ψ = model_params
@@ -440,9 +439,7 @@ function policy_function_itteration_new(Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁
 
     for iter in 1:Niter
 
-        println(iter)
-
-        Kgc, Tv = coleman_operator_new(gc, v, Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params)[1:2]
+        Kgc, Tv = coleman_operator(gc, v, Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params)[1:2]
 
         err = vec_max(Kgc, gc)
 
@@ -468,7 +465,7 @@ function policy_function_itteration_new(Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁
 
     end
 
-    Kgc, Tv, Kga = coleman_operator_new(gc, Tv, Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params)
+    Kgc, Tv, Kga = coleman_operator(gc, Tv, Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params)
 
     πprob = make_πprob(Tv, σϵ, ψ)
 
