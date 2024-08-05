@@ -358,6 +358,10 @@ function solve_household_problem(R, W, p, τ, model_params; tol = 10^-6, solutio
     elseif solution_method == "itteration"
 
         Kga, Kgc, πprob, Tv = policy_function_itteration(R, W, p, τ, model_params; tol = tol, Niter = 500)
+
+    elseif solution_method == "itteration_old"
+
+        Kga, Kgc, πprob, Tv = policy_function_itteration_old(R, W, p, τ, model_params; tol = tol, Niter = 500)
         
     end
     
@@ -368,6 +372,61 @@ end
 ##########################################################################
 ##########################################################################
 
+# This function is renamed to '_old' just to check with old codes,
+# will delete once all test is done
+function policy_function_itteration_old(R, W, p, τ, model_params; tol = 10^-6, Niter = 500)
+    
+    @unpack Na, Nshocks, Ncntry, β, σϵ, ψ = model_params
+
+    # this is the guess... always start at borrowing cosntraint
+    gc = Array{Float64}(undef, Na, Nshocks, Ncntry)
+    Kgc = similar(gc)
+    
+    make_gc_guess!(gc, R, W, p, model_params)
+    
+    #gc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
+    #println(gc)
+
+    v = -ones(Na, Nshocks, Ncntry)/(1-β)
+    Tv = similar(v)
+
+    for iter in 1:Niter
+        
+        Kgc, Tv = coleman_operator_old(gc, v, R, W, p, τ, model_params)[1:2]
+
+        err = vec_max(Kgc, gc)
+
+        #println(iter)
+
+        if err < tol
+
+            #println(iter)
+
+            break
+        end
+
+        copy!(gc, Kgc)
+
+        copy!(v,Tv)
+
+        if iter == Niter
+
+          println("value function may not have converged")
+          println("check the situation")
+          
+        end
+
+    end
+
+    Kgc, Tv, Kga = coleman_operator_old(gc, Tv, R, W, p, τ, model_params)
+
+    πprob = make_πprob(Tv, σϵ, ψ)
+
+    return Kga, Kgc, πprob, Tv
+    
+end
+
+# We don't change this function at all as we have 'coleman_operator' multiple dispatch
 function policy_function_itteration(R, W, p, τ, model_params; tol = 10^-6, Niter = 500)
     
     @unpack Na, Nshocks, Ncntry, β, σϵ, ψ = model_params
@@ -420,59 +479,6 @@ function policy_function_itteration(R, W, p, τ, model_params; tol = 10^-6, Nite
     
 end
 
-# still need to change name for this function, and inside other functions that call this guy
-function policy_function_itteration_new(Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params; tol = 10^-6, Niter = 500)
-    
-    @unpack Na, Nshocks, Ncntry, β, σϵ, ψ = model_params
-
-    # this is the guess... always start at borrowing cosntraint
-    gc = Array{Float64}(undef, Na, Nshocks, Ncntry)
-    Kgc = similar(gc)
-    
-    make_gc_guess!(gc, Rₜ₊₁, Wₜ, pₜ₊₁, model_params)
-    
-    #gc = repeat(range(0.1,3,Na),1,Nshocks,Ncntry)
-    #println(gc)
-
-    v = -ones(Na, Nshocks, Ncntry)/(1-β)
-    Tv = similar(v)
-
-    for iter in 1:Niter
-
-        Kgc, Tv = coleman_operator(gc, v, Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params)[1:2]
-
-        err = vec_max(Kgc, gc)
-
-        #println(iter)
-
-        if err < tol
-
-            #println(iter)
-
-            break
-        end
-
-        copy!(gc, Kgc)
-
-        copy!(v,Tv)
-
-        if iter == Niter
-
-          println("value function may not have converged")
-          println("check the situation")
-          
-        end
-
-    end
-
-    Kgc, Tv, Kga = coleman_operator(gc, Tv, Rₜ, Rₜ₊₁, Wₜ, pₜ, pₜ₊₁, τ, model_params)
-
-    πprob = make_πprob(Tv, σϵ, ψ)
-
-    return Kga, Kgc, πprob, Tv
-    
-end
-
 function vec_max(x,y)
     
     s = 0.0
@@ -488,6 +494,7 @@ end
 ##########################################################################
 ##########################################################################
 
+# this function needs double check
 function policy_function_fixedpoint(R, W, p, τ, model_params; tol = 10^-6)
 
     @unpack Na, Nshocks, Ncntry, statesize, β, σϵ, ψ, TFP = model_params

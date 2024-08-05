@@ -52,19 +52,20 @@ end
 
 ##########################################################################
 
-# function coleman_operator(policy, R, W, p, τ, model_params)
-#     # multiple dispatch version that directly takes policy functions
-#     # single R so this means assumption is a stationary setting
+function coleman_operator(policy, R, W, p, τ, model_params)
+    # multiple dispatch version that directly takes policy functions
+    # single R so this means assumption is a stationary setting
 
-#     c = policy[1:model_params.Na, :, :]
+    c = policy[1:model_params.Na, :, :]
 
-#     v = policy[(model_params.Na+1):end, :, :]
+    v = policy[(model_params.Na+1):end, :, :]
 
-#     Kg, Tv = coleman_operator(c, v, R, W, p, τ, model_params)[1:2]
+    #Kg, Tv = coleman_operator(c, v, R, W, p, τ, model_params)[1:2]
+    Kg, Tv = coleman_operator(c, v, R, R, W, p, p, τ, model_params)[1:2]
 
-#     return vcat(Kg, Tv)
+    return vcat(Kg, Tv)
 
-# end
+end
 
 function coleman_operator(c, v, R, W, p, τ, model_params)
     # multiple dispatch version for ss equilibrium where
