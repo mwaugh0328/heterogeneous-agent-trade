@@ -100,7 +100,7 @@ function transition_path(xxx, Rpath, τrsf_path, trp_values, foo_params; display
 
         for cntry = 1:Ncntry # for each country
 
-            p = make_p(W, TFP, d[cntry, :], tariff[cntry, :] ) # need T add t dimension
+            p[:, bwdate] = make_p(W[:, bwdate], TFP[:, bwdate], d[cntry, :, bwdate], tariff[cntry, :, bwdate] ) # need T add t dimension
     
             ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), hh_params) # need T add t dimension
             # this creates the z quality shifter
