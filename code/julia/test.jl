@@ -1,6 +1,6 @@
 include("ha-trade.jl")
 
-R = 1.014
+R = [1.014; 1.014]
 T = 2
 Ncntry = 2
 Na = 50
@@ -17,8 +17,11 @@ tariff = zeros(Ncntry, Ncntry)
 d_ij = 1.745
 d = [1.0 d_ij; d_ij 1.0]
 
-Rpath = repeat([R], inner = (T)) 
+Rpath = repeat(R, outer = (1,T)) 
 Rend = copy(R)
+
+R_test = reshape(Rpath, Ncntry, T)
+hcat(R_test, Rend)
 
 d_path = d.* ones(Ncntry, Ncntry, T)
 
@@ -38,3 +41,11 @@ end
 size(Q)
 
 Q[1][:,:,1]
+
+hcat(zeros(Ncntry, T), TFP)
+
+vcat([1.0; 2.0], [3.0; 4.0])[:]
+reshape(vcat([1.0; 2.0], [3.0; 4.0]), Ncntry, T)
+
+W_path = repeat( [1.0; 2.0; 3.0], outer = (1,T))
+W_path = W_path[:]

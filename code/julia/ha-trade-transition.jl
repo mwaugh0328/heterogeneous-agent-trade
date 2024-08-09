@@ -2,10 +2,11 @@ struct trans_path_values
     hh_end::Array{household{Float64}, 1} # check this later
     dist₀::Array{distribution{Float64}, 1} # check this later
     R₀::Float64 
-    Rend::Float64
+    Rend::Array{Float64, 1} # Ncntry by 1
     W::Float64 
     T::Int64
     τ::Array{Float64, 1} # this is transfer, set to 0.0 for now
+    pend::Array{Float64, 1}
 end
 
 #####################################################################################################
@@ -50,7 +51,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     # ORGANIZATION NEED TO BE FIXED
 
     @unpack ψslope, γ, σϵ, Ncntry, Na, Nshocks = hh_params
-    @unpack hh_end, dist₀, Rend, T, τ = trp_values
+    @unpack hh_end, dist₀, Rend, T, τ, pend = trp_values
     @unpack TFP, L, tariff = cntry_params # decide if want to put TFP and L in 'trp_values'
 
     # R = vcat([R₀], Rpath, [Rend])
@@ -58,8 +59,11 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     # p = reshape(xxx[T + 1 : end], Ngoods, T)
     # this is for situation with initial pinned down
 
-    R = vcat(Rpath, [Rend]) # add the final period
-    W = xxx[1:T] # we are finding W path such that markets clear at all date
+    R = reshape(Rpath, Ncntry, T)
+    R = hcat(Rpath, Rend) # add the final period
+    W = reshape(xxx[:], Ncntry, T) # we are finding W path such that markets clear at all date, here we feed in xxx as 2T by 1 vector
+    p = zeros(Ncntry, T)
+    p = hcat(p, pend)
 
     @assert length(R) ≈ T + 1
     @assert length(W[1,:]) ≈ T
@@ -74,8 +78,11 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
 
     λ = Array{distribution{eltype(W)}}(undef, Ncntry, T+1) # This is different from PI, here we define λ as a Ncntry by T+1 matrix
 
+    # Aggregate stuff holders
+    Y = Array{eltype(W)}(undef, Ncntry, T)
+    tradeflows = Array{eltype(W)}(undef, Ncntry, Ncntry, T)
+    A_demand = Array{eltype(W)}(undef, Ncntry, T)
     goods_market = Array{eltype(W)}(undef, Ncntry, T)
-
     asset_market = Array{eltype(W)}(undef, T)
 
     for cntry = 1:Ncntry # for each country
@@ -99,6 +106,8 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
 
     end
 
+    
+
 
     #####################################################################################################
     # This is the backward step: solve hh problem at T then use colman operator to work backwards
@@ -121,8 +130,8 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
 
             #### THIS IS WHERE OUR NEW ONE STEP WOULD GO
             hh[cntry, bwdate] = one_step_itteration(hh[cntry, bwdate + 1].cons_policy, hh[cntry, bwdate + 1].Tv, # consumption, values at date t+1
-                    R[bwdate], R[bwdate + 1], # returns at date t and t + 1
-                    W[bwdate], # factor prices at date t
+                    R[cntry, bwdate], R[cntry, bwdate + 1], # returns at date t and t + 1
+                    W[cntry, bwdate], # factor prices at date t
                     p[:, bwdate] , p[:, bwdate + 1], τ[cntry, bwdate], foo_hh_params) # goods prices at date t and t+1
 
             ### THIS WOULD NEED TO HAVE COUNTRY DIMENSION
@@ -151,24 +160,22 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     end
 
     #####################################################################################################
-    # This is the forward step, so given an initial distribution, take hh decicion rules and push forward
+    # This is the forward step, so given an initial distribution, take hh decision rules and push forward
 
     for fwdate = 1:T
         # so when date > T as we run it out, just grab stuff from end in policy functions or parameter
 
         for cntry = 1:Ncntry
-
-            p = make_p(W, TFP, d[cntry, :], tariff[cntry, :] ) #ADD T dimension
     
-            ψ = make_ψ(cntry, ψslope.*TFP[cntry].^(1.0 - γ), hh_params) #ADD T dimension
+            ψ = make_ψ(cntry, ψslope.*TFP[cntry, fwdate].^(1.0 - γ), hh_params) #ADD T dimension
     
-            agrid = make_agrid(hh_params, TFP[cntry]) #ADD T dimension
+            agrid = make_agrid(hh_params, TFP[cntry, fwdate]) #ADD T dimension
     
             foo_hh_params = household_params(hh_params, agrid = agrid, 
-                    TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ) #ADD T dimension
+                    TFP = TFP[cntry, fwdate], L = L[cntry, fwdate], σϵ = σϵ*(TFP[cntry, fwdate]^(1.0 - γ)), ψ = ψ) #ADD T dimension
     
-            output, tradestats = aggregate(R[cntry], W[cntry], p, τ[cntry], tariff, cntry, 
-                hh[cntry, fwdate], distribution(Q[cntry, fwdate], λ[cntry, fwdate], dist₀.state_index), foo_hh_params)
+            output, tradestats = aggregate(R[cntry, fwdate], W[cntry, fwdate], p[:, fwdate], τ[cntry, fwdate], tariff[:,:,fwdate], cntry, 
+                hh[cntry, fwdate], distribution(Q[fwdate][:,:,cntry], λ[cntry, fwdate], dist₀.state_index), foo_hh_params)
             #ADD T dimension
     
             Y[cntry, fwdate] = output.production
@@ -177,7 +184,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
         
             A_demand[cntry, fwdate] = output.Aprime
 
-            λ[cntry, fwdate + 1] .= law_of_motion(λ[cntry, fwdate] , transpose(Q[fwdate]))
+            λ[cntry, fwdate + 1] .= law_of_motion(λ[cntry, fwdate] , transpose(Q[fwdate][:,:,cntry]))
     
         end            
             #then push forward
