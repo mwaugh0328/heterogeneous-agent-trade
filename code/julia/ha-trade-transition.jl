@@ -1,12 +1,9 @@
 struct trans_path_values
     hh_end::Array{household{Float64}, 1} # check this later
     dist₀::Array{distribution{Float64}, 1} # check this later
-    R₀::Float64 
     Rend::Array{Float64, 1} # Ncntry by 1
-    W::Float64 
     T::Int64
-    τ::Array{Float64, 1} # this is transfer, set to 0.0 for now
-    pend::Array{Float64, 1}
+    τ::Array{Float64, 1} # this is transfer, Ncntry by 1, set to [0.0; 0.0] for now
 end
 
 #####################################################################################################
@@ -51,7 +48,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     # ORGANIZATION NEED TO BE FIXED
 
     @unpack ψslope, γ, σϵ, Ncntry, Na, Nshocks = hh_params
-    @unpack hh_end, dist₀, Rend, T, τ, pend = trp_values
+    @unpack hh_end, dist₀, Rend, T, τ = trp_values
     @unpack TFP, L, tariff = cntry_params # decide if want to put TFP and L in 'trp_values'
 
     # R = vcat([R₀], Rpath, [Rend])
@@ -62,8 +59,6 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     R = reshape(Rpath, Ncntry, T)
     R = hcat(Rpath, Rend) # add the final period
     W = reshape(xxx[:], Ncntry, T) # we are finding W path such that markets clear at all date, here we feed in xxx as 2T by 1 vector
-    p = zeros(Ncntry, T)
-    p = hcat(p, pend)
 
     @assert length(R) ≈ T + 1
     @assert length(W[1,:]) ≈ T
@@ -106,9 +101,6 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
 
     end
 
-    
-
-
     #####################################################################################################
     # This is the backward step: solve hh problem at T then use colman operator to work backwards
 
@@ -116,8 +108,10 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
 
         for cntry = 1:Ncntry # for each country
 
-            p[:, bwdate] = make_p(W[:, bwdate], TFP[:, bwdate], d_path[cntry, :, bwdate], tariff[cntry, :, bwdate] ) # need T add t dimension
+            pₜ = make_p(W[:, bwdate], TFP[:, bwdate], d_path[cntry, :, bwdate], tariff[cntry, :, bwdate]) # need T add t dimension
     
+            pₜ₊₁ = make_p(W[:, bwdate + 1], TFP[:, bwdate + 1], d_path[cntry, :, bwdate + 1], tariff[cntry, :, bwdate + 1])
+
             ψ = make_ψ(cntry, ψslope.*TFP[cntry, bwdate].^(1.0 - γ), hh_params) # need T add t dimension
             # this creates the z quality shifter
             # scaled in a way that is invariant to level of TFP
@@ -132,7 +126,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
             hh[cntry, bwdate] = one_step_itteration(hh[cntry, bwdate + 1].cons_policy, hh[cntry, bwdate + 1].Tv, # consumption, values at date t+1
                     R[cntry, bwdate], R[cntry, bwdate + 1], # returns at date t and t + 1
                     W[cntry, bwdate], # factor prices at date t
-                    p[:, bwdate] , p[:, bwdate + 1], τ[cntry, bwdate], foo_hh_params) # goods prices at date t and t+1
+                    pₜ , pₜ₊₁, τ[cntry, bwdate], foo_hh_params) # goods prices at date t and t+1
 
             ### THIS WOULD NEED TO HAVE COUNTRY DIMENSION
     
@@ -166,6 +160,8 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
         # so when date > T as we run it out, just grab stuff from end in policy functions or parameter
 
         for cntry = 1:Ncntry
+
+            pₜ = make_p(W[:, fwdate], TFP[:, fwdate], d_path[cntry, :, fwdate], tariff[cntry, :, fwdate])
     
             ψ = make_ψ(cntry, ψslope.*TFP[cntry, fwdate].^(1.0 - γ), hh_params) #ADD T dimension
     
@@ -174,7 +170,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
             foo_hh_params = household_params(hh_params, agrid = agrid, 
                     TFP = TFP[cntry, fwdate], L = L[cntry, fwdate], σϵ = σϵ*(TFP[cntry, fwdate]^(1.0 - γ)), ψ = ψ) #ADD T dimension
     
-            output, tradestats = aggregate(R[cntry, fwdate], W[cntry, fwdate], p[:, fwdate], τ[cntry, fwdate], tariff[:,:,fwdate], cntry, 
+            output, tradestats = aggregate(R[cntry, fwdate], W[cntry, fwdate], pₜ, τ[cntry, fwdate], tariff[:,:,fwdate], cntry, 
                 hh[cntry, fwdate], distribution(Q[fwdate][:,:,cntry], λ[cntry, fwdate], dist₀.state_index), foo_hh_params)
             #ADD T dimension
     
