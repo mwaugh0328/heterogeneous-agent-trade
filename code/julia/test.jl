@@ -72,7 +72,7 @@ Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist = world_equillibrium(Rsol
 # Transition path
 # 
 
-T = 2
+T = 3
 Ncntry = 2
 Na = 50
 Nshocks = 10
@@ -99,7 +99,7 @@ Wend = copy(wage)
 
 trp_values = trans_path_values(hh, dist, Rend, Wend, T, τ)
 
-include("ha-trade.jl")
-transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
+good_market, asset_market = transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
 
-
+good_market
+asset_market
