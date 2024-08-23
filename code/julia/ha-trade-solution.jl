@@ -308,9 +308,10 @@ function itterate_stationary_distribution(Q; tol = 1e-10, Niter = 5000)
     # Takes the transition matrix above then we know a stationary distribution
     # must satisfy the fixed point relationsip λ = Q'*λ  
     
-    λ = zeros(size(Q)[1], 1)
-    λ = convert(Array{eltype(Q)}, λ)
+    #λ = zeros(size(Q)[1], 1)
+    #λ = convert(Array{eltype(Q)}, λ)
     
+    λ = zeros(size(Q)[1])
     λ .= 1.0 / size(Q)[1]
     
     Lnew = similar(λ)

@@ -49,7 +49,8 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     # ORGANIZATION NEED TO BE FIXED
 
     @unpack ψslope, γ, σϵ, Ncntry, Na, Nshocks = hh_params
-    @unpack hh_end, dist₀, Rend, T, τ = trp_values
+    #@unpack hh_end, dist₀, Rend, T, τ = trp_values
+    @unpack hh_end, dist₀, Rend, Wend, T, τ = trp_values
     @unpack TFP, L, tariff = cntry_params # decide if want to put TFP and L in 'trp_values'
 
     # R = vcat([R₀], Rpath, [Rend])
@@ -82,12 +83,14 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     goods_market = Array{eltype(W)}(undef, Ncntry, T)
     asset_market = Array{eltype(W)}(undef, T)
 
+    
+
     for cntry = 1:Ncntry # for each country
 
         hh[cntry, end] = hh_end[cntry]
         # this is the household at the end
 
-        λ[:, cntry, 1] = deepcopy(vec(dist₀[cntry].λ))
+        λ[:, cntry, 1] = deepcopy(dist₀[cntry].λ)
         # this is dist. at beginning
 
     end

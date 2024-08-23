@@ -1,6 +1,8 @@
 include("ha-trade.jl")
 
 using MINPACK
+using JET
+
 
 # ##########################################################################
 # Parameters
@@ -10,7 +12,7 @@ using MINPACK
 σϵ = 0.25 # logit dispersion parameter
 Ncntry = 2 # number of countries
 
-hh_prm = household_params(Ncntry = Ncntry, Na = 100, β = 0.92, γ = γ, ϕ = 0.5, amax = 8.0, σϵ = σϵ);
+hh_prm = household_params();
 
 # here are some simpe country parametrers
 TFP = [1.0; 1.0]
@@ -73,9 +75,6 @@ Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist = world_equillibrium(Rsol
 # 
 
 T = 3
-Ncntry = 2
-Na = 50
-Nshocks = 10
 
 TFP = [1.0; 1.0]
 
@@ -101,5 +100,10 @@ trp_values = trans_path_values(hh, dist, Rend, Wend, T, τ)
 
 good_market, asset_market = transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
 
-good_market
-asset_market
+@report_opt transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
+# this run gives 458 possible errors
+
+
+
+
+

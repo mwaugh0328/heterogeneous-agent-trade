@@ -21,13 +21,13 @@ include("mix-MarkovChain.jl")
 @with_kw struct household_params
     TFP::Float64 = 1.0
     L::Float64 = 1.0
-    β::Float64 = 0.95
-    γ::Float64 = 2.0
-    ϕ::Float64 = 0.0
+    β::Float64 = 0.92 #0.95
+    γ::Float64 = 1.5 #2.0
+    ϕ::Float64 = 0.5 #0.0
     amax::Float64 = 8.0
     Ncntry::Int64 = 2
     σϵ::Float64 = 0.25
-    Na::Int64 = 50
+    Na::Int64 = 100 #50
     agrid::Array{Float64, 1} = convert(Array{Float64, 1}, range(-ϕ*TFP, amax*TFP, length = Na))
     Nar::Int64 = 5
     Nma::Int64 = 2
@@ -48,7 +48,7 @@ end
     L::Array{Float64, 1} = ones(Ncntry)
     d::Array{Float64, 2} = ones(Ncntry,Ncntry)
     tariff::Array{Float64, 2} = zeros(Ncntry,Ncntry)
- end
+end
 
 ##########################################################################
 
@@ -106,7 +106,8 @@ function coleman_operator(cₜ₊₁, vₜ₊₁, Rₜ, Rₜ₊₁, Wₜ, pₜ, 
     ∑π_ϵ!(muc_ϵₜ₊₁, cₜ₊₁, πprobₜ₊₁, pₜ₊₁, γ)
     # this integrates over ϵ
 
-    Emucₜ₊₁ .= β*Rₜ₊₁*λτ*( matmul( muc_ϵₜ₊₁ , mc.p') ) # change notation of prob.
+    #Emucₜ₊₁ .= β*Rₜ₊₁*λτ*( matmul( muc_ϵₜ₊₁ , mc.p') ) # change notation of prob.
+    Emucₜ₊₁ .= @inbounds β*Rₜ₊₁*λτ*( matmul( muc_ϵₜ₊₁ , mc.p') ) # change notation of prob.
     # λτ is porportional tax / subsidy on 
     # all income. used for welfare analysis
     # This R is at t+1

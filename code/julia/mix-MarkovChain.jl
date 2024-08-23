@@ -52,10 +52,12 @@ function mMarkovChain(nP::Int64, nIID::Int64, ρ::Float64, σP::Float64, σIID::
     # compute mean of ergodic
     invZ = real(inv(eigvecs(P))[nZ,:])
     invZ .= invZ ./ sum(invZ)
-    meanZ = invZ' * z_vals
+    #meanZ = invZ' * z_vals
+    meanZ = sum(invZ .* z_vals)
     # scale to get desired mean
     z_vals .= (w0 / meanZ) .* z_vals
 
+    
     return MarkovChain(P, log.(z_vals))
 end
 
@@ -88,6 +90,7 @@ function rouwenhorst(N::Integer, ρ::Real, σ::Real, μ::Real=0.0)
     return p, state_values
 end
 
+
 function _rouwenhorst(p::Real, q::Real, m::Real, Δ::Real, n::Integer)
     if n == 2
         return [m - Δ, m + Δ],  [p 1 - p; 1 - q q]
@@ -101,3 +104,4 @@ function _rouwenhorst(p::Real, q::Real, m::Real, Δ::Real, n::Integer)
         return range(m - Δ, stop=m + Δ, length=n), θN
     end
 end
+
