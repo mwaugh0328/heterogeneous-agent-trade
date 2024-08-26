@@ -83,8 +83,6 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     goods_market = Array{eltype(W)}(undef, Ncntry, T)
     asset_market = Array{eltype(W)}(undef, T)
 
-    
-
     for cntry = 1:Ncntry # for each country
 
         hh[cntry, end] = hh_end[cntry]

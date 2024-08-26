@@ -42,7 +42,7 @@ init_p = make_p(init_W, TFP, d[1, :], τ[1, :])
 
 # Check if 'policy_function_itteration' and 'policy_function_itteration_new' give exact same outputs
 # still have two versions...
-Kga_old, Kgc_old, πprob_old, Tv_old = policy_function_itteration_old(init_R, init_W, init_p, τ[1], hh_prm; tol = 10^-6, Niter = 500)
+#Kga_old, Kgc_old, πprob_old, Tv_old = policy_function_itteration_old(init_R, init_W, init_p, τ[1], hh_prm; tol = 10^-6, Niter = 500)
 Kga, Kgc, πprob, Tv = policy_function_itteration(init_R, init_W, init_p, τ[1], hh_prm; tol = 10^-6, Niter = 500)
 
 vec_max(Kga_old, Kga)
@@ -59,14 +59,12 @@ vec_max(Tv_old, Tv)
 # one step iteration gives the same things
 
 # Here we have asset, consumption policies, and choice prob. same, but value function is not
-hh_obj = one_step_itteration(Kgc_old, Tv_old, init_R, init_R, init_W, init_p, init_p, τ[1], hh_prm)
-vec_max(Kga_old, hh_obj.asset_policy)
-vec_max(Kgc_old, hh_obj.cons_policy)
-vec_max(πprob_old, hh_obj.πprob)
-vec_max(Tv_old, hh_obj.Tv)
+hh_obj = one_step_itteration(Kgc, Tv, init_R, init_R, init_W, init_p, init_p, τ[1], hh_prm)
 
-#a, b, c = coleman_operator_new(Kgc, Tv, init_R, init_R, init_W, init_p, init_p, τ[1], hh_prm)
-#vec_max(b, Tv)
+include("ha-trade.jl")
+#one_step_itteration(Kgc, Tv, init_R, init_R, init_W, init_p, init_p, τ[1], hh_prm);
 
-#d,e,f = coleman_operator(Kgc, Tv, init_R, init_W, init_p, τ[1], hh_prm)
-#vec_max(e, Tv)
+coleman_operator(Kgc, Tv, init_R, init_R, init_W, init_p, init_p, τ[1], hh_prm);
+
+
+

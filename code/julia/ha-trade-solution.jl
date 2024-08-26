@@ -1,10 +1,9 @@
 struct household{T}
-    asset_policy::Array{T} # asset_policy
-    cons_policy::Array{T} # asset_policy
-    πprob::Array{T} # choice probabilities
-    Tv::Array{T} # value function
+    asset_policy::Array{T, 3} # asset_policy
+    cons_policy::Array{T, 3} # asset_policy
+    πprob::Array{T, 3} # choice probabilities
+    Tv::Array{T, 3} # value function
 end
-
 
 struct distribution{T}
     Q::Array{T} # transition matrix

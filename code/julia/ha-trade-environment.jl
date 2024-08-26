@@ -113,7 +113,7 @@ function coleman_operator(cₜ₊₁, vₜ₊₁, Rₜ, Rₜ₊₁, Wₜ, pₜ, 
     # This R is at t+1
 
     #Step (3) Work through each county option
-     @inbounds @views for cntry = 1:Ncntry
+    @inbounds @views for cntry = 1:Ncntry
 
         muc_inverse!( gc, pₜ[cntry] * Emucₜ₊₁, γ)
 
