@@ -1,6 +1,7 @@
 struct trans_path_values
     hh_end::Array{household{Float64}, 1} # check this later
     dist₀::Array{distribution{Float64}, 1} # check this later
+    R₀::Array{Float64, 1} # Ncntry by 1
     Rend::Array{Float64, 1} # Ncntry by 1
     Wend::Array{Float64, 1} # Ncntry by 1
     T::Int64
@@ -42,6 +43,31 @@ end
 # here the idea is there is a change in trade costs, that is the exogenous path changed
 # it would be set up so d path, W path, and R path that goes, so set up argumetns that fixes that
 
+function transition_path(xxx, d_path, trp_values, hh_params, cntry_params; display = false)
+    # multiple dispatch version to deal with endogenous path of R 
+
+    @unpack T = trp_values
+
+    Rpath = xxx[1:(T-1)]
+
+    goods_market, asset_market = transition_path(xxx[T:end], Rpath, d_path, trp_values, hh_params, cntry_params; display = display)
+    
+    return vcat(goods_market, asset_market[1:(T - 1)])
+
+end
+
+#####################################################################################################
+
+function transition_path_only_assetmarket(xxx, w_path, d_path, trp_values, hh_params, cntry_params; display = false)
+    # multiple dispatch version to deal with endogenous path of R 
+    # Rpath = xxx[1:T]
+
+    asset_market = transition_path(w_path, xxx, d_path, trp_values, hh_params, cntry_params; display = display)[2]
+    
+    return asset_market[1:(trp_values.T - 1)]
+
+end
+
 function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params; display = false)
     # multiple dispatch version for use in solver
 
@@ -50,7 +76,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
 
     @unpack ψslope, γ, σϵ, Ncntry, Na, Nshocks = hh_params
     #@unpack hh_end, dist₀, Rend, T, τ = trp_values
-    @unpack hh_end, dist₀, Rend, Wend, T, τ = trp_values
+    @unpack hh_end, dist₀, R₀, Rend, Wend, T, τ = trp_values
     @unpack TFP, L, tariff = cntry_params # decide if want to put TFP and L in 'trp_values'
 
     # R = vcat([R₀], Rpath, [Rend])
@@ -59,7 +85,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     # this is for situation with initial pinned down
 
     R = reshape(Rpath, Ncntry, T)
-    R = hcat(Rpath, Rend) # add the final period
+    R = hcat(R₀, Rpath, Rend) # add the final period
     W = reshape(xxx[:], Ncntry, T) # we are finding W path such that markets clear at all date, here we feed in xxx as 2T by 1 vector
     W = hcat(W, Wend)
 

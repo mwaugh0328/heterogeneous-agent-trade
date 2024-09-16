@@ -87,7 +87,7 @@ tariff = zeros(Ncntry, Ncntry)
 d_ij = 1.745
 d = [1.0 d_ij; d_ij 1.0]
 
-Rpath = repeat(Rsol, outer = (1,T)) 
+Rpath = repeat(Rsol, outer = (1,T-1)) # in PI this is length T?
 Rend = copy(Rsol)
 
 d_path = d.* ones(Ncntry, Ncntry, T+1)
@@ -96,7 +96,7 @@ W_path = repeat( [1.0; 1.0], outer = (1,T))
 xxx = W_path[:]
 Wend = copy(wage)
 
-trp_values = trans_path_values(hh, dist, Rend, Wend, T, τ)
+trp_values = trans_path_values(hh, dist, Rend, Rend, Wend, T, τ)
 
 good_market, asset_market = transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
 
