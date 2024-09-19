@@ -98,9 +98,12 @@ Wend = copy(wage)
 
 trp_values = trans_path_values(hh, dist, Rend, Rend, Wend, T, τ)
 
+include("ha-trade.jl")
 good_market, asset_market = transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
 
-@report_opt transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
+transition_path_only_assetmarket(Rpath, W_path[:], d_path, trp_values, hh_prm, cntry_prm)
+
+# @report_opt transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
 # this run gives 458 possible errors
 
 

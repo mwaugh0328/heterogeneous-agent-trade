@@ -84,7 +84,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     # p = reshape(xxx[T + 1 : end], Ngoods, T)
     # this is for situation with initial pinned down
 
-    R = reshape(Rpath, Ncntry, T)
+    R = reshape(Rpath, Ncntry, T-1)
     R = hcat(R₀, Rpath, Rend) # add the final period
     W = reshape(xxx[:], Ncntry, T) # we are finding W path such that markets clear at all date, here we feed in xxx as 2T by 1 vector
     W = hcat(W, Wend)
