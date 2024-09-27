@@ -68,6 +68,9 @@ function transition_path_only_assetmarket(xxx, w_path, d_path, trp_values, hh_pa
 
 end
 
+#####################################################################################################
+#####################################################################################################
+
 function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params; display = false)
     # multiple dispatch version for use in solver
 
@@ -140,22 +143,24 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
             pₜ = make_p(W[:, bwdate], TFP[:, bwdate], d_path[cntry, :, bwdate], tariff[cntry, :, bwdate]) # need T add t dimension
     
             pₜ₊₁ = make_p(W[:, bwdate + 1], TFP[:, bwdate + 1], d_path[cntry, :, bwdate + 1], tariff[cntry, :, bwdate + 1])
-
-            ψ = make_ψ(cntry, ψslope.*TFP[cntry, bwdate].^(1.0 - γ), hh_params) # need T add t dimension
-            # this creates the z quality shifter
-            # scaled in a way that is invariant to level of TFP
     
-            agrid = make_agrid(hh_params, TFP[cntry, bwdate]) # need T add t dimension
-            # this creates teh asset grid so it's alwasy a fraction of home labor income
-    
-            foo_hh_params = household_params(hh_params, agrid = agrid, 
-                    TFP = TFP[cntry, bwdate], L = L[cntry, bwdate], σϵ = σϵ*(TFP[cntry, bwdate]^(1.0 - γ)), ψ = ψ) # need T add t dimension
+            foo_hh_params = household_params(hh_params, agrid = make_agrid(hh_params, TFP[cntry, bwdate]), 
+                    TFP = TFP[cntry, bwdate], L = L[cntry, bwdate], σϵ = σϵ*(TFP[cntry, bwdate]^(1.0 - γ)),
+                     ψ = make_ψ(cntry, ψslope.*TFP[cntry, bwdate].^(1.0 - γ), hh_params) ) # need T add t dimension
 
             #### THIS IS WHERE OUR NEW ONE STEP WOULD GO
             hh[cntry, bwdate] = one_step_itteration(hh[cntry, bwdate + 1].cons_policy, hh[cntry, bwdate + 1].Tv, # consumption, values at date t+1
                     R[cntry, bwdate], R[cntry, bwdate + 1], # returns at date t and t + 1
                     W[cntry, bwdate], # factor prices at date t
                     pₜ , pₜ₊₁, τ[cntry, bwdate], foo_hh_params) # goods prices at date t and t+1
+
+                    # if cntry == 1
+                    #     println(" ")
+                    #     println(bwdate)
+                    #     println(" ")
+                    #     println(hh[cntry, bwdate].πprob[25,5,:])
+
+                    # end
 
             ### THIS WOULD NEED TO HAVE COUNTRY DIMENSION
     
@@ -169,12 +174,9 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
 
         for cntry = 1:Ncntry
 
-            ψ = make_ψ(cntry, ψslope.*TFP[cntry, fwdate].^(1.0 - γ), hh_params)
-
-            agrid = make_agrid(hh_params, TFP[cntry, fwdate])
-
-            foo_hh_params = household_params(hh_params, agrid = agrid, 
-                        TFP = TFP[cntry, fwdate], L = L[cntry, fwdate], σϵ = σϵ*(TFP[cntry, fwdate]^(1.0 - γ)), ψ = ψ)
+            foo_hh_params = household_params(hh_params, agrid = make_agrid(hh_params, TFP[cntry, fwdate]), 
+                        TFP = TFP[cntry, fwdate], L = L[cntry, fwdate], σϵ = σϵ*(TFP[cntry, fwdate]^(1.0 - γ)),
+                         ψ = make_ψ(cntry, ψslope.*TFP[cntry, fwdate].^(1.0 - γ), hh_params))
 
             make_Q!(Q[fwdate][:,:,cntry], hh[cntry, fwdate], foo_hh_params) # THIS WOULD NEED TO BE BY COUNTRY
 
@@ -192,16 +194,15 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
 
             pₜ = make_p(W[:, fwdate], TFP[:, fwdate], d_path[cntry, :, fwdate], tariff[cntry, :, fwdate])
     
-            ψ = make_ψ(cntry, ψslope.*TFP[cntry, fwdate].^(1.0 - γ), hh_params) #ADD T dimension
-    
-            agrid = make_agrid(hh_params, TFP[cntry, fwdate]) #ADD T dimension
-    
-            foo_hh_params = household_params(hh_params, agrid = agrid, 
-                    TFP = TFP[cntry, fwdate], L = L[cntry, fwdate], σϵ = σϵ*(TFP[cntry, fwdate]^(1.0 - γ)), ψ = ψ) #ADD T dimension
+            foo_hh_params = household_params(hh_params, agrid = make_agrid(hh_params, TFP[cntry, fwdate]), 
+                        TFP = TFP[cntry, fwdate], L = L[cntry, fwdate], σϵ = σϵ*(TFP[cntry, fwdate]^(1.0 - γ)),
+                         ψ = make_ψ(cntry, ψslope.*TFP[cntry, fwdate].^(1.0 - γ), hh_params))
     
             output, tradestats = aggregate(R[cntry, fwdate], W[cntry, fwdate], pₜ, τ[cntry, fwdate], tariff[:,:,fwdate], cntry, 
                 hh[cntry, fwdate], distribution(Q[fwdate][:,:,cntry], λ[:, cntry, fwdate], dist₀[cntry].state_index), foo_hh_params)
             #ADD T dimension
+
+            # println(output.production)
     
             Y[cntry, fwdate] = output.production
     
@@ -210,6 +211,14 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
             A_demand[cntry, fwdate] = output.Aprime
 
             λ[:, cntry, fwdate + 1] .= law_of_motion(λ[:, cntry, fwdate] , transpose(Q[fwdate][:,:,cntry]))
+
+                    if cntry == 1
+                        println(" ")
+                        println(fwdate)
+                        println(" ")
+                        println(transpose(Q[fwdate][400,400,cntry]))
+
+                    end
     
         end            
             #then push forward
