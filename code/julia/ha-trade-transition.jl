@@ -154,14 +154,6 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
                     W[cntry, bwdate], # factor prices at date t
                     pₜ , pₜ₊₁, τ[cntry, bwdate], foo_hh_params) # goods prices at date t and t+1
 
-                    # if cntry == 1
-                    #     println(" ")
-                    #     println(bwdate)
-                    #     println(" ")
-                    #     println(hh[cntry, bwdate].πprob[25,5,:])
-
-                    # end
-
             ### THIS WOULD NEED TO HAVE COUNTRY DIMENSION
     
         end
@@ -178,8 +170,9 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
                         TFP = TFP[cntry, fwdate], L = L[cntry, fwdate], σϵ = σϵ*(TFP[cntry, fwdate]^(1.0 - γ)),
                          ψ = make_ψ(cntry, ψslope.*TFP[cntry, fwdate].^(1.0 - γ), hh_params))
 
-            make_Q!(Q[fwdate][:,:,cntry], hh[cntry, fwdate], foo_hh_params) # THIS WOULD NEED TO BE BY COUNTRY
-
+            #make_Q!(Q[fwdate][:,:,cntry], hh[cntry, fwdate], foo_hh_params) # THIS WOULD NEED TO BE BY COUNTRY
+            Q[fwdate][:,:,cntry] = make_Q(hh[cntry, fwdate], foo_hh_params)
+            
         end
 
     end
@@ -211,14 +204,6 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
             A_demand[cntry, fwdate] = output.Aprime
 
             λ[:, cntry, fwdate + 1] .= law_of_motion(λ[:, cntry, fwdate] , transpose(Q[fwdate][:,:,cntry]))
-
-                    if cntry == 1
-                        println(" ")
-                        println(fwdate)
-                        println(" ")
-                        println(transpose(Q[fwdate][400,400,cntry]))
-
-                    end
     
         end            
             #then push forward

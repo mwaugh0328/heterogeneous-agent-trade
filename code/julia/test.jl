@@ -117,7 +117,25 @@ Y, tradeflows, A_demand, Gbudget, tradeshare, hh_end, dist_end = world_equillibr
 # Transition path
 # 
 
-T = 4
+T = 150
+
+Rpath_check = repeat(Rint, outer = (1,T-1)) # in PI this is length T?
+Rend_check = copy(Rint)
+
+d_path_check = d .* ones(Ncntry, Ncntry, T+1)
+
+W_path_check = repeat( Wint, outer = (1,T))
+xxx_check = W_path_check[:]
+Wend_check = copy(Wint)
+
+trp_values_check = trans_path_values(hh, dist_int, Rint, Rend_check, Wend_check, T, τ)
+
+good_market_check, asset_market_check = transition_path(xxx_check, Rpath_check, d_path_check, trp_values_check, hh_prm, cntry_prm)
+
+good_market_check
+asset_market_check
+
+################################################
 
 Rpath = repeat(Rsol_end, outer = (1,T-1)) # in PI this is length T?
 Rend = copy(Rsol_end)
@@ -136,6 +154,7 @@ trp_values = trans_path_values(hh_end, dist_int, Rint, Rend, Wend, T, τ)
 
 good_market, asset_market = transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
 
+
 # transition_path_only_assetmarket(Rpath, W_path[:], d_path, trp_values, hh_prm, cntry_prm)
 
 # @report_opt transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
@@ -149,7 +168,6 @@ good_market, asset_market = transition_path(xxx, Rpath, d_path, trp_values, hh_p
 # L = [1.0; 1.0]
 
 # tariff = zeros(Ncntry, Ncntry)
-
 
 
 
