@@ -74,11 +74,7 @@ end
 function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params; display = false)
     # multiple dispatch version for use in solver
 
-    #####################################################################################################
-    # ORGANIZATION NEED TO BE FIXED
-
-    @unpack ψslope, γ, σϵ, Ncntry, Na, Nshocks = hh_params
-    #@unpack hh_end, dist₀, Rend, T, τ = trp_values
+    @unpack ψslope, γ, σϵ, Ncntry, Na, Nshocks, mc = hh_params
     @unpack hh_end, dist₀, R₀, Rend, Wend, T, τ = trp_values
     @unpack TFP, L, tariff = cntry_params # decide if want to put TFP and L in 'trp_values'
 
@@ -112,31 +108,20 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     goods_market = Array{eltype(W)}(undef, Ncntry, T)
     asset_market = Array{eltype(W)}(undef, T)
 
-    for cntry = 1:Ncntry # for each country
+    @views @inbounds for cntry = 1:Ncntry # for each country
 
         hh[cntry, end] = hh_end[cntry]
         # this is the household at the end
 
-        λ[:, cntry, 1] = deepcopy(dist₀[cntry].λ)
+        λ[:, cntry, 1] .= deepcopy(dist₀[cntry].λ)
         # this is dist. at beginning
-
-    end
-
-    Q = Array{Array{Float64,3}}(undef, T)
-    #Q = Array{Float64}(undef, Na*Nshocks, Na*Nshocks)
-
-    for fwdate = 1:T
-
-    #### Country dimension needs to be changed
-
-        Q[fwdate] = Array{Float64}(undef, Na*Nshocks, Na*Nshocks, Ncntry)
 
     end
 
     #####################################################################################################
     # This is the backward step: solve hh problem at T then use colman operator to work backwards
 
-    for bwdate = (T):-1:1 # do this for each T
+    @time @views @inbounds for bwdate = (T):-1:1 # do this for each T
 
         for cntry = 1:Ncntry # for each country
 
@@ -148,21 +133,20 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
                     TFP = TFP[cntry, bwdate], L = L[cntry, bwdate], σϵ = σϵ*(TFP[cntry, bwdate]^(1.0 - γ)),
                      ψ = make_ψ(cntry, ψslope.*TFP[cntry, bwdate].^(1.0 - γ), hh_params) ) # need T add t dimension
 
-            #### THIS IS WHERE OUR NEW ONE STEP WOULD GO
             hh[cntry, bwdate] = one_step_itteration(hh[cntry, bwdate + 1].cons_policy, hh[cntry, bwdate + 1].Tv, # consumption, values at date t+1
                     R[cntry, bwdate], R[cntry, bwdate + 1], # returns at date t and t + 1
                     W[cntry, bwdate], # factor prices at date t
                     pₜ , pₜ₊₁, τ[cntry, bwdate], foo_hh_params) # goods prices at date t and t+1
-
-            ### THIS WOULD NEED TO HAVE COUNTRY DIMENSION
-    
         end
         
     end
 
     # this constructs the transition matrix, here there is no 
     # recursive relationship, so it can be multi-threaded
-    for fwdate = 1:T
+
+    Q = Array{Float64}(undef, Na*Nshocks, Na*Nshocks)
+
+    @time @views @inbounds for fwdate = 1:T
 
         for cntry = 1:Ncntry
 
@@ -170,8 +154,9 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
                         TFP = TFP[cntry, fwdate], L = L[cntry, fwdate], σϵ = σϵ*(TFP[cntry, fwdate]^(1.0 - γ)),
                          ψ = make_ψ(cntry, ψslope.*TFP[cntry, fwdate].^(1.0 - γ), hh_params))
 
-            #make_Q!(Q[fwdate][:,:,cntry], hh[cntry, fwdate], foo_hh_params) # THIS WOULD NEED TO BE BY COUNTRY
-            Q[fwdate][:,:,cntry] = make_Q(hh[cntry, fwdate], foo_hh_params)
+            make_Q!(Q, hh[cntry, fwdate], foo_hh_params) 
+
+            λ[:, cntry, fwdate + 1] .= law_of_motion(λ[:, cntry, fwdate] , transpose(Q) )
             
         end
 
@@ -180,7 +165,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     #####################################################################################################
     # This is the forward step, so given an initial distribution, take hh decision rules and push forward
 
-    for fwdate = 1:T
+    @time @inbounds for fwdate = 1:T
         # so when date > T as we run it out, just grab stuff from end in policy functions or parameter
 
         for cntry = 1:Ncntry
@@ -192,23 +177,20 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
                          ψ = make_ψ(cntry, ψslope.*TFP[cntry, fwdate].^(1.0 - γ), hh_params))
     
             output, tradestats = aggregate(R[cntry, fwdate], W[cntry, fwdate], pₜ, τ[cntry, fwdate], tariff[:,:,fwdate], cntry, 
-                hh[cntry, fwdate], distribution(Q[fwdate][:,:,cntry], λ[:, cntry, fwdate], dist₀[cntry].state_index), foo_hh_params)
-            #ADD T dimension
+                hh[cntry, fwdate], distribution(Q, λ[:, cntry, fwdate], dist₀[cntry].state_index), foo_hh_params)
 
-            # println(output.production)
-    
+            # this is the next step to simplify...
+
             Y[cntry, fwdate] = output.production
     
             tradeflows[cntry, :, fwdate] = tradestats.bilateral_imports
         
             A_demand[cntry, fwdate] = output.Aprime
-
-            λ[:, cntry, fwdate + 1] .= law_of_motion(λ[:, cntry, fwdate] , transpose(Q[fwdate][:,:,cntry]))
     
         end            
             #then push forward
 
-        goods_market[:, fwdate] = Y[:, fwdate] .- vec(sum(tradeflows[:, :, fwdate] , dims = 1))
+        goods_market[:, fwdate] .= Y[:, fwdate] .- vec(sum(tradeflows[:, :, fwdate] , dims = 1))
         
         asset_market[fwdate] = sum(A_demand[:, fwdate])
 

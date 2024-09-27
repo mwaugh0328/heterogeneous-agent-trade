@@ -108,7 +108,7 @@ Wend = [exp.(sol.x[1]); 1.0]
 
 Rend = [exp.(sol.x[2]); exp.(sol.x[2])]
 
-Y, tradeflows, A_demand, Gbudget, tradeshare, hh_end, dist_end = world_equillibrium(Rsol_end, Wend, τ, hh_prm, cntry_prm, tol_vfi = 1e-10);
+Y, tradeflows, A_demand, Gbudget, tradeshare, hh_end, dist_end = world_equillibrium(Rend, Wend, τ, hh_prm, cntry_prm, tol_vfi = 1e-10);
 # this world_eq...is a core file takes prices and returns a bunch of stuff
 # note that hh, dist are objects of dimensiom number of countries, then within
 # it has policy functions and distributions state by state
@@ -118,24 +118,6 @@ Y, tradeflows, A_demand, Gbudget, tradeshare, hh_end, dist_end = world_equillibr
 # 
 
 T = 150
-
-# Rpath_check = repeat(Rint, outer = (1,T-1)) # in PI this is length T?
-# Rend_check = copy(Rint)
-
-# d_path_check = d .* ones(Ncntry, Ncntry, T+1)
-
-# W_path_check = repeat( Wint, outer = (1,T))
-# xxx_check = W_path_check[:]
-# Wend_check = copy(Wint)
-
-# trp_values_check = trans_path_values(hh, dist_int, Rint, Rend_check, Wend_check, T, τ)
-
-# good_market_check, asset_market_check = transition_path(xxx_check, Rpath_check, d_path_check, trp_values_check, hh_prm, cntry_prm)
-
-# good_market_check
-# asset_market_check
-
-################################################
 
 Rpath = repeat(Rend, outer = (1,T-1)) # in PI this is length T?
 

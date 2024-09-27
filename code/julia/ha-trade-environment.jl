@@ -356,10 +356,7 @@ function make_Q!(Q, household, model_params)
 
 end
 
-function make_Q(household, model_params)
-
-    @unpack asset_policy, πprob = household
-    @unpack Na, Nshocks, Ncntry, mc, agrid = model_params
+function make_Q(asset_policy, πprob, Na, Nshocks, Ncntry, mc, agrid)
 
     Q = zeros(Na*Nshocks, Na*Nshocks)
     # this is all setup assumeing Q is zero everywehre
