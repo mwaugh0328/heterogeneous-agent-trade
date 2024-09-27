@@ -165,7 +165,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     #####################################################################################################
     # This is the forward step, so given an initial distribution, take hh decision rules and push forward
 
-    @time @inbounds for fwdate = 1:T
+    @time @inbounds @views for fwdate = 1:T
         # so when date > T as we run it out, just grab stuff from end in policy functions or parameter
 
         for cntry = 1:Ncntry
