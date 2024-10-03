@@ -13,6 +13,6 @@ include("ha-trade-efficient.jl")
 
 include("static-trade-environment.jl")
 
-include("gravity-tools.jl")
+# include("gravity-tools.jl")
 
 include("ha-trade-transition.jl")

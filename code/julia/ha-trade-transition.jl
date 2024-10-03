@@ -48,11 +48,13 @@ function transition_path(xxx, d_path, trp_values, hh_params, cntry_params; displ
 
     @unpack T = trp_values
 
-    Rpath = xxx[1:(T-1)]
+    Rpath = repeat(xxx[1:(T-1)]', outer = (hh_params.Ncntry,1)) # then reshape it so there is an R for each country
 
-    goods_market, asset_market = transition_path(xxx[T:end], Rpath, d_path, trp_values, hh_params, cntry_params; display = display)
+    Wpath = [xxx[T:end]; ones(T) ]
+
+    goods_market, asset_market = transition_path(Wpath, Rpath, d_path, trp_values, hh_params, cntry_params; display = display)
     
-    return vcat(goods_market, asset_market[1:(T - 1)])
+    return vcat(goods_market[1:hh_params.Ncntry - 1, :][:], asset_market[1:(trp_values.T - 1)] )
 
 end
 
@@ -83,13 +85,20 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     # p = reshape(xxx[T + 1 : end], Ngoods, T)
     # this is for situation with initial pinned down
 
-    R = reshape(Rpath, Ncntry, T-1)
     R = hcat(R₀, Rpath, Rend) # add the final period
-    W = reshape(xxx[:], Ncntry, T) # we are finding W path such that markets clear at all date, here we feed in xxx as 2T by 1 vector
+    W = reshape(xxx,  T, Ncntry)' # we are finding W path such that markets clear at all date, here we feed in xxx as 2T by 1 vector
     W = hcat(W, Wend)
+
+    W = W ./ ( sum(W, dims = 1) / Ncntry ) 
+    # need to set this up so it is conistent with the way I have the numeriar in the 
+    # ha-trade-solution like line 73 so the numeriare here is that average wages are one.
+
+    # println(" ")
+    # println(W[:,1:5])
 
     @assert length(R[1,:]) ≈ T + 1
     @assert length(W[1,:]) ≈ T + 1 
+    @assert size(d_path)[3] ≈ T + 1 
 
     TFP = TFP.*ones(Ncntry, T+1)
     τ = τ.*ones(Ncntry, T+1) # transfer
@@ -121,7 +130,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     #####################################################################################################
     # This is the backward step: solve hh problem at T then use colman operator to work backwards
 
-    @time @views @inbounds for bwdate = (T):-1:1 # do this for each T
+    @views @inbounds for bwdate = (T):-1:1 # do this for each T
 
         for cntry = 1:Ncntry # for each country
 
@@ -131,7 +140,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     
             foo_hh_params = household_params(hh_params, agrid = make_agrid(hh_params, TFP[cntry, bwdate]), 
                     TFP = TFP[cntry, bwdate], L = L[cntry, bwdate], σϵ = σϵ*(TFP[cntry, bwdate]^(1.0 - γ)),
-                     ψ = make_ψ(cntry, ψslope.*TFP[cntry, bwdate].^(1.0 - γ), hh_params) ) # need T add t dimension
+                     ψ = make_ψ(cntry, ψslope.*TFP[cntry, bwdate].^(1.0 - γ), hh_params) ) # need T add t dimension                   
 
             hh[cntry, bwdate] = one_step_itteration(hh[cntry, bwdate + 1].cons_policy, hh[cntry, bwdate + 1].Tv, # consumption, values at date t+1
                     R[cntry, bwdate], R[cntry, bwdate + 1], # returns at date t and t + 1
@@ -146,7 +155,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
 
     Q = Array{Float64}(undef, Na*Nshocks, Na*Nshocks)
 
-    @time @views @inbounds for fwdate = 1:T
+    @views @inbounds for fwdate = 1:T
 
         for cntry = 1:Ncntry
 
@@ -165,7 +174,7 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
     #####################################################################################################
     # This is the forward step, so given an initial distribution, take hh decision rules and push forward
 
-    @time @inbounds @views for fwdate = 1:T
+    @inbounds for fwdate = 1:T
         # so when date > T as we run it out, just grab stuff from end in policy functions or parameter
 
         for cntry = 1:Ncntry

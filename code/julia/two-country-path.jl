@@ -1,6 +1,7 @@
 include("ha-trade.jl")
 using MINPACK
 using JET
+using Plots
 
 
 # ##########################################################################
@@ -59,6 +60,7 @@ sol = fsolve(f!, log.(xguess), show_trace = true, method = :hybr;
 print(sol)
 
 Wint = [exp.(sol.x[1]); 1.0]
+Wint = Wint ./ ( sum(Wint, dims = 1) / Ncntry ) # Need to be consistent with numeriare 
 
 Rint = [exp.(sol.x[2]); exp.(sol.x[2])]
 
@@ -68,6 +70,7 @@ Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist_int = world_equillibrium(
 # it has policy functions and distributions state by state
 
 # ##########################################################################
+##########################################################################
 # Find ending Equilibrium
 
 d_ij_end = 1.65
@@ -105,6 +108,7 @@ sol = fsolve(f!, log.(xguess), show_trace = true, method = :hybr;
 print(sol)
 
 Wend = [exp.(sol.x[1]); 1.0]
+Wend = Wend ./ ( sum(Wend, dims = 1) / Ncntry ) # Need to be consistent with numeriare 
 
 Rend = [exp.(sol.x[2]); exp.(sol.x[2])]
 
@@ -114,40 +118,56 @@ Y, tradeflows, A_demand, Gbudget, tradeshare, hh_end, dist_end = world_equillibr
 # it has policy functions and distributions state by state
 
 # ##########################################################################
+##########################################################################
 # Transition path
-# 
 
-T = 150
+T = 50
 
-Rpath = repeat(Rend, outer = (1,T-1)) # in PI this is length T?
+Rpath = 1.015*ones(T-1)
 
 d_path = zeros(Ncntry, Ncntry, T+1)
 
-d_path[:,:,1] = [1.0 1.70; d_ij 1.0]
-d_path[:,:,2] = [1.0 1.68; d_ij 1.0]
-d_path[:,:,3:end] = d_end .* ones(Ncntry, Ncntry, T-1)
+# d_path[:,:,1] = [1.0 1.72; d_ij 1.0]
+# d_path[:,:,2] = [1.0 1.71; d_ij 1.0]
 
-W_path = repeat( Wint, outer = (1,T))
-xxx = W_path[:]
+d_path = d_end .* ones(Ncntry, Ncntry, T+1)
+
+W_path = 1.0.*ones(T)
+
+xxx = vcat(Rpath, W_path)
 
 trp_values = trans_path_values(hh_end, dist_int, Rint, Rend, Wend, T, τ)
 
-@time good_market, asset_market = transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
+out = transition_path(xxx, d_path, trp_values, hh_prm, cntry_prm)
+
+# @time good_market, asset_market = transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
+
+##########################################################################
+##########################################################################
+
+g(x) = transition_path(( x ), d_path, trp_values, hh_prm, cntry_prm)
+
+function g!(fvec, x)
+
+    fvec .= g(x)
+
+end
+
+initial_x = (xxx)
+
+n = length(initial_x)
+diag_adjust = n - 1
+
+sol = fsolve(g!, initial_x, show_trace = true, method = :hybr;
+      ml=diag_adjust, mu=diag_adjust,
+      diag=ones(n),
+      mode= 1,
+      tol=1e-5,
+       )
+
+print(sol);  
 
 
-# transition_path_only_assetmarket(Rpath, W_path[:], d_path, trp_values, hh_prm, cntry_prm)
-
-# @report_opt transition_path(xxx, Rpath, d_path, trp_values, hh_prm, cntry_prm)
-# this run gives 458 possible errors
-
-
-# TFP = [1.0; 1.0]
-
-# τ = [0.0; 0.0]
-
-# L = [1.0; 1.0]
-
-# tariff = zeros(Ncntry, Ncntry)
 
 
 
