@@ -49,6 +49,62 @@ function eq_variation_porportional(R, w, p, Δ_hh, state_index, model_params)
 
 end
 
+
+function one_time_asset(hh_int, hh_new, R, W, TFP, hh_params)
+    # core function that computes difference between 
+    # value fun at old prices + transfer (xxx) and new value fun
+
+    @unpack ψ, σϵ , Ncntry, Nshocks, Na, mc = hh_params
+
+    shocks = exp.(mc.state_values)
+
+    agrid = make_agrid(hh_params, TFP)
+
+    vint = alt_log_sum(hh_int.πprob, hh_int.Tv, σϵ, ψ)
+
+    vnew = alt_log_sum(hh_new.πprob, hh_new.Tv, σϵ, ψ)
+
+    evτ = Array{Float64}(undef,Na, Nshocks)
+
+    income = Array{Float64}(undef,Na, Nshocks)
+
+    for shk = 1:Nshocks
+
+        for ast = 1:Na
+
+            if ast > 90
+
+                evτ[ast,shk] = NaN
+
+            else
+
+            ahigh =  searchsortedfirst(vint[:, shk], vnew[ast,shk])
+
+            alow = max(ahigh - 1, 1)
+
+            p = (vnew[ast,shk] - vint[alow,shk]) / (vint[ahigh, shk] - vint[alow, shk])
+
+            if isnan(p)
+
+                p = 0.0
+            end
+
+            evτ[ast,shk] =  p*agrid[ahigh] + (1.0 - p).*agrid[alow] - agrid[ast]
+
+            income[ast, shk] = (R)*agrid[ast] + W*shocks[shk] - agrid[1] 
+
+        end
+
+        end
+    end
+
+    return vint, vnew, evτ, income
+    #Δ_v is new value fun
+
+end
+
+
+
 #########################################################################################
 
 function eq_variation_porportional(x, astate, shockstate, R, w, p, Δ_v, model_params)

@@ -116,16 +116,28 @@ Reserve Bank of Minneapolis or the Federal Reserve System. This project was deve
 \section{}
 \end{frame}
 
-%\begin{frame}[t]{Heterogenous Price Elasticities and Trade}
-%\smallskip
-%To trade economists, household heterogeneity is interesting because of the notion that some benefit from trade and others don't.\\
-%\medskip
-%One mechanism behind this notion is heterogeneity in \begin{alert}{\textbf{elasticities}}\end{alert}.\\
-%\bigskip
-%This paper: A model of household heterogeneity that results in heterogenous price elasticities and I use it as a laboratory to think about aggregate trade, the gains from trade and how they are distributed.\\
-%\end{frame}
-
 \begin{frame}[t]{Heterogenous Price Elasticities and Trade}
+\smallskip
+To trade economists, household heterogeneity is interesting because of the notion that some benefit from trade and others don't.\\
+\bigskip
+One mechanism behind this notion is heterogeneity in \begin{alert}{\textbf{elasticities}}\end{alert}.
+\begin{itemize}
+\item \citet*{auer2022unequal} is a nice example. In the context of the 2015 Swiss appreciation, they find that poor households are more price elastic.
+\smallskip
+\item A very intuitive idea. Missing almost entirely from macro and trade, but a foundation of modern demand estimation in IO, e.g., \citet*{berry1995automobile}.
+\end{itemize}
+\bigskip
+\medskip
+This paper:\\
+\begin{itemize}
+\item A model of household heterogeneity that results in heterogenous price elasticities and I use it as a laboratory to think about aggregate trade, the gains from trade and how they are distributed.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{Heterogenous Price Elasticities and Trade | How it Works}
 \smallskip
 Two ingredients:
 \begin{itemize}
@@ -143,6 +155,22 @@ Two core results:
 \bigskip
 Quantitatively, these forces are powerful | the poorest households gain 4.5X more than the richest; the average gains from trade are 3X than representative agent benchmarks.
 \end{frame}
+
+%\begin{frame}[t]{The Contribution and Agenda\ldots}
+%\smallskip
+%Thomas Paine in opening line of ``Common Sense'':\\
+%``\emph{a long habit of not thinking a thing \textbf{wrong}, gives it a superficial appearance of being \textbf{right}}''\\
+%\bigskip
+%CES is nice, but abstracts from empirically relevant issues about how household heterogeneity shapes demand.
+%\begin{itemize}
+%\item This paper is about trade and the gains from trade.
+%\smallskip
+%\item Pricing and market power issues in \citet{mongey-waugh-1}.
+%\smallskip
+%\
+%\end{itemize}
+%\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -174,15 +202,16 @@ Quantitatively, these forces are powerful | the poorest households gain 4.5X mor
 \smallskip
 Armington model with two countries home and foreign.\\
 \medskip
-Continuum of agents with names $k \in [0, \ 1]$ in the home country. Agents are heterogenous in wealth $w^k$.
+$k = {1,\ldots, K}$ types of agents and mass $\mu^k$ of each type. Agents are heterogenous in wealth $w^k$.\\
+\smallskip
 Agents have preferences:
 \begin{align*}
-u(c_{hh}^k) + \epsilon_{h}^k  \ \ \ \  \mbox{and} \ \ \ \ u(c_{hf}^k) + \epsilon_{f}^k,
+u(c_{hh}) + \epsilon_{h}  \ \ \ \  \mbox{and} \ \ \ \ u(c_{hf}) + \epsilon_{f},
 \end{align*}
 \begin{itemize}
-\item discrete choice\ldots so each household chooses only the home or foreign variety.
+\item discrete choice\ldots so each agent chooses \textbf{\emph{only}} the home or foreign variety.
 \smallskip
-\item $\epsilon^k_{j}$s are iid across agents and distributed Type 1 Extreme Value with parameter $\sigma_{\epsilon}$.
+\item $\epsilon_{j}$s are iid across agents and options, distributed Type 1 EV with parameter $\sigma_{\epsilon}$.
 \smallskip
 \item For now, $u$ is well behaved.
 \end{itemize}
@@ -202,14 +231,13 @@ Micro-level trade
 which is the standard result with the Type 1 EV taste shocks.\\
 \bigskip
 \medskip
-Aggregate trade aries from the \textbf{explicit aggregation} of these decisions
+Aggregate trade aries from the \begin{alert}{\textbf{explicit aggregation}}\end{alert} of these decisions
 \begin{align*}
-M_{hf} = \int w^k \pi_{hf}^k dk.
+M_{hf} = \sum\limits_{k\in K} w^k \pi_{hf}^k \mu^k.
 \end{align*}\\
 \bigskip
-The \textbf{aggregate trade elasticity} is just a expenditure weighted average of all agent $k$s elasticities.
+The \begin{alert}{\textbf{aggregate trade elasticity}}\end{alert} is just a expenditure weighted average of all agent $k$s elasticities.
 \begin{itemize}
-\smallskip
 \item Micro-elasticities\ldots next slide
 \end{itemize}
 \end{frame}
@@ -229,22 +257,10 @@ Agent $k$'s trade elasticity
 \smallskip
 \item Generally depends on how curved $u$ is \ldots with CRRA and curvature parameter $>$ 1 $\Rightarrow$ elasticities are larger for the poor.
 \smallskip
-\item Intuition: A price reduction delivers a lot of extra utility for high marginal utility ( poor ) households and this induces strong substitution by the poor.
+\item Intuition: A price reduction delivers a lot of extra utility for high marginal utility ( poor ) agents and this induces strong substitution by the poor.
 \end{itemize}
 \bigskip
 A second interesting case is when $u$ is $\log$ \ldots elasticities are constant and this (\emph{and} the Type 1 EV taste shocks) leads to the {\small \citet{anderson1987ces}} CES aggregation result.
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\begin{frame}[t]{Example: Micro-Level Trade Elasticities by Income and Wealth}
-\vspace{-.5cm}
-\begin{figure}[t]
-\centerline{
-\includegraphics[scale = 0.4]{../notes/figures/micro-elasticity.pdf}}
-\end{figure}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -265,7 +281,7 @@ The gains are about (i) exposure ( {\small \citet{deaton1989rice}, \citet{borusy
 \smallskip
 \item The standard result is that elasticities don't matter to a first order.
 \smallskip
-\item \begin{alert}{\textbf{Here they do}}\end{alert}. And under certain conditions, these gains are pro-poor.
+\item \begin{alert}{\textbf{Here elasticities matter}}\end{alert}. And under certain conditions, these gains are pro-poor.
 \end{itemize}
 \medskip
 Why? Next slide\ldots
@@ -305,7 +321,7 @@ and the term in brackets disappears.  \\
 \medskip
 Connections and implications:
 \begin{itemize}
-\item \textbf{Theory:} Relates to the spatial analysis of {\small \citet*{miyauchi2024unpacking}} and complete markets decentralization of discrete choice models in {\small \citet{mongey-waugh-2}}.
+\item \textbf{Theory:} Very salient in spatial models ( {\small \citet*{miyauchi2024unpacking}} ) and connects with the complete markets decentralization of discrete choice models in {\small \citet{mongey-waugh-2}}.
 \smallskip
 \item \textbf{Measurement:} Assumptions when micro-level shares (the $\pi^k$s ) are constructed?
 \end{itemize}
@@ -344,15 +360,15 @@ Two enrichments:\\
 \medskip
 \textbf{1.} Production side to connect prices with trade flows as in quantitative trade models.\\
 \bigskip
-\textbf{2.} The standard incomplete markets model on the household side. This is important because\ldots
+\textbf{2.} The standard incomplete markets model on the household side. This is quantitatively important because\ldots
 \begin{itemize}
 \smallskip
-\item In the illustrative model, there was no ability to insure. The SIM model provides an \textbf{intermediate setting} with self-insurance, and thus works against the elasticity effects.
+\item In the illustrative model, there was no ability to insure,
 \smallskip
-\item In the illustrative model, types are fixed. In the SIM model, household-level dynamics $\Rightarrow$ poor people today are rich in the future, and this also works against the elasticity effects.
-\medskip
-\item Less important reasons (i) I like it (ii) I started there (iii) provides an interface with large body of research in macro (iv) a theory as to why there are rich and poor people.
+\item and types are fixed.
 \end{itemize}
+\medskip
+The SIM model has self-insurance and household-level dynamics (poor people today are rich in the future). Both these forces work \begin{alert}{\textbf{against}}\end{alert} the mechanisms I just described.
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -377,6 +393,53 @@ where conditional direct utility for good $j$ is
 \bigskip
 Household $k$'s efficiency units $z_t$ evolve according to a Markov Chain, and can borrow or accumulate a non-state contingent asset, $a$, with gross return $R_{i}$.
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{What Households Do I}
+Focus on a stationary setting. A hh's state are its asset holdings $a$ and shock $z$.\\
+\smallskip
+\textbf{1.} Condition on variety choice their problem is:
+\begin{align}
+v_{i}(a, z, j) =   \max_{\ a', \ c_{ij}  \ }\bigg  \{ u(c_{ij})  + \beta \, \mathbb{E} [v_{i}(a', z')]  \bigg\}, \nonumber \\
+\nonumber \\
+\mbox{subject to}  \ \ \  \  p_{ij}c_{ij} +  a' \leq    R_{i} a + w_{i} z \ \ \  \mbox{and} \ \ \ \ a' \geq - \phi_{i}. \nonumber
+\end{align}\\
+\bigskip
+\textbf{2.} The ex-post value function of a household in country $i$ is
+\begin{align}
+\max_{j} \big  \{ \  v_{i}(a, z, j) + \epsilon_{j}  \ \big \}. \nonumber
+\end{align}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{What Households Do II}
+Three equations characterizing the commodity choice, value functions, consumption / savings\ldots\\
+\smallskip
+\textbf{1.} The choice probability is:
+\begin{align*}
+\pi_{ij}(a, z) = \exp \left( \frac{ v_{i}(a, z, j) }{\sigma_{\epsilon}} \right) \Bigg / \Phi_{i}(a,z) ,\\
+\\
+\mbox{where} \ \ \Phi_{i}(a,z) := \sum_{j'} \exp \left( \frac{ v_{i}(a, z, j') }{\sigma_{\epsilon}}  \right).
+\end{align*}\\
+\bigskip
+\textbf{2.} The ex-ante value function of a household in country $i$ is
+\begin{align*}
+v_i(a, z) = \sigma_{\epsilon} \log \left\{ \Phi_{i}(a,z)  \right\}.
+\end{align*}\\
+\bigskip
+\textbf{3.} Away from the constraint, consumption and asset choices must respect this Euler equation:
+\begin{align*}
+\frac{u'(c_{i}(a, z, j))}{p_{ij}} = \beta R_{i} \mathrm{E}_{z'} \left[ \sum_{j'} \pi_{ij'}(a', z') \frac{u'(c_{i}(a', z', j'))}{p_{ij'}} \right].
+\end{align*}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -430,6 +493,18 @@ Exactly the same as in the illustrative model. With CRRA and relative risk avers
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+\begin{frame}[t]{Example: Micro-Level Trade Elasticities by Income and Wealth}
+\vspace{-.5cm}
+\begin{figure}[t]
+\centerline{
+\includegraphics[scale = 0.4]{../notes/figures/micro-elasticity.pdf}}
+\end{figure}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}[t]{HA Gains from Trade}
 \textbf{How does utility change under the heuristic of an immediate jump to the new steady state?}
 \smallskip
@@ -466,16 +541,16 @@ How hh's real wealth ($+$ or $-$) change through GE effects on prices | all eval
 }
 \only<4>{
 \bigskip
-This term is what I call the ``gains from changes in asset holdings''
+This term is about how assets adjust
 \vspace{.15cm}
 {\small
 \begin{align*}
-C(a,z) = \bigg \{\underbrace{ - \frac{u'(c_{i}(a,z,i))}{p_{ii}} + \beta \mathbb{E}_{z'} \bigg [-\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + \frac{u'(c_{i}(a',z',i))R_{i}}{p_{ii}} \bigg ] }_{\mbox{Euler equation}} \  \bigg \}\frac{\mathrm{d} g_{i}(a',z',i)}{\mathrm{d} d_{ij} / d_{ij}}
+C(a,z) = \bigg \{\underbrace{ - \frac{u'(c_{i}(a,z,i))}{p_{ii}} + \beta \mathbb{E}_{z'} \bigg [-\sigma_{\epsilon} \frac{\partial \pi_{ii}(a',z') / \pi_{ii}(a',z')}{\partial a'} + \frac{u'(c_{i}(a',z',i))R_{i}}{p_{ii}} \bigg ] }_{\mbox{Euler equation}} \  \bigg \}\frac{\mathrm{d} a'_{i}(a,z,i)}{\mathrm{d} d_{ij} / d_{ij}}
 \end{align*}
 }
 \\
 \medskip
-which is zero for small changes as hh's are either (i) on their Euler equation or (ii) constrained and can't adjust their asset position.
+which is \begin{alert}{\textbf{zero}}\end{alert} for small changes as hh's are either (i) on their Euler equation or (ii) constrained and can't adjust their asset position.
 }
 \end{frame}
 
@@ -503,11 +578,37 @@ and both are independent of the household heterogeneity. \uncover<2->{And the we
 }
 \medskip
 \only<1>{This mimics the results of \citet*{anderson1987ces}. This was not obvious to me given the environment \ldots risk, market incompleteness, borrowing constraints, etc.}
-\only<2>{And we are back to \citet{arkolakis2012new} $+$ what's going on with factor prices and borrowing constraints.}
+\only<2>{And we are back to \citet{arkolakis2012new} $+$ what's going on with valuation effects and asset adjustment.}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{HA Gains from Trade under Efficiency}
+\vspace{-.25cm}
+\smallskip
+{\small
+\begin{prp}[{\normalsize Trade Elasticities and Welfare Gains in the Efficient Allocation}]\label{prp:gains-efficient-allocation} The elasticity of trade to a change in trade costs between $ij$ in the efficient allocation is:
+\begin{align*}
+\theta_{ij} =  -\frac{1}{\sigma_{\epsilon}} \bigg [ u'(c_{i}(j)) c_{i}(j) \bigg].
+\end{align*}
+\uncover<2->{And the welfare gains from a reduction in trade costs between $i,j$ are
+\begin{align*}
+= \sigma_{\epsilon} \times  \theta_{ij} \times  \pi_{ij} \times \frac{L_i}{1-\beta},
+\end{align*}
+which is the discounted, direct effect from relaxing the aggregate resource constraint.} \uncover<3->{And this can be expressed as
+\begin{align*}
+= -\sigma_{\epsilon} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \times \frac{L_i}{1 - \beta}.
+\end{align*}}
+\end{prp}
+}
+\medskip
+\only<1>{Same idea as in decentralized allocation, but now everyone substitutes in a common way...}
+
+\only<2>{Mimics the results of \citet{AtkesonBurstein2010} but with household (not firm) heterogeneity.}
+
+\only<3>{And | again| we are back to an \citet{arkolakis2012new}-like expression and with $\log$ its exact.}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -543,6 +644,70 @@ This is what I'll do\ldots\\
 \bigskip
 \textbf{2.} Gains from trade calculations.\\
 \end{frame}
+
+
+\begin{frame}[t]
+\frametitle{Preferences, Shocks, and Constraints}
+\begin{table}[t]
+\small
+\begin{center}
+\refstepcounter{table}
+\setlength {\tabcolsep}{4.5mm}
+\renewcommand{\arraystretch}{1.60}\label{tb-calibration}
+\begin{tabular}[t]{l c l}
+\multicolumn{3}{c}{{\normalsize\textbf{Preferences, Shocks, and Constraints | Calibrated Parameters}} }
+\\\hline \hline
+Description & Value & \multicolumn{1}{c}{Target}\\
+\cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3}
+Discount Factor, \ $\beta$                          & $0.92$ & \phantom{\} } Global Interest Rate of $1\%$ \\
+CRRA parameter, \ $\gamma$                          & $1.45$ & \multirow{2}{*}{\Bigg \} Micro elasticities of {\small \citet{auer2022unequal}} }\\
+Type One E-V parameter, \ $1 / \sigma_{\epsilon}$    & $3.0\phantom{0}$ & \\
+Slope of Quality Shifter, \ $\psi_{ii}(z)$          & --- & \phantom{\} } Micro moments of {\small \citet{borusyak2021distributional} } \\
+Borrowing Constraint \ $\phi_{i}$                   & --- & \phantom{\} } $50\%$ of $i$'s autarky labor income \\
+Income Process on \ $z$                             & --- & \phantom{\} } {\small \citet*{krueger2016macroeconomics}} \\
+\hline
+\end{tabular}
+\\[0.5ex]
+%\parbox{5.95in}{\footnotesize \textbf{Note:} }
+\end{center}
+\end{table}
+\bigskip
+\begin{itemize}
+\smallskip
+\item Everything is done under financial globalization case.
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{County Specific Parameters | Using Gravity as a Guide}
+\smallskip
+\only<1>{
+The problem: no closed form map from trade flows to parameters as in standard trade models. But I want the model to replicate the geographic pattern of activity seen in the data.}
+\only<2>{The solution: use the gravity regression ``as a guide'' where I estimate parameters of the model so that the regression coefficients run on my model's data match that seen in the data.}
+\medskip
+\uncover<2->{
+\begin{itemize}
+\smallskip
+\item Step 0. Impose a trade cost function to reduce the parameter space
+\begin{align}
+\log d_{ij} = d_{k} + b + l + e_{h} + m_{i}. \nonumber
+\end{align}
+\smallskip
+\item Step 1. Run this gravity regression on the data
+\begin{align}
+\log \left( {\frac{M_{ij}}{M_{ii}}} \right) = {Im_{i}} + {Ex_{j}} + {d_{k}} + {b} + {l} + {e_{h}} + \delta_{ij}. \nonumber
+\end{align}
+\smallskip
+\item Step 2. Guess TFP terms and coefficients on the trade cost function, compute an equilibrium, run the same regression from above on model generated data.
+\smallskip
+\item Step 3. Evaluate difference between model and data and update parameters until convergence.
+\end{itemize}
+}
+\end{frame}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -588,6 +753,29 @@ This is what I'll do\ldots\\
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]
+\frametitle{Measuring Welfare}
+\smallskip
+Want is a measure of welfare in interpretable units. I'm going to focus on equivalent variation. \\
+\medskip
+Reminder: Given some price change delivering utility level $v'$, equivalent variation asks ``at the old prices, $p$, how much extra income must be provided to be indifferent between $v'$ and $v(p)$?''\\
+\bigskip
+\bigskip
+My measure is a permanent, proportional increase in wealth $\tau_{i,a,z}$, at the old prices such that the new level of utility $v'_i$ is achieved:
+\begin{align}
+v'_i(a,z ; \mathbf{p'}) = v_i(a,z ; \mathbf{p}, \tau_{i, a,z}).  \nonumber
+\end{align}\\
+\bigskip
+\bigskip
+Today, I'm doing this across steady states, not transition path.
+\begin{itemize}
+\item I just computed the path last week, need time to think about results\ldots sorry :(
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}[t]{U.S. Welfare: 10\% Reduction in $d_{us,j}$}
@@ -596,6 +784,14 @@ This is what I'll do\ldots\\
 \end{figure}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[t]{U.S. Welfare: Global 10\% Reduction in $d$ }
+\begin{figure}[!t]
+\centering{\includegraphics[scale = .55]{../notes/figures/global-welfare-household-vs-log.pdf}}
+\end{figure}
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -784,6 +980,25 @@ p_{i} Y_{i} - \sum_{j}  X_{ji} = 0, \ \ \forall i
 }
 \end{frame}
 
+
+\begin{frame}[t]{Aggregation}
+\smallskip
+Aggregates arise from explicit aggregation of hh-level actions. Two examples:\\
+\medskip
+\medskip
+\textbf{1.} Aggregate, bilateral imports are
+\begin{align*}
+M_{ij} = L_i \int_{z} \int_{a}  p_{ij} c_{i}(a, z, j) \pi_{ij}(a, z) \lambda_i(a, z)
+\end{align*}
+where $\lambda_i$ is the \emph{endogenous} distribution of hhs across states. Here trade flows take on a mixed-logit form similar to \citet*{berry1995automobile}, but everything is tied down in equilibrium. \\
+\bigskip
+\bigskip
+\textbf{2.} The national income accounting identity (GDP = C + I + G + X - M) \ldots
+\begin{align*}
+p_{i} Y_{i}  =  \underbrace{L_{i} \sum_{j} \int_{z} \int_{a}  p_{ij} c_{i}(a, z, j) \pi_{ij}(a, z) \lambda_i(a, z)}_{\widetilde{P_{i} C_i}} \ + \ \underbrace{\bigg[\ \sum_{j\neq i}X_{ji} -  \sum_{j\neq i}M_{ij} \bigg]}_{-R_{i}A_i + A_{i}'}.
+\end{align*}
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -845,100 +1060,11 @@ With CRRA and relative risk aversion $ > 1$ then \begin{alert}<5>{\textbf{poor h
 \end{frame}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[t]{U.S. Welfare: Global 10\% Reduction in $d$ }
-\begin{figure}[!t]
-\centering{\includegraphics[scale = .55]{../notes/figures/global-welfare-household-vs-log.pdf}}
-\end{figure}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[t]
-\frametitle{Measuring Welfare}
-\smallskip
-Want is a measure of welfare in interpretable units. I'm going to focus on equivalent variation. \\
-\medskip
-Reminder: Given some price change delivering utility level $v'$, equivalent variation asks ``at the old prices, $p$, how much extra income must be provided to be indifferent between $v'$ and $v(p)$?''\\
-\bigskip
-\bigskip
-My measure is a permanent, proportional increase in wealth $\tau_{i,a,z}$, at the old prices such that the new level of utility $v'_i$ is achieved:
-\begin{align}
-v'_i(a,z ; \mathbf{p'}) = v_i(a,z ; \mathbf{p}, \tau_{i, a,z}).  \nonumber
-\end{align}\\
-\bigskip
-\bigskip
-Also, I'm doing this across steady states, not transitions.\\ Sorry :(
-\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[t]
-\frametitle{Preferences, Shocks, and Constraints}
-\begin{table}[t]
-\small
-\begin{center}
-\refstepcounter{table}
-\setlength {\tabcolsep}{4.5mm}
-\renewcommand{\arraystretch}{1.60}\label{tb-calibration}
-\begin{tabular}[t]{l c l}
-\multicolumn{3}{c}{{\normalsize\textbf{Preferences, Shocks, and Constraints | Calibrated Parameters}} }
-\\\hline \hline
-Description & Value & \multicolumn{1}{c}{Target}\\
-\cmidrule(lr){1-1} \cmidrule(lr){2-2} \cmidrule(lr){3-3}
-Discount Factor, \ $\beta$                          & $0.92$ & \phantom{\} } Global Interest Rate of $1\%$ \\
-CRRA parameter, \ $\gamma$                          & $1.45$ & \multirow{2}{*}{\Bigg \} Micro elasticities of {\small \citet{auer2022unequal}} }\\
-Type One E-V parameter, \ $1 / \sigma_{\epsilon}$    & $3.0\phantom{0}$ & \\
-Slope of Quality Shifter, \ $\psi_{ii}(z)$          & $0.72$ & \phantom{\} } Micro moments of {\small \citet{borusyak2021distributional} } \\
-Borrowing Constraint \ $\phi_{i}$                   & --- & \phantom{\} } $50\%$ of $i$'s autarky labor income \\
-Income Process on \ $z$                             & --- & \phantom{\} } {\small \citet*{krueger2016macroeconomics}} \\
-\hline
-\end{tabular}
-\\[0.5ex]
-%\parbox{5.95in}{\footnotesize \textbf{Note:} }
-\end{center}
-\end{table}
-\bigskip
-\begin{itemize}
-\smallskip
-\item Everything is done under financial globalization case.
-\end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}[t]{County Specific Parameters | Using Gravity as a Guide}
-\smallskip
-\only<1>{
-The problem: no closed form map from trade flows to parameters as in standard trade models. But I want the model to replicate the geographic pattern of activity seen in the data.}
-\only<2>{The solution: use the gravity regression ``as a guide'' where I estimate parameters of the model so that the regression coefficients run on my model's data match that seen in the data.}
-\medskip
-\uncover<2->{
-\begin{itemize}
-\smallskip
-\item Step 0. Impose a trade cost function to reduce the parameter space
-\begin{align}
-\log d_{ij} = d_{k} + b + l + e_{h} + m_{i}. \nonumber
-\end{align}
-\smallskip
-\item Step 1. Run this gravity regression on the data
-\begin{align}
-\log \left( {\frac{M_{ij}}{M_{ii}}} \right) = {Im_{i}} + {Ex_{j}} + {d_{k}} + {b} + {l} + {e_{h}} + \delta_{ij}. \nonumber
-\end{align}
-\smallskip
-\item Step 2. Guess TFP terms and coefficients on the trade cost function, compute an equilibrium, run the same regression from above on model generated data.
-\smallskip
-\item Step 3. Evaluate difference between model and data and update parameters until convergence.
-\end{itemize}
-}
-\end{frame}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -960,34 +1086,7 @@ p_{i} Y_{i}  =  \underbrace{L_{i} \sum_{j} \int_{z} \int_{a}  p_{ij} c_{i}(a, z,
 \end{align*}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}[t]{HA Gains from Trade under Efficiency}
-\vspace{-.25cm}
-\smallskip
-{\small
-\begin{prp}[{\normalsize Trade Elasticities and Welfare Gains in the Efficient Allocation}]\label{prp:gains-efficient-allocation} The elasticity of trade to a change in trade costs between $ij$ in the efficient allocation is:
-\begin{align*}
-\theta_{ij} =  -\frac{1}{\sigma_{\epsilon}} \bigg [ u'(c_{i}(j)) c_{i}(j) \bigg].
-\end{align*}
-\uncover<2->{And the welfare gains from a reduction in trade costs between $i,j$ are
-\begin{align*}
-= \sigma_{\epsilon} \times  \theta_{ij} \times  \pi_{ij} \times \frac{L_i}{1-\beta},
-\end{align*}
-which is the discounted, direct effect from relaxing the aggregate resource constraint.} \uncover<3->{And this can be expressed as
-\begin{align*}
-= -\sigma_{\epsilon} \times \frac{\mathrm{d} \pi_{ii} / \pi_{ii}}{\mathrm{d} d_{ij} / d_{ij}} \times \frac{L_i}{1 - \beta}.
-\end{align*}}
-\end{prp}
-}
-\medskip
-\only<1>{Same idea as in decentralized allocation, but now everyone substitutes in a common way...}
-
-\only<2>{Mimics the results of \citet{AtkesonBurstein2010} but with household (not firm) heterogeneity.}
-
-\only<3>{And | again| we are back to an \citet{arkolakis2012new}-like expression and with $\log$ its exact.}
-\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

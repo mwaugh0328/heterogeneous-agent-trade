@@ -12,7 +12,7 @@ using Plots
 σϵ = 0.25 # logit dispersion parameter
 Ncntry = 2 # number of countries
 
-hh_prm = household_params();
+hh_prm = household_params(γ = γ, σϵ = σϵ, Ncntry= Ncntry, Na = 200);
 
 # here are some simpe country parametrers
 TFP = [1.0; 1.0]
@@ -64,7 +64,7 @@ Wint = Wint ./ ( sum(Wint, dims = 1) / Ncntry ) # Need to be consistent with num
 
 Rint = [exp.(sol.x[2]); exp.(sol.x[2])]
 
-Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist_int = world_equillibrium(Rint, Wint, τ, hh_prm, cntry_prm, tol_vfi = 1e-10);
+Y, tradeflows, A_demand, Gbudget, tradeshare_int, hh, dist_int = world_equillibrium(Rint, Wint, τ, hh_prm, cntry_prm, tol_vfi = 1e-10);
 # this world_eq...is a core file takes prices and returns a bunch of stuff
 # note that hh, dist are objects of dimensiom number of countries, then within
 # it has policy functions and distributions state by state
@@ -169,7 +169,9 @@ print(sol);
 
 
 
+godos_market, asset_market, hhpath = transition_path(( sol.x ), d_path, trp_values, hh_prm, cntry_prm, display = true)
 
+vint, vnew, evτ, income = one_time_asset(hh[1], hhpath[1,1], Rint[1], Wint[1], 1.0, hh_prm)
 
 
 

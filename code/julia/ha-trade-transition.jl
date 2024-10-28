@@ -52,9 +52,19 @@ function transition_path(xxx, d_path, trp_values, hh_params, cntry_params; displ
 
     Wpath = [xxx[T:end]; ones(T) ]
 
-    goods_market, asset_market = transition_path(Wpath, Rpath, d_path, trp_values, hh_params, cntry_params; display = display)
+    if display == false
+
+        goods_market, asset_market = transition_path(Wpath, Rpath, d_path, trp_values, hh_params, cntry_params; display = display)
     
-    return vcat(goods_market[1:hh_params.Ncntry - 1, :][:], asset_market[1:(trp_values.T - 1)] )
+        return vcat(goods_market[1:hh_params.Ncntry - 1, :][:], asset_market[1:(trp_values.T - 1)] )
+
+    else
+
+        goods_market, asset_market, hh = transition_path(Wpath, Rpath, d_path, trp_values, hh_params, cntry_params; display = display)
+    
+        return goods_market, asset_market, hh
+
+    end
 
 end
 
@@ -205,8 +215,16 @@ function transition_path(xxx, Rpath, d_path, trp_values, hh_params, cntry_params
 
     end
 
-    return goods_market,  asset_market # the goods market should by Ncntry by T, asset market should be by T 
+    if display == false
 
+        return goods_market,  asset_market # the goods market should by Ncntry by T, asset market should be by T 
+
+    else
+
+        return goods_market,  asset_market, hh # the goods market should by Ncntry by T, asset market should be by T 
+
+    end
+    
 end
 
 #####################################################################################################

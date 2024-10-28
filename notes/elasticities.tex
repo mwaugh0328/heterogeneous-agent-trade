@@ -1,0 +1,244 @@
+\documentclass[pdftex,11pt]{article}
+\usepackage[pdftex]{graphicx,color}
+\usepackage{setspace}
+\usepackage{amsmath,amssymb}
+\usepackage{titlesec}
+%\usepackage{subfigure}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage[longnamesfirst]{natbib}
+\usepackage[listings, most]{tcolorbox}
+\usepackage{cite}
+\usepackage[paperwidth=8.5in,
+left=0.5in,right=0.5in,paperheight=11.0in,textheight=9.5in,centering]{geometry}
+
+\bibliographystyle{ecta}
+\definecolor{nblue}{RGB}{0,0,128}
+
+\usepackage[colorlinks=true, linkcolor=nblue,
+citecolor=black, urlcolor=nblue, bookmarks=false,
+pdfstartview={XYZ null null 0.95},
+pdftitle={Redistributing the Gains From Trade Through Progressive Taxation},
+pdfauthor={Spencer G. Lyon, Michael E. Waugh},
+pdfkeywords={economics, trade, dynamics, quant econ, lyon, waugh, incomplete markets, taxes, redistribution, progressivity, inequality, Ricardo, julia, migration, taxation, social insurance}
+]{hyperref}
+
+\usepackage{setspace}
+
+\onehalfspace
+
+\renewcommand{\baselinestretch}{1.1}
+\renewcommand{\arraystretch}{.7}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{.1in}
+\renewcommand\familydefault{\sfdefault}
+
+\titleformat{\section}{\large\bf}{\thesection.}{.5em}{}
+\titleformat{\subsection}{\normalsize\bf}{\thesubsection.}{.5em}{}
+\titleformat{\subsubsection}{\normalsize\bf}{\thesubsubsection.}{.5em}{}
+
+\newtheorem{as}{Assumption}
+\newtheorem{reg}{Regularity Condition}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{corr}{Corollary}
+\newtheorem{df}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{prp}{Proposition}
+\newtheorem{rmk}{Remark}
+\newenvironment{prf}{{\bf Proof}}{\hfill { }}
+
+\def\thesection{\arabic{section}}
+\def\thesubsection{\Alph{subsection}}
+\def\thesubsubsection{\Roman{subsubsection}}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{assumption}{Assumption}
+
+\pagestyle{fancy}
+\rhead{}
+\lhead{}
+\cfoot{\thepage}
+\lfoot{}
+\lfoot{Revised: \today}
+\renewcommand{\headrulewidth}{0pt}
+
+\tcolorboxenvironment{df}{%
+boxrule = 0mm, breakable, colframe=white,
+before skip=5pt,after skip=5pt,
+colback=gray!5!white,
+top = 2mm,
+bottom = 2mm%,
+%borderline north={1pt}{1pt}{gray},
+%borderline south={1pt}{1pt}{gray}
+}
+
+
+\def\citeapos#1{\citeauthor{#1}'s (\citeyear{#1})}
+
+
+\begin{document}
+
+\section{Elasticities}
+
+Given this discussion, my mathematical definition of the aggregate trade elasticity is
+\begin{align}
+\theta_{ij} = \frac{\partial M_{ij} / M_{ij}}{\partial p_{ij} / p_{ij}}  - \frac{\partial M_{ii} / M_{ii}}{\partial p_{ij} / p_{ij}}.
+\label{eq:def_trade_elasticity}
+\end{align}
+Then, if we work from the definition of imports in (\ref{eq:imports}), Proposition \ref{prp:GET} connects the aggregate trade elasticity with micro-level behavior.
+
+\begin{prp}[\textbf{The HA Trade Elasticity}] \label{prp:GET} The trade elasticity between country $i$ and country $j$ is
+{\footnotesize
+\begin{align}
+\theta_{ij} = 1 + \int_{z,a} \bigg \{ \theta_{ij}(a,z)^{I} + \theta_{ij}(a,z)^{E} \bigg \}\omega_{ij}(a,z)da \ dz - \int_{z,a} \bigg \{ \theta_{ii,j}(a,z)^{I} + \theta_{ii,j}(a,z)^{E} \bigg \}\omega_{ii}(a,z)da \ dz,
+\label{eq:trade-elasticity}
+\end{align}
+}which is an expenditure-weighted average of micro-level elasticities. The micro-level elasticities are decomposed into an intensive margin and extensive margin
+{\footnotesize
+\begin{align}
+\nonumber
+\theta_{ij}(a,z)^{I} = \frac{\partial c_{i}(a,z,j)/ c_{i}(a,z,j)}{\partial d_{ij} / d_{ij}}, \ \ \ \ \ \ \theta_{ij}(a,z)^{E} = \frac{\partial \pi_{ij}(a,z) / \pi_{ij}(a,z)}{\partial d_{ij} / d_{ij}}, \ \ \ \
+\end{align}
+}
+and the expenditure weights are defined as
+{\footnotesize
+\begin{align}
+\nonumber
+\omega_{ij}(a,z) = \frac{p_{ij}c_{i}(a,z,j)\pi_{ij}(a,z) \psi_{i}(a,z) L_i}{M_{ij}}.
+\end{align}
+}The notation $\theta_{ii,j}^I,  \  \theta_{ii,j}^E $ represents how the home variety, $ii$, intensive and extensive margin respond to the $ij$ change in trade costs.
+\end{prp}
+
+\section{Basic CES, Hand-to-Mouth}
+
+This is a model where the intensive margin is the only margin relevant and the quantity demand is
+\begin{align}
+\nonumber
+p_{ij} c_i(z,j)= \frac{p_{ij}^{-\sigma}}{\sum\limits_{j' \in J} p_{ij'}^{-\sigma}} \times \left( p_{i} c_{i}(z) \right)
+\end{align}
+where the price index is defined as
+\begin{align}
+\nonumber 
+p_{i}^{-\sigma} = \sum\limits_{j' \in J} p_{ij'}^{-\sigma} := \Phi_i
+\end{align}
+We know that the household's budget constraint binds ($w_i =  p_{i} c_{i}(a,z)$ and so we can rewrite the demand function as 
+\begin{align}
+\nonumber
+c_i(z,j)= \frac{p_{ij}^{-\sigma-1}}{\sum\limits_{j' \in J} p_{ij'}^{-\sigma}} \times w_i z
+\end{align}
+And from here we will calculate own and cross price elasticities.
+
+\textbf{Own-Price Elasticities:} This is
+\begin{align} 
+ \frac{\partial c_{i}(z,j) }{\partial p_{ij}} &= \frac{1}{\Phi_i^2}\times \Bigg [ (-\sigma -1 ) p_{ij}^{-\sigma - 1} p_{ij}^{-1} \Phi_{i} - \frac{\partial \Phi_{i}}{\partial p_{ij}} p_{ij}^{-\sigma - 1} \Bigg ] \\
+\nonumber \\
+&= (-\sigma -1 )c_{i}(z,j) p_{ij}^{-1} - c_{i}(j)\frac{\partial \Phi_{i} / \Phi_{i}}{\partial p_{ij}} \ \ \ \ \Rightarrow \\
+\nonumber \\
+ \frac{\partial c_{i}(z,j)/ c_{i}(z,j)}{\partial p_{ij} / p_{ij}}  &= (-\sigma -1 ) - \frac{\partial \Phi_{i} / \Phi_{i} }{\partial p_{ij}/ p_{ij}}
+\end{align}
+which is about the parameter $\sigma$ net of how the price index adjusts. And then the next step is not know that 
+\begin{align} 
+\frac{\partial \Phi_{i} }{\partial p_{ik}} = \frac{-\sigma}p_{ik}^{-\sigma}p_{ik}^{-1}  \ \ \ \ \Rightarrow \\
+\nonumber \\
+ \frac{\partial \Phi_{i} / \Phi_{i} }{\partial p_{ik} / p_{ik}} = -\sigma \pi_{ik}
+\end{align}
+where I'm slightly abusing notation here with $\pi_{ik}$ being the expenditure share on $i$ from $k$. Note that this holds for \textbf{any} $k$. So then the own-price elasticity is 
+\begin{align} 
+\frac{\partial c_{i}(z,j)/ c_{i}(z,j)}{\partial p_{ij} / p_{ij}}  &= (-\sigma -1 ) + \sigma \pi_{ik}
+\end{align}
+
+\textbf{Cross-Price Elasticities:} This is
+\begin{align}
+ \frac{\partial c_{i}(z,j) }{\partial p_{ik}} &= \frac{1}{\Phi_i^2} \times \Bigg [ - \frac{\partial \Phi_{i}}{\partial p_{ik}} p_{ij}^{-\sigma - 1} \Bigg ] \\
+ \nonumber \\
+&= - c_{i}(z,j)\frac{\partial \Phi_{i} / \Phi_{i}}{\partial p_{ik}} \ \ \ \ \Rightarrow \\
+\nonumber \\
+ \frac{\partial c_{i}(z,j)/ c_{i}(z,j)}{\partial p_{ik} / p_{ik}}  &= - \frac{\partial \Phi_{i} / \Phi_{i} }{\partial p_{ik}/ p_{ik}}
+\end{align}
+so the cross-price elasticity is simply about how the price index changes. Then using our formula above for how the price index changes we have
+\begin{align}
+ \frac{\partial c_{i}(z,j)/ c_{i}(z,j)}{\partial p_{ik} / p_{ik}}  &= \sigma \pi_{ik},
+\end{align}
+and the signs make sense here because an increase in the price of good $k$ leads to an increase in the good $j$ in a way that is proportional to expenditure share of good $k$. This is illustrates what people like to complain about is that how good $j$ responds to the price of $k$ has nothing todo with the properties of good $j$ (high price, low price) etc. And in fact, take another good $\ell$ and the substitution to it will be exactly the same as too good $j$. 
+
+Then lets apply the Trade Elasticity formula:
+\begin{itemize}
+\item aggregate imports and own consumption is
+\begin{align}
+M_{ij} = \int_{z} \pi_{ij} w_i z \psi_{i}(z) L_i \ \ \ \ \mbox{and} \ \ \ \ \ M_{ii} = \int_{z} \pi_{ij} w_i z \psi_{i}(z) L_i
+\end{align}
+
+\item Then individual expenditures are 
+\begin{align}
+p_{ij}c_{i}(z,j) = \pi_{ij} w_i z \ \ \ \ \mbox{and} \ \ \ \ \ p_{ii}c_{i}(z,j) = \pi_{ii} w_i z
+\end{align}
+ 
+\item Then weights are
+\begin{align}
+\omega_{ij}(z)  = \frac{\pi_{ij} w_i z \psi_{i}(z) L_i}{M_{ij}}.
+\end{align}
+which turn out to be only a function of the $z$s and nothing else
+\begin{align}
+\omega_{ij}(z)  = \frac{\pi_{ij} w_i z \psi_{i}(z) L_i}{\int_{z} \pi_{ij} w_i z \psi_{i}(z) L_i} = \frac{z \psi_{i}(z)}{\int_{z}z \psi_{i}(z)}
+\end{align}
+which is independent of $i,j$. This is an important observation. 
+ 
+\item Then micro-elasticities are
+\begin{align}
+\theta_{ij}(z)^{I} = (-\sigma -1 ) + \sigma \pi_{ij} \ \ \ \ \ \mbox{and} \ \ \ \ \ \theta_{ii,j}(z)^{I} =  \sigma \pi_{ij} 
+\end{align}
+where the extensive margin elasticities are all zero given the setup of the model.
+
+\item Putting this all together we have
+\begin{align}
+\nonumber 
+\theta_{ij} &= 1 + \int_{z} \bigg \{ (-\sigma -1 ) + \sigma \pi_{ij}  \bigg \}\omega_{ij}(z) dz - \int_{z} \bigg \{ \sigma \pi_{ij} \bigg \}\omega_{ii}(z) dz, \\
+\nonumber \\
+\theta_{ij} &= 1 + \int_{z} \bigg \{ [ (-\sigma -1 ) + \sigma \pi_{ij} ]  - \sigma \pi_{ij}  \bigg \}\omega(z) dz
+\end{align}
+where I inserted the observation about the weights above. Then we can see how terms cancel inside the brackets and then the integral adds up to one, so we have
+\begin{align} 
+\theta_{ij} = -\sigma
+\end{align}
+and we have the constant elasticity world.
+\end{itemize}
+Notice there were two important steps. One is how the cross-price elasticity exactly cancels with the extra term in the own price elasticity. In other words, the price index for consuming $j$ vs. $i$ changes exactly the same way when the price of $j$ changes. The other issue is the shares. Here they are constant across types. This then leads to the next setup, income varying quality shifters.
+
+\section{CES with Income Dependent Quality, Hand-to-Mouth}
+
+Same CES structure, but lets image that there are quality shifters that depend upon the households income state.
+\begin{align}
+\nonumber
+p_{ij} c_i(z,j)= \frac{\kappa_{i}(z) p_{ij}^{-\sigma}}{\sum\limits_{j' \in J} \kappa_{i}(z) p_{ij'}^{-\sigma}} \times \left( p_{i}(z) c_{i}(z) \right)
+\end{align}
+where the price index is defined as
+\begin{align}
+\nonumber
+p_{i}^{-\sigma} = \sum\limits_{j' \in J} \kappa_{i}(z) p_{ij'}^{-\sigma} := \Phi_i(z)
+\end{align}
+We know that the household's budget constraint binds ($w_iz =  p_{i} c_{i}(z)$ and so we can rewrite the demand function as
+\begin{align}
+\nonumber
+c_i(z,j)= \frac{\kappa_{i}(z) p_{ij}^{-\sigma-1}}{\sum\limits_{j' \in J} \kappa_{i}(z) p_{ij'}^{-\sigma}} \times w_i z
+\end{align}
+And from here we will calculate own and cross price elasticities.
+
+
+\section{Computation}
+
+This scetches how we could just insert the demand system as see how things work
+\begin{itemize}
+\item We should just work on the transition path branch that you were working on. Until we can run my main code, we should not merge the things. 
+
+\item My code{ \tt static\_logit } is a good place to start. It takes arguments (prices and model parameters) in and then delivers demand for each type of household, state by state. Note that the asset state is redundant here because I only want to think about things in the static world. We should probably pass through the CES parameter as an explicit parameter, not add on to model parameters. Then we want it to return stuff for which to aggregate.
+    
+\item Step 1 is just to get CES running at the household level, then we see how things look. 
+    
+\item Step 2 is how to aggregate, preferably without adding new code. The open question is if a stand alon function should be used, or we just set the asset policy function equal to zero. Also open question is how to construct stationary distribution.
+\end{itemize}
+
+
+
+
+
+\end{document}
