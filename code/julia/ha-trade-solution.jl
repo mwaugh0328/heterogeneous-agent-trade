@@ -96,8 +96,8 @@ end
 # ##########################################################################
 # ##########################################################################
 
-function world_equillibrium_FG_τ(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
-    hh_solution_method = "itteration", stdist_sol_method = "itteration")
+function world_equillibrium_FG_tariff(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_dis = 1e-10, 
+    hh_solution_method = "itteration", stdist_sol_method = "itteration", display = false)
     # for the situation in which there are rebates to households
 
     @unpack Ncntry = cntry_params
@@ -110,16 +110,26 @@ function world_equillibrium_FG_τ(x, hh_params, cntry_params; tol_vfi = 1e-6, to
 
     #CSV.write("current-price.csv", dfguess)
 
-    Y, tradeflows, A_demand, Gbudget = world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
-        hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
+    if display == false
 
-    goods_market = Y .- vec(sum(tradeflows, dims = 1))
-    # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
-    # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
+        Y, tradeflows, tradeflows_net_tariff, A_demand, Gbudget = world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+            hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:5]
 
-    asset_market = A_demand
+        #goods_market = Y .- vec(sum(tradeflows, dims = 1))
+        goods_market = Y .- vec(sum(tradeflows_net_tariff, dims = 1))
+        # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
+        # per line ~ 70 below, if we sum down a row this is the world demand of a countries commodity. 
 
-    return [sum(asset_market); goods_market[2:end]; Gbudget]
+        asset_market = A_demand
+
+        return [sum(asset_market); goods_market[2:end]; Gbudget]
+    
+    else
+
+        return world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+            hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)
+
+    end
 
 end
 
@@ -157,10 +167,13 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
     Gbudget = similar(R)
 
     tradeflows = Array{Float64}(undef,Ncntry,Ncntry)
+    tradeflows_net_tariff = Array{Float64}(undef,Ncntry,Ncntry)
     tradeshare = Array{Float64}(undef,Ncntry,Ncntry)
 
     hh = Array{household{Float64}}(undef,Ncntry)
     dist = Array{distribution{Float64}}(undef,Ncntry)
+    output = Array{NIPA}(undef,Ncntry)
+    tradestats = Array{trade}(undef,Ncntry)
 
     Threads.@threads for cntry = 1:Ncntry
 
@@ -192,23 +205,25 @@ function world_equillibrium(R, W, τ, hh_params, cntry_params; tol_vfi = 1e-6, t
         foo_hh_params = household_params(hh_params, agrid = agrid, 
                 TFP = TFP[cntry], L = L[cntry], σϵ = σϵ*(TFP[cntry]^(1.0 - γ)), ψ = ψ)
 
-        output, tradestats = aggregate(R[cntry], W[cntry], p, τ[cntry], tariff, cntry, hh[cntry], dist[cntry], foo_hh_params)
+        output[cntry], tradestats[cntry] = aggregate(R[cntry], W[cntry], p, τ[cntry], tariff, cntry, hh[cntry], dist[cntry], foo_hh_params)
 
-        Y[cntry] = output.production
+        Y[cntry] = output[cntry].production
 
-        tradeflows[cntry, :] = tradestats.bilateral_imports
+        tradeflows[cntry, :] = tradestats[cntry].bilateral_imports
 
-        tradeshare[cntry, :] = tradestats.bilateral_imports ./ output.PC
+        tradeflows_net_tariff[cntry, :] = tradestats[cntry].bilateral_imports_net_tariff
+
+        tradeshare[cntry, :] = tradestats[cntry].bilateral_imports ./ output[cntry].PC
         # the way I read this is fix a row, then across the columns this is how much cntry in position cntry
         # is buying/importing from of the other commodities. 
 
-        Gbudget[cntry] = tradestats.tariff_revenue - output.G 
+        Gbudget[cntry] = tradestats[cntry].tariff_revenue - output[cntry].G 
 
-        A_demand[cntry] = output.Aprime
+        A_demand[cntry] = output[cntry].Aprime
 
     end
 
-return Y, tradeflows, A_demand, Gbudget, tradeshare, hh, dist
+    return Y, tradeflows, tradeflows_net_tariff, A_demand, Gbudget, tradeshare, hh, dist
 
 end
 

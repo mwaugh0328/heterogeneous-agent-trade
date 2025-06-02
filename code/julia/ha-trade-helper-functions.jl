@@ -11,7 +11,8 @@ struct NIPA
 end
 
 struct trade
-    bilateral_imports::Array{Float64} # asset_policy
+    bilateral_imports::Array{Float64} 
+    bilateral_imports_net_tariff::Array{Float64}
     bilateral_πprob::Array{Float64} # choice probabilities
     tariff_revenue::Float64
 end
@@ -325,6 +326,8 @@ function aggregate(R, W, p, τ, tariff, country, household, distribution, hh_par
 
     bilateral_imports = sum( L * pcπ_by_state.* λ, dims = 1)
 
+    bilateral_imports_net_tariff = bilateral_imports ./ reshape(1.0 .+ tariff[country, :], 1, 2)
+
     tariff_revenue  =  sum(( tariff[country, :] ./ ( 1.0 .+ tariff[country, :]) ).* bilateral_imports' )
 
     bilateral_πprob = sum( π_by_state.* λ, dims = 1)
@@ -378,7 +381,7 @@ function aggregate(R, W, p, τ, tariff, country, household, distribution, hh_par
 
     end
 
-    return NIPA(PC, M, X, income, production, N, Aprime, NetA, G), trade(bilateral_imports, bilateral_πprob, tariff_revenue)
+    return NIPA(PC, M, X, income, production, N, Aprime, NetA, G), trade(bilateral_imports, bilateral_imports_net_tariff, bilateral_πprob, tariff_revenue)
 
 end
 
