@@ -64,7 +64,7 @@ Wint = Wint ./ ( sum(Wint, dims = 1) / Ncntry ) # Need to be consistent with num
 
 Rint = [exp.(sol.x[2]); exp.(sol.x[2])]
 
-Y, tradeflows, A_demand, Gbudget, tradeshare_int, hh, dist_int = world_equillibrium(Rint, Wint, τ, hh_prm, cntry_prm, tol_vfi = 1e-10);
+Y, tradeflows, tradeflows_net_tariff, A_demand, Gbudget, tradeshare_int, hh, dist_int = world_equillibrium(Rint, Wint, τ, hh_prm, cntry_prm, tol_vfi = 1e-10);
 # this world_eq...is a core file takes prices and returns a bunch of stuff
 # note that hh, dist are objects of dimensiom number of countries, then within
 # it has policy functions and distributions state by state
@@ -112,7 +112,7 @@ Wend = Wend ./ ( sum(Wend, dims = 1) / Ncntry ) # Need to be consistent with num
 
 Rend = [exp.(sol.x[2]); exp.(sol.x[2])]
 
-Y, tradeflows, A_demand, Gbudget, tradeshare, hh_end, dist_end = world_equillibrium(Rend, Wend, τ, hh_prm, cntry_prm, tol_vfi = 1e-10);
+Y, tradeflows, tradeflow_net_tariff, A_demand, Gbudget, tradeshare, hh_end, dist_end = world_equillibrium(Rend, Wend, τ, hh_prm, cntry_prm, tol_vfi = 1e-10);
 # this world_eq...is a core file takes prices and returns a bunch of stuff
 # note that hh, dist are objects of dimensiom number of countries, then within
 # it has policy functions and distributions state by state
@@ -166,8 +166,6 @@ sol = fsolve(g!, initial_x, show_trace = true, method = :hybr;
        )
 
 print(sol);  
-
-
 
 godos_market, asset_market, hhpath = transition_path(( sol.x ), d_path, trp_values, hh_prm, cntry_prm, display = true)
 

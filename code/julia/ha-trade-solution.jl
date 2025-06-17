@@ -80,8 +80,8 @@ function world_equillibrium_FG(x, hh_params, cntry_params; tol_vfi = 1e-6, tol_d
 
     # CSV.write("current-price.csv", dfguess)
 
-    Y, tradeflows, A_demand = world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
-        hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:3]
+    Y, tradeflows, tradeflows_net_tariff, A_demand = world_equillibrium(R, W, hh_params, cntry_params; tol_vfi = tol_vfi, tol_dis = tol_dis, 
+        hh_solution_method = hh_solution_method, stdist_sol_method=stdist_sol_method)[1:4]
 
     goods_market = Y .- vec(sum(tradeflows, dims = 1))
     # so output (in value terms) minus stuff being purchased by others (value terms so trade costs)
